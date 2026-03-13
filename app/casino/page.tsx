@@ -8962,6 +8962,13 @@ function NavTestPageContent() {
     if (!mounted || isMobile || showSports || showVipRewards || showPoker) return
     if (typeof window === 'undefined') return
 
+    // Keep the tour opt-in only to avoid dimming the full page by default.
+    const tourParam = searchParams.get('tour')
+    if (tourParam !== '1') {
+      setCasinoFeatureTourOpen(false)
+      return
+    }
+
     const hasSeenTour = window.localStorage.getItem(CASINO_FEATURE_TOUR_KEY) === 'seen'
     if (hasSeenTour) return
 
@@ -8970,7 +8977,7 @@ function NavTestPageContent() {
     }, 500)
 
     return () => window.clearTimeout(timeout)
-  }, [mounted, isMobile, showSports, showVipRewards, showPoker, CASINO_FEATURE_TOUR_KEY])
+  }, [mounted, isMobile, showSports, showVipRewards, showPoker, searchParams, CASINO_FEATURE_TOUR_KEY])
 
   // Don't render until mounted to prevent hydration issues
   if (!mounted) {
