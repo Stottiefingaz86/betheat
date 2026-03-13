@@ -1398,7 +1398,7 @@ function CashRacesPage({ brandPrimary, setVipDrawerOpen, setShowVipRewards, setV
                   {activeRaceTab === tab && (
                     <motion.div
                       layoutId="activeRaceTab"
-                      className="absolute inset-0 rounded-2xl -z-10"
+                      className="absolute inset-0 rounded-small -z-10"
                       style={{ backgroundColor: 'var(--ds-primary, #ee3536)' }}
                       initial={false}
                       transition={{
@@ -1637,7 +1637,7 @@ function PromosPage({ brandPrimary, setVipDrawerOpen, setShowVipRewards, setVipA
                     {activeTab === tab && (
                       <motion.div
                         layoutId="activePromosTab"
-                        className="absolute inset-0 rounded-2xl -z-10"
+                        className="absolute inset-0 rounded-small -z-10"
                         style={{ backgroundColor: 'var(--ds-primary, #ee3536)' }}
                         initial={false}
                         transition={{
@@ -1911,7 +1911,7 @@ function MyBonusPage({ brandPrimary, setShowVipRewards }: { brandPrimary: string
                     {activeTab === tab && (
                       <motion.div
                         layoutId="activeBonusTab"
-                        className="absolute inset-0 rounded-2xl -z-10"
+                        className="absolute inset-0 rounded-small -z-10"
                         style={{ backgroundColor: 'var(--ds-primary, #ee3536)' }}
                         initial={false}
                         transition={{
@@ -2485,7 +2485,7 @@ function VIPRewardsPage({ brandPrimary, setVipDrawerOpen, setVipActiveTab, setSh
                     {vipActiveSidebarItem === item.id && (
                       <motion.div
                         layoutId="activeVipMobileTab"
-                        className="absolute inset-0 rounded-2xl -z-10"
+                        className="absolute inset-0 rounded-small -z-10"
                         style={{ backgroundColor: 'var(--ds-primary, #ee3536)' }}
                         initial={false}
                         transition={{
@@ -3406,7 +3406,7 @@ function MyBetsContent({ onBack, brandPrimary, initialFilter }: { onBack: () => 
               {activeFilter === tab.key && (
                 <motion.div
                   layoutId="activeMyBetsTab"
-                  className="absolute inset-0 rounded-2xl -z-10"
+                  className="absolute inset-0 rounded-small -z-10"
                   style={{ backgroundColor: brandPrimary || '#ee3536' }}
                   initial={false}
                   transition={{
@@ -5700,9 +5700,9 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
         variant="sidebar"
         mobileOverlay
         mobileNoDrag
-        mobileBg="#2d2d2d"
+        mobileBg="var(--ds-sidebar-bg, #141920)"
         mobileOverlayClassName="!bg-black/30 !backdrop-blur-sm"
-        className="!bg-[#2d2d2d] border-r border-white/10 text-white [&>div]:!bg-[#2d2d2d] !h-screen !top-0 !z-[102]"
+        className="!bg-[var(--ds-sidebar-bg)] border-r border-white/10 text-white [&>div]:!bg-[var(--ds-sidebar-bg)] !h-screen !top-0 !z-[102]"
       >
         {/* Sidebar Header — sticky, clean (both mobile and desktop) */}
         <SidebarHeader 
@@ -5710,7 +5710,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
           style={{
             backdropFilter: isMobile ? 'none' : 'blur(16px) saturate(180%)',
             WebkitBackdropFilter: isMobile ? 'none' : 'blur(16px) saturate(180%)',
-            backgroundColor: isMobile ? '#2d2d2d' : 'rgba(45, 45, 45, 0.75)',
+            backgroundColor: isMobile ? 'var(--ds-sidebar-bg, #141920)' : 'rgba(18, 24, 33, 0.78)',
           }}
         >
           <div className="relative w-full h-full flex items-center justify-center">
@@ -5772,21 +5772,12 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                   exit={{ opacity: 0, transition: { duration: 0.05 } }}
                   transition={{ duration: 0.1 }}
                 >
-                  {/* Full BETONLINE logo */}
-                  <div className="h-5 w-[110px] flex-shrink-0">
-                    <svg viewBox="0 0 640 86" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-                      <g id="BETONLINE">
-                        <path fillRule="evenodd" clipRule="evenodd" d="M113.405 60.8753V61.3718C113.405 61.5704 113.405 61.769 113.505 61.8684V62.2656C113.405 66.6351 112.307 70.3095 110.211 73.2887C108.014 76.2679 105.219 78.7506 101.825 80.5381C98.4308 82.4249 94.5375 83.7159 90.2449 84.5104C85.9523 85.3048 81.6597 85.7021 77.367 85.7021H37.4357V36.4457H37.236C37.236 36.4457 7.08782 34.4596 0 34.4596C0 34.4596 20.1653 32.7714 37.236 32.4734H37.4357L37.3358 0H73.3739C77.5667 0 81.7595 0.297921 85.9523 0.794457C90.1451 1.3903 94.0384 2.38337 97.4325 3.97229C100.827 5.5612 103.722 7.84526 105.818 10.7252C108.014 13.6051 109.112 17.3788 109.112 22.1455C109.112 27.0115 107.615 31.0831 104.52 34.261L103.722 35.0554C103.722 35.0554 103.422 35.4527 102.723 36.0485C101.925 36.6443 101.126 37.2402 99.9282 37.9353C99.8284 37.985 99.7536 38.0346 99.6787 38.0843C99.6038 38.1339 99.5289 38.1836 99.4291 38.2333C93.1399 35.4527 86.0521 33.8637 80.861 32.97C83.9557 31.679 85.2535 30.388 85.6528 29.8915C85.799 29.7461 85.8916 29.6007 86.0091 29.4163C86.0521 29.3488 86.0984 29.2761 86.1519 29.1963C86.8507 28.0046 87.25 26.6143 87.25 25.0254C87.25 23.3372 86.8507 22.0462 86.0521 20.9538C85.1536 19.8614 84.1554 19.067 82.8576 18.4711C81.46 17.776 79.9626 17.3788 78.2655 17.0808C76.5684 16.7829 74.8713 16.6836 73.2741 16.6836H58.9986L59.0984 33.0693H59.7972C82.9574 34.4596 98.7303 38.6305 106.617 45.6813C107.415 46.2771 111.608 49.8522 113.006 56.6051L113.205 57.3002V57.5981C113.205 57.7471 113.23 57.8961 113.255 58.045C113.28 58.194 113.305 58.343 113.305 58.4919V58.8891C113.305 59.2367 113.33 59.5595 113.355 59.8822C113.38 60.205 113.405 60.5277 113.405 60.8753ZM90.5444 63.7552L90.6442 63.5566C91.343 62.2656 93.0401 57.9954 88.8473 52.7321C86.1519 49.6536 79.7629 45.2841 65.4874 41.5104L56.6027 39.4249L57.8007 40.8152L58.0003 41.0139C58.0262 41.0654 58.0723 41.1303 58.1316 41.2138C58.3007 41.4521 58.5772 41.8417 58.7989 42.5035L59.0984 43.3972C59.1068 43.4722 59.1152 43.5465 59.1235 43.6203C59.2143 44.4257 59.2981 45.1688 59.2981 46.0785C59.1983 48.7598 59.0984 61.6697 59.0984 67.3303V69.1178L59.8971 69.2171H77.6665C79.2638 69.2171 80.9609 69.0185 82.6579 68.7205C84.355 68.4226 85.8524 67.8268 87.1502 67.0323C88.448 66.2379 89.5461 65.2448 90.4445 63.9538C90.4445 63.9538 90.5444 63.8545 90.5444 63.7552Z" fill="#ee3536"/>
-                        <path d="M120.693 85.7021V0.0993091H178.194V17.4781H140.558V33.6651H176.197V50.2494H140.658V68.0254H180.39V85.7021H120.693Z" fill="#ee3536"/>
-                        <path d="M257.757 8.54042C261.251 5.16397 265.244 2.38337 269.736 0.0993091H185.781V17.776H209.939V85.7021H230.604V17.776H250.37C252.466 14.3995 254.962 11.321 257.757 8.54042Z" fill="#ee3536"/>
-                        <path fillRule="evenodd" clipRule="evenodd" d="M313.761 3.47575C319.151 5.66051 323.843 8.63973 327.737 12.5127C331.63 16.3857 334.625 20.9538 336.821 26.1178C339.017 31.3811 340.115 37.0416 340.115 43.0993C340.115 49.1571 339.017 54.9169 336.821 60.0808C334.625 65.2448 331.63 69.8129 327.737 73.6859C323.843 77.4596 319.151 80.5381 313.761 82.7229C308.27 84.9076 302.28 86 295.891 86C289.403 86 283.413 84.9076 278.022 82.7229C272.631 80.5381 267.939 77.5589 264.046 73.6859C260.253 69.9122 257.158 65.2448 254.962 60.0808C252.766 54.8176 251.667 49.1571 251.667 43.0993C251.667 37.0416 252.766 31.2818 254.962 26.1178C257.158 20.9538 260.153 16.3857 264.046 12.5127C267.939 8.73903 272.631 5.66051 278.022 3.47575C283.513 1.291 289.502 0.198618 295.891 0.198618C302.38 0.198618 308.37 1.291 313.761 3.47575ZM324.642 55.3141C326.139 51.5404 326.838 47.3695 326.838 43.0993C326.838 38.8291 326.04 34.6582 324.642 30.8845C323.244 27.1109 321.148 23.7344 318.453 20.9538C315.757 18.1732 312.563 15.8891 308.769 14.2009C305.076 12.5127 300.783 11.7182 296.091 11.7182C291.399 11.7182 287.206 12.5127 283.413 14.2009C279.719 15.8891 276.425 18.1732 273.73 20.9538C271.134 23.7344 269.038 27.1109 267.54 30.8845C266.043 34.6582 265.344 38.8291 265.344 43.0993C265.344 47.3695 266.043 51.5404 267.54 55.3141C268.938 59.0878 271.034 62.4642 273.73 65.2448C276.425 68.0254 279.619 70.3095 283.413 71.9977C287.107 73.6859 291.399 74.4804 296.091 74.4804C300.783 74.4804 304.976 73.6859 308.769 71.9977C312.463 70.3095 315.757 68.0254 318.453 65.2448C321.048 62.4642 323.145 59.0878 324.642 55.3141Z" fill="white"/>
-                        <path d="M437.847 0.0993091H425.069V85.6028H476.681V74.1824H437.847V0.0993091Z" fill="white"/>
-                        <path d="M484.268 0.0993091H497.046V85.7021H484.268V0.0993091Z" fill="white"/>
-                        <path d="M594.778 74.1824V48.2633H634.909V36.7436H594.778V11.6189H637.804V0.0993091H582V85.6028H640V74.1824H594.778Z" fill="white"/>
-                        <path d="M347.802 0.0993091L405.403 56.903V0.0993091H417.482V85.6028L359.782 29.4942V85.6028H347.802V0.0993091Z" fill="white"/>
-                        <path d="M562.333 57.3002L504.633 0.0993091V85.6028H516.712V29.8915L574.313 85.2055V0.0993091H562.333V57.3002Z" fill="white"/>
-                      </g>
-                    </svg>
+                  <div className="h-7 w-[148px] flex-shrink-0">
+                    <img
+                      src="/logos/BHGL_logo-1773311608241-DDbBBO6v.png"
+                      alt="Betheat"
+                      className="w-full h-full object-contain"
+                    />
                   </div>
                 </motion.div>
               )}
@@ -5802,7 +5793,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
             style={{
               backdropFilter: 'blur(16px) saturate(180%)',
               WebkitBackdropFilter: 'blur(16px) saturate(180%)',
-              backgroundColor: 'rgba(45, 45, 45, 0.92)',
+              backgroundColor: 'rgba(18, 20, 23, 0.92)',
             }}
           >
             <div 
@@ -5877,7 +5868,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.2, ease: 'easeInOut' }}
                 className="overflow-hidden border-b border-white/5"
-                style={{ backgroundColor: 'rgba(45, 45, 45, 0.95)' }}
+                style={{ backgroundColor: 'rgba(18, 20, 23, 0.95)' }}
               >
                 <div className="flex items-center gap-0 px-1 py-1">
                   {[
@@ -7422,7 +7413,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                           {activeTab === tab && (
                             <motion.div
                               layoutId="activeSportsTab"
-                              className="absolute inset-0 rounded-2xl -z-10"
+                              className="absolute inset-0 rounded-small -z-10"
                               style={{ backgroundColor: 'var(--ds-primary, #ee3536)' }}
                               initial={false}
                               transition={{
@@ -10398,6 +10389,8 @@ function NavTestPageContent() {
   const [sportsActiveTab, setSportsActiveTab] = useState('Events')
   const [isPageTransitioning, setIsPageTransitioning] = useState(false)
   const [searchOverlayOpen, setSearchOverlayOpen] = useState(false)
+  const [headerLanguage, setHeaderLanguage] = useState<'EN' | 'ES' | 'DE' | 'FR' | 'PT'>('EN')
+  const [mobileLanguageAccordionOpen, setMobileLanguageAccordionOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [viewMode, setViewMode] = useState<'list' | 'card' | 'pack'>('card')
   const [favoritedGames, setFavoritedGames] = useState<Set<number>>(new Set())
@@ -10489,10 +10482,36 @@ function NavTestPageContent() {
   const bannerRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   const subNavScrollRef = useRef<HTMLDivElement>(null)
+  const desktopSubNavTabsRef = useRef<HTMLDivElement>(null)
+  const [desktopSubNavCanScrollLeft, setDesktopSubNavCanScrollLeft] = useState(false)
+  const [desktopSubNavCanScrollRight, setDesktopSubNavCanScrollRight] = useState(false)
   const [isContentUnderNav, setIsContentUnderNav] = useState(false)
   const { state: sidebarState, open: sidebarOpen, setOpen, openMobile, setOpenMobile, toggleSidebar } = useSidebar()
   const [showQuickLinksMenu, setShowQuickLinksMenu] = useState(false)
   const [otherDropdownOpen, setOtherDropdownOpen] = useState(false)
+
+  const updateDesktopSubNavScrollState = React.useCallback(() => {
+    const el = desktopSubNavTabsRef.current
+    if (!el || isMobile) {
+      setDesktopSubNavCanScrollLeft(false)
+      setDesktopSubNavCanScrollRight(false)
+      return
+    }
+    const maxScrollLeft = Math.max(0, el.scrollWidth - el.clientWidth)
+    setDesktopSubNavCanScrollLeft(el.scrollLeft > 4)
+    setDesktopSubNavCanScrollRight(el.scrollLeft < maxScrollLeft - 4)
+  }, [isMobile])
+
+  useEffect(() => {
+    updateDesktopSubNavScrollState()
+    const el = desktopSubNavTabsRef.current
+    if (el) el.addEventListener('scroll', updateDesktopSubNavScrollState, { passive: true })
+    window.addEventListener('resize', updateDesktopSubNavScrollState)
+    return () => {
+      if (el) el.removeEventListener('scroll', updateDesktopSubNavScrollState)
+      window.removeEventListener('resize', updateDesktopSubNavScrollState)
+    }
+  }, [isMobile, showSports, showVipRewards, quickLinksOpen, updateDesktopSubNavScrollState])
 
   // Debug: Log drawer state changes
   useEffect(() => {
@@ -10592,19 +10611,11 @@ function NavTestPageContent() {
       primaryColor: colorTokenMap['betRed/500']?.hex || '#ee3536',
       primaryHover: colorTokenMap['betRed/700']?.hex || '#dc2a2f',
       logo: (
-        <svg viewBox="0 0 640 86" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-          <g id="BETONLINE">
-            <path fillRule="evenodd" clipRule="evenodd" d="M113.405 60.8753V61.3718C113.405 61.5704 113.405 61.769 113.505 61.8684V62.2656C113.405 66.6351 112.307 70.3095 110.211 73.2887C108.014 76.2679 105.219 78.7506 101.825 80.5381C98.4308 82.4249 94.5375 83.7159 90.2449 84.5104C85.9523 85.3048 81.6597 85.7021 77.367 85.7021H37.4357V36.4457H37.236C37.236 36.4457 7.08782 34.4596 0 34.4596C0 34.4596 20.1653 32.7714 37.236 32.4734H37.4357L37.3358 0H73.3739C77.5667 0 81.7595 0.297921 85.9523 0.794457C90.1451 1.3903 94.0384 2.38337 97.4325 3.97229C100.827 5.5612 103.722 7.84526 105.818 10.7252C108.014 13.6051 109.112 17.3788 109.112 22.1455C109.112 27.0115 107.615 31.0831 104.52 34.261L103.722 35.0554C103.722 35.0554 103.422 35.4527 102.723 36.0485C101.925 36.6443 101.126 37.2402 99.9282 37.9353C99.8284 37.985 99.7536 38.0346 99.6787 38.0843C99.6038 38.1339 99.5289 38.1836 99.4291 38.2333C93.1399 35.4527 86.0521 33.8637 80.861 32.97C83.9557 31.679 85.2535 30.388 85.6528 29.8915C85.799 29.7461 85.8916 29.6007 86.0091 29.4163C86.0521 29.3488 86.0984 29.2761 86.1519 29.1963C86.8507 28.0046 87.25 26.6143 87.25 25.0254C87.25 23.3372 86.8507 22.0462 86.0521 20.9538C85.1536 19.8614 84.1554 19.067 82.8576 18.4711C81.46 17.776 79.9626 17.3788 78.2655 17.0808C76.5684 16.7829 74.8713 16.6836 73.2741 16.6836H58.9986L59.0984 33.0693H59.7972C82.9574 34.4596 98.7303 38.6305 106.617 45.6813C107.415 46.2771 111.608 49.8522 113.006 56.6051L113.205 57.3002V57.5981C113.205 57.7471 113.23 57.8961 113.255 58.045C113.28 58.194 113.305 58.343 113.305 58.4919V58.8891C113.305 59.2367 113.33 59.5595 113.355 59.8822C113.38 60.205 113.405 60.5277 113.405 60.8753ZM90.5444 63.7552L90.6442 63.5566C91.343 62.2656 93.0401 57.9954 88.8473 52.7321C86.1519 49.6536 79.7629 45.2841 65.4874 41.5104L56.6027 39.4249L57.8007 40.8152L58.0003 41.0139C58.0262 41.0654 58.0723 41.1303 58.1316 41.2138C58.3007 41.4521 58.5772 41.8417 58.7989 42.5035L59.0984 43.3972C59.1068 43.4722 59.1152 43.5465 59.1235 43.6203C59.2143 44.4257 59.2981 45.1688 59.2981 46.0785C59.1983 48.7598 59.0984 61.6697 59.0984 67.3303V69.1178L59.8971 69.2171H77.6665C79.2638 69.2171 80.9609 69.0185 82.6579 68.7205C84.355 68.4226 85.8524 67.8268 87.1502 67.0323C88.448 66.2379 89.5461 65.2448 90.4445 63.9538C90.4445 63.9538 90.5444 63.8545 90.5444 63.7552Z" fill={colorTokenMap['betRed/500']?.hex || '#ee3536'}/>
-            <path d="M120.693 85.7021V0.0993091H178.194V17.4781H140.558V33.6651H176.197V50.2494H140.658V68.0254H180.39V85.7021H120.693Z" fill={colorTokenMap['betRed/500']?.hex || '#ee3536'}/>
-            <path d="M257.757 8.54042C261.251 5.16397 265.244 2.38337 269.736 0.0993091H185.781V17.776H209.939V85.7021H230.604V17.776H250.37C252.466 14.3995 254.962 11.321 257.757 8.54042Z" fill={colorTokenMap['betRed/500']?.hex || '#ee3536'}/>
-            <path fillRule="evenodd" clipRule="evenodd" d="M313.761 3.47575C319.151 5.66051 323.843 8.63973 327.737 12.5127C331.63 16.3857 334.625 20.9538 336.821 26.1178C339.017 31.3811 340.115 37.0416 340.115 43.0993C340.115 49.1571 339.017 54.9169 336.821 60.0808C334.625 65.2448 331.63 69.8129 327.737 73.6859C323.843 77.4596 319.151 80.5381 313.761 82.7229C308.27 84.9076 302.28 86 295.891 86C289.403 86 283.413 84.9076 278.022 82.7229C272.631 80.5381 267.939 77.5589 264.046 73.6859C260.253 69.9122 257.158 65.2448 254.962 60.0808C252.766 54.8176 251.667 49.1571 251.667 43.0993C251.667 37.0416 252.766 31.2818 254.962 26.1178C257.158 20.9538 260.153 16.3857 264.046 12.5127C267.939 8.73903 272.631 5.66051 278.022 3.47575C283.513 1.291 289.502 0.198618 295.891 0.198618C302.38 0.198618 308.37 1.291 313.761 3.47575ZM324.642 55.3141C326.139 51.5404 326.838 47.3695 326.838 43.0993C326.838 38.8291 326.04 34.6582 324.642 30.8845C323.244 27.1109 321.148 23.7344 318.453 20.9538C315.757 18.1732 312.563 15.8891 308.769 14.2009C305.076 12.5127 300.783 11.7182 296.091 11.7182C291.399 11.7182 287.206 12.5127 283.413 14.2009C279.719 15.8891 276.425 18.1732 273.73 20.9538C271.134 23.7344 269.038 27.1109 267.54 30.8845C266.043 34.6582 265.344 38.8291 265.344 43.0993C265.344 47.3695 266.043 51.5404 267.54 55.3141C268.938 59.0878 271.034 62.4642 273.73 65.2448C276.425 68.0254 279.619 70.3095 283.413 71.9977C287.107 73.6859 291.399 74.4804 296.091 74.4804C300.783 74.4804 304.976 73.6859 308.769 71.9977C312.463 70.3095 315.757 68.0254 318.453 65.2448C321.048 62.4642 323.145 59.0878 324.642 55.3141Z" fill="white"/>
-            <path d="M437.847 0.0993091H425.069V85.6028H476.681V74.1824H437.847V0.0993091Z" fill="white"/>
-            <path d="M484.268 0.0993091H497.046V85.7021H484.268V0.0993091Z" fill="white"/>
-            <path d="M594.778 74.1824V48.2633H634.909V36.7436H594.778V11.6189H637.804V0.0993091H582V85.6028H640V74.1824H594.778Z" fill="white"/>
-            <path d="M347.802 0.0993091L405.403 56.903V0.0993091H417.482V85.6028L359.782 29.4942V85.6028H347.802V0.0993091Z" fill="white"/>
-            <path d="M562.333 57.3002L504.633 0.0993091V85.6028H516.712V29.8915L574.313 85.2055V0.0993091H562.333V57.3002Z" fill="white"/>
-          </g>
-        </svg>
+        <img
+          src="/logos/BHGL_logo-1773311608241-DDbBBO6v.png"
+          alt="Betheat"
+          className="w-full h-full object-contain"
+        />
       )
     },
     wildcasino: { 
@@ -10716,13 +10727,15 @@ function NavTestPageContent() {
     { icon: IconDeviceGamepad2, label: 'Slots' },
     { icon: IconCards, label: 'Blackjack' },
     { icon: IconVideo, label: 'Video Poker' },
-    { icon: IconDots, label: 'Specialty Games' },
+    { icon: IconBolt, label: 'Instant Wins' },
+    { icon: IconCoins, label: 'Prize Drops' },
     { icon: IconCards, label: 'Table Games' },
     { icon: IconBroadcast, label: 'Live Casino' },
     { icon: IconTrophy, label: 'Tournaments' },
     { icon: IconCrown, label: 'Loyalty Hub' },
     { icon: IconBuilding, label: 'Banking' },
     { icon: IconLifebuoy, label: 'Need Help' },
+    ...(isMobile ? [{ icon: IconWorld, label: 'Language' }] : []),
   ]
 
   const gameFilters = ['For You', 'Bonus Buys', 'Megaways', 'Slots', 'Live', 'Jackpots', 'Early', 'Staff Picks', 'New', 'Exclusive']
@@ -10762,7 +10775,10 @@ function NavTestPageContent() {
             pointerEvents: quickLinksOpen ? 'auto' : 'none',
             opacity: 1,
             visibility: 'visible',
-            backgroundColor: 'var(--ds-nav-bg, #2D2E2C)',
+            backgroundColor: 'rgba(18, 20, 23, 0.92)',
+            boxShadow: '0 -200px 0 0 rgba(18, 20, 23, 0.94)',
+            backdropFilter: 'blur(8px) saturate(105%)',
+            WebkitBackdropFilter: 'blur(8px) saturate(105%)',
           }}
         >
           <div className="px-3 py-2 flex items-center gap-2 overflow-x-auto scrollbar-hide border-b border-white/10">
@@ -10825,11 +10841,13 @@ function NavTestPageContent() {
           duration: 0.3
         } : {}}
         style={{ 
-          backgroundColor: 'var(--ds-nav-bg, #2D2E2C)',
+          backgroundColor: 'rgba(18, 20, 23, 0.96)',
           pointerEvents: 'auto',
           zIndex: 101,
           position: 'fixed',
-          boxShadow: '0 -200px 0 0 var(--ds-nav-bg, #2D2E2C)',
+          boxShadow: '0 -200px 0 0 rgba(18, 20, 23, 0.97)',
+          backdropFilter: 'blur(22px) saturate(112%)',
+          WebkitBackdropFilter: 'blur(22px) saturate(112%)',
         }}
       >
           <div className="flex items-center gap-6">
@@ -11141,17 +11159,18 @@ function NavTestPageContent() {
                 openAccountDrawer()
               }}
               className={cn(
-                "flex items-center rounded-small transition-colors group relative",
+                "grid items-center rounded-small transition-colors group relative",
                 "border border-white/10 bg-[#141920]/90 hover:bg-[#1a202b]/95",
                 "active:bg-[#1f2834]",
                 accountDrawerOpen && "text-white",
-                isMobile ? "gap-1 px-2 py-1.5 h-9" : "gap-1 px-2.5 py-1.5 h-10 min-w-[140px]"
+                isMobile
+                  ? "grid-cols-[20px_minmax(0,1fr)_20px] gap-1.5 px-2 py-1.5 h-9"
+                  : "grid-cols-[24px_minmax(0,1fr)_24px] gap-2 px-2.5 py-1.5 h-10"
               )}
               style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer' }}
             >
               <div className={cn(
-                "relative shrink-0",
-                !isMobile && "absolute left-2 top-1/2 -translate-y-1/2"
+                "relative shrink-0"
               )}>
               <Avatar className={cn(
                 "border border-white/20 group-hover:border-white/40 transition-colors",
@@ -11164,12 +11183,13 @@ function NavTestPageContent() {
                 <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-red-500" />
               </div>
               <div className={cn(
-                "font-bold text-white tabular-nums transition-all duration-300 flex items-center justify-center text-center whitespace-nowrap",
-                isMobile ? "text-[10px]" : "text-xs w-full"
+                "font-bold text-white tabular-nums transition-all duration-300 flex items-center justify-center text-center whitespace-nowrap min-w-0",
+                isMobile ? "text-[10px] pl-0.5" : "text-xs pl-1.5"
               )}>
                 <span>€</span>
                 <NumberFlow value={displayBalance} format={{ notation: 'standard', minimumFractionDigits: 2, maximumFractionDigits: 2 }} />
               </div>
+              <div className={cn("shrink-0", isMobile ? "w-5 h-5" : "w-6 h-6")} aria-hidden="true" />
             </Button>
 
             {isMobile && (
@@ -11198,11 +11218,10 @@ function NavTestPageContent() {
                 }}
                 className={cn(
                   "flex items-center gap-1.5 px-4 py-1.5 h-10 rounded-small transition-colors group",
-                  "border-0",
-                  "bg-gradient-to-r from-[#0f5bff] via-[#13a8ff] to-[#21d39a]",
-                  "hover:from-[#1a66ff] hover:via-[#1eb1ff] hover:to-[#2add9f]",
-                  "active:bg-gray-500/20",
-                  "text-xs font-semibold text-white cursor-pointer"
+                  "border border-[#9a86d1]/75",
+                  "bg-[#c9b4ff] hover:bg-[#cfbcff]",
+                  "active:bg-[#bfa7fb]",
+                  "text-xs font-semibold text-[#121417] cursor-pointer"
                 )}
                 style={{
                   pointerEvents: 'auto',
@@ -11210,11 +11229,11 @@ function NavTestPageContent() {
                   position: 'relative',
                   cursor: 'pointer',
                   borderRadius: '0.56rem',
-                  boxShadow: '0 6px 18px rgba(19, 168, 255, 0.24)',
+                  boxShadow: '0 6px 18px rgba(122, 92, 196, 0.28)',
                 }}
               >
-                <IconWallet className="w-3.5 h-3.5 text-white" />
-                <span className="text-white">WALLET</span>
+                <IconWallet className="w-3.5 h-3.5 text-[#121417]" />
+                <span className="text-[#121417]">WALLET</span>
               </Button>
             )}
 
@@ -11225,6 +11244,39 @@ function NavTestPageContent() {
                 }}
                 placeholder="Search games, teams, promotions..."
               />
+            )}
+
+            {!isMobile && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-9 w-9 rounded-[0.56rem] border border-white/10 bg-[#141920]/90 text-white/75 hover:bg-[#1a202b]/95"
+                  style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer' }}
+                >
+                  <IconWorld className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-[140px] bg-[#141920] border-white/10 text-white">
+                {[
+                  { code: 'EN', label: 'English' },
+                  { code: 'ES', label: 'Spanish' },
+                  { code: 'DE', label: 'German' },
+                  { code: 'FR', label: 'French' },
+                  { code: 'PT', label: 'Portuguese' },
+                ].map((lang) => (
+                  <DropdownMenuItem
+                    key={lang.code}
+                    onClick={() => setHeaderLanguage(lang.code as 'EN' | 'ES' | 'DE' | 'FR' | 'PT')}
+                    className="text-white/75 hover:text-white hover:bg-white/5 cursor-pointer flex items-center justify-between"
+                  >
+                    <span>{lang.label}</span>
+                    {headerLanguage === lang.code && <IconCheck className="h-3.5 w-3.5 text-white/90" />}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
             )}
           </div>
         </motion.header>
@@ -11939,7 +11991,7 @@ function NavTestPageContent() {
               className="fixed top-0 left-0 h-screen z-[101] transition-[width] duration-200 ease-linear border-r border-white/10"
               style={{ 
                 width: sidebarOpen ? '16rem' : '3rem',
-                backgroundColor: 'var(--ds-sidebar-bg, #2d2d2d)'
+                backgroundColor: 'var(--ds-sidebar-bg, #141920)'
               }}
             />
           )}
@@ -11948,7 +12000,7 @@ function NavTestPageContent() {
           <Sidebar 
             collapsible="icon"
             variant="sidebar"
-            className="!bg-[#2d2d2d] dark:!bg-[#2d2d2d] border-r border-white/10 text-white [&>div]:!bg-[#2d2d2d] dark:[&>div]:!bg-[#2d2d2d]"
+            className="!bg-[var(--ds-sidebar-bg)] border-r border-white/10 text-white [&>div]:!bg-[var(--ds-sidebar-bg)]"
           >
             <SidebarContent className="overflow-y-auto flex flex-col">
               <TooltipProvider>
@@ -12136,7 +12188,7 @@ function NavTestPageContent() {
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent 
                                           align="start" 
-                                          className="bg-[#2D2E2C] border-white/10 text-white min-w-[160px]"
+                                          className="bg-[var(--ds-sidebar-bg,#141920)] border-white/10 text-white min-w-[160px]"
                                           side="right"
                                           sideOffset={8}
                                           alignOffset={-8}
@@ -12192,6 +12244,55 @@ function NavTestPageContent() {
                       
                       {!showQuickLinksMenu && sidebarMenuItems.map((item, index) => {
                         const Icon = item.icon
+                        if (item.label === 'Language' && isMobile) {
+                          return (
+                            <React.Fragment key={index}>
+                              <SidebarMenuItem>
+                                <SidebarMenuButton
+                                  onClick={(e) => {
+                                    e.preventDefault()
+                                    e.stopPropagation()
+                                    setMobileLanguageAccordionOpen((prev) => !prev)
+                                  }}
+                                  className={cn(
+                                    "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
+                                    "text-white/70 hover:text-white hover:bg-white/5"
+                                  )}
+                                >
+                                  <Icon strokeWidth={1.5} className="w-5 h-5" />
+                                  <span className="flex-1">Language</span>
+                                  <span className="text-[11px] text-white/45 mr-1">{headerLanguage}</span>
+                                  <IconChevronDown className={cn("h-4 w-4 transition-transform", mobileLanguageAccordionOpen && "rotate-180")} />
+                                </SidebarMenuButton>
+                              </SidebarMenuItem>
+                              {mobileLanguageAccordionOpen && (
+                                <div className="ml-3 mr-2 mb-1 rounded-small border border-white/10 bg-white/[0.03] overflow-hidden">
+                                  {[
+                                    { code: 'EN', label: 'English' },
+                                    { code: 'ES', label: 'Spanish' },
+                                    { code: 'DE', label: 'German' },
+                                    { code: 'FR', label: 'French' },
+                                    { code: 'PT', label: 'Portuguese' },
+                                  ].map((lang) => (
+                                    <button
+                                      key={lang.code}
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.preventDefault()
+                                        e.stopPropagation()
+                                        setHeaderLanguage(lang.code as 'EN' | 'ES' | 'DE' | 'FR' | 'PT')
+                                      }}
+                                      className="w-full px-3 py-2 text-left text-sm text-white/75 hover:text-white hover:bg-white/5 transition-colors flex items-center justify-between"
+                                    >
+                                      <span>{lang.label}</span>
+                                      {headerLanguage === lang.code && <IconCheck className="h-3.5 w-3.5 text-white/90" />}
+                                    </button>
+                                  ))}
+                                </div>
+                              )}
+                            </React.Fragment>
+                          )
+                        }
                         const showSeparatorAbove = item.label === 'Loyalty Hub'
                         // Determine if this menu item is active based on selectedCategory only
                         // Note: activeSubNav is for sub nav tabs, not side menu highlighting
@@ -12199,7 +12300,8 @@ function NavTestPageContent() {
                              (item.label === 'Slots' && selectedCategory === 'Slots') ||
                              (item.label === 'Blackjack' && (selectedCategory === 'Blackjack' || selectedCategory === 'BlackJack')) ||
                              (item.label === 'Video Poker' && selectedCategory === 'Video Poker') ||
-                             (item.label === 'Specialty Games' && selectedCategory === 'Specialty') ||
+                             (item.label === 'Instant Wins' && selectedCategory === 'Instant Wins') ||
+                             (item.label === 'Prize Drops' && selectedCategory === 'Prize Drops') ||
                              (item.label === 'Table Games' && selectedCategory === 'Table Games') ||
                              (item.label === 'My Favorites' && selectedCategory === 'Favorites') ||
                              (item.label === 'Popular Games' && selectedCategory === 'Popular') ||
@@ -12269,9 +12371,14 @@ function NavTestPageContent() {
                                         setShowAllGames(true)
                                         setShowSports(false)
                                         window.scrollTo(0, 0)
-                                      } else if (item.label === 'Specialty Games') {
+                                      } else if (item.label === 'Instant Wins') {
                                         setActiveSubNav('For You')
-                                        setSelectedCategory('Specialty')
+                                        setSelectedCategory('Instant Wins')
+                                        setShowAllGames(true)
+                                        setShowSports(false)
+                                      } else if (item.label === 'Prize Drops') {
+                                        setActiveSubNav('For You')
+                                        setSelectedCategory('Prize Drops')
                                         setShowAllGames(true)
                                         setShowSports(false)
                                       } else if (item.label === 'Table Games') {
@@ -12329,7 +12436,7 @@ function NavTestPageContent() {
           <Sidebar 
             collapsible="icon"
             variant="sidebar"
-            className="!bg-[#2d2d2d] dark:!bg-[#2d2d2d] border-r border-white/10 text-white [&>div]:!bg-[#2d2d2d] dark:[&>div]:!bg-[#2d2d2d]"
+            className="!bg-[var(--ds-sidebar-bg)] border-r border-white/10 text-white [&>div]:!bg-[var(--ds-sidebar-bg)]"
           >
             <SidebarContent className="overflow-y-auto flex flex-col">
               <TooltipProvider>
@@ -12425,8 +12532,55 @@ function NavTestPageContent() {
                         { icon: IconCrown, label: 'Loyalty Hub' },
                         { icon: IconBuilding, label: 'Banking' },
                         { icon: IconLifebuoy, label: 'Need Help' },
+                        ...(isMobile ? [{ icon: IconWorld, label: 'Language' }] : []),
                       ].map((item, index) => {
                         const Icon = item.icon
+                        if (item.label === 'Language' && isMobile) {
+                          return (
+                            <React.Fragment key={`vip-bottom-${index}`}>
+                              <SidebarMenuItem>
+                                <SidebarMenuButton
+                                  onClick={(e) => {
+                                    e.preventDefault()
+                                    e.stopPropagation()
+                                    setMobileLanguageAccordionOpen((prev) => !prev)
+                                  }}
+                                  className="w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer text-white/70 hover:text-white hover:bg-white/5"
+                                >
+                                  <Icon strokeWidth={1.5} className="w-5 h-5" />
+                                  <span className="flex-1">Language</span>
+                                  <span className="text-[11px] text-white/45 mr-1">{headerLanguage}</span>
+                                  <IconChevronDown className={cn("h-4 w-4 transition-transform", mobileLanguageAccordionOpen && "rotate-180")} />
+                                </SidebarMenuButton>
+                              </SidebarMenuItem>
+                              {mobileLanguageAccordionOpen && (
+                                <div className="ml-3 mr-2 mb-1 rounded-small border border-white/10 bg-white/[0.03] overflow-hidden">
+                                  {[
+                                    { code: 'EN', label: 'English' },
+                                    { code: 'ES', label: 'Spanish' },
+                                    { code: 'DE', label: 'German' },
+                                    { code: 'FR', label: 'French' },
+                                    { code: 'PT', label: 'Portuguese' },
+                                  ].map((lang) => (
+                                    <button
+                                      key={lang.code}
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.preventDefault()
+                                        e.stopPropagation()
+                                        setHeaderLanguage(lang.code as 'EN' | 'ES' | 'DE' | 'FR' | 'PT')
+                                      }}
+                                      className="w-full px-3 py-2 text-left text-sm text-white/75 hover:text-white hover:bg-white/5 transition-colors flex items-center justify-between"
+                                    >
+                                      <span>{lang.label}</span>
+                                      {headerLanguage === lang.code && <IconCheck className="h-3.5 w-3.5 text-white/90" />}
+                                    </button>
+                                  ))}
+                                </div>
+                              )}
+                            </React.Fragment>
+                          )
+                        }
                         return (
                           <SidebarMenuItem key={`vip-bottom-${index}`}>
                             <Tooltip>
@@ -12570,8 +12724,55 @@ function NavTestPageContent() {
                         </div>
                       </div>
                     )}
+                    {isMobile && (
+                      <div
+                        className="flex-shrink-0 flex items-center gap-1 pl-2 pr-1 sticky left-0 z-20 border-r border-white/5"
+                        style={{ backgroundColor: 'var(--ds-nav-bg, #121417)' }}
+                      >
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            const targetCategory = activeSubNav === 'For You' ? 'New' : activeSubNav
+                            setActiveIconTab('filter')
+                            setShowAllGames(true)
+                            setSelectedVendor('')
+                            setSelectedCategory(targetCategory)
+                            setActiveSubNav(targetCategory)
+                          }}
+                          className={cn(
+                            "bg-transparent rounded-2xl p-1.5 h-9 w-9 flex items-center justify-center transition-all duration-300",
+                            activeIconTab === 'filter'
+                              ? "text-white bg-white/10"
+                              : "text-white/75 hover:text-white hover:bg-white/5"
+                          )}
+                        >
+                          <IconFilter className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    )}
                     
                     {/* Text Tabs - Full Width */}
+                    {!isMobile && desktopSubNavCanScrollLeft && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          desktopSubNavTabsRef.current?.scrollBy({ left: -220, behavior: 'smooth' })
+                          requestAnimationFrame(() => updateDesktopSubNavScrollState())
+                          window.setTimeout(() => updateDesktopSubNavScrollState(), 220)
+                        }}
+                        className="flex-shrink-0 h-8 w-8 rounded-small border border-white/10 bg-[#141920]/90 text-white/70 hover:text-white hover:bg-[#1a202b]/95 transition-colors"
+                      >
+                        <IconChevronLeft className="h-4 w-4 mx-auto" />
+                      </button>
+                    )}
+                    <div
+                      ref={!isMobile ? desktopSubNavTabsRef : undefined}
+                      className={cn("min-w-0 flex-1", !isMobile && "overflow-x-auto scrollbar-hide")}
+                    >
                     <AnimateTabs value={(() => {
                       // Don't highlight any tab if viewing vendor or category not in sub nav menu
                       const subNavItems = ['For You', 'Slots', 'Bonus Buys', 'Megaways', 'Originals', 'Blackjack', 'Live', 'Jackpots', 'Early', 'Staff Picks', 'Exclusive', 'New']
@@ -12612,8 +12813,7 @@ function NavTestPageContent() {
                       }
                     }} className="w-full">
                       <AnimateTabsList className={cn(
-                        "bg-white/5 dark:bg-white/5 bg-gray-100/80 dark:bg-white/5 p-0.5 h-auto gap-1 rounded-3xl border-0 relative transition-colors duration-300",
-                        isMobile && "flex-nowrap"
+                        "bg-white/5 dark:bg-white/5 bg-gray-100/80 dark:bg-white/5 p-0.5 h-auto gap-1 rounded-3xl border-0 relative transition-colors duration-300 flex-nowrap"
                       )}
                       style={isMobile ? {
                         minWidth: 'max-content',
@@ -12622,7 +12822,11 @@ function NavTestPageContent() {
                         marginLeft: '12px',
                         paddingLeft: 0,
                         paddingRight: 0
-                      } : {}}
+                      } : {
+                        minWidth: 'max-content',
+                        width: 'max-content',
+                        flexShrink: 0
+                      }}
                       >
                         {['For You', 'Slots', 'Bonus Buys', 'Megaways', 'Originals', 'Blackjack', 'Live', 'Jackpots', 'Early', 'Staff Picks', 'Exclusive', 'New'].map((tab, index) => (
                           <TabsTab 
@@ -12644,7 +12848,7 @@ function NavTestPageContent() {
                             })() && (
                               <motion.div
                                 layoutId="activeTab" layout="position"
-                                className="absolute inset-0 rounded-2xl -z-10"
+                                className="absolute inset-0 rounded-small -z-10"
                                 style={{ backgroundColor: 'var(--ds-primary, #ee3536)' }}
                                 initial={false}
                                 transition={{
@@ -12659,6 +12863,22 @@ function NavTestPageContent() {
                         ))}
                       </AnimateTabsList>
                     </AnimateTabs>
+                    </div>
+                    {!isMobile && desktopSubNavCanScrollRight && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          desktopSubNavTabsRef.current?.scrollBy({ left: 220, behavior: 'smooth' })
+                          requestAnimationFrame(() => updateDesktopSubNavScrollState())
+                          window.setTimeout(() => updateDesktopSubNavScrollState(), 220)
+                        }}
+                        className="flex-shrink-0 h-8 w-8 rounded-small border border-white/10 bg-[#141920]/90 text-white/70 hover:text-white hover:bg-[#1a202b]/95 transition-colors"
+                      >
+                        <IconChevronRight className="h-4 w-4 mx-auto" />
+                      </button>
+                    )}
                   </div>
             </motion.div>
             )}
@@ -14893,7 +15113,7 @@ function NavTestPageContent() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 z-[200] bg-[#1a1a1a]"
+              className="fixed inset-0 z-[200] bg-[var(--ds-page-bg,#0d0f12)]"
             >
               {/* Rounded Glass Top Bar - Hidden in mobile landscape */}
               {!(isMobile && isLandscape) && (
@@ -14907,72 +15127,21 @@ function NavTestPageContent() {
                     isMobile ? "h-10" : "h-12"
                   )}
                   style={{
-                    backgroundColor: 'rgba(26, 26, 26, 0.6)',
+                    backgroundColor: 'rgba(18, 20, 23, 0.66)',
                   }}
                 >
                   <div className="flex items-center justify-between h-full px-3 relative">
-                    {/* Hamburger Menu - Left */}
-                    <div className="relative" ref={gameLauncherMenuRef}>
-                      <button
-                        onClick={() => setGameLauncherMenuOpen(!gameLauncherMenuOpen)}
-                        className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
-                      >
-                        {/* Custom Staggered Hamburger Icon */}
-                        <svg
-                          className="w-4 h-4 text-white"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <line x1="4" y1="7" x2="20" y2="7" />
-                          <line x1="6" y1="12" x2="20" y2="12" />
-                          <line x1="4" y1="17" x2="18" y2="17" />
-                        </svg>
-                  </button>
-                      
-                      {/* Dropdown Menu */}
-                      <AnimatePresence>
-                        {gameLauncherMenuOpen && (
-                          <motion.div
-                            initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                            exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                            transition={{ duration: 0.2 }}
-                            className="absolute top-full left-0 mt-2 w-56 bg-[#2d2d2d]/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl overflow-hidden z-50"
-                          >
-                            <div className="py-2">
-                              <button
-                                onClick={() => {
-                                  openDepositDrawer()
-                                  setGameLauncherMenuOpen(false)
-                                }}
-                                className="w-full px-4 py-3 text-left text-white hover:bg-white/10 transition-colors text-sm"
-                              >
-                                Quick Deposit
-                  </button>
-                              <button
-                                onClick={() => {
-                                  setSimilarGamesDrawerOpen(true)
-                                  setGameLauncherMenuOpen(false)
-                                }}
-                                className="w-full px-4 py-3 text-left text-white hover:bg-white/10 transition-colors text-sm"
-                              >
-                                More Games Like This
-                  </button>
-                            </div>
-                            
-                            {/* VIP Progress Bar */}
-                            <div className="px-4 py-3 border-t border-white/10 bg-white/5">
-                              <div className="text-xs text-white/70 mb-2">Gold To Platinum I</div>
-                              <VIPProgressBar value={45} />
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                </div>
+                    {/* Wallet Button - Left */}
+                    <button
+                      onClick={() => openDepositDrawer()}
+                      className="flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-small border border-[#9a86d1]/75 bg-[#c9b4ff] text-[#121417] transition-colors duration-200 hover:bg-[#cfbcff]"
+                      style={{
+                        boxShadow: '0 6px 18px rgba(122, 92, 196, 0.28)',
+                      }}
+                    >
+                      <IconWallet className="w-3.5 h-3.5 text-[#121417]" />
+                      {!isMobile && <span className="text-[11px] font-semibold tracking-wide">WALLET</span>}
+                    </button>
 
                 {/* Game Name - Center (absolutely positioned) */}
                     <h2 className="absolute left-1/2 -translate-x-1/2 text-sm font-semibold text-white max-w-[50%] truncate px-2">
@@ -15144,7 +15313,7 @@ function NavTestPageContent() {
           <DrawerContent 
             showOverlay={isMobile}
             className={cn(
-              "bg-[#1a1a1a] text-white flex flex-col relative",
+              "bg-[var(--ds-page-bg,#0d0f12)] text-white flex flex-col relative",
               "w-full sm:max-w-2xl border-l border-white/10 overflow-hidden"
             )}
             style={isMobile ? {
@@ -15155,7 +15324,7 @@ function NavTestPageContent() {
             } : undefined}
           >
             {isMobile && <DrawerHandle />}
-            <DrawerHeader className="pb-4 sticky top-0 z-50 backdrop-blur-xl border-b border-white/10" style={{ backgroundColor: 'rgba(26, 26, 26, 0.8)' }}>
+            <DrawerHeader className="pb-4 sticky top-0 z-50 backdrop-blur-xl border-b border-white/10" style={{ backgroundColor: 'rgba(18, 20, 23, 0.82)' }}>
               <div className="flex items-center justify-between">
                 <div className="pt-2">
                   <DrawerTitle className="text-white text-xl font-bold">More Games Like This</DrawerTitle>
@@ -15213,7 +15382,7 @@ function NavTestPageContent() {
 
         {/* Advanced Search Side Drawer */}
         <Drawer open={advancedSearchOpen} onOpenChange={setAdvancedSearchOpen} direction={isMobile ? "bottom" : "right"} shouldScaleBackground={false}>
-          <DrawerContent className="w-full sm:max-w-md bg-[#2d2d2d] border-l border-white/10 text-white z-[210] relative">
+          <DrawerContent className="w-full sm:max-w-md bg-[var(--ds-sidebar-bg,#141920)] border-l border-white/10 text-white z-[210] relative">
             <DrawerHeader>
               <div className="flex items-center justify-between">
                 <div>
@@ -15369,7 +15538,7 @@ function NavTestPageContent() {
                 bottom: 'auto',
                 zIndex: 999999,
                 pointerEvents: 'auto',
-                backgroundColor: '#2d2d2d',
+                backgroundColor: 'var(--ds-sidebar-bg, #141920)',
                 border: '1px solid rgba(255, 255, 255, 0.2)',
                 color: 'white',
                 padding: '10px 16px',

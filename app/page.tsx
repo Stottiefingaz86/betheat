@@ -1974,12 +1974,10 @@ function HomePageContent() {
             {[
               { label: 'Home', onClick: () => { setQuickLinksOpen(false); } },
               { label: 'Sports', onClick: () => { trackNav('sports', 'Sports'); router.push('/sports/football'); setQuickLinksOpen(false); } },
-              { label: 'Live Betting', onClick: () => { trackNav('live-betting', 'Live Betting'); window.location.href = '/live-betting'; setQuickLinksOpen(false); } },
+              { label: 'In-Play', onClick: () => { trackNav('in-play', 'In-Play'); window.location.href = '/live-betting'; setQuickLinksOpen(false); } },
               { label: 'Casino', onClick: () => { trackNav('casino', 'Casino'); router.push('/casino'); setQuickLinksOpen(false); } },
               { label: 'Live Casino', onClick: () => { trackNav('casino', 'Live Casino'); router.push('/casino?tab=live'); setQuickLinksOpen(false); } },
-              { label: 'Poker', onClick: () => { trackNav('poker', 'Poker'); router.push('/casino?poker=true'); setQuickLinksOpen(false); } },
-              { label: 'VIP Rewards', onClick: () => { trackNav('vip-rewards', 'VIP Rewards'); router.push('/casino?vip=true'); setQuickLinksOpen(false); } },
-              { label: 'Other', onClick: () => { setQuickLinksOpen(false); } },
+              { label: 'Promotions', onClick: () => { trackNav('promotions', 'Promotions'); router.push('/casino?vip=true'); setQuickLinksOpen(false); } },
             ].map((item) => (
               <button
                 key={item.label}
@@ -2012,7 +2010,7 @@ function HomePageContent() {
       <motion.header 
         data-nav-header
         className={cn(
-          "bg-[#2D2E2C] dark:bg-[#2D2E2C] border-b border-white/10 h-16 flex items-center justify-between z-[101] fixed left-0 right-0",
+          "border-b border-white/10 h-16 flex items-center justify-between z-[101] fixed left-0 right-0 transition-[background-color] duration-200 ease-linear",
           isMobile ? "px-3" : "px-6",
           isMobile && quickLinksOpen && "border-t-0"
         )}
@@ -2030,8 +2028,10 @@ function HomePageContent() {
           top: isMobile ? (quickLinksOpen ? 40 : 0) : 0,
           zIndex: 101,
           position: 'fixed',
-          backgroundColor: 'var(--ds-nav-bg, #2D2E2C)',
-          boxShadow: '0 -200px 0 0 var(--ds-nav-bg, #2D2E2C)',
+          backgroundColor: 'rgba(18, 20, 23, 0.96)',
+          boxShadow: '0 -200px 0 0 rgba(18, 20, 23, 0.97)',
+          backdropFilter: 'blur(22px) saturate(112%)',
+          WebkitBackdropFilter: 'blur(22px) saturate(112%)',
         }}
       >
         <div className="flex items-center gap-6">
@@ -2046,7 +2046,7 @@ function HomePageContent() {
           
           {/* Navigation Menu - Desktop only */}
           {!isMobile && (
-            <nav className="flex-1 flex items-center z-[110] ml-6" style={{ pointerEvents: 'auto' }}>
+            <nav className="flex-1 flex items-center z-[110] ml-2" style={{ pointerEvents: 'auto' }}>
               <SidebarMenu className="flex flex-row items-center gap-2">
                 <SidebarMenuItem>
                   <SidebarMenuButton
@@ -2059,9 +2059,9 @@ function HomePageContent() {
                 <SidebarMenuItem>
                   <SidebarMenuButton
                     className="h-10 min-w-[100px] px-4 py-2 rounded-small text-sm font-medium justify-center hover:bg-white/5 hover:text-white transition-colors text-white/70 cursor-pointer"
-                    onClick={() => { trackNav('live-betting', 'Live Betting'); window.location.href = '/live-betting' }}
+                    onClick={() => { trackNav('in-play', 'In-Play'); window.location.href = '/live-betting' }}
                   >
-                    Live Betting
+                    In-Play
                   </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
@@ -2082,53 +2082,11 @@ function HomePageContent() {
                 </SidebarMenuItem>
                 <SidebarMenuItem>
                   <SidebarMenuButton
-                    className="h-10 min-w-[80px] px-4 py-2 rounded-small text-sm font-medium justify-center hover:bg-white/5 hover:text-white transition-colors text-white/70 cursor-pointer"
-                    onClick={() => { trackNav('poker', 'Poker'); router.push('/casino?poker=true') }}
-                  >
-                    Poker
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton
                     className="h-10 min-w-[100px] px-4 py-2 rounded-small text-sm font-medium justify-center hover:bg-white/5 hover:text-white transition-colors text-white/70 cursor-pointer"
-                    onClick={() => { trackNav('vip-rewards', 'VIP Rewards'); router.push('/casino?vip=true') }}
+                    onClick={() => { trackNav('promotions', 'Promotions'); router.push('/casino?vip=true') }}
                   >
-                    VIP Rewards
+                    Promotions
                   </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <SidebarMenuButton
-                        className="h-10 min-w-[80px] px-4 py-2 rounded-small text-sm font-medium justify-center hover:bg-white/5 hover:text-white transition-colors text-white/70 data-[state=open]:text-white data-[state=open]:bg-white/10"
-                        style={{ pointerEvents: 'auto' }}
-                      >
-                        <span className="flex items-center gap-1">
-                          Other
-                          <IconChevronDown className="h-3 w-3" />
-                        </span>
-                      </SidebarMenuButton>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent 
-                      align="end" 
-                      sideOffset={5}
-                      className="w-[200px] bg-[#2d2d2d] border-white/10 z-[120]"
-                      style={{ zIndex: 120 }}
-                    >
-                      <DropdownMenuItem className="text-white/70 hover:text-white hover:bg-white/5">
-                        <a href="/esports" className="w-full">Esports</a>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="text-white/70 hover:text-white hover:bg-white/5">
-                        <a href="#" className="w-full">Racebook</a>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="text-white/70 hover:text-white hover:bg-white/5">
-                        <a href="#" className="w-full">Contests</a>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="text-white/70 hover:text-white hover:bg-white/5">
-                        <a href="#" className="w-full">Virtuals</a>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
                 </SidebarMenuItem>
               </SidebarMenu>
             </nav>
@@ -2136,32 +2094,6 @@ function HomePageContent() {
         </div>
         
         <div className={cn("flex items-center", isMobile ? "gap-2" : "gap-3")} style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative' }}>
-          {/* VIP Crown Button - Desktop */}
-          {!isMobile && isUserLoggedIn && (
-            <button
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                openVipDrawer()
-              }}
-              className={cn(
-                "rounded-full bg-yellow-400/20 border border-yellow-400/30 flex items-center justify-center transition-colors",
-                "hover:bg-yellow-400/30 hover:border-yellow-400/40",
-                "active:bg-gray-500/20",
-                vipDrawerOpen && "bg-yellow-400/30 border-yellow-400/40",
-                "h-8 w-8"
-              )}
-              style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer' }}
-            >
-              <IconCrown className="text-yellow-400 w-4 h-4" />
-            </button>
-          )}
-          
-          {/* Separator - Hide on mobile */}
-          {!isMobile && isUserLoggedIn && (
-            <div className="h-6 w-px bg-white/20" />
-          )}
-          
           {isUserLoggedIn ? (
             <Button
               variant="ghost"
@@ -2217,42 +2149,18 @@ function HomePageContent() {
             </div>
           )}
           
-          {/* VIP Crown Button - Mobile */}
-          {isMobile && isUserLoggedIn && (
-            <button
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                openVipDrawer()
-              }}
-              className={cn(
-                "rounded-full bg-yellow-400/20 border border-yellow-400/30 flex items-center justify-center transition-colors",
-                "hover:bg-yellow-400/30 hover:border-yellow-400/40",
-                "active:bg-gray-500/20",
-                vipDrawerOpen && "bg-yellow-400/30 border-yellow-400/40",
-                "h-8 w-8"
-              )}
-              style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer' }}
-            >
-              <IconCrown className="text-yellow-400 w-4 h-4" />
-            </button>
-          )}
-          
-          {/* Deposit Button - Desktop only */}
+          {/* Wallet Button - Desktop only */}
           {!isMobile && isUserLoggedIn && (
             <Button
               variant="ghost"
               onClick={openDepositDrawer}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-small transition-colors group bg-white/5 hover:bg-white/10 text-xs font-semibold text-white cursor-pointer"
-              style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer' }}
+              className="flex items-center gap-1.5 px-4 py-1.5 h-10 rounded-small transition-colors group border border-[#9a86d1]/75 bg-[#c9b4ff] hover:bg-[#cfbcff] text-xs font-semibold text-[#121417] cursor-pointer"
+              style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer', boxShadow: '0 6px 18px rgba(122, 92, 196, 0.28)' }}
             >
-              <IconWallet className="w-3.5 h-3.5 text-white" />
-              <span className="text-white">DEPOSIT</span>
+              <IconWallet className="w-3.5 h-3.5 text-[#121417]" />
+              <span className="text-[#121417]">WALLET</span>
             </Button>
           )}
-
-          {/* Chat Toggle - Desktop only, right of deposit */}
-          {!isMobile && <ChatNavToggle />}
         </div>
       </motion.header>
 

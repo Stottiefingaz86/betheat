@@ -46,13 +46,13 @@ export default function LiveBettingPage() {
           <div className="flex items-center gap-3 mt-2">
             <span className="text-sm text-[#666]">Follow us on X for live updates:</span>
             <a
-              href="https://x.com/BetOnline_AG"
+              href="https://x.com/Betheat"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-[#ee3536] hover:text-[#cc2d2e] transition-colors text-sm font-medium"
             >
               <IconBrandX className="w-5 h-5 text-[#1a1a1a]" />
-              @BetOnline_AG
+              @Betheat
             </a>
           </div>
 

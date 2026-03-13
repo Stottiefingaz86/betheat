@@ -4,6 +4,7 @@
 
 :root {
   color-scheme: light;
+  --ds-primary-gradient: linear-gradient(112deg, rgba(255, 136, 52, 1) 0%, rgba(255, 109, 42, 0.98) 40%, rgba(236, 73, 46, 0.94) 72%, rgba(168, 44, 42, 0.92) 100%);
   --ui-button-radius: 0.56rem;
   --background: #f3f5f7;
   --foreground: #151b24;
@@ -28,6 +29,7 @@
 
 .dark {
   color-scheme: dark;
+  --ds-primary-gradient: linear-gradient(112deg, rgba(255, 136, 52, 1) 0%, rgba(255, 109, 42, 0.98) 40%, rgba(236, 73, 46, 0.94) 72%, rgba(168, 44, 42, 0.92) 100%);
   --background: #0a0d12;
   --foreground: #dbe3ee;
   --border: 220 13% 18%;
@@ -72,7 +74,7 @@ html, body {
 /* Match html + body background to nav bg so overscroll area blends with nav.
    Page content sets its own bg via [data-page-bg] / inline styles. */
 html, body {
-  background-color: var(--ds-nav-bg, #0f1012);
+  background-color: var(--ds-nav-bg, #121417);
 }
 
 body {
@@ -329,7 +331,7 @@ img[decoding="sync"] {
 
 /* Ensure header stays dark in both light and dark modes */
 header.bg-\[#2d2d2d\] {
-  background-color: var(--ds-nav-bg, #0f1012) !important;
+  background-color: var(--ds-nav-bg, #121417) !important;
 }
 
 /* Ensure sidebar stays dark in both light and dark modes */
@@ -391,7 +393,7 @@ header.bg-\[#2d2d2d\] {
 /* Make "Other" navigation menu primary when open */
 [data-state="open"] button[class*="NavigationMenuTrigger"] {
   background-color: var(--ds-primary, #ff6a1a) !important;
-  background-image: var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%)) !important;
+  background-image: var(--ds-primary-gradient, linear-gradient(112deg, rgba(255, 136, 52, 1) 0%, rgba(255, 109, 42, 0.98) 40%, rgba(236, 73, 46, 0.94) 72%, rgba(168, 44, 42, 0.92) 100%)) !important;
 }
 
 /* Fix banner and tabs scrolling - allow natural page scroll */
@@ -1066,18 +1068,26 @@ body {
 [data-sub-nav] button[data-state="active"],
 [data-sub-nav] button[data-active="true"],
 [data-sub-nav] [data-state="active"][data-tab-item] {
-  background-color: var(--ds-primary, #ff6a1a) !important;
-  background-image: var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%)) !important;
+  background-color: transparent !important;
+  background-image: var(--ds-primary-gradient, linear-gradient(112deg, rgba(255, 136, 52, 1) 0%, rgba(255, 109, 42, 0.98) 40%, rgba(236, 73, 46, 0.94) 72%, rgba(168, 44, 42, 0.92) 100%)) !important;
   color: #fff4ec !important;
   border: 0 !important;
   box-shadow: none !important;
   border-radius: var(--ui-button-radius) !important;
 }
 
+/* Tabs with animated active pill already render their own fill layer.
+   Disable global active fill here to avoid a doubled "two-layer" chip. */
+[data-sub-nav] [data-tab-item][data-state="active"] {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
 /* Some tabs use inline backgroundColor only; force brand gradient there too */
 [data-sub-nav] [style*="background-color: var(--ds-primary"],
 [data-nav-header] [style*="background-color: var(--ds-primary"] {
-  background-image: var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%)) !important;
+  background-color: transparent !important;
+  background-image: var(--ds-primary-gradient, linear-gradient(112deg, rgba(255, 136, 52, 1) 0%, rgba(255, 109, 42, 0.98) 40%, rgba(236, 73, 46, 0.94) 72%, rgba(168, 44, 42, 0.92) 100%)) !important;
   border-radius: var(--ui-button-radius) !important;
 }
 
@@ -1094,7 +1104,7 @@ body {
 /* Sidebar active buttons that only set inline backgroundColor */
 [data-sidebar="sidebar"] [style*="background-color: var(--ds-primary"],
 [data-sidebar="sidebar"] [style*="background-color:var(--ds-primary"] {
-  background-image: var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%)) !important;
+  background-image: var(--ds-primary-gradient, linear-gradient(112deg, rgba(255, 136, 52, 1) 0%, rgba(255, 109, 42, 0.98) 40%, rgba(236, 73, 46, 0.94) 72%, rgba(168, 44, 42, 0.92) 100%)) !important;
   border-radius: var(--ui-button-radius) !important;
   outline: none !important;
   box-shadow: none !important;
@@ -1495,8 +1505,8 @@ div[class*="rounded-full"][class*="mx-auto"][class*="h-1.5"][class*="bg-white"] 
 [data-sidebar="menu-button"][data-active="true"],
 button[data-active="true"][class*="SidebarMenuButton"],
 [data-active="true"][class*="SidebarMenuButton"] {
-  background-color: var(--ds-primary, var(--brand-primary, #ff6a1a)) !important;
-  background-image: var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%)) !important;
+  background-color: transparent !important;
+  background-image: var(--ds-primary-gradient, linear-gradient(112deg, rgba(255, 136, 52, 1) 0%, rgba(255, 109, 42, 0.98) 40%, rgba(236, 73, 46, 0.94) 72%, rgba(168, 44, 42, 0.92) 100%)) !important;
   transition: background-color 0.2s ease-in-out !important;
 }
 
@@ -1543,7 +1553,47 @@ button[data-active="true"][class*="SidebarMenuButton"],
 }
 
 [data-nav-header] {
-  background-color: var(--ds-nav-bg, #0f1012) !important;
+  background-color: rgba(18, 20, 23, 0.96) !important;
+  backdrop-filter: blur(22px) saturate(112%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(112%) !important;
+}
+
+/* Subtle separator between top nav and content/sidebar */
+[data-nav-header]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.02) 0%,
+    rgba(255, 255, 255, 0.08) 18%,
+    rgba(255, 255, 255, 0.08) 82%,
+    rgba(255, 255, 255, 0.02) 100%
+  ) !important;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Subtle vertical seam so sidebar/nav don't visually merge */
+[data-sidebar="sidebar"]::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -1px;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.015) 0%,
+    rgba(255, 255, 255, 0.07) 32%,
+    rgba(255, 255, 255, 0.05) 68%,
+    rgba(255, 255, 255, 0.015) 100%
+  ) !important;
+  pointer-events: none;
+  z-index: 2;
 }
 
 /* Missing image cards use neutral dark base, never light gray/white */
@@ -1735,14 +1785,14 @@ a[role="button"]:not(.rounded-full):not([class*="rounded-full"]),
 [style*="background-color: rgb(0, 150, 255)"],
 [style*="background-color: rgb(0, 135, 246)"] {
   background-color: var(--ds-primary, #ff6a1a) !important;
-  background-image: var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%)) !important;
+  background-image: var(--ds-primary-gradient, linear-gradient(112deg, rgba(255, 136, 52, 1) 0%, rgba(255, 109, 42, 0.98) 40%, rgba(236, 73, 46, 0.94) 72%, rgba(168, 44, 42, 0.92) 100%)) !important;
 }
 
 .bg-\[\#031679\],
 [style*="background-color: #031679"],
 [style*="background-color:#031679"],
 [style*="background-color: rgb(3, 22, 121)"] {
-  background-color: var(--ds-nav-bg, #0f1012) !important;
+  background-color: var(--ds-nav-bg, #121417) !important;
 }
 
 .bg-\[\#030d26\],
@@ -1773,7 +1823,7 @@ a[role="button"]:not(.rounded-full):not([class*="rounded-full"]),
 [style*="background-color:#ee3536"],
 [style*="background-color: rgb(238, 53, 54)"] {
   background-color: var(--ds-primary, #ff6a1a) !important;
-  background-image: var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%)) !important;
+  background-image: var(--ds-primary-gradient, linear-gradient(112deg, rgba(255, 136, 52, 1) 0%, rgba(255, 109, 42, 0.98) 40%, rgba(236, 73, 46, 0.94) 72%, rgba(168, 44, 42, 0.92) 100%)) !important;
 }
 
 .text-\[\#ee3536\],
