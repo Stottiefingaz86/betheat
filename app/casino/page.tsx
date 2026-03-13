@@ -121,7 +121,6 @@ import {
   IconCoins,
   IconDownload,
   IconExternalLink,
-  IconMaximize,
   IconStopwatch,
   IconRosetteFilled,
   IconUsers,
@@ -240,7 +239,6 @@ import {
   DrawerHandle,
 } from '@/components/ui/drawer'
 import { InteractiveGridBackground } from '@/components/interactive-grid-background'
-import { BackgroundBeams } from '@/components/ui/background-beams'
 import { cn } from '@/lib/utils'
 import ChatNavToggle from '@/components/chat/chat-nav-toggle'
 // DesignCustomizer now lives in app/layout.tsx globally
@@ -353,21 +351,32 @@ const casinoVendorList = [
 
 // Available square tile images
 const squareTileImages = [
-  '/games/square/goldNuggetRush.png',
-  '/games/square/megacrush.png',
-  '/games/square/goldNuggetRush2.png',
-  '/games/square/mrMammoth.png',
-  '/games/square/cocktailWheel.png',
-  '/games/square/takeTheBank.png',
-  '/games/square/hookedOnFishing.png',
-  '/games/square/roulette.png',
-  '/games/square/blackjack.png',
-  '/games/square/baccarat.png',
-  '/games/square/game8.png',
-  '/games/square/game17.png',
-  '/games/square/game18.png',
-  '/games/square/game20.png',
-  '/games/square/game21.png',
+  // Public game tiles provided by user
+  '/games/31d384b25e3d6c8704f84b3db84e31bceacf2ff16279fbcc25ad9e1bf55a7564.avif',
+  '/games/eaf11ccc50dea10b36385a20d03bb066989b69b03eb0a2260fb9f94b58111908.avif',
+  '/games/85df80b16ad5fc92a2a7a7e9e12f78c75dd1a33eddff36daa8a02dbc7f2eab54.avif',
+  '/games/fad562df401ccfd1dde3707308efab027eea94a6cd11c35d64cc814efbb3a44f.avif',
+  '/games/6cc2e6228b274e48ff6045944b153810db7131ad61d90cabce5aa35176c639e9.avif',
+  '/games/ba877175859e53e10049fb0d90a236e52290b30a74449d386863873e068f05f6.avif',
+  '/games/d0da486c2ef84196c52198fce55b4566303ef3d73d94c675179a8f6c4c5a3781.avif',
+  '/games/41ef135e01539f2cad0971dcc7b49bbf741eccbba3cb25daaa139c8d49dc168d.avif',
+  '/games/282a2fae2d94b39108e30fc0c1a448fcc666f7c804347d51ed4568cd849121b4.avif',
+  '/games/c0be957b99d1a534b8fa221a225e87445766948f0b861b42700ad370fb84e22d.avif',
+  '/games/7cea92185c7ace705297172c7c2d61591a1d51c6ec0e67545493598989e44b22.avif',
+  '/games/d319fe86677108d19df21e0ca027be9c240c347bfd90a9038d16ab76fe9e1b56.avif',
+  '/games/be2e59b9310ae467a892068b7e4afc38458ec87b2cababad70243af2c17f8f9b.avif',
+  '/games/e57824a3bba6f67381074acbdc293efe50bf38966365549a92f454c3a3ffb5ff.avif',
+  '/games/80cef3c2101ccc6abeb74df85fe242c1ba7cb741f4d1c16c8791818721495943.avif',
+  '/games/f21318673c065243f6fcecd14babc84e0e2c3a682fc79d7f5be9334fe5834e4e.avif',
+  '/games/cb8c8e48781137b94c5dea7326d5c4d15b045ee1e8282b8ca674a0ac231914a8.avif',
+  '/games/14d5410c6cf4c303d291262a10e949dc14b0ac2eca2a7a730b0401919c01358e.avif',
+  '/games/c5996d604ffd3f6e1e34d94425948d29f78bbd0a96c9611a78b12de8b4ff7677.avif',
+  '/games/2cb39e9486a6cd37f49767537241fc8b9f5fd302f17a79c06f5220afcea27ea3.avif',
+  '/games/73754d4bf421b78fbd3895bbc7890d379797588cb699d6cbe47f3656aa93613b.avif',
+  '/games/ceb29aff91c7ba3033e44ee289d2eeb4e85088cdb56daac04d2e82a886542b05.avif',
+  '/games/84513d6373e86453b6a8c1a1764787f1a888de7bee155b861f90289513864938.avif',
+  '/games/7a77b3910795bdd5f00f045fc5bab2aca5787542c07d39def8cc8b343aaa2d71.avif',
+  '/games/9407302fecd33613bc716d3b0d4f1e724334321ec910404f6b417284db593d37.avif',
 ]
 
 // Originals tile images (tall rectangles)
@@ -386,38 +395,38 @@ const originalsTileImages = [
 
 // Mock game data
 const mostPlayedGames = [
-  { id: 1, title: 'MEGACRUSH HOLD&WIN', provider: 'Betsoft', tag: 'Early', image: '/walk/image 1.png' },
-  { id: 2, title: 'MR MAMMOTH', provider: 'Betsoft', tag: null, image: '/walk/image 2.png' },
-  { id: 3, title: 'LIVE BETONLINE ROUETTE', provider: 'VIG', tag: '$25 - $100', image: '/walk/image 3.png' },
-  { id: 4, title: 'HOOKED ON FISHING', provider: 'Betsoft', tag: 'Hot', image: '/walk/image 4.png' },
-  { id: 5, title: 'MEGACRUSH HOLD&WIN', provider: 'Betsoft', tag: 'Early', image: '/walk/image 1.png' },
-  { id: 6, title: 'MR MAMMOTH', provider: 'Betsoft', tag: null, image: '/walk/image 2.png' },
-  { id: 7, title: 'ORIGINAL DICE', provider: 'BetOnline', tag: null, image: '/walk/image 3.png' },
+  { id: 1, title: 'MEGACRUSH HOLD&WIN', provider: 'Betsoft', tag: 'Early', image: squareTileImages[0] },
+  { id: 2, title: 'MR MAMMOTH', provider: 'Betsoft', tag: null, image: squareTileImages[1] },
+  { id: 3, title: 'LIVE BETONLINE ROUETTE', provider: 'VIG', tag: '$25 - $100', image: squareTileImages[2] },
+  { id: 4, title: 'HOOKED ON FISHING', provider: 'Betsoft', tag: 'Hot', image: squareTileImages[3] },
+  { id: 5, title: 'MEGACRUSH HOLD&WIN', provider: 'Betsoft', tag: 'Early', image: squareTileImages[4] },
+  { id: 6, title: 'MR MAMMOTH', provider: 'Betsoft', tag: null, image: squareTileImages[5] },
+  { id: 7, title: 'ORIGINAL DICE', provider: 'BetOnline', tag: null, image: squareTileImages[6] },
 ]
 
 const popularGames = [
-  { id: 8, title: 'Gold Nugget™ Rush', provider: 'Betsoft', tag: '+ New', image: '/walk/image 1.png' },
-  { id: 9, title: 'Stake the BANK', provider: 'Betsoft', tag: 'Exclusive', image: '/walk/image 2.png' },
-  { id: 10, title: 'VIP BLACKJACK', provider: 'Fresh Deck', tag: '$350 - $500', image: '/walk/image 3.png' },
-  { id: 11, title: 'MEGACRUSH HOLD&WIN', provider: 'Betsoft', tag: 'Early', image: '/walk/image 4.png' },
+  { id: 8, title: 'Gold Nugget™ Rush', provider: 'Betsoft', tag: '+ New', image: squareTileImages[7] },
+  { id: 9, title: 'Stake the BANK', provider: 'Betsoft', tag: 'Exclusive', image: squareTileImages[8] },
+  { id: 10, title: 'VIP BLACKJACK', provider: 'Fresh Deck', tag: '$350 - $500', image: squareTileImages[9] },
+  { id: 11, title: 'MEGACRUSH HOLD&WIN', provider: 'Betsoft', tag: 'Early', image: squareTileImages[10] },
 ]
 
 const originalsGames = [
-  { id: 12, title: 'ORIGINAL PLINKO', provider: 'BetOnline', tag: null, image: '/walk/image 1.png' },
-  { id: 13, title: 'ORIGINAL BLACKJACK', provider: 'BetOnline', tag: null, image: '/walk/image 2.png' },
-  { id: 14, title: 'ORIGINAL DICE', provider: 'BetOnline', tag: null, image: '/walk/image 3.png' },
-  { id: 15, title: 'ORIGINAL DIAMONDS', provider: 'BetOnline', tag: null, image: '/walk/image 4.png' },
-  { id: 16, title: 'ORIGINAL MINES', provider: 'BetOnline', tag: null, image: '/walk/image 1.png' },
-  { id: 17, title: 'ORIGINAL KENO', provider: 'BetOnline', tag: null, image: '/walk/image 2.png' },
-  { id: 18, title: 'ORIGINAL LIMBO', provider: 'BetOnline', tag: '900x', image: '/walk/image 3.png' },
+  { id: 12, title: 'ORIGINAL PLINKO', provider: 'BetOnline', tag: null, image: squareTileImages[11] },
+  { id: 13, title: 'ORIGINAL BLACKJACK', provider: 'BetOnline', tag: null, image: squareTileImages[12] },
+  { id: 14, title: 'ORIGINAL DICE', provider: 'BetOnline', tag: null, image: squareTileImages[13] },
+  { id: 15, title: 'ORIGINAL DIAMONDS', provider: 'BetOnline', tag: null, image: squareTileImages[14] },
+  { id: 16, title: 'ORIGINAL MINES', provider: 'BetOnline', tag: null, image: squareTileImages[15] },
+  { id: 17, title: 'ORIGINAL KENO', provider: 'BetOnline', tag: null, image: squareTileImages[16] },
+  { id: 18, title: 'ORIGINAL LIMBO', provider: 'BetOnline', tag: '900x', image: squareTileImages[17] },
 ]
 
 const liveCasinoGames = [
-  { id: 19, title: 'VIP BLACKJACK', provider: 'Live Dealer', tag: '$350 - $500', image: '/walk/image 1.png' },
-  { id: 20, title: 'LIVE BETONLINE ROUETTE', provider: 'Live Dealer', tag: '$25 - $100', image: '/walk/image 2.png' },
-  { id: 21, title: 'SUBTITLE TITLE', provider: 'Live Dealer', tag: null, image: '/walk/image 3.png' },
-  { id: 22, title: 'AUTO BACCARAT', provider: 'Live Dealer', tag: '$1 - $12.500', image: '/walk/image 4.png' },
-  { id: 23, title: 'LIVE BETONLINE ROUETTE', provider: 'Live Dealer', tag: '$25 - $100', image: '/walk/image 1.png' },
+  { id: 19, title: 'VIP BLACKJACK', provider: 'Live Dealer', tag: '$350 - $500', image: squareTileImages[18] },
+  { id: 20, title: 'LIVE BETONLINE ROUETTE', provider: 'Live Dealer', tag: '$25 - $100', image: squareTileImages[19] },
+  { id: 21, title: 'SUBTITLE TITLE', provider: 'Live Dealer', tag: null, image: squareTileImages[20] },
+  { id: 22, title: 'AUTO BACCARAT', provider: 'Live Dealer', tag: '$1 - $12.500', image: squareTileImages[21] },
+  { id: 23, title: 'LIVE BETONLINE ROUETTE', provider: 'Live Dealer', tag: '$25 - $100', image: squareTileImages[22] },
 ]
 
 const SUBNAV_REEL_STAGGER = 0.028
@@ -498,14 +507,14 @@ function PaymentLogo({ method, className }: { method: string; className?: string
     : `/logos/payment/${normalizedMethod}.svg`
   
   return (
-    <div className={`flex items-center justify-center h-8 px-2 ${className || ''}`}>
+    <div className={`flex items-center justify-center h-7 min-w-[42px] px-1.5 ${className || ''}`}>
           {!imageError ? (
             <Image
               src={imagePath}
               alt={method}
-              width={60}
-              height={20}
-          className="object-contain opacity-80 hover:opacity-100 transition-opacity"
+              width={46}
+              height={15}
+          className="object-contain opacity-72 hover:opacity-90 transition-opacity"
           onError={() => {
             if (!useFallback) {
               setUseFallback(true)
@@ -2127,84 +2136,70 @@ function CashRacesPage({ brandPrimary, setVipDrawerOpen, setShowVipRewards, setV
 }
 
 // Promos Page Component
-function PromosPage({ brandPrimary, setVipDrawerOpen, setShowVipRewards, setVipActiveTab, setVipActiveSidebarItem }: { brandPrimary: string; setVipDrawerOpen?: (open: boolean) => void; setShowVipRewards?: (show: boolean) => void; setVipActiveTab?: (tab: string) => void; setVipActiveSidebarItem?: (item: string) => void }) {
+function PromosPage({
+  brandPrimary,
+  setVipDrawerOpen,
+  setShowVipRewards,
+  setVipActiveTab,
+  setVipActiveSidebarItem,
+  activeFilter,
+}: {
+  brandPrimary: string;
+  setVipDrawerOpen?: (open: boolean) => void;
+  setShowVipRewards?: (show: boolean) => void;
+  setVipActiveTab?: (tab: string) => void;
+  setVipActiveSidebarItem?: (item: string) => void;
+  activeFilter?: string;
+}) {
   const isMobile = useIsMobile()
-  const [activeTab, setActiveTab] = useState('Deposit Bonus')
+  const promoFilters = ['All Promos', 'Sports Bonus', 'Casino Bonus', 'Deposit Bonus', 'Races']
+  const selectedFilter = promoFilters.includes(activeFilter || '') ? (activeFilter as string) : 'All Promos'
 
   const promoData = [
-    { id: '1', title: '50 Free Spins', description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temp.' },
-    { id: '2', title: 'Tittle', description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temp.' },
-    { id: '3', title: 'Tittle', description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temp.' },
-    { id: '4', title: 'Tittle', description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temp.' },
-    { id: '5', title: '50 Free Spins', description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temp.' },
-    { id: '6', title: 'Tittle', description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temp.' },
-    { id: '7', title: 'Tittle', description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temp.' },
-    { id: '8', title: 'Tittle', description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temp.' },
+    { id: '0', category: 'Races', title: 'Loyalty Tier Boost', description: 'Level up your loyalty status with extra weekly tier points.' },
+    { id: '1', category: 'Deposit Bonus', title: '100% Deposit Match', description: 'Boost your bankroll instantly on qualifying deposits.' },
+    { id: '2', category: 'Sports Bonus', title: 'In-Play Bet Boost', description: 'Enhanced odds on selected in-play fixtures every day.' },
+    { id: '3', category: 'Casino Bonus', title: '50 Free Spins', description: 'Get free spins on featured casino slots this week.' },
+    { id: '4', category: 'Deposit Bonus', title: 'Weekend Reload', description: 'Extra bonus funds added on your weekend deposits.' },
+    { id: '5', category: 'Sports Bonus', title: 'Parlay Insurance', description: 'Get coverage on near-miss parlays under promo rules.' },
+    { id: '6', category: 'Casino Bonus', title: 'Cashback Night', description: 'Receive cashback on eligible casino gameplay losses.' },
+    { id: '7', category: 'Deposit Bonus', title: 'Crypto Top-Up Bonus', description: 'Additional bonus for selected crypto deposit methods.' },
+    { id: '8', category: 'Casino Bonus', title: 'High Roller Reward', description: 'Extra perks and bonus credits on larger casino sessions.' },
+    { id: '9', category: 'Races', title: 'Club Cashback', description: 'Earn extra cashback rates based on your loyalty level.' },
   ]
+  const filteredPromoData = selectedFilter === 'All Promos'
+    ? promoData
+    : promoData.filter((promo) => promo.category === selectedFilter)
 
   return (
     <SidebarInset className="bg-[#1a1a1a] text-white">
-      {/* Banner Carousel - Full Width with Arrows */}
-      <div className="pt-6 md:pt-8 mb-6 md:mb-8">
-          <Carousel className="w-full relative overflow-visible" opts={{ dragFree: true, containScroll: 'trimSnaps', duration: 15 }}>
-          {!isMobile && (
-            <>
-              <CarouselPrevious className="!left-2 !-translate-x-0 h-8 w-8 rounded-full bg-[#1a1a1a]/90 backdrop-blur-sm border border-white/20 hover:bg-[#1a1a1a] hover:border-white/30 text-white z-20" />
-              <CarouselNext className="!right-2 !-translate-x-0 h-8 w-8 rounded-full bg-[#1a1a1a]/90 backdrop-blur-sm border border-white/20 hover:bg-[#1a1a1a] hover:border-white/30 text-white z-20" />
-            </>
-          )}
-          <CarouselContent className="ml-4 md:ml-6 -mr-2 md:-mr-4">
-            {[
-              { src: '/banners/casino/casino_banner1.svg', alt: 'Casino Banner 1' },
-              { src: '/banners/casino/casino_banner2.svg', alt: 'Casino Banner 2' },
-              { src: '/banners/casino/casino_banner 3.svg', alt: 'Casino Banner 3' },
-              { src: '/banners/casino/casino_banner4.svg', alt: 'Casino Banner 4' },
-              { src: '/banners/casino/casino_Banner5.svg', alt: 'Casino Banner 5' },
-            ].map((banner, index) => (
-              <CarouselItem key={index} className={`${index === 0 ? 'pl-0' : 'pl-2 md:pl-4'} basis-auto flex-shrink-0`}>
-                <Card className="border-0 relative overflow-hidden flex-shrink-0 cursor-pointer hover:opacity-90 transition-opacity rounded-small" style={{ width: '620px', height: '164px' }}>
-                  <Image
-                    src={banner.src}
-                    alt={banner.alt}
-                    width={620}
-                    height={164}
-                    className="object-cover w-full h-full"
-                    unoptimized
-                  />
-                </Card>
-              </CarouselItem>
-            ))}
-            </CarouselContent>
-          </Carousel>
-        </div>
-      <div className="px-4 md:px-6 pb-8 max-w-7xl mx-auto w-full">
+      <div className="px-4 md:px-6 pt-6 md:pt-8 pb-8 max-w-7xl mx-auto w-full">
 
         {/* Promos Section */}
         <div className="w-full">
           {/* Title */}
           <h1 className="text-2xl md:text-3xl font-bold text-white mb-4 md:mb-6">Promos</h1>
 
-          {/* Tabs - Using AnimateTabs like Casino */}
+          {/* Sub nav filters */}
           <div className="mb-6">
-            <AnimateTabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <AnimateTabsList className="bg-white/5 dark:bg-white/5 bg-gray-100/80 dark:bg-white/5 p-0.5 h-auto gap-1 rounded-3xl border-0 relative transition-colors duration-300">
-                {['Deposit Bonus', 'Sports', 'Casino', 'Poker'].map((tab) => (
+            <AnimateTabs value={selectedFilter} onValueChange={(value) => setVipActiveSidebarItem?.(value)} className="w-full">
+              <AnimateTabsList className="bg-transparent p-0 h-auto gap-1 border-0 relative transition-colors duration-300 w-max">
+                {promoFilters.map((tab) => (
                   <TabsTab 
                     key={tab}
                     value={tab} 
-                    className="relative z-10 text-white/70 dark:text-white/70 text-gray-900 dark:text-white/70 hover:text-white dark:hover:text-white hover:text-black dark:hover:text-white hover:bg-white/5 dark:hover:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/5 rounded-2xl px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-white dark:data-[state=active]:text-white focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none flex items-center gap-1.5"
+                    className="relative z-10 text-white/70 hover:text-white hover:bg-white/5 rounded-2xl px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-white focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none flex items-center gap-1.5 whitespace-nowrap"
                   >
-                    {activeTab === tab && (
+                    {selectedFilter === tab && (
                       <motion.div
-                        layoutId="activePromosTab"
+                        layoutId="activePromosSubNavTab"
                         className="absolute inset-0 rounded-small -z-10"
-                        style={{ backgroundColor: 'var(--ds-primary, #ee3536)' }}
-                        initial={false}
-                        transition={{
-                          type: "spring",
-                          stiffness: 400,
-                          damping: 40
+                        style={{
+                          backgroundColor: 'transparent',
+                          backgroundImage: 'var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%))'
                         }}
+                        initial={false}
+                        transition={{ type: "spring", stiffness: 400, damping: 40 }}
                       />
                     )}
                     <span className="relative z-10">{tab}</span>
@@ -2216,7 +2211,7 @@ function PromosPage({ brandPrimary, setVipDrawerOpen, setShowVipRewards, setVipA
 
           {/* Promo Cards Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {promoData.map((promo) => (
+            {filteredPromoData.map((promo) => (
               <Card key={promo.id} className="bg-white/5 border-white/10 overflow-hidden">
                 {/* Image Placeholder with Glare Animation */}
                 <div className="w-full h-48 bg-white/5 relative overflow-hidden">
@@ -2227,8 +2222,11 @@ function PromosPage({ brandPrimary, setVipDrawerOpen, setShowVipRewards, setVipA
                   <p className="text-sm text-white/70 mb-4 line-clamp-3">{promo.description}</p>
                   <Button 
                     variant="ghost" 
-                    className="w-full bg-red-500 hover:bg-red-600 text-white"
-                    style={{ backgroundColor: 'var(--ds-primary, #ee3536)' }}
+                    className="w-full text-white"
+                    style={{
+                      backgroundColor: 'transparent',
+                      backgroundImage: 'var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%))'
+                    }}
                   >
                     MORE INFO
                   </Button>
@@ -3382,17 +3380,14 @@ function VIPRewardsPage({ brandPrimary, setVipDrawerOpen, setVipActiveTab, setSh
             <Separator className="bg-white/10 mb-6" />
             <div className="mb-6">
               <div className="flex items-center gap-2 mb-3">
-                <h3 className="font-semibold text-base">A TRUSTED & SAFE EXPERIENCE</h3>
+                <h3 className="font-semibold text-base">We accept</h3>
                 <IconShield className="w-4 h-4" />
               </div>
               <p className="text-xs text-white/70 mb-4 max-w-2xl">
-                At BetOnline, our company's guiding principle is to establish long-lasting, positive relationships with our customers and within the online gaming community for over 25 years.
+                Fast and secure crypto deposits and payouts.
               </p>
               <div className="flex flex-wrap items-center gap-3">
                 {['Bitcoin', 'Ethereum', 'Litecoin', 'USDT', 'USDC', 'BitcoinCash', 'Dogecoin'].map((method) => (
-                  <PaymentLogo key={method} method={method} />
-                ))}
-                {['VISA', 'Mastercard', 'AMEX', 'Discover'].map((method) => (
                   <PaymentLogo key={method} method={method} />
                 ))}
                 <SecurityBadge name="Responsible Gaming" iconPath="/banners/partners/responsible gaming.webp" />
@@ -4450,14 +4445,12 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
 
             <Separator className="bg-white/10 mx-2" />
 
-            {/* Bottom section — Loyalty Hub, Banking, Need Help */}
+            {/* Bottom section — Support */}
             <SidebarGroup>
               <SidebarGroupContent>
                 <SidebarMenu>
                   {[
-                    { icon: IconCrown, label: 'Loyalty Hub' },
-                    { icon: IconBuilding, label: 'Banking' },
-                    { icon: IconLifebuoy, label: 'Need Help' },
+                    { icon: IconLifebuoy, label: 'Support' },
                   ].map((item, index) => {
                     const Icon = item.icon
                     return (
@@ -5965,19 +5958,15 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
             {/* Trust & Security Section - More compact */}
             <div className="mb-6">
               <div className="flex items-center gap-2 mb-3">
-                <h3 className="font-semibold text-base">A TRUSTED & SAFE EXPERIENCE</h3>
+                <h3 className="font-semibold text-base">We accept</h3>
                 <IconShield className="w-4 h-4" />
               </div>
               <p className="text-xs text-white/70 mb-4 max-w-2xl">
-                At BetOnline, our company's guiding principle is to establish long-lasting, positive relationships with our customers and within the online gaming community for over 25 years.
+                Fast and secure crypto deposits and payouts.
               </p>
               <div className="flex flex-wrap items-center gap-3">
                 {/* Crypto payment method logos */}
                 {['Bitcoin', 'Ethereum', 'Litecoin', 'USDT', 'USDC', 'BitcoinCash', 'Dogecoin'].map((method) => (
-                  <PaymentLogo key={method} method={method} />
-                ))}
-                {/* Traditional payment method logos */}
-                {['VISA', 'Mastercard', 'AMEX', 'Discover'].map((method) => (
                   <PaymentLogo key={method} method={method} />
                 ))}
                 {/* Security badges */}
@@ -7255,9 +7244,7 @@ function PokerLandingPage({ brandPrimary, quickLinksOpen, onNavigate }: { brandP
 
   // Bottom section (like casino sidebar)
   const pokerBottomItems = [
-    { icon: IconCrown, label: 'Loyalty Hub' },
-    { icon: IconBuilding, label: 'Banking' },
-    { icon: IconLifebuoy, label: 'Need Help' },
+    { icon: IconLifebuoy, label: 'Support' },
   ]
 
   const topFeatures = [
@@ -7930,17 +7917,14 @@ function PokerLandingPage({ brandPrimary, quickLinksOpen, onNavigate }: { brandP
               <Separator className="bg-white/10 mb-6" />
               <div className="mb-6">
                 <div className="flex items-center gap-2 mb-3">
-                  <h3 className="font-semibold text-base">A TRUSTED &amp; SAFE EXPERIENCE</h3>
+                  <h3 className="font-semibold text-base">We accept</h3>
                   <IconShield className="w-4 h-4" />
                 </div>
                 <p className="text-xs text-white/70 mb-4 max-w-2xl">
-                  At BetOnline, our company&apos;s guiding principle is to establish long-lasting, positive relationships with our customers and within the online gaming community for over 25 years.
+                  Fast and secure crypto deposits and payouts.
                 </p>
                 <div className="flex flex-wrap items-center gap-3">
                   {['Bitcoin', 'Ethereum', 'Litecoin', 'USDT', 'USDC', 'BitcoinCash', 'Dogecoin'].map((method) => (
-                    <PaymentLogo key={method} method={method} />
-                  ))}
-                  {['VISA', 'Mastercard', 'AMEX', 'Discover'].map((method) => (
                     <PaymentLogo key={method} method={method} />
                   ))}
                   <SecurityBadge name="Responsible Gaming" iconPath="/banners/partners/responsible gaming.webp" />
@@ -8158,7 +8142,7 @@ function NavTestPageContent() {
   const [tournamentExpandedCard, setTournamentExpandedCard] = useState<number | null>(null)
   const [leaderboardTournament, setLeaderboardTournament] = useState<typeof cashTournamentsData[0] | null>(null)
   const [initialVipSidebarItem, setInitialVipSidebarItem] = useState<string | null>(null)
-  const [vipActiveSidebarItem, setVipActiveSidebarItem] = useState<string>('Overview')
+  const [vipActiveSidebarItem, setVipActiveSidebarItem] = useState<string>('All Promos')
   
   // Sync initialVipSidebarItem -> vipActiveSidebarItem
   useEffect(() => {
@@ -8200,10 +8184,6 @@ function NavTestPageContent() {
   const [casinoPokerCanScrollPrev, setCasinoPokerCanScrollPrev] = useState(false)
   const [casinoPokerCanScrollNext, setCasinoPokerCanScrollNext] = useState(false)
   const [casinoPokerCurrentIndex, setCasinoPokerCurrentIndex] = useState(0)
-  
-  const [halloweenCarouselApi, setHalloweenCarouselApi] = useState<CarouselApi>()
-  const [halloweenCanScrollPrev, setHalloweenCanScrollPrev] = useState(false)
-  const [halloweenCanScrollNext, setHalloweenCanScrollNext] = useState(false)
   
   const [vipCarouselApi, setVipCarouselApi] = useState<CarouselApi>()
   const [vipCanScrollPrev, setVipCanScrollPrev] = useState(false)
@@ -8319,16 +8299,6 @@ function NavTestPageContent() {
   }, [casinoPokerCarouselApi])
   
   useEffect(() => {
-    if (!halloweenCarouselApi) return
-    setHalloweenCanScrollPrev(halloweenCarouselApi.canScrollPrev())
-    setHalloweenCanScrollNext(halloweenCarouselApi.canScrollNext())
-    halloweenCarouselApi.on('select', () => {
-      setHalloweenCanScrollPrev(halloweenCarouselApi.canScrollPrev())
-      setHalloweenCanScrollNext(halloweenCarouselApi.canScrollNext())
-    })
-  }, [halloweenCarouselApi])
-  
-  useEffect(() => {
     if (!vipCarouselApi) return
     setVipCanScrollPrev(vipCarouselApi.canScrollPrev())
     setVipCanScrollNext(vipCarouselApi.canScrollNext())
@@ -8425,7 +8395,7 @@ function NavTestPageContent() {
   }, [tournamentCarouselApi])
 
   // Activity table state
-  const [casinoActivityTab, setCasinoActivityTab] = useState<'All Bets' | 'Jackpot Winners' | 'High Rollers' | 'Daily Race'>('All Bets')
+  const [casinoActivityTab, setCasinoActivityTab] = useState<'All Bets' | 'Jackpot Winners' | 'High Rollers'>('All Bets')
   const [casinoActivityFeed, setCasinoActivityFeed] = useState<Array<{
     id: string
     type: 'casino'
@@ -8436,50 +8406,6 @@ function NavTestPageContent() {
     winAmount?: string
     gameImage?: string
   }>>([])
-
-  // Daily Race countdown
-  const [casinoRaceHours, setCasinoRaceHours] = useState(6)
-  const [casinoRaceMinutes, setCasinoRaceMinutes] = useState(54)
-  const [casinoRaceSeconds, setCasinoRaceSeconds] = useState(31)
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCasinoRaceSeconds((s) => {
-        if (s === 0) {
-          setCasinoRaceMinutes((m) => {
-            if (m === 0) {
-              setCasinoRaceHours((h) => (h === 0 ? 23 : h - 1))
-              return 59
-            }
-            return m - 1
-          })
-          return 59
-        }
-        return s - 1
-      })
-    }, 1000)
-    return () => clearInterval(interval)
-  }, [])
-
-  const casinoRaceLeaderboardData = [
-    { rank: 1, nickname: 'Hidden', wagered: '$100,005.00', prize: '25%', medal: 'gold' as const },
-    { rank: 2, nickname: 'Player_5130165', wagered: '$12,000.00', prize: '18%', medal: 'silver' as const },
-    { rank: 3, nickname: 'Hidden', wagered: '$8,000.00', prize: '16%', medal: 'bronze' as const },
-    { rank: 4, nickname: 'Hidden', wagered: '$6,000.00', prize: '12%' },
-    { rank: 5, nickname: 'Hidden', wagered: '$5,865.00', prize: '10%' },
-    { rank: 6, nickname: 'Hidden', wagered: '$4,986.34', prize: '8%' },
-    { rank: 7, nickname: 'Hidden', wagered: '$4,503.05', prize: '5%' },
-    { rank: 8, nickname: 'Hidden', wagered: '$4,163.80', prize: '3%' },
-    { rank: 9, nickname: 'Hidden', wagered: '$3,123.05', prize: '2%' },
-    { rank: 10, nickname: 'Hidden', wagered: '$2,305.07', prize: '1%' },
-  ]
-
-  const casinoUserRacePosition = {
-    rank: 5708,
-    nickname: 'You',
-    wagered: '$1,250.00',
-    prize: '0.1%'
-  }
 
   const casinoJackpotWinnersData = [
     { id: 'jp1', user: 'LuckyBet', game: 'Mega Moolah', amount: '$250,000.00', time: '2 hrs ago', gameImage: squareTileImages[3] },
@@ -8717,6 +8643,15 @@ function NavTestPageContent() {
       }
     }
   }, [gameImageLoaded, selectedGame])
+
+  // Auto-hide jackpot overlay 5s after it appears.
+  useEffect(() => {
+    if (!showJackpot) return
+    const hideTimer = setTimeout(() => {
+      setShowJackpot(false)
+    }, 5000)
+    return () => clearTimeout(hideTimer)
+  }, [showJackpot])
   
   // Handle fullscreen change events
   useEffect(() => {
@@ -9049,7 +8984,7 @@ function NavTestPageContent() {
   // Top featured casino items (square icon style like poker)
   const casinoTopItems = [
     { icon: IconHeart, label: 'My Favorites' },
-    { icon: null, label: 'Last Game Played', image: '/banners/casino/casino_banner1.svg', gameName: 'Golden Fortune' },
+    { icon: IconRefresh, label: 'Last Game Played', gameName: 'Golden Fortune' },
   ]
 
   const sidebarMenuItems = [
@@ -9065,9 +9000,7 @@ function NavTestPageContent() {
 
   // Bottom pinned items — same across all sidebars
   const sidebarBottomItems = [
-    { icon: IconCrown, label: 'Loyalty Hub' },
-    { icon: IconBuilding, label: 'Banking' },
-    { icon: IconLifebuoy, label: 'Need Help' },
+    { icon: IconLifebuoy, label: 'Support' },
     ...(isMobile ? [{ icon: IconWorld, label: 'Language' }] : []),
   ]
 
@@ -9225,7 +9158,7 @@ function NavTestPageContent() {
                 <span className="sr-only">Toggle Sidebar</span>
               </Button>
               <div 
-                className="relative h-7 w-[108px] flex items-center cursor-pointer"
+                className="relative h-8 w-[136px] flex items-center cursor-pointer"
                 onClick={() => {
                   router.push('/')
                 }}
@@ -9247,9 +9180,10 @@ function NavTestPageContent() {
                       onClick={() => toggleSidebar()}
                       className="h-8 w-8 text-white/40 hover:text-white hover:bg-white/10"
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="3" y="3" width="18" height="18" rx="2" />
-                        <line x1="9" y1="3" x2="9" y2="21" />
+                      <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none">
+                        <rect x="1" y="2.75" width="14" height="2" rx="1" fill="currentColor" />
+                        <rect x="1" y="7" width="10" height="2" rx="1" fill="currentColor" />
+                        <rect x="1" y="11.25" width="6" height="2" rx="1" fill="currentColor" />
                       </svg>
                     </Button>
                     <div className="w-px h-5 bg-white/20" />
@@ -9549,11 +9483,11 @@ function NavTestPageContent() {
                 isMobile ? "h-5 w-5" : "h-6 w-6"
               )}>
                 <AvatarFallback className="bg-white/10 text-white flex items-center justify-center font-semibold tracking-tight" style={{ fontSize: isMobile ? '9px' : '10px' }}>
-                  CH
+                  <IconUser className={cn(isMobile ? "h-2.5 w-2.5" : "h-3 w-3")} />
                 </AvatarFallback>
               </Avatar>
                 {/* Red dot indicator for notifications */}
-                <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-red-500" />
+                <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-[var(--ds-primary,#ff6a1a)]" />
               </div>
               <div className={cn(
                 "font-bold text-white tabular-nums transition-all duration-300 flex items-center justify-center text-center whitespace-nowrap min-w-0",
@@ -10350,32 +10284,70 @@ function NavTestPageContent() {
               <TooltipProvider>
                 {showVipRewards ? (
                   <>
-                    {/* VIP Rewards sidebar items */}
+                    {/* Promotions feature links (same style intent as Last Played links) */}
+                    <SidebarGroup className="mt-3">
+                      <SidebarGroupContent>
+                        <SidebarMenu>
+                          {[
+                            { id: 'Loyalty Club', icon: IconCrown, label: 'Loyalty Club', subtitle: 'Member rewards' },
+                            { id: 'Help Centre', icon: IconLifebuoy, label: 'Help Centre', subtitle: 'Issue or feedback' },
+                          ].map((item, index) => {
+                            const Icon = item.icon
+                            return (
+                              <SidebarMenuItem key={`promo-feature-${index}`}>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <SidebarMenuButton
+                                      onClick={(e: React.MouseEvent) => {
+                                        e.preventDefault()
+                                        e.stopPropagation()
+                                        if (isMobile) setOpenMobile(false)
+                                        if (item.id === 'Loyalty Club') {
+                                          setVipActiveSidebarItem('Races')
+                                        } else if (item.id === 'Help Centre') {
+                                          console.log('Help Centre clicked')
+                                        }
+                                      }}
+                                      className={cn(
+                                        "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer text-white/70 hover:text-white hover:bg-white/5",
+                                        sidebarState === 'collapsed' && "h-10 w-10 mx-auto p-0 justify-center"
+                                      )}
+                                    >
+                                      <div className="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0 bg-white/10">
+                                        <Icon strokeWidth={1.5} className="w-4 h-4" />
+                                      </div>
+                                      <div className={cn("flex flex-col leading-tight min-w-0", sidebarState === 'collapsed' && "hidden")}>
+                                        <span>{item.label}</span>
+                                        <span className="text-[11px] text-white/40 font-normal">{item.subtitle}</span>
+                                      </div>
+                                    </SidebarMenuButton>
+                                  </TooltipTrigger>
+                                  {sidebarState === 'collapsed' && (
+                                    <TooltipContent side="right" className="bg-[#2d2d2d] border-white/10 text-white">
+                                      <p>{item.label}</p>
+                                    </TooltipContent>
+                                  )}
+                                </Tooltip>
+                              </SidebarMenuItem>
+                            )
+                          })}
+                        </SidebarMenu>
+                      </SidebarGroupContent>
+                    </SidebarGroup>
+
+                    <Separator className="bg-white/10 mx-2 my-2" />
+
+                    {/* Promotions filters */}
                     <SidebarGroup>
                       <SidebarGroupContent>
                         <SidebarMenu>
                           {[
-                            { id: 'Overview', icon: IconLayoutDashboard, label: 'VIP Dashboard' },
-                            { id: 'My Bonus', icon: IconGift, label: 'My Bonus' },
-                            { id: 'Promos', icon: IconSparkles, label: 'Promos' },
-                            { id: 'Cash Races', icon: IconClock, label: 'Cash Races' },
-                            { id: 'Contests', icon: IconTrophy, label: 'Contests' },
-                            { id: 'Refer A Friend', icon: IconUserPlus, label: 'Refer A Friend' },
-                            { type: 'separator' as const },
-                            { id: 'Cash Boost', icon: IconBolt, label: 'Cash Boost', linkTo: 'cashboost' },
-                            { id: 'Reloads', icon: IconRefresh, label: 'Reloads', linkTo: 'reloads' },
-                            { id: 'Cash Drop', icon: IconParachute, label: 'Cash Drop', linkTo: 'draw' },
-                            { id: 'Bet & Get', icon: IconTargetArrow, label: 'Bet & Get', linkTo: 'draw' },
-                            { type: 'separator' as const },
-                            { id: 'Get Telegram', icon: IconDownload, label: 'Get Telegram' },
+                            { id: 'All Promos', icon: IconSparkles, label: 'All Promos' },
+                            { id: 'Sports Bonus', icon: IconTrophy, label: 'Sports Bonus' },
+                            { id: 'Casino Bonus', icon: IconDeviceGamepad2, label: 'Casino Bonus' },
+                            { id: 'Deposit Bonus', icon: IconWallet, label: 'Deposit Bonus' },
+                            { id: 'Races', icon: IconCrown, label: 'Races' },
                           ].map((item: any, index: number) => {
-                            if (item.type === 'separator') {
-                              return (
-                                <React.Fragment key={`vip-sep-${index}`}>
-                                  <Separator className="bg-white/10 my-2" />
-                                </React.Fragment>
-                              )
-                            }
                             if (!item.icon || !item.id) return null
                             const Icon = item.icon
                             const itemId = item.id
@@ -10390,37 +10362,21 @@ function NavTestPageContent() {
                                         e.preventDefault()
                                         e.stopPropagation()
                                         if (isMobile) setOpenMobile(false)
-                                        if (item.linkTo) {
-                                          if (item.linkTo === 'cashboost') {
-                                            setVipDrawerOpen(true)
-                                            setVipActiveTab('Cash Boost')
-                                          } else if (item.linkTo === 'reloads') {
-                                            setVipDrawerOpen(true)
-                                            setVipActiveTab('Reloads')
-                                          } else if (item.linkTo === 'draw') {
-                                            setVipDrawerOpen(true)
-                                            if (itemId === 'Cash Drop') {
-                                              setVipActiveTab('Cash Drop')
-                                            } else if (itemId === 'Bet & Get') {
-                                              setVipActiveTab('Bet & Get')
-                                            }
-                                          }
-                                        } else {
-                                          setVipActiveSidebarItem(itemId)
-                                        }
+                                        setVipActiveSidebarItem(itemId)
                                       }}
                                       className={cn(
                                         "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
                                         "data-[active=true]:text-white data-[active=true]:font-medium",
-                                        "data-[active=false]:text-white/70 hover:text-white hover:bg-white/5"
+                                        "data-[active=false]:text-white/70 hover:text-white hover:bg-white/5",
+                                        sidebarState === 'collapsed' && "h-10 w-10 mx-auto p-0 justify-center"
                                       )}
-                                      style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)' } : undefined}
+                                      style={isActive ? {
+                                        backgroundColor: 'transparent',
+                                        backgroundImage: 'var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%))'
+                                      } : undefined}
                                     >
                                       <Icon strokeWidth={1.5} className="w-5 h-5" />
-                                      <span className="flex-1">{item.label}</span>
-                                      {item.linkTo && (
-                                        <IconExternalLink className="w-4 h-4 text-white/50" />
-                                      )}
+                                      <span className={cn("flex-1", sidebarState === 'collapsed' && "hidden")}>{item.label}</span>
                                     </SidebarMenuButton>
                                   </TooltipTrigger>
                                   {sidebarState === 'collapsed' && (
@@ -10441,9 +10397,7 @@ function NavTestPageContent() {
                       <SidebarGroupContent>
                         <SidebarMenu>
                           {[
-                            { icon: IconCrown, label: 'Loyalty Hub' },
-                            { icon: IconBuilding, label: 'Banking' },
-                            { icon: IconLifebuoy, label: 'Need Help' },
+                            { icon: IconLifebuoy, label: 'Support' },
                             ...(isMobile ? [{ icon: IconWorld, label: 'Language' }] : []),
                           ].map((item, index) => {
                             const Icon = item.icon
@@ -10457,12 +10411,15 @@ function NavTestPageContent() {
                                         e.stopPropagation()
                                         setMobileLanguageAccordionOpen((prev) => !prev)
                                       }}
-                                      className="w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer text-white/70 hover:text-white hover:bg-white/5"
+                                      className={cn(
+                                        "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer text-white/70 hover:text-white hover:bg-white/5",
+                                        sidebarState === 'collapsed' && "h-10 w-10 mx-auto p-0 justify-center"
+                                      )}
                                     >
                                       <Icon strokeWidth={1.5} className="w-5 h-5" />
-                                      <span className="flex-1">Language</span>
-                                      <span className="text-[11px] text-white/45 mr-1">{headerLanguage}</span>
-                                      <IconChevronDown className={cn("h-4 w-4 transition-transform", mobileLanguageAccordionOpen && "rotate-180")} />
+                                      <span className={cn("flex-1", sidebarState === 'collapsed' && "hidden")}>Language</span>
+                                      <span className={cn("text-[11px] text-white/45 mr-1", sidebarState === 'collapsed' && "hidden")}>{headerLanguage}</span>
+                                      <IconChevronDown className={cn("h-4 w-4 transition-transform", mobileLanguageAccordionOpen && "rotate-180", sidebarState === 'collapsed' && "hidden")} />
                                     </SidebarMenuButton>
                                   </SidebarMenuItem>
                                   {mobileLanguageAccordionOpen && (
@@ -10502,16 +10459,17 @@ function NavTestPageContent() {
                                         e.preventDefault()
                                         e.stopPropagation()
                                         if (isMobile) setOpenMobile(false)
-                                        if (item.label === 'Loyalty Hub') {
-                                          openVipDrawer()
-                                        } else if (item.label === 'Banking') {
-                                          openDepositDrawer()
+                                        if (item.label === 'Support') {
+                                          console.log('Support clicked')
                                         }
                                       }}
-                                      className="w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer text-white/70 hover:text-white hover:bg-white/5"
+                                      className={cn(
+                                        "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer text-white/70 hover:text-white hover:bg-white/5",
+                                        sidebarState === 'collapsed' && "h-10 w-10 mx-auto p-0 justify-center"
+                                      )}
                                     >
                                       <Icon strokeWidth={1.5} className="w-5 h-5" />
-                                      <span>{item.label}</span>
+                                      <span className={cn(sidebarState === 'collapsed' && "hidden")}>{item.label}</span>
                                     </SidebarMenuButton>
                                   </TooltipTrigger>
                                   {sidebarState === 'collapsed' && (
@@ -10714,14 +10672,8 @@ function NavTestPageContent() {
                                         setSelectedCategory('')
                                         setSelectedVendor('')
                                         setShowSports(false)
-                                      } else if (item.label === 'Loyalty Hub') {
-                                        openVipDrawer()
-                                        setShowSports(false)
-                                      } else if (item.label === 'Banking') {
-                                        openDepositDrawer()
-                                        setShowSports(false)
-                                      } else if (item.label === 'Need Help') {
-                                        console.log('Need Help clicked')
+                                      } else if (item.label === 'Support') {
+                                        console.log('Support clicked')
                                         setShowSports(false)
                                       }
                                     }}
@@ -10748,7 +10700,7 @@ function NavTestPageContent() {
 
                 <Separator className="bg-white/10 mx-2" />
 
-                {/* Bottom section — Loyalty Hub, Banking, Need Help */}
+                {/* Bottom section — Support */}
                 <SidebarGroup>
                   <SidebarGroupContent>
                     <SidebarMenu>
@@ -10812,12 +10764,8 @@ function NavTestPageContent() {
                                     e.preventDefault()
                                     e.stopPropagation()
                                     if (isMobile) setOpenMobile(false)
-                                    if (item.label === 'Loyalty Hub') {
-                                      openVipDrawer()
-                                    } else if (item.label === 'Banking') {
-                                      openDepositDrawer()
-                                    } else if (item.label === 'Need Help') {
-                                      console.log('Need Help clicked')
+                                    if (item.label === 'Support') {
+                                      console.log('Support clicked')
                                     }
                                   }}
                                   className={cn(
@@ -10928,7 +10876,7 @@ function NavTestPageContent() {
                 >
                     {/* Icon Tabs - Left Side (Desktop Only) */}
                     {!isMobile && (
-                      <div className="flex-shrink-0 flex items-center gap-1.5">
+                      <div className="flex-shrink-0 flex items-center gap-1">
                         <ChatNavToggle
                           onSearch={() => {
                             setSearchOverlayOpen(true)
@@ -10937,7 +10885,7 @@ function NavTestPageContent() {
                           expandTo="right"
                           pushSiblingsOnExpand
                         />
-                        <div className="bg-transparent p-0.5 h-auto gap-0.5 rounded-3xl border-0 flex items-center transition-colors duration-300">
+                        <div className="bg-transparent p-0 h-auto gap-1 rounded-3xl border-0 flex items-center transition-colors duration-300">
                           <button
                             onClick={() => {
                               const targetCategory = activeSubNav === 'Lobby' ? 'New Games' : activeSubNav
@@ -10981,35 +10929,6 @@ function NavTestPageContent() {
                         </div>
                       </div>
                     )}
-                    {isMobile && (
-                      <div
-                        className="flex-shrink-0 flex items-center gap-1 pl-2 pr-1 sticky left-0 z-20 border-r border-white/5"
-                        style={{ backgroundColor: 'var(--ds-nav-bg, #121417)' }}
-                      >
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.preventDefault()
-                            e.stopPropagation()
-                            const targetCategory = activeSubNav === 'Lobby' ? 'New Games' : activeSubNav
-                            setActiveIconTab('filter')
-                            setShowAllGames(true)
-                            setSelectedVendor('')
-                            setSelectedCategory(targetCategory)
-                            setActiveSubNav(targetCategory)
-                          }}
-                          className={cn(
-                            "bg-transparent rounded-2xl p-1.5 h-9 w-9 flex items-center justify-center transition-all duration-300",
-                            activeIconTab === 'filter'
-                              ? "text-white bg-white/10"
-                              : "text-white/75 hover:text-white hover:bg-white/5"
-                          )}
-                        >
-                          <IconFilter className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    )}
-                    
                     {/* Text Tabs - Full Width */}
                     {!isMobile && desktopSubNavCanScrollLeft && (
                       <button
@@ -11086,6 +11005,29 @@ function NavTestPageContent() {
                         flexShrink: 0
                       }}
                       >
+                        {isMobile && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              e.stopPropagation()
+                              const targetCategory = activeSubNav === 'Lobby' ? 'New Games' : activeSubNav
+                              setActiveIconTab('filter')
+                              setShowAllGames(true)
+                              setSelectedVendor('')
+                              setSelectedCategory(targetCategory)
+                              setActiveSubNav(targetCategory)
+                            }}
+                            className={cn(
+                              "relative z-10 rounded-2xl p-1.5 h-9 w-9 flex items-center justify-center transition-colors duration-300 flex-shrink-0 scroll-snap-start",
+                              activeIconTab === 'filter'
+                                ? "text-white bg-white/10"
+                                : "text-white/75 hover:text-white hover:bg-white/[0.04]"
+                            )}
+                          >
+                            <IconFilter className="w-3.5 h-3.5" />
+                          </button>
+                        )}
                         {casinoSubNavItems.map((tab, index) => {
                           const TabIcon = casinoSubNavIconMap[tab] ?? IconLayoutGrid
                           return (
@@ -11186,7 +11128,7 @@ function NavTestPageContent() {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
                 >
-                  {/* Spacer for VIP page — accounts for fixed header + quick links on mobile */}
+                  {/* Spacer for promotions page — accounts for fixed header + quick links on mobile */}
                   <motion.div 
                     initial={false}
                     animate={isMobile ? {
@@ -11201,30 +11143,13 @@ function NavTestPageContent() {
                     }}
                     style={{ overflow: 'hidden' }}
                   />
-                  <VIPRewardsPage 
+                  <PromosPage 
                     brandPrimary={brandPrimary || '#ee3536'} 
                     setVipDrawerOpen={setVipDrawerOpen}
-                    setVipActiveTab={setVipActiveTab}
-                    setShowToast={setShowToast}
-                    setToastMessage={setToastMessage}
-                    setToastAction={setToastAction}
                     setShowVipRewards={setShowVipRewards}
-                    setIsPageTransitioning={setIsPageTransitioning}
-                    initialVipSidebarItem={initialVipSidebarItem}
-                    setInitialVipSidebarItem={setInitialVipSidebarItem}
-                    previousPageState={previousPageState}
-                    setPreviousPageState={setPreviousPageState}
-                    setActiveSubNav={setActiveSubNav}
-                    quickLinksOpen={quickLinksOpen}
-                      vipActiveSidebarItem={vipActiveSidebarItem}
-                      setVipActiveSidebarItem={setVipActiveSidebarItem}
-                    onNavigate={(page) => {
-                      if (page === 'home') { setShowSports(false); setShowVipRewards(false); setShowPoker(false); }
-                      else if (page === 'casino') { setShowSports(false); setShowVipRewards(false); setShowPoker(false); setActiveSubNav('Lobby'); }
-                      else if (page === 'liveCasino') { setShowSports(false); setShowVipRewards(false); setShowPoker(false); setActiveSubNav('Live Casino'); }
-                      else if (page === 'poker') { setShowPoker(true); setShowSports(false); setShowVipRewards(false); }
-                      else if (page === 'vipRewards') { /* already on VIP */ }
-                    }}
+                    setVipActiveTab={setVipActiveTab}
+                    setVipActiveSidebarItem={setVipActiveSidebarItem}
+                    activeFilter={vipActiveSidebarItem}
                   />
                 </motion.div>
               ) : showPoker ? (
@@ -11902,7 +11827,7 @@ function NavTestPageContent() {
                           }
                           
                           const categoryKey = selectedCategory || activeSubNav
-                          const maxCols = 8 // Maximum columns for largest screens
+                          const maxCols = isMobile ? 3 : 8 // Keep mobile rows aligned to 3 tiles
                           const gameTiles = sortedGames.map((game, displayIndex) => {
                             const columnIndex = displayIndex % maxCols
                             // Use stable key that doesn't change during scroll
@@ -11935,7 +11860,7 @@ function NavTestPageContent() {
                           // On mobile, use memoized static div to prevent re-renders during scroll
                           if (isMobile) {
                             return (
-                              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 3xl:grid-cols-8 gap-4 px-6" style={{ willChange: 'auto' }}>
+                              <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 3xl:grid-cols-8 gap-3 px-3 md:gap-4 md:px-6" style={{ willChange: 'auto' }}>
                                 {gameTiles}
                                 {skeletonBoxes}
                         </div>
@@ -12046,7 +11971,7 @@ function NavTestPageContent() {
                                         index={index}
                                         brandPrimary={brandPrimary}
                                         seats={{ occupied: bjSeats[index % bjSeats.length].o, total: bjSeats[index % bjSeats.length].t }}
-                                        className="w-[180px] h-[236px]"
+                                        className="w-[158px] h-[208px] md:w-[180px] md:h-[236px]"
                                         onClick={() => {
                                           setSelectedGame({
                                             title: bjNames[index % bjNames.length],
@@ -12140,7 +12065,7 @@ function NavTestPageContent() {
                                         bettingRange={rouletteLimits[index % rouletteLimits.length]}
                                         index={index}
                                         brandPrimary={brandPrimary}
-                                        className="w-[180px] h-[236px]"
+                                        className="w-[158px] h-[208px] md:w-[180px] md:h-[236px]"
                                         onClick={() => {
                                           setSelectedGame({
                                             title: rouletteNames[index % rouletteNames.length],
@@ -12234,7 +12159,7 @@ function NavTestPageContent() {
                                         bettingRange={baccaratLimits[index % baccaratLimits.length]}
                                         index={index}
                                         brandPrimary={brandPrimary}
-                                        className="w-[180px] h-[236px]"
+                                        className="w-[158px] h-[208px] md:w-[180px] md:h-[236px]"
                                       onClick={() => {
                                         setSelectedGame({
                                             title: baccaratNames[index % baccaratNames.length],
@@ -12331,7 +12256,7 @@ function NavTestPageContent() {
                                         index={index + 30}
                                         brandPrimary={brandPrimary}
                                         seats={type === 'blackjack' || type === 'poker' ? { occupied: 3 + (index % 4), total: 7 } : undefined}
-                                        className="w-[180px] h-[236px]"
+                                        className="w-[158px] h-[208px] md:w-[180px] md:h-[236px]"
                                       onClick={() => {
                                         setSelectedGame({
                                             title: vipNames[index % vipNames.length],
@@ -12427,7 +12352,7 @@ function NavTestPageContent() {
                                         index={index}
                                         brandPrimary={brandPrimary}
                                         seats={{ occupied: pokerSeats[index % pokerSeats.length].o, total: pokerSeats[index % pokerSeats.length].t }}
-                                        className="w-[180px] h-[236px]"
+                                        className="w-[158px] h-[208px] md:w-[180px] md:h-[236px]"
                                         onClick={() => {
                                           setSelectedGame({
                                             title: pokerNames[index % pokerNames.length],
@@ -12535,7 +12460,7 @@ function NavTestPageContent() {
                                     )}>
                                       <div 
                                         data-content-item 
-                                        className="w-[180px] h-[236px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
+                                        className="w-[158px] h-[208px] md:w-[180px] md:h-[236px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
                                         onClick={() => {
                                           setSelectedGame({
                                             title: slotNames[index % slotNames.length],
@@ -12625,7 +12550,7 @@ function NavTestPageContent() {
                           <div className="relative" style={{ overflow: 'visible', position: 'relative', width: '100%', maxWidth: '100%', boxSizing: 'border-box', minWidth: 0 }}>
                             <Carousel setApi={setOriginalsCarouselApi} className="w-full relative" style={{ overflow: 'visible', position: 'relative', width: '100%', maxWidth: '100%', minWidth: 0 }} opts={{ dragFree: true, containScroll: 'trimSnaps', duration: 15 }}>
                               <CarouselContent className="ml-0 -mr-2 md:-mr-4">
-                                {originalsTileImages.map((imageSrc, index) => {
+                                {squareTileImages.slice(0, 26).map((imageSrc, index) => {
                                   const gameNames = ['Plinko', 'Blackjack', 'Dice', 'Diamonds', 'Mines', 'Keno', 'Limbo', 'Wheel', 'Hilo', 'Video Poker']
                                   return (
                                     <CarouselItem key={index} className={cn(
@@ -12634,7 +12559,7 @@ function NavTestPageContent() {
                                     )}>
                                       <div 
                                         data-content-item 
-                                        className="w-[180px] h-[236px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
+                                        className="w-[158px] h-[208px] md:w-[180px] md:h-[236px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
                                         onClick={() => {
                                           const originalGameNames = ['Inferno Rush', 'Heat Blackjack', 'Neon Dice', 'Diamond Blaze', 'Molten Mines', 'Keno Heat', 'Turbo Limbo', 'Ring of Fire', 'High Lo Heat', 'Video Poker Pro']
                                           setSelectedGame({
@@ -12652,7 +12577,7 @@ function NavTestPageContent() {
                                           className="object-cover group-hover:scale-105 transition-transform duration-300"
                                           sizes="160px"
                                           onError={(e) => {
-                                            e.currentTarget.src = squareTileImages[index % squareTileImages.length]
+                                            e.currentTarget.src = squareTileImages[(index + 1) % squareTileImages.length]
                                           }}
                                         />
                                         <GameTagBadge tag="Hot" vendor="Hot Games" />
@@ -12747,7 +12672,7 @@ function NavTestPageContent() {
                                         index={index + 10}
                                         brandPrimary={brandPrimary}
                                         seats={{ occupied: bjSeats[index % bjSeats.length].o, total: bjSeats[index % bjSeats.length].t }}
-                                        className="w-[180px] h-[236px]"
+                                        className="w-[158px] h-[208px] md:w-[180px] md:h-[236px]"
                                         onClick={() => {
                                           setSelectedGame({
                                             title: gameNames[index % gameNames.length],
@@ -12810,141 +12735,72 @@ function NavTestPageContent() {
                           </div>
                         )}
                         
-                        {/* Feature Section - Jackpots */}
-                        <div className={cn(
-                          "relative w-full rounded-lg overflow-hidden mb-8",
-                          isMobile ? "mx-3" : "-mx-6"
-                        )}>
-                          <div className="relative rounded-lg min-h-[400px] overflow-hidden bg-[#0b111a]">
-                            <div
-                              className="pointer-events-none absolute inset-0"
-                              style={{
-                                background:
-                                  "linear-gradient(112deg, rgba(255, 122, 47, 0.16) 0%, rgba(255, 90, 20, 0.13) 38%, rgba(154, 63, 31, 0.14) 72%, rgba(8, 12, 20, 0.86) 100%), radial-gradient(120% 80% at 18% 0%, rgba(255, 104, 44, 0.2) 0%, rgba(225, 70, 44, 0.13) 42%, rgba(130, 44, 32, 0.11) 66%, rgba(8, 12, 20, 0.95) 100%)",
-                              }}
-                            />
-                            <BackgroundBeams className="opacity-60" />
-                            <div className={cn(
-                              "relative z-10",
-                              isMobile ? "p-8" : "pt-8 pb-8 pr-8 pl-14"
-                            )}>
-                              {/* Tag */}
-                              <div className="mb-2">
-                                <span className="inline-block bg-orange-600/80 text-white text-xs font-semibold px-3 py-1 rounded-small">
-                                  Jackpots
-                                </span>
-                              </div>
-                              
-                              {/* Title */}
-                              <h2 className="text-4xl md:text-3xl font-bold text-white mb-3">
-                                JACKPOT GAMES
-                              </h2>
-                              
-                              {/* Description */}
-                              <p className="text-white/90 text-sm md:text-base max-w-2xl mb-6">
-                                Discover our featured jackpot titles with progressive pools, high-volatility bonus rounds, and massive potential payouts.
-                              </p>
-                              
-                              {/* Action Button + Arrows */}
-                              <div className="flex items-center justify-between mb-6 pointer-events-auto">
-                                <Button
-                                  variant="ghost"
-                                  className="text-white/70 hover:text-white hover:bg-white/5 text-sm px-6 py-2.5 border border-white/20 rounded-small flex items-center gap-2"
-                                  onClick={() => {
-                                    setSelectedCategory('Jackpots')
-                                    setShowAllGames(true)
-                                    setActiveSubNav('Jackpots')
-                                  }}
-                                >
-                                  <IconCoins className="w-4 h-4" />
-                                  All Games
-                                </Button>
-                                {!isMobile && (
-                                  <div className="flex items-center gap-2">
-                                    <Button
-                                      variant="ghost"
-                                      size="icon"
-                                      className="h-8 w-8 rounded-small bg-black/40 backdrop-blur-sm border border-white/20 hover:bg-black/60 hover:border-white/30 text-white disabled:opacity-50 disabled:cursor-not-allowed"
-                                      onClick={() => {
-                                        if (halloweenCarouselApi) {
-                                          const currentIndex = halloweenCarouselApi.selectedScrollSnap()
-                                          const targetIndex = Math.max(0, currentIndex - 2)
-                                          halloweenCarouselApi.scrollTo(targetIndex)
-                                        }
-                                      }}
-                                      disabled={!halloweenCarouselApi || !halloweenCanScrollPrev}
-                                    >
-                                      <IconChevronLeft className="h-4 w-4" strokeWidth={2} />
-                                    </Button>
-                                    <Button
-                                      variant="ghost"
-                                      size="icon"
-                                      className="h-8 w-8 rounded-small bg-black/40 backdrop-blur-sm border border-white/20 hover:bg-black/60 hover:border-white/30 text-white disabled:opacity-50 disabled:cursor-not-allowed"
-                                      onClick={() => {
-                                        if (halloweenCarouselApi) {
-                                          const currentIndex = halloweenCarouselApi.selectedScrollSnap()
-                                          const slideCount = halloweenCarouselApi.scrollSnapList().length
-                                          const targetIndex = Math.min(slideCount - 1, currentIndex + 2)
-                                          halloweenCarouselApi.scrollTo(targetIndex)
-                                        }
-                                      }}
-                                      disabled={!halloweenCarouselApi || !halloweenCanScrollNext}
-                                    >
-                                      <IconChevronRight className="h-4 w-4" strokeWidth={2} />
-                                </Button>
-                                  </div>
-                                )}
-                              </div>
-                              
-                              {/* Game Tiles Carousel */}
-                              <div className="pointer-events-auto -mx-6">
-                                <Carousel setApi={setHalloweenCarouselApi} className="w-full relative" opts={{ dragFree: true, containScroll: 'trimSnaps', duration: 15 }}>
-                                  <CarouselContent className="ml-0 -mr-2 md:-mr-4">
-                                {Array.from({ length: 15 }).map((_, index) => {
-                                  const imageSrc = squareTileImages[index % squareTileImages.length]
+                        {/* Ready to Drop Section */}
+                        <div className={cn("mb-8", isMobile ? "px-3" : "px-6")}>
+                          <h2 className="text-lg font-semibold text-black dark:text-white transition-colors duration-300 mb-6">
+                            Ready to Drop
+                          </h2>
+
+                          <div className="space-y-3 md:space-y-4">
+                            {Array.from({ length: 3 }).map((_, rowIndex) => (
+                              <div
+                                key={`ready-drop-row-${rowIndex}`}
+                                className="flex gap-2 md:gap-3 overflow-x-auto scrollbar-hide pb-1"
+                                style={{ WebkitOverflowScrolling: 'touch' }}
+                              >
+                                {Array.from({ length: isMobile ? 9 : 8 }).map((__, tileIndex) => {
+                                  const gameIndex = rowIndex * 8 + tileIndex
+                                  const imageSrc = squareTileImages[gameIndex % squareTileImages.length]
+                                  const jackpotNames = ['Mega Moolah', 'Divine Fortune', 'Book of Jackpots', 'Dragon Gold', 'Treasure Vault', 'Grand Spinner', 'Gates of Olympus', 'Cash Volt']
+                                  const title = jackpotNames[gameIndex % jackpotNames.length]
+                                  const jackpotValue = 75000 + ((gameIndex * 17243) % 840000)
+                                  const jackpotTicker = `€${jackpotValue.toLocaleString('de-DE')}`
+
                                   return (
-                                        <CarouselItem key={index} className={cn(
-                                          "pr-0 basis-auto flex-shrink-0",
-                                          index === 0 ? (isMobile ? "pl-3" : "pl-8") : "pl-2 md:pl-3"
-                                        )}>
-                                      <div 
-                                        data-content-item 
-                                        className="w-[180px] h-[236px] rounded-small bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group border border-white/20"
-                                        onMouseEnter={(e) => {
-                                          e.currentTarget.style.backgroundColor = `${getComputedStyle(document.documentElement).getPropertyValue('--ds-primary').trim() || '#ee3536'}33`
-                                        }}
-                                        onMouseLeave={(e) => {
-                                          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
-                                        }}
-                                        onClick={() => {
-                                          const halloweenNames = ['Mega Moolah', 'Divine Fortune', 'Book of Jackpots', 'Dragon Gold', 'Treasure Vault', 'Grand Spinner']
-                                          setSelectedGame({
-                                            title: halloweenNames[index % halloweenNames.length],
-                                            image: imageSrc,
-                                                provider: getTileVendor(index + 80),
-                                            features: ['Progressive Jackpot Pool', 'High Volatility', 'Jackpot Bonus Features']
-                                          })
-                                        }}
-                                      >
-                                        {imageSrc && (
-                                          <Image
-                                            src={imageSrc}
-                                            alt={`Jackpot Game ${index + 1}`}
-                                            fill
-                                            className="object-cover group-hover:scale-105 transition-transform duration-300"
-                                            sizes="160px"
-                                          />
-                                        )}
-                                            <GameTagBadge tag={getMetaTag(index + 80)} vendor={getTileVendor(index + 80)} />
-                                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'color-mix(in srgb, var(--ds-primary, #ee3536) 10%, transparent)' }} />
+                                    <div
+                                      key={`ready-drop-tile-${rowIndex}-${tileIndex}`}
+                                      data-content-item
+                                      className={cn(
+                                        "w-[158px] h-[208px] md:w-[180px] md:h-[236px] rounded-small bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group border border-white/20 flex-shrink-0",
+                                        rowIndex === 0 && tileIndex === 0 && !isMobile ? "ml-0" : ""
+                                      )}
+                                      onMouseEnter={(e) => {
+                                        e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)'
+                                      }}
+                                      onMouseLeave={(e) => {
+                                        e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
+                                      }}
+                                      onClick={() => {
+                                        setSelectedGame({
+                                          title,
+                                          image: imageSrc,
+                                          provider: getTileVendor(gameIndex + 80),
+                                          features: ['Progressive Jackpot Pool', 'High Volatility', 'Live Jackpot Ticker']
+                                        })
+                                      }}
+                                    >
+                                      {imageSrc && (
+                                        <Image
+                                          src={imageSrc}
+                                          alt={`${title} tile`}
+                                          fill
+                                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                                          sizes="160px"
+                                        />
+                                      )}
+                                      <GameTagBadge tag={getMetaTag(gameIndex + 80)} vendor={getTileVendor(gameIndex + 80)} />
+                                      <div className="absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-black/80 via-black/55 to-transparent p-2.5 md:p-3">
+                                        <p className="text-[11px] md:text-xs font-semibold text-white truncate">{title}</p>
+                                        <p className="text-[10px] md:text-[11px] text-emerald-300/95 font-semibold tracking-wide">
+                                          Jackpot Ticker: {jackpotTicker}
+                                        </p>
                                       </div>
-                                        </CarouselItem>
+                                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'color-mix(in srgb, white 6%, transparent)' }} />
+                                    </div>
                                   )
                                 })}
-                                  </CarouselContent>
-                                </Carousel>
                               </div>
-                            </div>
+                            ))}
                           </div>
                         </div>
                         
@@ -12956,10 +12812,10 @@ function NavTestPageContent() {
                           {/* Tabs */}
                           <div className="mb-4 overflow-x-auto scrollbar-hide" style={{ WebkitOverflowScrolling: 'touch' }}>
                             <div className="p-0.5 h-auto gap-1 rounded-3xl border border-white/10 backdrop-blur-xl inline-flex w-max bg-[var(--ds-sidebar-bg,#121417)]/90">
-                              {['All Bets', 'Jackpot Winners', 'High Rollers', 'Daily Race'].map((tab) => (
+                              {['All Bets', 'Jackpot Winners', 'High Rollers'].map((tab) => (
                                 <button
                                   key={tab}
-                                  onClick={() => setCasinoActivityTab(tab as 'All Bets' | 'Jackpot Winners' | 'High Rollers' | 'Daily Race')}
+                                  onClick={() => setCasinoActivityTab(tab as 'All Bets' | 'Jackpot Winners' | 'High Rollers')}
                                   className={cn(
                                     "relative px-4 py-1 h-9 text-xs font-medium rounded-2xl transition-all duration-300 whitespace-nowrap flex-shrink-0",
                                     casinoActivityTab === tab
@@ -12988,61 +12844,11 @@ function NavTestPageContent() {
                             </div>
                           </div>
 
-                          {/* Activity Feed Table or Race Leaderboard */}
+                          {/* Activity Feed Table */}
                           <Card className="bg-[var(--ds-sidebar-bg,#121417)]/92 backdrop-blur-sm border-white/10 rounded-small overflow-hidden">
                             <CardContent className="p-0">
                               <div className="max-h-[500px] overflow-y-auto scrollbar-hide">
-                                {casinoActivityTab === 'Daily Race' ? (
-                                  <div className="bg-[var(--ds-card-bg,#151b24)] border border-white/10 rounded-lg overflow-hidden">
-                                    <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
-                                      <span className="text-white/70 text-xs">Ends in</span>
-                                      <div className="text-sm font-bold text-white flex items-center gap-1 tabular-nums">
-                                        <NumberFlow value={casinoRaceHours} />
-                                        <span className="mx-1">:</span>
-                                        <NumberFlow value={casinoRaceMinutes} />
-                                        <span className="mx-1">:</span>
-                                        <NumberFlow value={casinoRaceSeconds} />
-                                      </div>
-                                    </div>
-                                    <div className="overflow-x-auto">
-                                      <table className="w-full">
-                                        <thead>
-                                          <tr className="border-b border-white/10">
-                                            <th className="text-left py-3 px-4 text-xs font-medium text-white/70">Rank</th>
-                                            <th className="text-left py-3 px-4 text-xs font-medium text-white/70">Nickname</th>
-                                            <th className="text-right py-3 px-4 text-xs font-medium text-white/70">Wagered</th>
-                                            <th className="text-right py-3 px-4 text-xs font-medium text-white/70">Prize</th>
-                                          </tr>
-                                        </thead>
-                                        <tbody>
-                                          {casinoRaceLeaderboardData.map((entry) => (
-                                            <tr key={entry.rank} className="border-b border-white/10 hover:bg-white/5 transition-colors">
-                                              <td className="py-3 px-4">
-                                                <div className="flex items-center gap-2">
-                                                  {entry.medal === 'gold' && <IconTrophy className="w-5 h-5 text-yellow-400" />}
-                                                  {entry.medal === 'silver' && <IconTrophy className="w-5 h-5 text-gray-400" />}
-                                                  {entry.medal === 'bronze' && <IconTrophy className="w-5 h-5 text-orange-400" />}
-                                                  {!entry.medal && <span className="text-white/70 text-sm">{entry.rank}th</span>}
-                                                </div>
-                                              </td>
-                                              <td className="py-3 px-4 text-white text-sm">{entry.nickname}</td>
-                                              <td className="py-3 px-4 text-right text-white text-sm">{entry.wagered}</td>
-                                              <td className="py-3 px-4 text-right text-white text-sm font-semibold">{entry.prize}</td>
-                                            </tr>
-                                          ))}
-                                          <tr className="border-t-2 border-white/20 bg-white/5">
-                                            <td className="py-3 px-4">
-                                              <span className="text-white text-sm font-semibold">{casinoUserRacePosition.rank}th</span>
-                                            </td>
-                                            <td className="py-3 px-4 text-white text-sm font-semibold">{casinoUserRacePosition.nickname}</td>
-                                            <td className="py-3 px-4 text-right text-white text-sm font-semibold">{casinoUserRacePosition.wagered}</td>
-                                            <td className="py-3 px-4 text-right text-white text-sm font-semibold">{casinoUserRacePosition.prize}</td>
-                                          </tr>
-                                        </tbody>
-                                      </table>
-                                    </div>
-                                  </div>
-                                ) : casinoActivityTab === 'Jackpot Winners' ? (
+                                {casinoActivityTab === 'Jackpot Winners' ? (
                                   <Table>
                                     <TableHeader>
                                       <TableRow className="border-white/10 hover:bg-transparent">
@@ -13250,7 +13056,7 @@ function NavTestPageContent() {
                                     )}>
                                       <div 
                                         data-content-item 
-                                        className="w-[180px] h-[236px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
+                                        className="w-[158px] h-[208px] md:w-[180px] md:h-[236px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
                                         onClick={() => {
                                           setSelectedGame({
                                             title: popularNames[index % popularNames.length],
@@ -13356,7 +13162,7 @@ function NavTestPageContent() {
                                         bettingRange={baccaratLimits[index % baccaratLimits.length]}
                                         index={index + 20}
                                         brandPrimary={brandPrimary}
-                                        className="w-[180px] h-[236px]"
+                                        className="w-[158px] h-[208px] md:w-[180px] md:h-[236px]"
                                         onClick={() => {
                                           setSelectedGame({
                                             title: baccaratNames[index % baccaratNames.length],
@@ -13416,7 +13222,7 @@ function NavTestPageContent() {
                                     )}>
                                       <div 
                                         data-content-item 
-                                        className="w-[180px] h-[236px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
+                                        className="w-[158px] h-[208px] md:w-[180px] md:h-[236px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
                                         onClick={() => {
                                           setSelectedGame({
                                             title: exclusiveNames[index % exclusiveNames.length],
@@ -13489,7 +13295,7 @@ function NavTestPageContent() {
                                     )}>
                                       <div 
                                         data-content-item 
-                                        className="w-[180px] h-[236px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
+                                        className="w-[158px] h-[208px] md:w-[180px] md:h-[236px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
                                         onClick={() => {
                                           setSelectedGame({
                                             title: crashNames[index % crashNames.length],
@@ -13674,7 +13480,7 @@ function NavTestPageContent() {
                                     )}>
                                       <div 
                                         data-content-item 
-                                        className="w-[180px] h-[236px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
+                                        className="w-[158px] h-[208px] md:w-[180px] md:h-[236px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
                                         onClick={() => {
                                           setSelectedGame({
                                             title: instantNames[index % instantNames.length],
@@ -13808,19 +13614,15 @@ function NavTestPageContent() {
                   {/* Trust & Security Section - More compact */}
                   <div className="mb-6">
                     <div className="flex items-center gap-2 mb-3">
-                      <h3 className="font-semibold text-base">A TRUSTED & SAFE EXPERIENCE</h3>
+                      <h3 className="font-semibold text-base">We accept</h3>
                       <IconShield className="w-4 h-4" />
                     </div>
                     <p className="text-xs text-white/70 mb-4 max-w-2xl">
-                      At BetOnline, our company's guiding principle is to establish long-lasting, positive relationships with our customers and within the online gaming community for over 25 years.
+                      Fast and secure crypto deposits and payouts.
                     </p>
                     <div className="flex flex-wrap items-center gap-3">
                       {/* Crypto payment method logos */}
                       {['Bitcoin', 'Ethereum', 'Litecoin', 'USDT', 'USDC', 'BitcoinCash', 'Dogecoin'].map((method) => (
-                        <PaymentLogo key={method} method={method} />
-                      ))}
-                      {/* Traditional payment method logos */}
-                      {['VISA', 'Mastercard', 'AMEX', 'Discover'].map((method) => (
                         <PaymentLogo key={method} method={method} />
                       ))}
                       {/* Security badges */}
@@ -14591,36 +14393,8 @@ function NavTestPageContent() {
                   {selectedGame.title}
                 </h2>
 
-                    {/* Right Icons - Fullscreen, Favorite and Close */}
+                    {/* Right Icons - Favorite and Close */}
                     <div className="flex items-center gap-1">
-                <button
-                          onClick={() => {
-                            if (!gameImageRef.current) return
-                            
-                            if (!isFullscreen) {
-                              if (gameImageRef.current.requestFullscreen) {
-                                gameImageRef.current.requestFullscreen()
-                              } else if ((gameImageRef.current as any).webkitRequestFullscreen) {
-                                (gameImageRef.current as any).webkitRequestFullscreen()
-                              } else if ((gameImageRef.current as any).msRequestFullscreen) {
-                                (gameImageRef.current as any).msRequestFullscreen()
-                              }
-                              setIsFullscreen(true)
-                            } else {
-                              if (document.exitFullscreen) {
-                                document.exitFullscreen()
-                              } else if ((document as any).webkitExitFullscreen) {
-                                (document as any).webkitExitFullscreen()
-                              } else if ((document as any).msExitFullscreen) {
-                                (document as any).msExitFullscreen()
-                              }
-                              setIsFullscreen(false)
-                            }
-                          }}
-                          className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
-                        >
-                          <IconMaximize className="w-4 h-4 text-white/70 hover:text-white" />
-                        </button>
                       <button 
                         onClick={() => {
                           // Toggle favorite

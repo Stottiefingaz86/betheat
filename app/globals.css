@@ -1788,6 +1788,14 @@ a[role="button"]:not(.rounded-full):not([class*="rounded-full"]),
   background-image: var(--ds-primary-gradient, linear-gradient(112deg, rgba(255, 136, 52, 1) 0%, rgba(255, 109, 42, 0.98) 40%, rgba(236, 73, 46, 0.94) 72%, rgba(168, 44, 42, 0.92) 100%)) !important;
 }
 
+/* Mobile DVD tiles: keep three visible per row with swipe affordance */
+@media (max-width: 768px) {
+  .w-\[158px\].h-\[208px\] {
+    width: 120px !important;
+    height: 157px !important;
+  }
+}
+
 .bg-\[\#031679\],
 [style*="background-color: #031679"],
 [style*="background-color:#031679"],
@@ -1824,6 +1832,41 @@ a[role="button"]:not(.rounded-full):not([class*="rounded-full"]),
 [style*="background-color: rgb(238, 53, 54)"] {
   background-color: var(--ds-primary, #ff6a1a) !important;
   background-image: var(--ds-primary-gradient, linear-gradient(112deg, rgba(255, 136, 52, 1) 0%, rgba(255, 109, 42, 0.98) 40%, rgba(236, 73, 46, 0.94) 72%, rgba(168, 44, 42, 0.92) 100%)) !important;
+}
+
+/* Connected carousel arrows for header controls */
+button[class*="h-8 w-8 rounded-small bg-[#1a1a1a]/90"][class*="disabled:cursor-not-allowed"] {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  background-image: none !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  color: #fff !important;
+  border-radius: 9999px !important;
+}
+
+button[class*="h-8 w-8 rounded-small bg-[#1a1a1a]/90"][class*="disabled:cursor-not-allowed"] + button[class*="h-8 w-8 rounded-small bg-[#1a1a1a]/90"][class*="disabled:cursor-not-allowed"] {
+  margin-left: -0.5rem !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
+button[class*="h-8 w-8 rounded-small bg-[#1a1a1a]/90"][class*="disabled:cursor-not-allowed"]:has(+ button[class*="h-8 w-8 rounded-small bg-[#1a1a1a]/90"][class*="disabled:cursor-not-allowed"]) {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+button[class*="h-8 w-8 rounded-small bg-[#1a1a1a]/90"][class*="disabled:cursor-not-allowed"]:disabled,
+button[class*="h-8 w-8 rounded-small bg-[#1a1a1a]/90"][class*="disabled:cursor-not-allowed"][aria-disabled="true"],
+button[class*="h-8 w-8 rounded-small bg-[#1a1a1a]/90"][class*="disabled:cursor-not-allowed"][data-disabled] {
+  opacity: 0.4 !important;
+  filter: saturate(0.5) brightness(0.9) !important;
+  cursor: not-allowed !important;
+}
+
+button[class*="h-8 w-8 rounded-small bg-[#1a1a1a]/90"][class*="disabled:cursor-not-allowed"]:disabled svg,
+button[class*="h-8 w-8 rounded-small bg-[#1a1a1a]/90"][class*="disabled:cursor-not-allowed"][aria-disabled="true"] svg,
+button[class*="h-8 w-8 rounded-small bg-[#1a1a1a]/90"][class*="disabled:cursor-not-allowed"][data-disabled] svg {
+  opacity: 0.45 !important;
 }
 
 .text-\[\#ee3536\],

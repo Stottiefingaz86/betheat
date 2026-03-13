@@ -121,7 +121,6 @@ import {
   IconCoins,
   IconDownload,
   IconExternalLink,
-  IconMaximize,
   IconShare
 , IconMessageCircle2, IconTrash, IconBrandTelegram, IconRefresh, IconParachute, IconTargetArrow} from '@tabler/icons-react'
 import { SportsTrackerWidget } from '@/components/sports-tracker-widget'
@@ -378,14 +377,14 @@ function PaymentLogo({ method, className }: { method: string; className?: string
     : `/logos/payment/${normalizedMethod}.svg`
   
   return (
-    <div className={`flex items-center justify-center h-8 px-2 ${className || ''}`}>
+    <div className={`flex items-center justify-center h-7 min-w-[42px] px-1.5 ${className || ''}`}>
       {!imageError ? (
         <Image
           src={imagePath}
           alt={method}
-          width={60}
-          height={20}
-          className="object-contain opacity-80 hover:opacity-100 transition-opacity"
+          width={46}
+          height={15}
+          className="object-contain opacity-72 hover:opacity-90 transition-opacity"
           onError={() => {
             if (!useFallback) {
               setUseFallback(true)
@@ -2813,17 +2812,14 @@ function VIPRewardsPage({ brandPrimary, setVipDrawerOpen, setVipActiveTab, setSh
             <Separator className="bg-white/10 mb-6" />
             <div className="mb-6">
               <div className="flex items-center gap-2 mb-3">
-                <h3 className="font-semibold text-base">A TRUSTED & SAFE EXPERIENCE</h3>
+                <h3 className="font-semibold text-base">We accept</h3>
                 <IconShield className="w-4 h-4" />
               </div>
               <p className="text-xs text-white/70 mb-4 max-w-2xl">
-                At BetOnline, our company's guiding principle is to establish long-lasting, positive relationships with our customers and within the online gaming community for over 25 years.
+                Fast and secure crypto deposits and payouts.
               </p>
               <div className="flex flex-wrap items-center gap-3">
                 {['Bitcoin', 'Ethereum', 'Litecoin', 'USDT', 'USDC', 'BitcoinCash', 'Dogecoin'].map((method) => (
-                  <PaymentLogo key={method} method={method} />
-                ))}
-                {['VISA', 'Mastercard', 'AMEX', 'Discover'].map((method) => (
                   <PaymentLogo key={method} method={method} />
                 ))}
                 <SecurityBadge name="Responsible Gaming" iconPath="/banners/partners/responsible gaming.webp" />
@@ -9150,19 +9146,15 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
             {/* Trust & Security Section - More compact */}
             <div className="mb-6">
               <div className="flex items-center gap-2 mb-3">
-                <h3 className="font-semibold text-base">A TRUSTED & SAFE EXPERIENCE</h3>
+                <h3 className="font-semibold text-base">We accept</h3>
                 <IconShield className="w-4 h-4" />
               </div>
               <p className="text-xs text-white/70 mb-4 max-w-2xl">
-                At BetOnline, our company's guiding principle is to establish long-lasting, positive relationships with our customers and within the online gaming community for over 25 years.
+                Fast and secure crypto deposits and payouts.
               </p>
               <div className="flex flex-wrap items-center gap-3">
                 {/* Crypto payment method logos */}
                 {['Bitcoin', 'Ethereum', 'Litecoin', 'USDT', 'USDC', 'BitcoinCash', 'Dogecoin'].map((method) => (
-                  <PaymentLogo key={method} method={method} />
-                ))}
-                {/* Traditional payment method logos */}
-                {['VISA', 'Mastercard', 'AMEX', 'Discover'].map((method) => (
                   <PaymentLogo key={method} method={method} />
                 ))}
                 {/* Security badges */}
@@ -10732,9 +10724,7 @@ function NavTestPageContent() {
     { icon: IconCards, label: 'Table Games' },
     { icon: IconBroadcast, label: 'Live Casino' },
     { icon: IconTrophy, label: 'Tournaments' },
-    { icon: IconCrown, label: 'Loyalty Hub' },
-    { icon: IconBuilding, label: 'Banking' },
-    { icon: IconLifebuoy, label: 'Need Help' },
+    { icon: IconLifebuoy, label: 'Support' },
     ...(isMobile ? [{ icon: IconWorld, label: 'Language' }] : []),
   ]
 
@@ -10876,7 +10866,7 @@ function NavTestPageContent() {
                 <span className="sr-only">Toggle Sidebar</span>
               </Button>
               <div 
-                className="relative h-7 w-[108px] flex items-center cursor-pointer"
+                className="relative h-8 w-[136px] flex items-center cursor-pointer"
                 onClick={() => {
                   router.push('/')
                 }}
@@ -10903,9 +10893,10 @@ function NavTestPageContent() {
                       }}
                       className="h-8 w-8 text-white/40 hover:text-white hover:bg-white/10"
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="3" y="3" width="18" height="18" rx="2" />
-                        <line x1="9" y1="3" x2="9" y2="21" />
+                      <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none">
+                        <rect x="1" y="2.75" width="14" height="2" rx="1" fill="currentColor" />
+                        <rect x="1" y="7" width="10" height="2" rx="1" fill="currentColor" />
+                        <rect x="1" y="11.25" width="6" height="2" rx="1" fill="currentColor" />
                       </svg>
                     </Button>
                     <div className="w-px h-5 bg-white/20" />
@@ -11177,10 +11168,10 @@ function NavTestPageContent() {
                 isMobile ? "h-5 w-5" : "h-6 w-6"
               )}>
                 <AvatarFallback className="bg-white/10 text-white flex items-center justify-center font-semibold tracking-tight" style={{ fontSize: isMobile ? '9px' : '10px' }}>
-                  CH
+                  <IconUser className={cn(isMobile ? "h-2.5 w-2.5" : "h-3 w-3")} />
                 </AvatarFallback>
               </Avatar>
-                <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-red-500" />
+                <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-[var(--ds-primary,#ff6a1a)]" />
               </div>
               <div className={cn(
                 "font-bold text-white tabular-nums transition-all duration-300 flex items-center justify-center text-center whitespace-nowrap min-w-0",
@@ -12293,7 +12284,7 @@ function NavTestPageContent() {
                             </React.Fragment>
                           )
                         }
-                        const showSeparatorAbove = item.label === 'Loyalty Hub'
+                        const showSeparatorAbove = false
                         // Determine if this menu item is active based on selectedCategory only
                         // Note: activeSubNav is for sub nav tabs, not side menu highlighting
                         const isActive = selectedCategory === item.label || 
@@ -12397,15 +12388,9 @@ function NavTestPageContent() {
                                         setSelectedCategory('Tournaments')
                                         setShowAllGames(true)
                                         setShowSports(false)
-                                      } else if (item.label === 'Loyalty Hub') {
-                                        openVipDrawer()
-                                        setShowSports(false)
-                                      } else if (item.label === 'Banking') {
-                                        openDepositDrawer()
-                                        setShowSports(false)
-                                      } else if (item.label === 'Need Help') {
-                                        // Handle need help - could open a help modal or navigate
-                                        console.log('Need Help clicked')
+                                      } else if (item.label === 'Support') {
+                                        // Handle support action (chat/help modal can be wired here)
+                                        console.log('Support clicked')
                                         setShowSports(false)
                                       }
                                     }}
@@ -12529,9 +12514,7 @@ function NavTestPageContent() {
                   <SidebarGroupContent>
                     <SidebarMenu>
                       {[
-                        { icon: IconCrown, label: 'Loyalty Hub' },
-                        { icon: IconBuilding, label: 'Banking' },
-                        { icon: IconLifebuoy, label: 'Need Help' },
+                        { icon: IconLifebuoy, label: 'Support' },
                         ...(isMobile ? [{ icon: IconWorld, label: 'Language' }] : []),
                       ].map((item, index) => {
                         const Icon = item.icon
@@ -12687,7 +12670,7 @@ function NavTestPageContent() {
                     {/* Icon Tabs - Left Side (Desktop Only) */}
                     {!isMobile && (
                       <div className="flex-shrink-0">
-                        <div className="bg-white/5 dark:bg-white/5 bg-gray-100/80 dark:bg-white/5 p-0.5 h-auto gap-0.5 rounded-3xl border-0 flex items-center transition-colors duration-300">
+                        <div className="bg-white/5 dark:bg-white/5 bg-gray-100/80 dark:bg-white/5 p-0 h-auto gap-1 rounded-3xl border-0 flex items-center transition-colors duration-300">
                           <button
                             onClick={(e) => {
                               e.preventDefault()
@@ -12724,35 +12707,6 @@ function NavTestPageContent() {
                         </div>
                       </div>
                     )}
-                    {isMobile && (
-                      <div
-                        className="flex-shrink-0 flex items-center gap-1 pl-2 pr-1 sticky left-0 z-20 border-r border-white/5"
-                        style={{ backgroundColor: 'var(--ds-nav-bg, #121417)' }}
-                      >
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.preventDefault()
-                            e.stopPropagation()
-                            const targetCategory = activeSubNav === 'For You' ? 'New' : activeSubNav
-                            setActiveIconTab('filter')
-                            setShowAllGames(true)
-                            setSelectedVendor('')
-                            setSelectedCategory(targetCategory)
-                            setActiveSubNav(targetCategory)
-                          }}
-                          className={cn(
-                            "bg-transparent rounded-2xl p-1.5 h-9 w-9 flex items-center justify-center transition-all duration-300",
-                            activeIconTab === 'filter'
-                              ? "text-white bg-white/10"
-                              : "text-white/75 hover:text-white hover:bg-white/5"
-                          )}
-                        >
-                          <IconFilter className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    )}
-                    
                     {/* Text Tabs - Full Width */}
                     {!isMobile && desktopSubNavCanScrollLeft && (
                       <button
@@ -12828,6 +12782,29 @@ function NavTestPageContent() {
                         flexShrink: 0
                       }}
                       >
+                        {isMobile && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              e.stopPropagation()
+                              const targetCategory = activeSubNav === 'For You' ? 'New' : activeSubNav
+                              setActiveIconTab('filter')
+                              setShowAllGames(true)
+                              setSelectedVendor('')
+                              setSelectedCategory(targetCategory)
+                              setActiveSubNav(targetCategory)
+                            }}
+                            className={cn(
+                              "relative z-10 rounded-2xl p-1.5 h-9 w-9 flex items-center justify-center transition-colors duration-300 flex-shrink-0 scroll-snap-start",
+                              activeIconTab === 'filter'
+                                ? "text-white bg-white/10"
+                                : "text-white/75 hover:text-white hover:bg-white/[0.04]"
+                            )}
+                          >
+                            <IconFilter className="w-3.5 h-3.5" />
+                          </button>
+                        )}
                         {['For You', 'Slots', 'Bonus Buys', 'Megaways', 'Originals', 'Blackjack', 'Live', 'Jackpots', 'Early', 'Staff Picks', 'Exclusive', 'New'].map((tab, index) => (
                           <TabsTab 
                             key={tab}
@@ -15148,38 +15125,8 @@ function NavTestPageContent() {
                   {selectedGame.title}
                 </h2>
 
-                    {/* Right Icons - Fullscreen (desktop only), Favorite and Close */}
+                    {/* Right Icons - Favorite and Close */}
                     <div className="flex items-center gap-1">
-                      {!isMobile && (
-                <button
-                          onClick={() => {
-                            if (!gameImageRef.current) return
-                            
-                            if (!isFullscreen) {
-                              if (gameImageRef.current.requestFullscreen) {
-                                gameImageRef.current.requestFullscreen()
-                              } else if ((gameImageRef.current as any).webkitRequestFullscreen) {
-                                (gameImageRef.current as any).webkitRequestFullscreen()
-                              } else if ((gameImageRef.current as any).msRequestFullscreen) {
-                                (gameImageRef.current as any).msRequestFullscreen()
-                              }
-                              setIsFullscreen(true)
-                            } else {
-                              if (document.exitFullscreen) {
-                                document.exitFullscreen()
-                              } else if ((document as any).webkitExitFullscreen) {
-                                (document as any).webkitExitFullscreen()
-                              } else if ((document as any).msExitFullscreen) {
-                                (document as any).msExitFullscreen()
-                              }
-                              setIsFullscreen(false)
-                            }
-                          }}
-                          className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
-                        >
-                          <IconMaximize className="w-4 h-4 text-white/70 hover:text-white" />
-                        </button>
-                      )}
                       <button 
                         onClick={() => {
                           // Toggle favorite

@@ -2110,7 +2110,7 @@ function HomePageContent() {
             >
               <Avatar className={cn("border border-white/20 group-hover:border-white/40 transition-colors", isMobile ? "h-5 w-5" : "h-6 w-6")}>
                 <AvatarFallback className="bg-white/10 text-white flex items-center justify-center font-semibold tracking-tight" style={{ fontSize: isMobile ? '9px' : '10px' }}>
-                  CH
+                  <IconUser className={cn(isMobile ? "h-2.5 w-2.5" : "h-3 w-3")} />
                 </AvatarFallback>
               </Avatar>
               <span className={cn("font-medium text-white text-right tabular-nums transition-all duration-300", isMobile ? "text-[10px] min-w-[60px]" : "text-xs min-w-[70px]")}>
@@ -2188,8 +2188,8 @@ function HomePageContent() {
               <CarouselContent className="-ml-2">
                 {([
                   { src: '/banners/mobile bannerBanner.svg', alt: 'Flaame Banner', href: 'https://www.flaame.co/' },
-                  { src: '/banners/casino/casino_banner1.svg', alt: 'Casino Banner 1', href: '' },
-                  { src: '/banners/casino/casino_banner2.svg', alt: 'Casino Banner 2', href: '' },
+                  { src: '/banners/homepage_banner/28146d45-058f-4ee4-ae3a-bd7ad798b720.png', alt: 'Homepage Banner 1', href: '' },
+                  { src: '/banners/homepage_banner/a8c5b8b0-34a3-47ad-8065-6ab1a4fef39f.png', alt: 'Homepage Banner 2', href: '' },
                   { src: '/banners/casino/casino_banner 3.svg', alt: 'Casino Banner 3', href: '' },
                   { src: '/banners/casino/casino_banner4.svg', alt: 'Casino Banner 4', href: '' },
                   { src: '/banners/casino/casino_Banner5.svg', alt: 'Casino Banner 5', href: '' },
@@ -2226,8 +2226,8 @@ function HomePageContent() {
                 <CarouselItem className="basis-full flex-shrink-0 pl-0 pr-0">
                   <div className="relative w-full cursor-pointer hover:opacity-90 transition-opacity overflow-hidden rounded-2xl pr-4" style={{ aspectRatio: '4/1', minHeight: '200px' }}>
                     <Image
-                      src="/banners/ori.svg"
-                      alt="Originals Banner"
+                      src="/banners/homepage_banner/28146d45-058f-4ee4-ae3a-bd7ad798b720.png"
+                      alt="Homepage Banner 1"
                       fill
                       className="object-cover"
                       priority
@@ -2241,8 +2241,8 @@ function HomePageContent() {
                 <CarouselItem className="basis-full flex-shrink-0 pl-0 pr-0">
                   <div className="relative w-full cursor-pointer hover:opacity-90 transition-opacity overflow-hidden rounded-2xl pr-4" style={{ aspectRatio: '4/1', minHeight: '200px' }}>
                     <Image
-                      src="/banners/banner1.svg"
-                      alt="Hero Banner"
+                      src="/banners/homepage_banner/a8c5b8b0-34a3-47ad-8065-6ab1a4fef39f.png"
+                      alt="Homepage Banner 2"
                       fill
                       className="object-cover"
                       priority
@@ -3802,7 +3802,7 @@ function HomePageContent() {
                   <div className="flex items-center gap-3 flex-1">
                     <Avatar className="h-10 w-10 border border-gray-200">
                       <AvatarFallback className="bg-gray-100 text-gray-600 flex items-center justify-center text-sm font-semibold">
-                        CH
+                        <IconUser className="h-4 w-4" />
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
@@ -3814,7 +3814,7 @@ function HomePageContent() {
                   <div className="flex items-center gap-3 flex-1">
                     <Avatar className="h-10 w-10 border border-gray-200">
                       <AvatarFallback className="bg-gray-100 text-gray-600 flex items-center justify-center text-sm font-semibold">
-                        G
+                        <IconUser className="h-4 w-4" />
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
