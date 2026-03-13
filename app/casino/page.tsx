@@ -10544,15 +10544,9 @@ function NavTestPageContent() {
                                   )}
                                   style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)' } : undefined}
                                 >
-                                  {item.image ? (
-                                    <div className="w-7 h-7 rounded-md flex-shrink-0 overflow-hidden bg-white/10">
-                                      <img src={item.image} alt={item.label} className="w-full h-full object-cover" />
-                                    </div>
-                                  ) : (
-                                    <div className={cn("w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0", isActive ? "bg-white/20" : "bg-white/10")}>
-                                      {Icon && <Icon strokeWidth={1.5} className="w-4 h-4" />}
-                                    </div>
-                                  )}
+                                  <div className={cn("w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0", isActive ? "bg-white/20" : "bg-white/10")}>
+                                    {Icon && <Icon strokeWidth={1.5} className="w-4 h-4" />}
+                                  </div>
                                   {(sidebarState !== 'collapsed' || isMobile) && (
                                     item.gameName ? (
                                       <div className="flex flex-col leading-tight">
