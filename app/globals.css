@@ -1,0 +1,1924 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --ui-button-radius: 0.56rem;
+  --background: #f3f5f7;
+  --foreground: #151b24;
+  --border: 220 13% 18%;
+  --input: 220 13% 18%;
+  --ring: 217.2 91.2% 59.8%;
+  --card: 0 0% 98%;
+  --card-foreground: 0 0% 3.9%;
+  --primary: 23 96% 54%;
+  --primary-foreground: 26 100% 97%;
+  --secondary: 0 0% 96.1%;
+  --secondary-foreground: 0 0% 9%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --muted: 0 0% 96.1%;
+  --muted-foreground: 0 0% 45.1%;
+  --accent: 0 0% 96.1%;
+  --accent-foreground: 0 0% 9%;
+  --popover: 0 0% 98%;
+  --popover-foreground: 0 0% 3.9%;
+}
+
+.dark {
+  color-scheme: dark;
+  --background: #0a0d12;
+  --foreground: #dbe3ee;
+  --border: 220 13% 18%;
+  --input: 220 13% 18%;
+  --ring: 217.2 91.2% 59.8%;
+  --card: 0 0% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --primary: 23 96% 54%;
+  --primary-foreground: 26 100% 97%;
+  --secondary: 0 0% 14.9%;
+  --secondary-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --muted: 0 0% 14.9%;
+  --muted-foreground: 0 0% 63.9%;
+  --accent: 0 0% 14.9%;
+  --accent-foreground: 0 0% 98%;
+  --popover: 0 0% 3.9%;
+  --popover-foreground: 0 0% 98%;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Mobile only: prevent iOS rubber-band bounce on pull-down */
+@media (max-width: 768px) {
+  html, body {
+    overscroll-behavior-y: none;
+  }
+}
+
+/* Match html + body background to nav bg so overscroll area blends with nav.
+   Page content sets its own bg via [data-page-bg] / inline styles. */
+html, body {
+  background-color: var(--ds-nav-bg, #0f1012);
+}
+
+body {
+  color: var(--foreground);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI', 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeSpeed;
+  margin: 0;
+  padding: 0;
+}
+
+/* ─── Performance: Offscreen images skip rendering until near viewport ─── */
+img, video {
+  content-visibility: auto;
+}
+
+/* Smooth GPU-accelerated scrolling for all scroll containers */
+[data-radix-scroll-area-viewport],
+.overflow-auto,
+.overflow-y-auto,
+.overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Mobile: Allow vertical scrolling */
+@media (max-width: 768px) {
+  html, body {
+    height: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    overflow-y: auto;
+    position: relative;
+  }
+}
+
+/* ─── Chrome iOS: GPU-promote fixed header so it never unsticks ─── */
+[data-nav-header] {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* SF Sans font for titles */
+.sf-title {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', sans-serif;
+  font-weight: 700;
+}
+
+/* Neumorphic effects - dark black */
+.neu-soft {
+  background: #0a0a0a;
+  box-shadow: 
+    8px 8px 16px rgba(0, 0, 0, 0.8),
+    -8px -8px 16px rgba(20, 20, 20, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.neu-inset {
+  background: #0a0a0a;
+  box-shadow: 
+    inset 4px 4px 8px rgba(0, 0, 0, 0.9),
+    inset -4px -4px 8px rgba(20, 20, 20, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.neu-flat {
+  background: #0a0a0a;
+  box-shadow: 
+    2px 2px 4px rgba(0, 0, 0, 0.6),
+    -2px -2px 4px rgba(20, 20, 20, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* Soft glass */
+.glass-soft {
+  background: rgba(10, 10, 10, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Agency font */
+.agency-font {
+  font-family: 'Courier New', 'Monaco', 'Menlo', monospace;
+  letter-spacing: 0.02em;
+}
+
+/* Sprite animation */
+.sprite-container {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Shimmer animation for skeleton loaders */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Shimmer button animation */
+@keyframes shimmer-slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Text shimmer animation */
+@keyframes shimmer-text {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
+/* Prevent team logo images from flashing on mobile scroll */
+img[decoding="sync"] {
+  will-change: transform;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Subtle tile shimmer on hover */
+@keyframes tile-shimmer {
+  0% {
+    background-position: -100% 0;
+  }
+  100% {
+    background-position: 100% 0;
+  }
+}
+
+.tile-shimmer {
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: tile-shimmer 1.5s ease-in-out infinite;
+}
+
+@layer base {
+  :root {
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+    --background-image-lp-controls-fade: linear-gradient(
+          to bottom,
+          hsla(0, 0%, 91%, 0) 0%,
+          hsla(0, 0%, 91%, 0.002) 10.6%,
+          hsla(0, 0%, 91%, 0.008) 19.7%,
+          hsla(0, 0%, 91%, 0.019) 27.6%,
+          hsla(0, 0%, 91%, 0.035) 34.4%,
+          hsla(0, 0%, 91%, 0.057) 40.4%,
+          hsla(0, 0%, 91%, 0.086) 45.7%,
+          hsla(0, 0%, 91%, 0.122) 50.6%,
+          hsla(0, 0%, 91%, 0.165) 55.3%,
+          hsla(0, 0%, 91%, 0.217) 60%,
+          hsla(0, 0%, 91%, 0.278) 65%,
+          hsla(0, 0%, 91%, 0.349) 70.3%,
+          hsla(0, 0%, 91%, 0.43) 76.3%,
+          hsla(0, 0%, 91%, 0.522) 83.1%,
+          hsla(0, 0%, 91%, 0.625) 90.9%,
+          hsla(0, 0%, 91%, 0.74) 100%
+        );
+    --lp-accent: oklch(0.269 0 0);
+    --lp-primary: oklch(0.205 0 0);
+    --lp-primary-foreground: oklch(0.985 0 0);
+    --lp-timeline-buffered-color: oklch(0.985 0 0 / 0.4);
+  }
+  .dark {
+    --sidebar-background: 0 0% 17.6%; /* #2d2d2d */
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 10%; /* #1a1a1a */
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 0 0% 100% / 0.1; /* white/10 */
+    --sidebar-ring: 217.2 91.2% 59.8%;
+    --background-image-lp-controls-fade:  linear-gradient(
+          to bottom,
+          hsla(0, 0%, 0%, 0) 0%,
+          hsla(0, 0%, 0%, 0.009) 8.1%,
+          hsla(0, 0%, 0%, 0.035) 15.5%,
+          hsla(0, 0%, 0%, 0.074) 22.5%,
+          hsla(0, 0%, 0%, 0.125) 29%,
+          hsla(0, 0%, 0%, 0.184) 35.3%,
+          hsla(0, 0%, 0%, 0.25) 41.2%,
+          hsla(0, 0%, 0%, 0.32) 47.1%,
+          hsla(0, 0%, 0%, 0.39) 52.9%,
+          hsla(0, 0%, 0%, 0.46) 58.8%,
+          hsla(0, 0%, 0%, 0.526) 64.7%,
+          hsla(0, 0%, 0%, 0.585) 71%,
+          hsla(0, 0%, 0%, 0.636) 77.5%,
+          hsla(0, 0%, 0%, 0.675) 84.5%,
+          hsla(0, 0%, 0%, 0.701) 91.9%,
+          hsla(0, 0%, 0%, 0.71) 100%
+        );
+    --lp-accent: oklch(0.97 0 0);
+    --lp-primary: oklch(0.205 0 0);
+    --lp-primary-foreground: oklch(0.985 0 0);
+    --lp-timeline-buffered-color: oklch(0.985 0 0 / 0.4);
+  }
+  .theme {
+    --lp-timeline-track-height: 4px;
+    --lp-timeline-track-height-active: 7px;
+  }
+}
+
+@layer base {
+          * {
+            @apply border-border;
+          }
+          body {
+            @apply text-foreground;
+            /* bg-background removed — body bg set to nav bg via html,body rule
+               so iOS overscroll area matches the navigation colour.
+               Page content sets its own bg via [data-page-bg] / inline styles. */
+            overflow-x: hidden !important;
+            overflow-y: auto !important;
+            height: auto !important;
+          }
+          html {
+            overflow-x: hidden !important;
+            overflow-y: auto !important;
+            height: auto !important;
+          }
+        }
+
+        /* View Transition API timing function */
+        :root {
+          --expo-out: cubic-bezier(0.16, 1, 0.3, 1);
+          --expo-in: cubic-bezier(0.7, 0, 0.84, 0);
+        }
+
+/* Position sidebar below header - Uses CSS var for brand override, falls back to default */
+[data-sidebar="sidebar"] {
+  background-color: var(--ds-sidebar-bg, #121417) !important;
+}
+
+/* Ensure header stays dark in both light and dark modes */
+header.bg-\[#2d2d2d\] {
+  background-color: var(--ds-nav-bg, #0f1012) !important;
+}
+
+/* Ensure sidebar stays dark in both light and dark modes */
+[data-sidebar="sidebar"],
+[data-sidebar="sidebar"] > div,
+.bg-sidebar {
+  background-color: var(--ds-sidebar-bg, #121417) !important;
+}
+
+/* All sidebars: full height, flush with top of viewport (same as poker) */
+.group.peer > div.fixed {
+  top: 0 !important;
+  height: 100vh !important;
+}
+
+/* Fix sidebar feature items when collapsed - proper icon display and hidden text */
+[data-state="collapsed"][data-collapsible="icon"] [data-sidebar="menu-button"] {
+  width: 100% !important;
+  height: auto !important;
+  min-height: 2rem;
+  padding: 1px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+}
+
+/* Hide text labels and extra icons in collapsed sidebar menu buttons */
+[data-state="collapsed"][data-collapsible="icon"] [data-sidebar="menu-button"] > span {
+  display: none !important;
+}
+
+/* Ensure icon containers are not shrunk in collapsed sidebar */
+[data-state="collapsed"][data-collapsible="icon"] [data-sidebar="menu-button"] > div {
+  flex-shrink: 0;
+}
+
+/* Hide chevron/extra SVG icons (not the first icon) in collapsed sidebar */
+[data-state="collapsed"][data-collapsible="icon"] [data-sidebar="menu-button"] > svg:not(:first-child) {
+  display: none !important;
+}
+
+/* Hide scrollbar in collapsed sidebar but keep scroll functional */
+[data-state="collapsed"][data-collapsible="icon"] [data-sidebar="content"] {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+[data-state="collapsed"][data-collapsible="icon"] [data-sidebar="content"]::-webkit-scrollbar {
+  display: none;
+}
+
+/* Ensure sidebar content is dark — uses brand variable */
+[data-sidebar="sidebar"],
+[data-sidebar="sidebar"] > div,
+.bg-sidebar {
+  background-color: var(--ds-sidebar-bg, #121417) !important;
+}
+
+/* Make "Other" navigation menu primary when open */
+[data-state="open"] button[class*="NavigationMenuTrigger"] {
+  background-color: var(--ds-primary, #ff6a1a) !important;
+  background-image: var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%)) !important;
+}
+
+/* Fix banner and tabs scrolling - allow natural page scroll */
+/* Remove viewport height constraint from SidebarProvider to allow natural page scroll */
+.group\/sidebar-wrapper {
+  min-height: auto !important;
+  height: auto !important;
+  overflow: visible !important;
+  overflow-x: hidden !important;
+  position: relative !important;
+  display: flex !important;
+  width: 100% !important;
+  max-width: 100vw !important;
+}
+
+/* CRITICAL: Ensure SidebarInset is properly constrained to visible width */
+.group\/sidebar-wrapper {
+  display: flex !important;
+  width: 100% !important;
+  max-width: 100vw !important;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.group\/sidebar-wrapper > main[data-sidebar="inset"] {
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  width: auto !important; /* Use auto instead of 0 */
+  flex-basis: 0 !important; /* CRITICAL: Use flex-basis to allow proper flex shrinking */
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+}
+
+/* CRITICAL: Override the w-full class from SidebarInset component - use flex-basis instead */
+main[data-sidebar="inset"].w-full,
+main[data-sidebar="inset"][class*="w-full"],
+main[data-sidebar="inset"] {
+  width: auto !important; /* Override w-full class */
+  flex-basis: 0 !important; /* Use flex-basis to allow proper flex shrinking */
+  flex: 1 1 0% !important; /* Ensure flex takes remaining space */
+  min-width: 0 !important; /* Allow shrinking below content size */
+  max-width: 100% !important; /* Don't exceed parent */
+}
+
+/* Ensure SidebarInset doesn't create a scroll container but allows sticky to work */
+main[data-sidebar="inset"] {
+  overflow: visible !important;
+  overflow-x: visible !important;
+  height: auto !important;
+  max-height: none !important;
+  min-height: 100vh !important;
+  position: relative !important;
+  display: flex !important;
+  flex: 1 1 0% !important;
+  flex-direction: column !important;
+  width: auto !important; /* Use auto */
+  flex-basis: 0 !important; /* CRITICAL: Use flex-basis to allow proper flex shrinking */
+  max-width: none !important;
+  box-sizing: border-box !important;
+  min-width: 0 !important;
+}
+
+/* CRITICAL: Ensure content doesn't extend beyond viewport - constrain to visible area */
+main[data-sidebar="inset"] {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+  position: relative !important;
+}
+
+main[data-sidebar="inset"] > div {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+  position: relative !important;
+}
+
+/* Ensure parent containers allow sticky positioning - no overflow hidden on parents */
+main[data-sidebar="inset"] > * {
+  overflow: visible !important;
+  overflow-x: visible !important; /* Changed to visible for arrows */
+  position: relative !important;
+}
+
+/* Lock horizontal scroll on body and html */
+html, body {
+  overflow-x: hidden !important;
+  width: 100% !important;
+  max-width: 100vw !important;
+}
+
+/* Ensure header stays fixed at top */
+header[class*="z-\[100\]"] {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 100 !important;
+  pointer-events: auto !important;
+}
+
+/* Ensure header buttons are always clickable */
+header[class*="z-\[100\]"] button,
+header[class*="z-\[100\]"] [role="button"] {
+  pointer-events: auto !important;
+  z-index: 101 !important;
+  position: relative !important;
+  cursor: pointer !important;
+}
+
+/* Ensure dropdown menus and sheets appear above sub-nav */
+[data-radix-dropdown-menu-content],
+[data-radix-popper-content-wrapper],
+[data-radix-dropdown-menu-content][data-state="open"] {
+  z-index: 120 !important;
+  position: fixed !important;
+}
+
+/* Ensure dropdown portal appears above sub-nav */
+[data-radix-portal] [data-radix-dropdown-menu-content] {
+  z-index: 120 !important;
+  position: fixed !important;
+}
+
+/* Ensure carousel arrows are ALWAYS visible and NEVER clipped */
+button[class*="CarouselPrevious"],
+button[class*="CarouselNext"] {
+  z-index: 30 !important;
+  position: absolute !important;
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  margin: 0 !important;
+}
+
+/* Ensure ALL parent containers allow overflow for arrows - CRITICAL */
+main[data-sidebar="inset"],
+main[data-sidebar="inset"] > div,
+main[data-sidebar="inset"] > div > div,
+div[class*="relative"][class*="px-6"],
+div[class*="relative"][class*="px-6"] > *,
+[role="region"][aria-roledescription="carousel"],
+[role="region"][aria-roledescription="carousel"] > * {
+  overflow: visible !important;
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+}
+
+/* Ensure carousel container doesn't clip arrows */
+[role="region"][aria-roledescription="carousel"] {
+  position: relative !important;
+  width: 100% !important;
+  overflow: visible !important;
+}
+
+/* The inner scroll container can have overflow-hidden, but arrows must be outside */
+[role="region"][aria-roledescription="carousel"] > div:first-child {
+  overflow: hidden !important; /* This is the scroll container - keep hidden */
+}
+
+/* But arrows are siblings, so they should be visible */
+[role="region"][aria-roledescription="carousel"] > button {
+  overflow: visible !important;
+  position: absolute !important;
+}
+
+/* Ensure carousel arrows are positioned correctly within content area */
+main[data-sidebar="inset"] [role="region"][aria-roledescription="carousel"] {
+  position: relative !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
+}
+
+/* Ensure carousel wrapper doesn't extend beyond viewport */
+main[data-sidebar="inset"] div.relative.px-6 {
+  max-width: 100% !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+}
+
+/* CRITICAL: Force carousel arrows to be visible and positioned correctly - use viewport-relative positioning */
+main[data-sidebar="inset"] [role="region"][aria-roledescription="carousel"] {
+  position: relative !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
+}
+
+/* CRITICAL: Position carousel arrows at the edges of the visible content area - ensure they stay within viewport */
+main[data-sidebar="inset"] [role="region"][aria-roledescription="carousel"] {
+  position: relative !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* CRITICAL: Ensure ALL containers in the content area respect the visible width - target all nested divs */
+main[data-sidebar="inset"] > div,
+main[data-sidebar="inset"] > div > div,
+main[data-sidebar="inset"] > div > div > div,
+main[data-sidebar="inset"] > div > div > div > div,
+main[data-sidebar="inset"] > div > div > div > div > div,
+main[data-sidebar="inset"] div.flex.flex-col.gap-6,
+main[data-sidebar="inset"] div.space-y-8 {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+  min-width: 0 !important;
+  position: relative !important;
+}
+
+/* CRITICAL: Ensure carousel container respects parent width and doesn't overflow */
+main[data-sidebar="inset"] div.relative.px-6 {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+  overflow-x: visible !important;
+  min-width: 0 !important;
+  position: relative !important;
+  padding-right: 2.5rem !important; /* Add padding for arrow */
+}
+
+/* CRITICAL: Force RIGHT carousel arrow to be visible and positioned correctly - use container-relative positioning */
+main[data-sidebar="inset"] [role="region"][aria-roledescription="carousel"] {
+  position: relative !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
+  min-width: 0 !important; /* Allow carousel to shrink */
+}
+
+main[data-sidebar="inset"] [role="region"][aria-roledescription="carousel"] button[class*="CarouselNext"] {
+  right: 0 !important;
+  left: auto !important;
+  position: absolute !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: flex !important;
+  z-index: 30 !important;
+  transform: translate(50%, -50%) !important;
+  pointer-events: auto !important;
+  top: 50% !important;
+  max-width: none !important;
+  width: 2rem !important;
+  height: 2rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Ensure carousel wrapper doesn't clip the arrow */
+main[data-sidebar="inset"] div.relative.px-6[style*="overflow"] {
+  overflow: visible !important;
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+}
+
+main[data-sidebar="inset"] [role="region"][aria-roledescription="carousel"] button[class*="CarouselPrevious"] {
+  left: 1.5rem !important;
+  right: auto !important;
+  position: absolute !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: flex !important;
+  z-index: 30 !important;
+  transform: translateY(-50%) !important;
+  pointer-events: auto !important;
+  top: 50% !important;
+  max-width: none !important;
+}
+
+/* Ensure ALL GAMES buttons are visible */
+div.flex.items-center.justify-between button {
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: inline-flex !important;
+  z-index: 10 !important;
+  position: relative !important;
+}
+
+/* Ensure section headers with ALL GAMES buttons are visible and responsive */
+main[data-sidebar="inset"] div.flex.items-center.justify-between.mb-4 {
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: flex !important;
+  position: relative !important;
+  z-index: 5 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: visible !important; /* Changed to visible so buttons aren't clipped */
+  box-sizing: border-box !important;
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+}
+
+/* CRITICAL: Ensure ALL GAMES buttons are always visible and within viewport - account for sidebar width */
+main[data-sidebar="inset"] div.flex.items-center.justify-between.mb-4 {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: visible !important;
+  position: relative !important;
+  box-sizing: border-box !important;
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  min-width: 0 !important; /* Critical: allows flex container to shrink */
+}
+
+/* CRITICAL: Prevent tiles from resizing when sidebar opens/closes */
+[role="region"][aria-roledescription="carousel"] [class*="CarouselItem"] {
+  flex-shrink: 0 !important;
+  min-width: 0 !important;
+}
+
+[role="region"][aria-roledescription="carousel"] [data-content-item] {
+  flex-shrink: 0 !important;
+}
+
+/* Ensure tiles maintain their fixed widths */
+[role="region"][aria-roledescription="carousel"] [data-content-item][style*="width"] {
+  flex-shrink: 0 !important;
+}
+
+/* CRITICAL: Ensure banner cards maintain their exact width (320px) when sidebar opens/closes */
+div[class*="flex"][class*="gap-4"][class*="pl-6"] > div[style*="320px"],
+div[class*="flex"][class*="gap-4"][class*="pl-6"] > div[style*="width: '320px'"],
+div[class*="flex"][class*="gap-4"][class*="pl-6"] img[width="320"] {
+  width: 320px !important;
+  min-width: 320px !important;
+  max-width: 320px !important;
+  flex-shrink: 0 !important;
+  flex-grow: 0 !important;
+}
+
+/* Ensure banner container allows horizontal scroll if needed */
+div[class*="flex"][class*="gap-4"][class*="pl-6"][style*="flexWrap"] {
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+}
+
+/* CRITICAL: Force ALL GAMES button to be visible - ensure it stays within container */
+main[data-sidebar="inset"] div.flex.items-center.justify-between.mb-4 {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+}
+
+main[data-sidebar="inset"] div.flex.items-center.justify-between.mb-4 h2 {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  margin-right: 1rem !important;
+}
+
+main[data-sidebar="inset"] div.flex.items-center.justify-between.mb-4 button {
+  flex: 0 0 auto !important;
+  flex-shrink: 0 !important;
+  flex-grow: 0 !important;
+  white-space: nowrap !important;
+  max-width: fit-content !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: inline-flex !important;
+  position: relative !important;
+  z-index: 10 !important;
+  min-width: auto !important;
+  width: auto !important;
+}
+
+/* FORCE ALL GAMES buttons to be visible - override any hiding */
+main[data-sidebar="inset"] button:has-text("ALL GAMES"),
+main[data-sidebar="inset"] button[class*="text-white/70"] {
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: inline-flex !important;
+  position: relative !important;
+}
+
+/* Ensure buttons don't get pushed off screen - use flex to keep them visible */
+main[data-sidebar="inset"] div.flex.items-center.justify-between.mb-4 > h2 {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+main[data-sidebar="inset"] div.flex.items-center.justify-between.mb-4 > div:last-child {
+  flex-shrink: 0 !important;
+  margin-left: 1rem !important; /* Add spacing between title and button */
+}
+
+/* Ensure Sheet overlays and content are properly layered - above header and sub-nav */
+[data-radix-sheet-overlay] {
+  z-index: 150 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
+  pointer-events: auto !important;
+  position: fixed !important;
+}
+
+[data-radix-sheet-overlay][data-state="open"] {
+  z-index: 150 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
+  pointer-events: auto !important;
+}
+
+[data-radix-sheet-content] {
+  z-index: 160 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
+  pointer-events: auto !important;
+  position: fixed !important;
+}
+
+[data-radix-sheet-content][data-state="open"] {
+  z-index: 160 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
+  pointer-events: auto !important;
+  position: fixed !important;
+}
+
+/* Ensure Sheet/Modal overlays appear above everything */
+[data-radix-dialog-overlay],
+[data-radix-sheet-overlay] {
+  z-index: 150 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
+  pointer-events: auto !important;
+}
+
+[data-radix-dialog-content],
+[data-radix-sheet-content] {
+  z-index: 160 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
+  pointer-events: auto !important;
+}
+
+/* Override aria-hidden for Sheet portals - they should always be visible when open */
+[data-radix-portal] [data-radix-sheet-overlay][data-state="open"],
+[data-radix-portal] [data-radix-sheet-content][data-state="open"] {
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
+  pointer-events: auto !important;
+}
+
+/* Ensure Sheet portals are not affected by aria-hidden on parent elements */
+[data-radix-portal] {
+  pointer-events: auto !important;
+}
+
+[data-radix-portal] [data-radix-sheet-overlay],
+[data-radix-portal] [data-radix-sheet-content] {
+  pointer-events: auto !important;
+  visibility: visible !important;
+}
+
+/* Ensure dropdown portal appears above sub-nav */
+[data-radix-portal] [data-radix-dropdown-menu-content] {
+  z-index: 120 !important;
+}
+
+/* ─── Vaul Drawer Minimal Overrides ─── */
+/* Let vaul handle its own layout. We only add z-index for layering
+   and prevent body scroll-lock for non-modal drawers. */
+
+/* Drawer content should appear above page content */
+[data-vaul-drawer-direction] {
+  z-index: 99999 !important;
+  pointer-events: auto !important;
+}
+
+/* Vaul portal container must not inherit transforms that break position:fixed on iOS */
+[vaul-drawer-wrapper],
+[data-vaul-drawer-wrapper] {
+  transform: none !important;
+  will-change: auto !important;
+  pointer-events: auto !important;
+}
+
+/* Prevent body scroll lock when drawer is open (non-modal) */
+body[data-vaul-drawer-open="true"],
+html[data-vaul-drawer-open="true"] {
+  overflow: auto !important;
+  overflow-y: auto !important;
+  position: static !important;
+  height: auto !important;
+  touch-action: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  pointer-events: auto !important;
+}
+
+/* CRITICAL: Ensure body never gets stuck with overflow:hidden after betslip closes */
+body {
+  touch-action: manipulation;
+}
+
+/* Ensure sub nav is fixed - positioned right below the header at 64px, after sidebar */
+[data-sub-nav] {
+  position: fixed !important;
+  /* top is controlled by framer-motion, don't force it */
+  right: 0 !important;
+  z-index: 90 !important;
+  display: block !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Desktop: Keep transition for sidebar movement + chat responsive */
+@media (min-width: 769px) {
+  [data-sub-nav] {
+    transition: left 0.2s ease-linear, right 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+}
+
+/* Mobile: Full width sub nav, no left clipping, swipeable */
+@media (max-width: 768px) {
+  [data-sub-nav] {
+    left: 0 !important;
+    right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+  [data-sub-nav] > div {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scroll-snap-type: x mandatory !important;
+    touch-action: pan-x !important;
+    overscroll-behavior-x: auto !important;
+    padding-left: 0 !important;
+  }
+}
+
+/* Light mode: semi-transparent white background with blur */
+[data-sub-nav] {
+  background: transparent !important;
+}
+
+/* Dark mode: semi-transparent dark background with blur */
+.dark [data-sub-nav] {
+  background: transparent !important;
+}
+
+/* Betheat override: chips-only sub nav, neutral dark glass (no rail stroke) */
+[data-sub-nav] {
+  position: fixed !important;
+  background: rgba(8, 10, 14, 0.68) !important;
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(16px) saturate(68%) brightness(0.72) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(68%) brightness(0.72) !important;
+  isolation: isolate !important;
+}
+
+[data-sub-nav]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(7, 10, 14, 0.72) 0%,
+    rgba(7, 10, 14, 0.64) 56%,
+    rgba(7, 10, 14, 0.58) 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Sub-nav faded divider line */
+[data-sub-nav]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.018) 0%,
+    rgba(255, 255, 255, 0.045) 50%,
+    rgba(255, 255, 255, 0.018) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+[data-sub-nav] > div {
+  background: transparent !important;
+  margin-left: 0 !important;
+  position: relative;
+  z-index: 1;
+}
+
+/* Sub-nav rail removed — pills only */
+[data-sub-nav] [class*="bg-gray-100/80"],
+[data-sub-nav] [class*="dark:bg-white/5"],
+[data-sub-nav] [class*="bg-white/5"] {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Sports icon row: no background by default, only on hover */
+[data-sub-nav] button:not([data-tab-item]):not([data-state="active"]),
+[data-sub-nav] [role="button"]:not([data-tab-item]):not([data-state="active"]) {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+[data-sub-nav] button:not([data-tab-item]):hover,
+[data-sub-nav] [role="button"]:not([data-tab-item]):hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Inactive pills */
+[data-sub-nav] button:not([data-state="active"]):not([data-active="true"]),
+[data-sub-nav] [data-tab-item]:not([data-state="active"]) {
+  background-color: rgba(255, 255, 255, 0.035) !important;
+  color: rgba(233, 238, 244, 0.76) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: var(--ui-button-radius) !important;
+  transition: background-color 0.16s ease, color 0.16s ease !important;
+}
+
+/* Inactive pill hover: subtle but visible */
+[data-sub-nav] [data-tab-item]:not([data-state="active"]):hover,
+[data-sub-nav] button:not([data-state="active"]):not([data-active="true"]):hover {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  color: rgba(243, 247, 252, 0.92) !important;
+}
+
+/* Active pill: burnt orange faded gradient */
+[data-sub-nav] button[data-state="active"],
+[data-sub-nav] button[data-active="true"],
+[data-sub-nav] [data-state="active"][data-tab-item] {
+  background-color: var(--ds-primary, #ff6a1a) !important;
+  background-image: var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%)) !important;
+  color: #fff4ec !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: var(--ui-button-radius) !important;
+}
+
+/* Some tabs use inline backgroundColor only; force brand gradient there too */
+[data-sub-nav] [style*="background-color: var(--ds-primary"],
+[data-nav-header] [style*="background-color: var(--ds-primary"] {
+  background-image: var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%)) !important;
+  border-radius: var(--ui-button-radius) !important;
+}
+
+/* Main nav active state: no filled chip, underline only */
+[data-nav-header] button[data-active="true"],
+[data-nav-header] [role="button"][data-active="true"] {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  position: relative !important;
+}
+
+/* Sidebar active buttons that only set inline backgroundColor */
+[data-sidebar="sidebar"] [style*="background-color: var(--ds-primary"],
+[data-sidebar="sidebar"] [style*="background-color:var(--ds-primary"] {
+  background-image: var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%)) !important;
+  border-radius: var(--ui-button-radius) !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Sidebar active highlight shape: rounded-square, not circle */
+[data-sidebar="menu-button"][data-active="true"],
+[data-sidebar="sidebar"] [data-active="true"][class*="SidebarMenuButton"] {
+  border-radius: var(--ui-button-radius) !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Kill all outline/stroke artifacts inside sub-nav controls */
+[data-sub-nav] button,
+[data-sub-nav] [role="button"],
+[data-sub-nav] [class*="rounded"] {
+  border-color: transparent !important;
+  outline: none !important;
+}
+
+/* Enhanced blur effect for content items when scrolling under sub-nav */
+[data-content-item] {
+  transition: filter 0.3s ease-out, opacity 0.3s ease-out !important;
+}
+
+/* Apply blur to content items that are positioned under the fixed sub-nav */
+main[data-sidebar="inset"] [data-content-item] {
+  position: relative;
+}
+
+/* When content scrolls under sub-nav, apply stronger blur via JavaScript state */
+
+/* CRITICAL: Ensure body/html is the scrolling container, not any parent */
+html {
+  overflow-y: scroll !important;
+  overflow-x: hidden !important;
+}
+
+body {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  height: auto !important;
+}
+
+/* Ensure no parent creates a scroll container that prevents sticky */
+.group\/sidebar-wrapper {
+  overflow: visible !important;
+  overflow-y: visible !important;
+  overflow-x: hidden !important;
+  height: auto !important;
+  max-height: none !important;
+  min-height: 100vh !important;
+  width: 100% !important;
+}
+
+.group\/sidebar-wrapper > *,
+main[data-sidebar="inset"] > * {
+  overflow: visible !important;
+  overflow-y: visible !important;
+  overflow-x: hidden !important;
+  height: auto !important;
+  max-height: none !important;
+}
+
+/* Sticky support is handled by .group/sidebar-wrapper and main[data-sidebar="inset"]
+   rules above. No broad body > div overrides — they break vaul drawer portals. */
+
+/* ─── Dock Portal Root ─── */
+/* Dedicated container for the DynamicIsland mobile dock.
+   A MutationObserver in dynamic-island.tsx keeps this element as a direct
+   child of <body>, outside vaul's [data-vaul-drawer-wrapper].
+   This prevents any parent transform from breaking position:fixed on iOS Safari. */
+#dock-portal-root {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: auto !important;
+  width: auto !important;
+  height: auto !important;
+  overflow: visible !important;
+  pointer-events: none !important;
+  z-index: 99990 !important;
+  /* CRITICAL: Prevent any transform/perspective that would create a new
+     containing block for position:fixed descendants on mobile Safari */
+  transform: none !important;
+  -webkit-transform: none !important;
+  will-change: auto !important;
+  contain: none !important;
+  perspective: none !important;
+  -webkit-perspective: none !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  transition: none !important;
+}
+
+/* Also protect the dock from vaul wrapper styles if it ever ends up inside one */
+[data-vaul-drawer-wrapper] > #dock-portal-root,
+[data-vaul-drawer-wrapper] #dock-portal-root {
+  position: fixed !important;
+  transform: none !important;
+  -webkit-transform: none !important;
+}
+
+/* ─── Chat Portal Root ─── */
+/* This container hosts the chat panel via React portal.
+   It is intentionally zero-size so it never blocks clicks or layout.
+   Children use position:fixed to position themselves relative to the viewport.
+   z-index: 95 puts the chat ABOVE the sub-nav (90) but BELOW the header (100). */
+#chat-portal-root {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: visible !important;
+  pointer-events: none !important;
+  z-index: 95 !important;
+}
+
+/* Mobile: Chat drawer is a full-screen overlay that must cover the header
+   and all page content, matching the behaviour of VIP/Account/Deposit drawers. */
+@media (max-width: 768px) {
+  #chat-portal-root {
+    z-index: 9997 !important;
+  }
+}
+
+/* ─── Overlay Portal Root ─── */
+/* Dedicated container for modals/overlays (user profile, tip modal, etc.)
+   that need to appear ABOVE everything including the header.
+   Same zero-size technique as #chat-portal-root but with much higher z-index. */
+#overlay-portal-root {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: visible !important;
+  pointer-events: none !important;
+  z-index: 100000 !important;
+}
+
+/* Chat panel scroll — ensure the message area can actually scroll.
+   The portal is excluded from the body>div overflow:visible rules above,
+   but we explicitly ensure overflow-y works on the chat scroll container. */
+#chat-portal-root [data-chat-scroll] {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  min-height: 0 !important;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* ─── Chat-Open Responsive Layout ─── */
+/* When chat is open on desktop, shrink ALL content to make room for the 340px panel.
+   Uses padding-right on body (respected by box-sizing: border-box) so flow content,
+   and right: 340px on fixed elements (header, sub-nav, toasts) so they also shrink. */
+@media (min-width: 769px) {
+  html.chat-open body {
+    padding-right: 340px !important;
+    transition: padding-right 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  /* Header stays full-width — the chat toggle lives in the header, and the
+     chat panel starts at top:64px, so no conflict. */
+
+  /* Shrink the fixed sub-nav so it doesn't overlap the chat panel */
+  html.chat-open [data-sub-nav] {
+    right: 340px !important;
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  /* Shrink the sidebar wrapper to stay within visible area */
+  html.chat-open .group\/sidebar-wrapper {
+    max-width: calc(100vw - 340px) !important;
+    transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  /* Move toast notifications so they don't hide behind chat */
+  html.chat-open [data-toast-notification] {
+    right: 364px !important;
+  }
+
+  /* ─── Dock-Open (widget dock without chat) ─── */
+  html.dock-open:not(.chat-open) body {
+    padding-right: var(--dock-panel-width, 300px) !important;
+    transition: padding-right 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+  html.dock-open:not(.chat-open) [data-sub-nav] {
+    right: var(--dock-panel-width, 300px) !important;
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+  html.dock-open:not(.chat-open) .group\/sidebar-wrapper {
+    max-width: calc(100vw - var(--dock-panel-width, 300px)) !important;
+    transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+  html.dock-open:not(.chat-open) [data-toast-notification] {
+    right: calc(var(--dock-panel-width, 300px) + 24px) !important;
+  }
+
+  /* ─── Both Dock + Chat open ─── */
+  html.dock-open.chat-open body {
+    padding-right: calc(var(--dock-panel-width, 300px) + 340px) !important;
+    transition: padding-right 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+  html.dock-open.chat-open [data-sub-nav] {
+    right: calc(var(--dock-panel-width, 300px) + 340px) !important;
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+  html.dock-open.chat-open .group\/sidebar-wrapper {
+    max-width: calc(100vw - var(--dock-panel-width, 300px) - 340px) !important;
+    transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+  html.dock-open.chat-open [data-toast-notification] {
+    right: calc(var(--dock-panel-width, 300px) + 364px) !important;
+  }
+
+  /* Smooth transition when chat/dock closes */
+  body {
+    transition: padding-right 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+  [data-sub-nav] {
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+  .group\/sidebar-wrapper {
+    transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+}
+
+/* Ensure content items don't overlap and flow properly - banners should be visible below sub nav */
+[data-content-item] {
+  position: relative !important;
+  z-index: 1 !important;
+  margin-top: 0 !important;
+  filter: none !important; /* Remove any blur from content items - rely on sub-nav backdrop-blur */
+}
+
+/* Ensure content flows below sticky nav - content should start after sub nav in normal flow */
+main[data-sidebar="inset"] [data-sub-nav] ~ * {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Add blur effect to content when scrolling under sub nav */
+main[data-sidebar="inset"] > div > div:not(:first-child) {
+  position: relative;
+}
+
+/* Ensure content doesn't overlap sticky elements */
+main[data-sidebar="inset"] > div > div:first-child + div {
+  margin-top: 0;
+}
+
+/* All page wrappers that use sidebar: no margin-top (sidebar is full-height now) */
+
+/* Toast Notification - Ensure it's at the top right */
+[data-toast-notification] {
+  position: fixed !important;
+  top: 80px !important;
+  right: 24px !important;
+  left: auto !important;
+  bottom: auto !important;
+  z-index: 999999 !important;
+  pointer-events: auto !important;
+}
+
+/* Hide scrollbars for horizontal scrollable sections */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Mobile Sidebar Improvements for Safari */
+[data-mobile="true"][data-sidebar="sidebar"] {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: transform;
+}
+
+[data-mobile="true"][data-sidebar="sidebar"] > div {
+  padding-top: env(safe-area-inset-top, 0);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Improve menu button styling on mobile */
+[data-mobile="true"] [data-sidebar="menu-button"] {
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
+  transition: background-color 0.15s ease, transform 0.1s ease;
+  -webkit-transition: background-color 0.15s ease, -webkit-transform 0.1s ease;
+}
+
+[data-mobile="true"] [data-sidebar="menu-button"]:active {
+  transform: scale(0.98);
+  -webkit-transform: scale(0.98);
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Remove default margin for bottom drawers on mobile */
+[data-vaul-drawer-direction='bottom'][style*='top'] {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Ensure bottom drawers have fixed height and don't resize when switching tabs */
+@media (max-width: 768px) {
+  [data-vaul-drawer-direction='bottom'] {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    max-height: 90vh !important;
+    bottom: 0 !important;
+    top: auto !important;
+  }
+}
+
+/* Ensure drag handles are visible on ALL drawers */
+[data-drag-handle] {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 0.6 !important;
+  z-index: 10000 !important;
+  position: relative !important;
+  pointer-events: auto !important;
+  min-height: 6px !important;
+  min-width: 64px !important;
+}
+
+/* Ensure VIP tabs container is swipeable */
+[data-vaul-drawer-direction] [class*="overflow-x-auto"][class*="scrollbar-hide"] {
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-x !important;
+  overscroll-behavior-x: auto !important;
+  scroll-snap-type: x mandatory !important;
+  overflow-x: auto !important;
+  pointer-events: auto !important;
+}
+
+[data-vaul-drawer-direction] > div[class*="rounded-full"][class*="mx-auto"][class*="h-1.5"],
+[data-vaul-drawer-direction] [class*="rounded-full"][class*="mx-auto"][class*="h-1.5"],
+[data-vaul-drawer-content] [class*="rounded-full"][class*="mx-auto"][class*="h-1.5"],
+div[class*="rounded-full"][class*="mx-auto"][class*="h-1.5"][class*="bg-gray"],
+div[class*="rounded-full"][class*="mx-auto"][class*="h-1.5"][class*="bg-white"] {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 0.4 !important;
+  z-index: 10000 !important;
+  position: relative !important;
+  pointer-events: auto !important;
+}
+
+/* Drawer content — let each drawer control its own theme.
+   Only ensure pointer-events and visibility are correct. */
+[data-vaul-drawer-content] {
+  pointer-events: auto !important;
+  visibility: visible !important;
+}
+
+@utility -focus-area-x-* {
+    --x: --value(number) * -1;
+}
+
+@utility -focus-area-y-* {
+    --y: --value(number) * -1;
+}
+
+@utility focus-area {
+  &:before {
+    content: "";
+    inset: calc(var(--y) * 1px) calc(var(--x) * 1px);
+    position: absolute;
+  }
+    position: relative;
+}
+
+@utility focus-area-x-* {
+    --x: --value(number);
+}
+
+@utility focus-area-y-* {
+    --y: --value(number);
+}
+
+/* Override sidebar active state to use brand primary color */
+[data-sidebar="menu-button"][data-active="true"],
+button[data-active="true"][class*="SidebarMenuButton"],
+[data-active="true"][class*="SidebarMenuButton"] {
+  background-color: var(--ds-primary, var(--brand-primary, #ff6a1a)) !important;
+  background-image: var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%)) !important;
+  transition: background-color 0.2s ease-in-out !important;
+}
+
+.image-skeleton-fallback {
+  background: linear-gradient(90deg, #101317 0%, #171b21 50%, #101317 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.7s ease-in-out infinite;
+  border: 1px solid rgba(132, 140, 152, 0.07);
+  border-radius: 0.5rem;
+  object-fit: cover;
+  min-height: 100%;
+}
+
+.image-skeleton-surface {
+  background: linear-gradient(180deg, #111317 0%, #101216 100%) !important;
+  border: 0 !important;
+  border-radius: 0.65rem !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.006);
+}
+
+.image-skeleton-surface[data-img-error="true"] img,
+.image-skeleton-surface .image-skeleton-fallback {
+  opacity: 0 !important;
+}
+
+/* Force legacy dark greys into Betheat dark surfaces */
+.bg-\[\#1a1a1a\],
+.dark\:bg-\[\#1a1a1a\]:is(.dark *),
+[style*="background-color: #1a1a1a"],
+[style*="background-color:#1a1a1a"] {
+  background-color: var(--ds-page-bg, #0d0f12) !important;
+}
+
+.bg-\[\#2d2d2d\],
+.dark\:bg-\[\#2d2d2d\]:is(.dark *),
+[style*="background-color: #2d2d2d"],
+[style*="background-color:#2d2d2d"],
+[style*="background-color: rgb(45, 45, 45)"] {
+  background-color: var(--ds-sidebar-bg, #121417) !important;
+}
+
+[data-page-bg] {
+  background-color: var(--ds-page-bg, #0d0f12) !important;
+}
+
+[data-nav-header] {
+  background-color: var(--ds-nav-bg, #0f1012) !important;
+}
+
+/* Missing image cards use neutral dark base, never light gray/white */
+.dark .bg-gray-200,
+.dark .bg-gray-100,
+[data-content-item].bg-gray-200,
+[data-content-item].bg-gray-100 {
+  background-color: #16191d !important;
+}
+
+.dark .border-gray-200 {
+  border-color: rgba(104, 118, 138, 0.14) !important;
+}
+
+/* Soften carousel/tile stroke lines */
+[data-content-item] {
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+[role="region"][aria-roledescription="carousel"] [data-content-item] {
+  border-color: transparent !important;
+}
+
+/* Global stroke softening */
+.border-white\/20,
+[class*="border-white/20"] {
+  border-color: rgba(255, 255, 255, 0.028) !important;
+}
+
+.border-white\/10,
+[class*="border-white/10"] {
+  border-color: rgba(255, 255, 255, 0.02) !important;
+}
+
+.border-white\/5,
+[class*="border-white/5"] {
+  border-color: rgba(255, 255, 255, 0.015) !important;
+}
+
+/* Header controls: rounder pills/buttons */
+[data-nav-header] button:not(.rounded-full):not([class*="rounded-full"]),
+[data-nav-header] a[role="button"]:not(.rounded-full):not([class*="rounded-full"]) {
+  border-radius: var(--ui-button-radius) !important;
+}
+
+/* Side menu buttons: less rounded, cleaner than current */
+[data-sidebar="menu-button"] {
+  border-radius: 0.52rem !important;
+}
+
+/* Soften hard side-menu divider/separator strokes */
+[data-sidebar="sidebar"] [class*="border-r"],
+[data-sidebar="sidebar"] [class*="border-l"],
+[data-sidebar="sidebar"] [class*="border-t"],
+[data-sidebar="sidebar"] [class*="border-b"] {
+  border-color: rgba(255, 255, 255, 0.012) !important;
+}
+
+/* Sidebar divider lines: keep structure, reduce visual weight */
+[data-sidebar="sidebar"] hr,
+[data-sidebar="sidebar"] [role="separator"] {
+  border-color: rgba(255, 255, 255, 0.01) !important;
+  background-color: rgba(255, 255, 255, 0.01) !important;
+  opacity: 0.65 !important;
+}
+
+/* Fade common Tailwind border utilities within sidebar only */
+[data-sidebar="sidebar"] .border-white\/20,
+[data-sidebar="sidebar"] [class*="border-white/20"] {
+  border-color: rgba(255, 255, 255, 0.018) !important;
+}
+
+[data-sidebar="sidebar"] .border-white\/10,
+[data-sidebar="sidebar"] [class*="border-white/10"] {
+  border-color: rgba(255, 255, 255, 0.012) !important;
+}
+
+[data-sidebar="sidebar"] .border-white\/5,
+[data-sidebar="sidebar"] [class*="border-white/5"] {
+  border-color: rgba(255, 255, 255, 0.009) !important;
+}
+
+/* Kill structural sidebar rails/edges that still appear as hard lines */
+.group.peer > div.fixed {
+  border-right-color: transparent !important;
+  border-left-color: transparent !important;
+  box-shadow: none !important;
+}
+
+[data-sidebar="rail"],
+[data-sidebar="rail"]::after {
+  background: transparent !important;
+  border: 0 !important;
+}
+
+[data-sidebar="menu-sub"] {
+  border-left-color: transparent !important;
+}
+
+[data-sidebar="separator"] {
+  background-color: rgba(255, 255, 255, 0.006) !important;
+}
+
+/* Banner cards: use dark skeleton placeholder when images are missing */
+[role="region"][aria-roledescription="carousel"] [data-banner-card] {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+[role="region"][aria-roledescription="carousel"] [data-banner-card][data-banner-error="true"] {
+  background: linear-gradient(110deg, #101317 0%, #171c22 52%, #101317 100%) !important;
+  background-size: 200% 100% !important;
+  animation: shimmer 1.8s ease-in-out infinite !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Remove any remaining crown action in top header */
+[data-nav-header] button[class*="bg-yellow-400/20"],
+[data-nav-header] button[class*="border-yellow-400/30"] {
+  display: none !important;
+}
+
+/* Remove sidebar shell edge borders (outside data-sidebar subtree) */
+[data-side="left"] > div.fixed,
+.group.peer[data-side="left"] > div.fixed {
+  border-right: 0 !important;
+  box-shadow: none !important;
+}
+
+[data-side="right"] > div.fixed,
+.group.peer[data-side="right"] > div.fixed {
+  border-left: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Remove remaining chrome lines inside sidebar structure */
+[data-sidebar="sidebar"],
+[data-sidebar="sidebar"] > div,
+[data-sidebar="content"],
+[data-sidebar="group"],
+[data-sidebar="menu"],
+[data-sidebar="menu-item"],
+[data-sidebar="header"],
+[data-sidebar="footer"],
+[data-sidebar="separator"] {
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* More rounded buttons/chips, keep circular icon buttons untouched */
+button:not(.rounded-full):not([class*="rounded-full"]),
+a[role="button"]:not(.rounded-full):not([class*="rounded-full"]),
+[role="button"]:not(.rounded-full):not([class*="rounded-full"]) {
+  border-radius: var(--ui-button-radius) !important;
+}
+
+/* Keep "rounded-small" controls aligned with reduced radius */
+.rounded-small {
+  border-radius: var(--ui-button-radius) !important;
+}
+
+/* Tone down legacy bright blue accents */
+.bg-\[\#0096ff\],
+.bg-\[\#0087f6\],
+.bg-\[\#031679\],
+.bg-\[\#030d26\],
+.bg-\[\#020e4a\],
+.bg-\[\#fdc100\],
+.hover\:bg-\[\#0096ff\]:hover,
+.hover\:bg-\[\#0087f6\]:hover,
+[style*="background-color: #031679"],
+[style*="background-color:#031679"],
+[style*="background-color: #030d26"],
+[style*="background-color:#030d26"],
+[style*="background-color: #020e4a"],
+[style*="background-color:#020e4a"],
+[style*="background-color: #fdc100"],
+[style*="background-color:#fdc100"],
+[style*="background-color: #0096ff"],
+[style*="background-color:#0096ff"],
+[style*="background-color: #0087f6"],
+[style*="background-color:#0087f6"],
+[style*="background-color: rgb(3, 22, 121)"],
+[style*="background-color: rgb(3, 13, 38)"],
+[style*="background-color: rgb(2, 14, 74)"],
+[style*="background-color: rgb(253, 193, 0)"],
+[style*="background-color: rgb(0, 150, 255)"],
+[style*="background-color: rgb(0, 135, 246)"] {
+  background-color: var(--ds-primary, #ff6a1a) !important;
+  background-image: var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%)) !important;
+}
+
+.bg-\[\#031679\],
+[style*="background-color: #031679"],
+[style*="background-color:#031679"],
+[style*="background-color: rgb(3, 22, 121)"] {
+  background-color: var(--ds-nav-bg, #0f1012) !important;
+}
+
+.bg-\[\#030d26\],
+[style*="background-color: #030d26"],
+[style*="background-color:#030d26"],
+[style*="background-color: rgb(3, 13, 38)"] {
+  background-color: var(--ds-page-bg, #0d0f12) !important;
+}
+
+.bg-\[\#020e4a\],
+[style*="background-color: #020e4a"],
+[style*="background-color:#020e4a"],
+[style*="background-color: rgb(2, 14, 74)"] {
+  background-color: var(--ds-card-bg, #16191d) !important;
+}
+
+.bg-\[\#fdc100\],
+[style*="background-color: #fdc100"],
+[style*="background-color:#fdc100"],
+[style*="background-color: rgb(253, 193, 0)"] {
+  background-color: #8c9098 !important;
+}
+
+/* Burnt orange for legacy primary red elements */
+.bg-\[\#ee3536\]:not(.animate-pulse),
+.\!bg-\[\#ee3536\]:not(.animate-pulse),
+[style*="background-color: #ee3536"],
+[style*="background-color:#ee3536"],
+[style*="background-color: rgb(238, 53, 54)"] {
+  background-color: var(--ds-primary, #ff6a1a) !important;
+  background-image: var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%)) !important;
+}
+
+.text-\[\#ee3536\],
+[style*="color: #ee3536"],
+[style*="color:#ee3536"],
+[style*="color: rgb(238, 53, 54)"] {
+  color: #ff7a2f !important;
+}
+
+.border-\[\#ee3536\],
+[style*="border-color: #ee3536"],
+[style*="border-color:#ee3536"],
+[style*="border-color: rgb(238, 53, 54)"] {
+  border-color: #e65a12 !important;
+}
+
+/* Fully disable the floating brand switcher bubble/panel surface */
+[data-customizer],
+[data-customizer-fab] {
+  display: none !important;
+}
+
+/* Ensure smooth transition from default to active state - prevent black flash */
+[data-sidebar="menu-button"] {
+  transition: background-color 0.2s ease-in-out !important;
+  background-color: transparent !important;
+}
+
+/* Prevent black flash on hover/active before transition */
+[data-sidebar="menu-button"]:hover:not([data-active="true"]),
+[data-sidebar="menu-button"]:active:not([data-active="true"]) {
+  transition: background-color 0.2s ease-in-out !important;
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* ─── Chat Component Styles ─────────────────────────────── */
+
+/* Live map scanning line */
+@keyframes live-scan {
+  0% {
+    left: -30%;
+  }
+  100% {
+    left: 130%;
+  }
+}
+
+.live-scan-line::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -30%;
+  width: 30%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #10b981, transparent);
+  animation: live-scan 3s ease-in-out infinite;
+}
+
+/* Live map glow border */
+@keyframes live-border-glow {
+  0%, 100% {
+    border-color: rgba(16, 185, 129, 0.1);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+  50% {
+    border-color: rgba(16, 185, 129, 0.2);
+    box-shadow: 0 0 15px -3px rgba(16, 185, 129, 0.08);
+  }
+}
+
+/* Rain drop animation */
+@keyframes rain-drop {
+  0% {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(60px);
+    opacity: 0;
+  }
+}
+
+/* Custom scrollbar for chat */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Chat panel slide animation */
+.chat-panel-enter {
+  animation: chat-slide-in 0.3s ease-out;
+}
+
+.chat-panel-exit {
+  animation: chat-slide-out 0.2s ease-in;
+}
+
+@keyframes chat-slide-in {
+  from {
+    width: 0;
+    opacity: 0;
+  }
+  to {
+    width: 340px;
+    opacity: 1;
+  }
+}
+
+@keyframes chat-slide-out {
+  from {
+    width: 340px;
+    opacity: 1;
+  }
+  to {
+    width: 0;
+    opacity: 0;
+  }
+}
+
+/* ─── STATSCORE Widget SDK — allow full rendering ─── */
+.statscore-widget-root {
+  overflow: visible;
+  position: relative;
+}
+
+.statscore-widget-root .STATSCOREWidget--PreLoader {
+  z-index: 5;
+}
+
+/* Lock vaul drawer — prevent drag, allow open/close animation */
+[data-vaul-no-drag] [data-sidebar="content"] {
+  overflow: visible !important;
+}
