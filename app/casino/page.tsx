@@ -7887,7 +7887,16 @@ function NavTestPageContent() {
   const [depositAmount, setDepositAmount] = useState(25)
   const [useManualAmount, setUseManualAmount] = useState(false)
   const [selectedCard, setSelectedCard] = useState('Mastercard **** 0740')
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('bitcoin')
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('usdt')
+  const [walletMode, setWalletMode] = useState<'deposit' | 'withdraw'>('deposit')
+  const [walletCurrencyMenuOpen, setWalletCurrencyMenuOpen] = useState(false)
+  const [walletCurrencySearch, setWalletCurrencySearch] = useState('')
+  const [walletNetworkMenuOpen, setWalletNetworkMenuOpen] = useState(false)
+  const [walletSelectedNetwork, setWalletSelectedNetwork] = useState('ERC20')
+  const [walletAmountInput, setWalletAmountInput] = useState('0.00')
+  const [walletAddressInput, setWalletAddressInput] = useState('')
+  const [walletCryptoCopied, setWalletCryptoCopied] = useState(false)
+  const [walletAddressCopied, setWalletAddressCopied] = useState(false)
   const [showDepositConfirmation, setShowDepositConfirmation] = useState(false)
   const [depositStep, setDepositStep] = useState<'started' | 'processing' | 'almost' | 'complete'>('started')
   const [transactionId, setTransactionId] = useState<string>('')
@@ -7905,6 +7914,32 @@ function NavTestPageContent() {
     almost: false,
     complete: false
   })
+  const walletCurrencies = [
+    { id: 'usdt', code: 'USDT', name: 'USD Tether', iconSymbol: 'usdt', iconBg: 'bg-[#14b8a6]', eurRate: 0.92, decimals: 2, availableBalance: '0.00' },
+    { id: 'btc', code: 'BTC', name: 'Bitcoin', iconSymbol: 'btc', iconBg: 'bg-[#f59e0b]', eurRate: 79400, decimals: 8, availableBalance: '0.00000620' },
+    { id: 'eth', code: 'ETH', name: 'Ethereum', iconSymbol: 'eth', iconBg: 'bg-[#60a5fa]', eurRate: 4100, decimals: 8, availableBalance: '0.00000000' },
+    { id: 'ltc', code: 'LTC', name: 'Litecoin', iconSymbol: 'ltc', iconBg: 'bg-[#3b82f6]', eurRate: 92, decimals: 8, availableBalance: '0.00000000' },
+    { id: 'doge', code: 'DOGE', name: 'Dogecoin', iconSymbol: 'doge', iconBg: 'bg-[#eab308]', eurRate: 0.17, decimals: 8, availableBalance: '0.00000000' },
+    { id: 'xrp', code: 'XRP', name: 'Ripple', iconSymbol: 'xrp', iconBg: 'bg-[#94a3b8]', eurRate: 0.58, decimals: 8, availableBalance: '0.00000000' },
+    { id: 'link', code: 'LINK', name: 'Chainlink', iconSymbol: 'link', iconBg: 'bg-[#2563eb]', eurRate: 16.4, decimals: 8, availableBalance: '0.00000000' },
+  ] as const
+  const selectedWalletCurrency = walletCurrencies.find((currency) => currency.id === selectedPaymentMethod) ?? walletCurrencies[0]
+  const filteredWalletCurrencies = walletCurrencies.filter((currency) =>
+    `${currency.code} ${currency.name}`.toLowerCase().includes(walletCurrencySearch.toLowerCase())
+  )
+  const parseWalletFiatAmount = (value: string) => {
+    const normalized = value.replace(/,/g, '')
+    return Number.parseFloat(normalized) || 0
+  }
+  const formatWalletFiatAmount = (value: number) => new Intl.NumberFormat('en-GB', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value)
+  const walletEurAmount = parseWalletFiatAmount(walletAmountInput)
+  const walletCryptoAmount = walletEurAmount > 0 ? walletEurAmount / selectedWalletCurrency.eurRate : 0
+  const walletCryptoAmountText = walletCryptoAmount.toFixed(selectedWalletCurrency.decimals)
+  const walletNetworks = ['ERC20', 'TRC20', 'BEP20', 'Solana'] as const
+  const walletDepositAddress = `${selectedWalletCurrency.code.toLowerCase()}-${walletSelectedNetwork.toLowerCase()}-4f8a7c2e91d3`
   const [showToast, setShowToast] = useState(false)
   const [toastMessage, setToastMessage] = useState('')
   const [toastAction, setToastAction] = useState<{ label: string; onClick: () => void } | null>(null)
@@ -8104,6 +8139,18 @@ function NavTestPageContent() {
     setVipDrawerOpen(false)
     setDepositDrawerOpen(false)
     setAccountDrawerOpen(true)
+    useChatStore.getState().setIsOpen(false)
+  }, [])
+
+  // Allow other pages (e.g. homepage) to open the exact casino deposit drawer.
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const shouldOpen = localStorage.getItem('bh-open-casino-deposit-drawer') === '1'
+    if (!shouldOpen) return
+    localStorage.removeItem('bh-open-casino-deposit-drawer')
+    setVipDrawerOpen(false)
+    setAccountDrawerOpen(false)
+    setDepositDrawerOpen(true)
     useChatStore.getState().setIsOpen(false)
   }, [])
 
@@ -9641,11 +9688,11 @@ function NavTestPageContent() {
         {/* Deposit Drawer - Rendered outside header to avoid conflicts */}
         <Drawer open={depositDrawerOpen} onOpenChange={handleDepositDrawerOpenChange} direction={isMobile ? "bottom" : "right"} shouldScaleBackground={false}>
           <DrawerContent 
-                showOverlay={isMobile}
+                showOverlay={true}
+                overlayClassName={!isMobile ? "bg-[#0f1728]/52 backdrop-blur-[2px]" : "bg-black/45 backdrop-blur-[1.5px]"}
                 className={cn(
-                  "bg-white text-gray-900 flex flex-col relative",
-                  "w-full sm:max-w-md border-l border-gray-200 overflow-hidden",
-                  isMobile && "rounded-t-[10px]"
+                  "w-full sm:max-w-md bg-[var(--ds-sidebar-bg,#121417)] text-white flex flex-col overscroll-contain outline-none",
+                  isMobile ? "!border-0 rounded-t-[10px]" : "border-l border-white/10"
                 )}
                 style={isMobile ? {
                   height: '80vh',
@@ -9654,22 +9701,256 @@ function NavTestPageContent() {
                   bottom: 0,
                 } : { display: 'flex', flexDirection: 'column' as const, overflow: 'hidden' }}
               >
-                {isMobile && <DrawerHandle variant="dark" />}
-            
-                {!isMobile && (
-              <DrawerHeader className="relative flex-shrink-0 px-4 pt-4 pb-2">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-base font-semibold text-gray-900">Quick Deposit</h2>
+                {isMobile && <DrawerHandle />}
+              <DrawerHeader className={cn("flex-shrink-0", isMobile ? "px-4 pt-4 pb-3" : "px-4 pt-4 pb-3")}>
+                <div className="flex items-center justify-between gap-3">
+                  <h2 className="text-base font-semibold text-white">Wallet</h2>
                   <DrawerClose asChild>
-                    <button className="h-8 w-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors flex-shrink-0">
-                      <IconX className="h-4 w-4 text-gray-600" />
+                    <button className="h-8 w-8 rounded-full bg-white/10 hover:bg-white/15 flex items-center justify-center transition-colors flex-shrink-0">
+                      <IconX className="h-4 w-4 text-white/75" />
                     </button>
                   </DrawerClose>
               </div>
             </DrawerHeader>
-            )}
-            <div className={cn("w-full overflow-y-auto flex-1 min-h-0", isMobile ? "px-4 pt-4 pb-6" : "px-4 pt-4 pb-4")} style={{ WebkitOverflowScrolling: 'touch', overflowY: 'auto', flex: '1 1 auto', minHeight: 0, paddingBottom: isMobile ? 'env(safe-area-inset-bottom, 20px)' : undefined }}>
-              {!showDepositConfirmation ? (
+            <div className={cn("flex-1 overflow-y-auto text-white", isMobile ? "px-4 pt-4 pb-4" : "px-4 pt-6 pb-4")} style={{ WebkitOverflowScrolling: 'touch' }}>
+              <div className="space-y-4">
+                <div className="relative flex items-center gap-1.5 rounded-2xl p-1.5 border border-white/10 bg-white/[0.03]">
+                  {(['deposit', 'withdraw'] as const).map((mode) => (
+                    <button
+                      key={mode}
+                      type="button"
+                      onClick={() => setWalletMode(mode)}
+                      className={cn(
+                        "relative z-10 text-white/70 hover:text-white hover:bg-white/[0.04] rounded-2xl px-4 py-1 h-9 text-[11px] font-medium transition-colors duration-300 ease-in-out focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none flex-1",
+                        walletMode === mode && "text-white"
+                      )}
+                    >
+                      {walletMode === mode && (
+                        <motion.div
+                          layoutId="walletModeTab"
+                          layout="position"
+                          className="absolute inset-0 rounded-small -z-10"
+                          style={{
+                            backgroundColor: 'transparent',
+                            backgroundImage: 'var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%))',
+                          }}
+                          transition={{ type: "spring", stiffness: 400, damping: 40 }}
+                        />
+                      )}
+                      {mode === 'deposit' ? 'Deposit' : 'Withdraw'}
+                    </button>
+                  ))}
+                </div>
+
+                {walletMode === 'withdraw' && (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-white/60">Available Balance</span>
+                      <span className="text-xs text-white/90 font-bold inline-flex items-center gap-0.5">
+                        <span>€</span>
+                        <NumberFlow value={displayBalance} format={{ notation: 'standard', minimumFractionDigits: 2, maximumFractionDigits: 2 }} />
+                      </span>
+                    </div>
+                    <Separator className="bg-white/[0.025]" />
+                  </>
+                )}
+                <div className="text-xs text-white/80 font-medium">Select Crypto</div>
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setWalletCurrencyMenuOpen((prev) => !prev)}
+                    className="w-full rounded-lg border border-white/10 bg-white/[0.04] px-3 py-3 flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className={cn("h-10 w-10 rounded-full flex items-center justify-center text-white text-xs font-bold", selectedWalletCurrency.iconBg)}>
+                        <span className={`icon icon-${selectedWalletCurrency.iconSymbol} text-[18px] leading-[1]`} aria-label={selectedWalletCurrency.code} />
+                      </div>
+                      <div className="text-left min-w-0">
+                        <div className="text-white text-lg leading-none font-semibold">{selectedWalletCurrency.code}</div>
+                        <div className="text-white/60 text-xs leading-tight mt-1">{selectedWalletCurrency.name}</div>
+                      </div>
+                    </div>
+                    <IconChevronDown className={cn("h-4 w-4 text-white/70 transition-transform", walletCurrencyMenuOpen && "rotate-180")} />
+                  </button>
+                  {walletCurrencyMenuOpen && (
+                    <div className="mt-2 rounded-lg border border-white/10 bg-[var(--ds-sidebar-bg,#121417)] p-3 max-h-[360px] overflow-y-auto">
+                      <div className="relative mb-3">
+                        <IconSearch className="w-4 h-4 text-white/50 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <input
+                          value={walletCurrencySearch}
+                          onChange={(e) => setWalletCurrencySearch(e.target.value)}
+                          placeholder="Search Currencies"
+                          className="w-full pl-10 pr-3 py-3 bg-white/5 border border-white/10 rounded-small text-white placeholder:text-white/50 focus:outline-none focus:border-white/20"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        {filteredWalletCurrencies.map((currency) => (
+                          <button
+                            key={currency.id}
+                            type="button"
+                            onClick={() => {
+                              setSelectedPaymentMethod(currency.id)
+                              setWalletCurrencyMenuOpen(false)
+                            }}
+                            className="w-full rounded-small px-2 py-2.5 flex items-center justify-between hover:bg-white/[0.06] transition-colors"
+                          >
+                            <div className="flex items-center gap-3 min-w-0">
+                              <div className={cn("h-10 w-10 rounded-full flex items-center justify-center text-white text-[10px] font-bold", currency.iconBg)}>
+                                <span className={`icon icon-${currency.iconSymbol} text-[18px] leading-[1]`} aria-label={currency.code} />
+                              </div>
+                              <div className="text-left min-w-0">
+                                <div className="text-white text-sm font-semibold">{currency.code}</div>
+                                <div className="text-white/60 text-xs">{currency.name}</div>
+                              </div>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-xs text-white/80 font-medium">Select Amount (EUR) *</span>
+                </div>
+                <div className="rounded-lg overflow-hidden border border-white/10 bg-white/[0.03]">
+                  <div className="flex">
+                    <span className="h-14 px-4 inline-flex items-center text-xl text-white/70 border-r border-white/10">€</span>
+                    <input
+                      value={walletAmountInput}
+                      onChange={(e) => {
+                        const raw = e.target.value.replace(/,/g, '')
+                        const sanitized = raw.replace(/[^\d.]/g, '')
+                        const parts = sanitized.split('.')
+                        const whole = parts[0] ?? ''
+                        const decimals = (parts[1] ?? '').slice(0, 2)
+                        const nextValue = parts.length > 1 ? `${whole}.${decimals}` : whole
+                        setWalletAmountInput(nextValue)
+                      }}
+                      onFocus={() => {
+                        setWalletAmountInput((prev) => prev.replace(/,/g, ''))
+                      }}
+                      onBlur={() => {
+                        const parsed = parseWalletFiatAmount(walletAmountInput)
+                        setWalletAmountInput(formatWalletFiatAmount(parsed))
+                      }}
+                      className="flex-1 h-14 bg-transparent px-4 text-2xl leading-none text-white/85 placeholder:text-white/45 focus:outline-none"
+                      placeholder="0.00"
+                    />
+                  </div>
+                  <div className="px-4 py-2 border-t border-white/[0.03] flex items-center justify-between gap-2">
+                    <span className="text-xs leading-none font-semibold text-white/90 whitespace-nowrap">
+                      {walletCryptoAmountText} {selectedWalletCurrency.code}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        try {
+                          await navigator.clipboard.writeText(walletCryptoAmountText)
+                          setWalletCryptoCopied(true)
+                          window.setTimeout(() => setWalletCryptoCopied(false), 1200)
+                        } catch {
+                          setWalletCryptoCopied(false)
+                        }
+                      }}
+                      className="h-7 w-7 rounded-[6px] bg-white/[0.08] hover:bg-white/[0.12] inline-flex items-center justify-center transition-colors"
+                      aria-label="Copy crypto amount"
+                    >
+                      {walletCryptoCopied ? <IconCheck className="h-3.5 w-3.5 text-white/90" /> : <IconCopy className="h-3.5 w-3.5 text-white/75" />}
+                    </button>
+                  </div>
+                </div>
+                <Separator className="bg-white/[0.025]" />
+
+                <div className="text-xs text-white/80 font-medium">
+                  {walletMode === 'deposit' ? 'Deposit Wallet Address' : 'Enter Wallet Address *'}
+                </div>
+                {walletMode === 'deposit' ? (
+                  <div className="flex items-center pr-4 rounded-lg overflow-hidden border border-white/10 bg-white/[0.03]">
+                    <input
+                      value={walletDepositAddress}
+                      readOnly
+                      className="flex-1 h-12 bg-transparent px-4 text-sm text-white/90 focus:outline-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        try {
+                          await navigator.clipboard.writeText(walletDepositAddress)
+                          setWalletAddressCopied(true)
+                          window.setTimeout(() => setWalletAddressCopied(false), 1200)
+                        } catch {
+                          setWalletAddressCopied(false)
+                        }
+                      }}
+                      className="h-7 w-7 rounded-[6px] bg-white/[0.08] hover:bg-white/[0.12] inline-flex items-center justify-center transition-colors"
+                      aria-label="Copy deposit wallet address"
+                    >
+                      {walletAddressCopied ? <IconCheck className="w-3.5 h-3.5 text-white/90" /> : <IconCopy className="w-3.5 h-3.5 text-white/75" />}
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex rounded-lg overflow-hidden border border-white/10 bg-white/[0.03]">
+                    <input
+                      value={walletAddressInput}
+                      onChange={(e) => setWalletAddressInput(e.target.value)}
+                      className="flex-1 h-12 bg-transparent px-4 text-sm text-white placeholder:text-white/45 focus:outline-none"
+                      placeholder="Enter wallet address"
+                    />
+                  </div>
+                )}
+
+                <Separator className="bg-white/[0.025]" />
+                <div className="text-xs text-white/80 font-medium">Select Network *</div>
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setWalletNetworkMenuOpen((prev) => !prev)}
+                    className="w-full h-11 rounded-lg border border-white/10 bg-white/[0.04] px-4 flex items-center justify-between text-left"
+                  >
+                    <span className="text-xs text-white font-medium">{walletSelectedNetwork}</span>
+                    <IconChevronDown className={cn("h-4 w-4 text-white/70 transition-transform", walletNetworkMenuOpen && "rotate-180")} />
+                  </button>
+                  {walletNetworkMenuOpen && (
+                    <div className="mt-2 rounded-lg border border-white/10 bg-[var(--ds-sidebar-bg,#121417)] p-2">
+                      {walletNetworks.map((network) => (
+                        <button
+                          key={network}
+                          type="button"
+                          onClick={() => {
+                            setWalletSelectedNetwork(network)
+                            setWalletNetworkMenuOpen(false)
+                          }}
+                          className={cn(
+                            "w-full text-left rounded-small px-3 py-2 text-xs transition-colors",
+                            walletSelectedNetwork === network ? "bg-white/10 text-white" : "text-white/70 hover:bg-white/[0.06] hover:text-white"
+                          )}
+                        >
+                          {network}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <Button
+                  type="button"
+                  className="w-full justify-center gap-2 h-10 px-3 border border-[#9a86d1]/75 text-[#121417] text-sm font-semibold hover:text-[#121417]"
+                  style={{ backgroundColor: '#c9b4ff', boxShadow: '0 6px 18px rgba(122, 92, 196, 0.28)' }}
+                  onClick={() => {
+                    trackAction('wallet-submit', walletMode, {
+                      currency: selectedWalletCurrency.code,
+                      amountEur: walletAmountInput,
+                      amountCrypto: walletCryptoAmountText,
+                      address: walletAddressInput,
+                      network: walletSelectedNetwork,
+                    })
+                  }}
+                >
+                  {walletMode === 'deposit' ? `Deposit ${selectedWalletCurrency.code}` : `Withdraw ${selectedWalletCurrency.code}`}
+                </Button>
+              </div>
+
+              {false && (!showDepositConfirmation ? (
               <>
               <Card className="bg-white border border-gray-200 shadow-sm">
                 <CardContent className={cn(isMobile ? "p-4" : "p-5")}>
@@ -10077,7 +10358,7 @@ function NavTestPageContent() {
                       </Button>
                     )}
                 </div>
-              )}
+              ))}
             </div>
           </DrawerContent>
         </Drawer>

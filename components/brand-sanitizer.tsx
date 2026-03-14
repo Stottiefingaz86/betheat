@@ -17,8 +17,6 @@ const TEXT_REPLACEMENTS: Array<[RegExp, string]> = [
   [/\bvip\s*rewrds\b/gi, 'Loyalty'],
   [/\bLoyalty\b/gi, 'Promotions'],
   [/\bLOYALTY\b/g, 'PROMOTIONS'],
-  [/\bDeposit\b/g, 'Wallet'],
-  [/\bDEPOSIT\b/g, 'WALLET'],
 ]
 
 function sanitizeText(value: string): string {
@@ -48,6 +46,11 @@ function sanitizeTextNodes(root: ParentNode) {
   let node = walker.nextNode()
   while (node) {
     const textNode = node as Text
+    const parentEl = textNode.parentElement
+    if (parentEl?.closest('[data-no-brand-sanitize="true"]')) {
+      node = walker.nextNode()
+      continue
+    }
     const original = textNode.nodeValue ?? ''
     const sanitized = sanitizeText(original)
     if (sanitized !== original) {

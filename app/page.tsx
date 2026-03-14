@@ -1465,11 +1465,12 @@ function HomePageContent() {
   }, [trackClick])
   const openDepositDrawer = useCallback(() => {
     trackClick('deposit', 'Deposit')
-    setAccountDrawerOpen(false)
-    setVipDrawerOpen(false)
-    setDepositDrawerOpen(true)
+    try {
+      localStorage.setItem('bh-open-casino-deposit-drawer', '1')
+    } catch {}
+    router.push('/casino')
     useChatStore.getState().setIsOpen(false)
-  }, [trackClick])
+  }, [trackClick, router])
 
   // Panel exclusivity: when chat opens, close all drawers + collapse sidebar
   useEffect(() => {
@@ -4347,11 +4348,11 @@ function HomePageContent() {
         {/* Deposit Drawer */}
         <Drawer open={depositDrawerOpen} onOpenChange={handleDepositDrawerOpenChange} direction={isMobile ? "bottom" : "right"} shouldScaleBackground={false}>
           <DrawerContent 
-                showOverlay={isMobile}
+                showOverlay={true}
+                overlayClassName={!isMobile ? "bg-[#0f1728]/52 backdrop-blur-[2px]" : "bg-black/45 backdrop-blur-[1.5px]"}
                 className={cn(
-                  "bg-white text-gray-900 flex flex-col relative",
-                  "w-full sm:max-w-md border-l border-gray-200 overflow-hidden",
-                  isMobile && "rounded-t-[10px]"
+                  "w-full sm:max-w-md bg-[var(--ds-sidebar-bg,#121417)] text-white flex flex-col overscroll-contain outline-none",
+                  isMobile ? "!border-0 rounded-t-[10px]" : "border-l border-white/10"
                 )}
                 style={isMobile ? {
                   height: '80vh',
@@ -4360,22 +4361,31 @@ function HomePageContent() {
                   bottom: 0,
                 } : { display: 'flex', flexDirection: 'column' as const, overflow: 'hidden' }}
               >
-                {isMobile && <DrawerHandle variant="dark" />}
+                {isMobile && <DrawerHandle />}
             
                 {!isMobile && (
               <DrawerHeader className="relative flex-shrink-0 px-4 pt-4 pb-2">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-base font-semibold text-gray-900">Quick Deposit</h2>
+                  <h2 className="text-base font-semibold text-white">Wallet</h2>
                   <DrawerClose asChild>
-                    <button className="h-8 w-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors flex-shrink-0">
-                      <IconX className="h-4 w-4 text-gray-600" />
+                    <button className="h-8 w-8 rounded-full bg-white/10 hover:bg-white/15 flex items-center justify-center transition-colors flex-shrink-0">
+                      <IconX className="h-4 w-4 text-white/75" />
                     </button>
                   </DrawerClose>
               </div>
             </DrawerHeader>
             )}
             <div className={cn("w-full overflow-y-auto flex-1 min-h-0", isMobile ? "px-4 pt-4 pb-6" : "px-4 pt-4 pb-4")} style={{ WebkitOverflowScrolling: 'touch', overflowY: 'auto', flex: '1 1 auto', minHeight: 0, paddingBottom: isMobile ? 'env(safe-area-inset-bottom, 20px)' : undefined }}>
-              {!showDepositConfirmation ? (
+              <Card className="bg-white/[0.04] border border-white/10 shadow-none">
+                <CardContent className="p-4">
+                  <h3 className="text-base font-semibold text-white">Quick Wallet</h3>
+                  <p className="mt-2 text-sm text-white/70">
+                    Quick deposit content is temporarily removed while we align this drawer with the global account hub style.
+                  </p>
+                </CardContent>
+              </Card>
+
+              {false && (!showDepositConfirmation ? (
               <>
               <Card className="bg-white border border-gray-200 shadow-sm">
                 <CardContent className={cn(isMobile ? "p-4" : "p-5")}>
@@ -4747,7 +4757,7 @@ function HomePageContent() {
                       </Button>
                     )}
                 </div>
-              )}
+              ))}
             </div>
           </DrawerContent>
         </Drawer>

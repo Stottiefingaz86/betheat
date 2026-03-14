@@ -10731,8 +10731,7 @@ function NavTestPageContent() {
     { icon: IconBroadcast, label: 'Live Casino' },
     { icon: IconTrophy, label: 'Tournaments' },
     { icon: IconLifebuoy, label: 'Support' },
-    { icon: IconCrown, label: 'Loyalty Club' },
-    { icon: IconGift, label: 'Rewards' },
+    { icon: IconGift, label: 'My Bonus' },
     ...(isMobile ? [{ icon: IconWorld, label: 'Language' }] : []),
   ]
 
@@ -12400,11 +12399,8 @@ function NavTestPageContent() {
                                         // Handle support action (chat/help modal can be wired here)
                                         console.log('Support clicked')
                                         setShowSports(false)
-                                      } else if (item.label === 'Loyalty Club') {
-                                        console.log('Loyalty Club clicked')
-                                        setShowSports(false)
-                                      } else if (item.label === 'Rewards') {
-                                        console.log('Rewards clicked')
+                                      } else if (item.label === 'My Bonus') {
+                                        console.log('My Bonus clicked')
                                         setShowSports(false)
                                       }
                                     }}
@@ -12529,8 +12525,7 @@ function NavTestPageContent() {
                     <SidebarMenu>
                       {[
                         { icon: IconLifebuoy, label: 'Support' },
-                        { icon: IconCrown, label: 'Loyalty Club' },
-                        { icon: IconGift, label: 'Rewards' },
+                        { icon: IconGift, label: 'My Bonus' },
                         ...(isMobile ? [{ icon: IconWorld, label: 'Language' }] : []),
                       ].map((item, index) => {
                         const Icon = item.icon
