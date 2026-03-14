@@ -14678,13 +14678,7 @@ function NavTestPageContent() {
                               >
                                 {row.method === 'System' ? (
                                   <IconSettings
-                                    className={cn(
-                                      "h-4 w-4",
-                                      row.status === 'PENDING' && "text-amber-300",
-                                      row.status !== 'PENDING' && row.type === 'WITHDRAWAL' && "text-rose-300",
-                                      row.status !== 'PENDING' && row.type === 'DEPOSIT' && "text-emerald-300",
-                                      row.status !== 'PENDING' && row.type === 'BONUS' && "text-blue-300",
-                                    )}
+                                    className="h-4 w-4 text-blue-300"
                                   />
                                 ) : (
                                   <IconWallet
