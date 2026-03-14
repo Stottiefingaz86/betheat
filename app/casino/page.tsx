@@ -645,7 +645,7 @@ function LazyGameTile({ index, columnIndex, rowIndex, onTileClick, isMobile = fa
   // Use regular div on mobile to avoid layout animation issues - no state, no animations
   if (isMobile) {
     return (
-      <div className="w-[132px] h-[174px]">
+      <div className="w-full aspect-[132/174]">
         <div 
           className="w-full h-full rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group"
           onClick={() => {
@@ -11794,7 +11794,7 @@ function NavTestPageContent() {
                           const itemsInLastRow = totalTiles % maxCols
                           const skeletonCount = itemsInLastRow > 0 ? maxCols - itemsInLastRow : 0
                           const skeletonBoxes = Array.from({ length: skeletonCount }).map((_, index) => (
-                            <div key={`skeleton-${categoryKey}-${index}`} className="w-[132px] h-[174px]">
+                            <div key={`skeleton-${categoryKey}-${index}`} className={isMobile ? "w-full aspect-[132/174]" : "w-[132px] h-[174px]"}>
                               <Skeleton 
                                 className="w-full h-full rounded-small bg-white/10 dark:bg-white/10" 
                               />
@@ -11804,7 +11804,7 @@ function NavTestPageContent() {
                           // On mobile, use memoized static div to prevent re-renders during scroll
                           if (isMobile) {
                             return (
-                              <div className="grid [grid-template-columns:repeat(auto-fill,minmax(132px,132px))] justify-start gap-3 px-3 md:gap-4 md:px-6" style={{ willChange: 'auto' }}>
+                              <div className="grid grid-cols-3 gap-3 px-3" style={{ willChange: 'auto' }}>
                                 {gameTiles}
                                 {skeletonBoxes}
                         </div>
