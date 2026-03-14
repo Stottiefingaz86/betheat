@@ -13688,8 +13688,8 @@ function NavTestPageContent() {
                   <div className="md:hidden mb-6">
                     <Accordion type="multiple" className="w-full border-y border-white/10">
                       <AccordionItem value="casino" className="border-white/10">
-                        <AccordionTrigger className="text-sm font-semibold py-3">Casino</AccordionTrigger>
-                        <AccordionContent>
+                        <AccordionTrigger value="casino" className="text-sm font-semibold py-3">Casino</AccordionTrigger>
+                        <AccordionContent value="casino">
                           <ul className="space-y-1.5 pb-2 text-xs text-white/70">
                             <li><a href="#" className="hover:text-white transition-colors">Casino Games</a></li>
                             <li><a href="#" className="hover:text-white transition-colors">Slots</a></li>
@@ -13703,8 +13703,8 @@ function NavTestPageContent() {
                         </AccordionContent>
                       </AccordionItem>
                       <AccordionItem value="sports" className="border-white/10">
-                        <AccordionTrigger className="text-sm font-semibold py-3">Sports</AccordionTrigger>
-                        <AccordionContent>
+                        <AccordionTrigger value="sports" className="text-sm font-semibold py-3">Sports</AccordionTrigger>
+                        <AccordionContent value="sports">
                           <ul className="space-y-1.5 pb-2 text-xs text-white/70">
                             <li><a href="#" className="hover:text-white transition-colors">Sportsbook</a></li>
                             <li><a href="#" className="hover:text-white transition-colors">Live Sports</a></li>
@@ -13719,8 +13719,8 @@ function NavTestPageContent() {
                         </AccordionContent>
                       </AccordionItem>
                       <AccordionItem value="support" className="border-white/10">
-                        <AccordionTrigger className="text-sm font-semibold py-3">Support</AccordionTrigger>
-                        <AccordionContent>
+                        <AccordionTrigger value="support" className="text-sm font-semibold py-3">Support</AccordionTrigger>
+                        <AccordionContent value="support">
                           <ul className="space-y-1.5 pb-2 text-xs text-white/70">
                             <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
                             <li><a href="#" className="hover:text-white transition-colors">Fairness</a></li>
@@ -13733,8 +13733,8 @@ function NavTestPageContent() {
                         </AccordionContent>
                       </AccordionItem>
                       <AccordionItem value="about" className="border-white/10">
-                        <AccordionTrigger className="text-sm font-semibold py-3">About Us</AccordionTrigger>
-                        <AccordionContent>
+                        <AccordionTrigger value="about" className="text-sm font-semibold py-3">About Us</AccordionTrigger>
+                        <AccordionContent value="about">
                           <ul className="space-y-1.5 pb-2 text-xs text-white/70">
                             <li><a href="#" className="hover:text-white transition-colors">VIP Club</a></li>
                             <li><a href="#" className="hover:text-white transition-colors">Affiliate</a></li>
@@ -13745,8 +13745,8 @@ function NavTestPageContent() {
                         </AccordionContent>
                       </AccordionItem>
                       <AccordionItem value="payment" className="border-white/10">
-                        <AccordionTrigger className="text-sm font-semibold py-3">Payment Info</AccordionTrigger>
-                        <AccordionContent>
+                        <AccordionTrigger value="payment" className="text-sm font-semibold py-3">Payment Info</AccordionTrigger>
+                        <AccordionContent value="payment">
                           <ul className="space-y-1.5 pb-2 text-xs text-white/70">
                             <li><a href="#" className="hover:text-white transition-colors">Deposit & Withdrawals</a></li>
                             <li><a href="#" className="hover:text-white transition-colors">Currency Guide</a></li>
@@ -13757,8 +13757,8 @@ function NavTestPageContent() {
                         </AccordionContent>
                       </AccordionItem>
                       <AccordionItem value="faq" className="border-white/10">
-                        <AccordionTrigger className="text-sm font-semibold py-3">FAQ</AccordionTrigger>
-                        <AccordionContent>
+                        <AccordionTrigger value="faq" className="text-sm font-semibold py-3">FAQ</AccordionTrigger>
+                        <AccordionContent value="faq">
                           <ul className="space-y-1.5 pb-2 text-xs text-white/70">
                             <li><a href="#" className="hover:text-white transition-colors">How-to Guides</a></li>
                             <li><a href="#" className="hover:text-white transition-colors">Online Casino Guide</a></li>
