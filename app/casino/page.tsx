@@ -77,7 +77,8 @@ import {
   Coins as IconCoins,
   Download as IconDownload,
   ExternalLink as IconExternalLink,
-  RefreshCw as IconRefresh
+  RefreshCw as IconRefresh,
+  Copy as IconCopy
 } from "lucide-react"
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 import Image from 'next/image'
@@ -132,15 +133,17 @@ import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  DropdownMenuCheckboxItem,
   DropdownMenuSub,
-  DropdownMenuSubTrigger,
   DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
   Sidebar,
@@ -2083,18 +2086,24 @@ function PromosPage({
 
           {/* Sub nav filters */}
           <div className="mb-6">
-            <AnimateTabs value={selectedFilter} onValueChange={(value) => setVipActiveSidebarItem?.(value)} className="w-full">
-              <AnimateTabsList className="bg-transparent p-0 h-auto gap-1 border-0 relative transition-colors duration-300 w-max">
+            <div className="overflow-x-auto scrollbar-hide pb-1" style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-x' }}>
+              <div className="h-auto gap-1 inline-flex w-max">
                 {promoFilters.map((tab) => (
-                  <TabsTab 
+                  <button
                     key={tab}
-                    value={tab} 
-                    className="relative z-10 bg-transparent text-white/70 hover:text-white rounded-none px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-white focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none flex items-center gap-1.5 whitespace-nowrap"
+                    type="button"
+                    onClick={() => setVipActiveSidebarItem?.(tab)}
+                    className={cn(
+                      "relative px-4 py-1 h-9 text-xs font-medium rounded-none transition-colors duration-300 whitespace-nowrap flex-shrink-0",
+                      selectedFilter === tab
+                        ? "text-white"
+                        : "text-white/65 hover:text-white bg-transparent",
+                    )}
                   >
                     {selectedFilter === tab && (
                       <motion.div
                         layoutId="activePromosUnderline"
-                        className="absolute left-3 right-3 -bottom-0.5 h-[2px] rounded-full"
+                        className="absolute left-3 right-3 bottom-0 h-[2px] rounded-full"
                         style={{
                           backgroundImage: 'var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%))'
                         }}
@@ -2102,11 +2111,11 @@ function PromosPage({
                         transition={{ type: "spring", stiffness: 400, damping: 40 }}
                       />
                     )}
-                    <span className="relative z-10">{tab}</span>
-                  </TabsTab>
+                    <span className="relative z-10 whitespace-nowrap">{tab}</span>
+                  </button>
                 ))}
-              </AnimateTabsList>
-            </AnimateTabs>
+              </div>
+            </div>
           </div>
 
           {/* Promo Cards Grid */}
@@ -2120,8 +2129,8 @@ function PromosPage({
                 <CardContent className="p-4">
                   <CardTitle className="text-lg font-semibold text-white mb-2">{promo.title}</CardTitle>
                   <p className="text-sm text-white/70 mb-4 line-clamp-3">{promo.description}</p>
-                  <Button
-                    variant="ghost"
+                  <Button 
+                    variant="ghost" 
                     className="w-full font-semibold text-[#121417] hover:text-[#121417] border border-[#9a86d1]/75"
                     style={{
                       backgroundColor: '#c9b4ff',
@@ -4351,8 +4360,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                 <SidebarMenu>
                   {[
                     { icon: IconLifebuoy, label: 'Support' },
-                    { icon: IconCrown, label: 'Loyalty Club' },
-                    { icon: IconGift, label: 'Rewards' },
+                    { icon: IconGift, label: 'My Bonus' },
                   ].map((item, index) => {
                     const Icon = item.icon
                     return (
@@ -7147,8 +7155,7 @@ function PokerLandingPage({ brandPrimary, quickLinksOpen, onNavigate }: { brandP
   // Bottom section (like casino sidebar)
   const pokerBottomItems = [
     { icon: IconLifebuoy, label: 'Support' },
-    { icon: IconCrown, label: 'Loyalty Club' },
-    { icon: IconGift, label: 'Rewards' },
+    { icon: IconGift, label: 'My Bonus' },
   ]
 
   const topFeatures = [
@@ -7288,7 +7295,7 @@ function PokerLandingPage({ brandPrimary, quickLinksOpen, onNavigate }: { brandP
                         if (onNavigate) {
                           onNavigate('sports' as any)
                         } else {
-                          router.push('/sports/football')
+                        router.push('/sports/football')
                         }
                       } else if (item.page === 'liveBetting') {
                         window.location.href = '/live-betting'
@@ -7940,8 +7947,111 @@ function NavTestPageContent() {
   
   const [accountDrawerOpen, setAccountDrawerOpen] = useState(false)
   const [vipDrawerOpen, setVipDrawerOpen] = useState(false)
-  const [accountDrawerView, setAccountDrawerView] = useState<'account' | 'notifications'>('account')
+  const [accountDrawerView, setAccountDrawerView] = useState<'account' | 'profile' | 'notifications' | 'bonus' | 'transactions'>('account')
+  const [accountIdCopied, setAccountIdCopied] = useState(false)
   const webInboxUnreadCount = 2
+  const [accountBonusTab, setAccountBonusTab] = useState<'available' | 'active' | 'history'>('available')
+  const [accountBonusExpandedId, setAccountBonusExpandedId] = useState<string | null>(null)
+  const [accountBonusFilterOpen, setAccountBonusFilterOpen] = useState(false)
+  const [accountBonusHistoryStatusFilter, setAccountBonusHistoryStatusFilter] = useState<'ALL' | 'ACTIVE' | 'EXPIRED' | 'CANCELLED' | 'COMPLETE'>('ALL')
+  const [accountBonusHistorySort, setAccountBonusHistorySort] = useState<'latest' | 'oldest'>('latest')
+  const accountBonusHistoryRows = [
+    { id: 'b1', code: 'Welcome500', amount: '$4.00', rollover: '$0.00', date: '14/03/2026', status: 'ACTIVE' },
+    { id: 'b2', code: 'Risk Free', amount: '$5.00', rollover: '$0.00', date: '12/03/2026', status: 'EXPIRED' },
+    { id: 'b3', code: 'Freespins 25', amount: '$5.00', rollover: '$0.00', date: '09/03/2026', status: 'EXPIRED' },
+    { id: 'b4', code: 'Risk Free', amount: '$10.00', rollover: '$8.00', date: '07/03/2026', status: 'CANCELLED' },
+    { id: 'b5', code: 'Welcome500', amount: '$4.00', rollover: '$0.00', date: '03/03/2026', status: 'COMPLETE' },
+  ] as const
+  const accountBonusHistoryFilteredRows = useMemo(() => {
+    const parseDate = (value: string) => {
+      const [day, month, year] = value.split('/').map((part) => Number(part))
+      return new Date(year, month - 1, day).getTime()
+    }
+
+    const filtered = accountBonusHistoryRows.filter((row) => (
+      accountBonusHistoryStatusFilter === 'ALL' || row.status === accountBonusHistoryStatusFilter
+    ))
+
+    return [...filtered].sort((a, b) => {
+      const aTime = parseDate(a.date)
+      const bTime = parseDate(b.date)
+      return accountBonusHistorySort === 'latest' ? bTime - aTime : aTime - bTime
+    })
+  }, [accountBonusHistoryRows, accountBonusHistorySort, accountBonusHistoryStatusFilter])
+  const [accountTransactionExpandedId, setAccountTransactionExpandedId] = useState<string | null>(null)
+  const [accountTransactionCopiedReferenceId, setAccountTransactionCopiedReferenceId] = useState<string | null>(null)
+  const [accountTransactionFilterOpen, setAccountTransactionFilterOpen] = useState(false)
+  const [accountTransactionStatusFilter, setAccountTransactionStatusFilter] = useState<'ALL' | 'COMPLETED' | 'PENDING' | 'CREDITED'>('ALL')
+  const [accountTransactionSort, setAccountTransactionSort] = useState<'latest' | 'oldest'>('latest')
+  const [accountTransactionTypeFilter, setAccountTransactionTypeFilter] = useState<'ALL' | 'DEPOSIT' | 'WITHDRAWAL' | 'BONUS'>('ALL')
+  const accountTransactionRows = [
+    { id: 't1', date: '18/02/2026', type: 'DEPOSIT', method: 'Bitcoin', amount: '+$500.00', status: 'COMPLETED', reference: 'TXN-8847291' },
+    { id: 't2', date: '15/02/2026', type: 'WITHDRAWAL', method: 'Bitcoin', amount: '-$200.00', status: 'COMPLETED', reference: 'TXN-8847290' },
+    { id: 't3', date: '12/02/2026', type: 'DEPOSIT', method: 'Credit Card', amount: '+$100.00', status: 'COMPLETED', reference: 'TXN-8847289' },
+    { id: 't4', date: '10/02/2026', type: 'BONUS', method: 'System', amount: '+$25.00', status: 'CREDITED', reference: 'TXN-8847288' },
+    { id: 't5', date: '08/02/2026', type: 'WITHDRAWAL', method: 'Bitcoin', amount: '-$1000.00', status: 'PENDING', reference: 'TXN-8847287' },
+    { id: 't6', date: '05/02/2026', type: 'DEPOSIT', method: 'Ethereum', amount: '+$250.00', status: 'COMPLETED', reference: 'TXN-8847286' },
+  ] as const
+  const accountTransactionFilteredRows = useMemo(() => {
+    const parseDate = (value: string) => {
+      const [day, month, year] = value.split('/').map((part) => Number(part))
+      return new Date(year, month - 1, day).getTime()
+    }
+    const filtered = accountTransactionRows.filter((row) => {
+      const statusOk = accountTransactionStatusFilter === 'ALL' || row.status === accountTransactionStatusFilter
+      const typeOk = accountTransactionTypeFilter === 'ALL' || row.type === accountTransactionTypeFilter
+      return statusOk && typeOk
+    })
+    return [...filtered].sort((a, b) => {
+      const aTime = parseDate(a.date)
+      const bTime = parseDate(b.date)
+      return accountTransactionSort === 'latest' ? bTime - aTime : aTime - bTime
+    })
+  }, [accountTransactionRows, accountTransactionSort, accountTransactionStatusFilter, accountTransactionTypeFilter])
+  const [profileForm, setProfileForm] = useState({
+    username: '5Aces',
+    email: 'christopher.hunt86@gmail.com',
+    fullName: '',
+    day: '',
+    month: '',
+    year: '',
+    gender: '',
+    country: 'Cyprus',
+    city: '',
+    stateOrProvince: '',
+    address: '',
+    code: '',
+    phone: '',
+    postalCode: '',
+  })
+  const [isProfileSaving, setIsProfileSaving] = useState(false)
+  const countryDialCode = useMemo(() => {
+    const dialByCountry: Record<string, string> = {
+      Cyprus: '+357',
+      'United Kingdom': '+44',
+      'United States': '+1',
+      Germany: '+49',
+    }
+    return dialByCountry[profileForm.country] ?? '+357'
+  }, [profileForm.country])
+
+  // Prevent page scroll behind account drawer on desktop.
+  // On mobile, keep body overflow untouched so Vaul drag-to-close stays responsive.
+  useEffect(() => {
+    if (!accountDrawerOpen || isMobile) return
+    const html = document.documentElement
+    const body = document.body
+    const prevHtmlOverflow = html.style.overflow
+    const prevBodyOverflow = body.style.overflow
+
+    html.style.overflow = 'hidden'
+    body.style.overflow = 'hidden'
+
+    return () => {
+      html.style.overflow = prevHtmlOverflow
+      body.style.overflow = prevBodyOverflow
+    }
+  }, [accountDrawerOpen, isMobile])
 
   const completeCasinoFeatureTour = useCallback(() => {
     setCasinoFeatureTourOpen(false)
@@ -8930,8 +9040,7 @@ function NavTestPageContent() {
   // Bottom pinned items — same across all sidebars
   const sidebarBottomItems = [
     { icon: IconLifebuoy, label: 'Support' },
-    { icon: IconCrown, label: 'Loyalty Club' },
-    { icon: IconGift, label: 'Rewards' },
+    { icon: IconGift, label: 'My Bonus' },
     ...(isMobile ? [{ icon: IconWorld, label: 'Language' }] : []),
   ]
 
@@ -9444,7 +9553,7 @@ function NavTestPageContent() {
                 <NumberFlow value={displayBalance} format={{ notation: 'standard', minimumFractionDigits: 2, maximumFractionDigits: 2 }} />
               </div>
             </Button>
-
+            
             {isMobile && (
               <Button
                 variant="ghost"
@@ -9488,7 +9597,7 @@ function NavTestPageContent() {
                 }}
               >
                 <IconWallet className="w-3.5 h-3.5 text-[#121417]" />
-                <span className="text-[#121417]">DEPOSIT</span>
+                <span className="text-[#121417]">Wallet</span>
               </Button>
             )}
 
@@ -9509,10 +9618,10 @@ function NavTestPageContent() {
                   variant="ghost"
                   size="icon"
                   className="h-9 w-9 rounded-[0.56rem] border border-white/10 bg-[#141920]/90 text-white/75 hover:bg-[#1a202b]/95"
-                  style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer' }}
-                >
+                style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer' }}
+              >
                   <IconWorld className="h-4 w-4" />
-                </Button>
+              </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-[140px] bg-[#141920] border-white/10 text-white">
                 {[
@@ -10240,11 +10349,11 @@ function NavTestPageContent() {
                       <SidebarGroupContent>
                         <SidebarMenu>
                           {[
-                            { id: 'Loyalty Club', icon: IconCrown, label: 'Loyalty Club', subtitle: 'Member rewards' },
-                            { id: 'Help Centre', icon: IconLifebuoy, label: 'Help Centre', subtitle: 'Issue or feedback' },
+                            { id: 'Daily Races', icon: IconTrophy, label: 'Daily Races', subtitle: 'Compete for cash prizes' },
+                            { id: 'Wallet', icon: IconWallet, label: 'Wallet', subtitle: 'Deposit or withdraw funds' },
                           ].map((item, index) => {
                             const Icon = item.icon
-                            return (
+                              return (
                               <SidebarMenuItem key={`promo-feature-${index}`}>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
@@ -10260,12 +10369,19 @@ function NavTestPageContent() {
                                         }
                                       }}
                                       className={cn(
-                                        "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer text-white/70 hover:text-white hover:bg-white/5",
+                                        "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer text-white/70 hover:text-white hover:bg-white/[0.03] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none",
+                                        "border border-transparent hover:border-white/[0.08]",
                                         sidebarState === 'collapsed' && "h-10 w-10 mx-auto p-0 justify-center"
                                       )}
                                     >
-                                      <div className="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0 bg-white/[0.045] border border-white/[0.08]">
-                                        <Icon strokeWidth={1.5} className="w-4 h-4" />
+                                      <div className="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0 bg-white/[0.03]">
+                                        <Icon
+                                          strokeWidth={1.5}
+                                          className={cn(
+                                            "w-4 h-4 text-white/70",
+                                            item.id === 'Wallet' && "text-[#c9b4ff]",
+                                          )}
+                                        />
                                       </div>
                                       <div className={cn("flex flex-col leading-tight min-w-0", sidebarState === 'collapsed' && "hidden")}>
                                         <span>{item.label}</span>
@@ -10297,7 +10413,7 @@ function NavTestPageContent() {
                             { id: 'Sports Bonus', icon: IconTrophy, label: 'Sports Bonus' },
                             { id: 'Casino Bonus', icon: IconDeviceGamepad2, label: 'Casino Bonus' },
                             { id: 'Deposit Bonus', icon: IconWallet, label: 'Deposit Bonus' },
-                            { id: 'Races', icon: IconCrown, label: 'Races' },
+                            { id: 'Races', icon: IconFlag2, label: 'Races' },
                           ].map((item: any, index: number) => {
                             if (!item.icon || !item.id) return null
                             const Icon = item.icon
@@ -10313,7 +10429,7 @@ function NavTestPageContent() {
                                         e.preventDefault()
                                         e.stopPropagation()
                                         if (isMobile) setOpenMobile(false)
-                                        setVipActiveSidebarItem(itemId)
+                                          setVipActiveSidebarItem(itemId)
                                       }}
                                       className={cn(
                                         "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
@@ -10349,8 +10465,7 @@ function NavTestPageContent() {
                         <SidebarMenu>
                           {[
                             { icon: IconLifebuoy, label: 'Support' },
-                            { icon: IconCrown, label: 'Loyalty Club' },
-                            { icon: IconGift, label: 'Rewards' },
+                            { icon: IconGift, label: 'My Bonus' },
                             ...(isMobile ? [{ icon: IconWorld, label: 'Language' }] : []),
                           ].map((item, index) => {
                             const Icon = item.icon
@@ -10504,10 +10619,10 @@ function NavTestPageContent() {
                                       isActive ? "bg-white/10" : "bg-white/[0.045]"
                                     )}
                                   >
-                                    {Icon && <Icon strokeWidth={1.5} className="w-4 h-4" />}
-                                  </div>
+                                      {Icon && <Icon strokeWidth={1.5} className="w-4 h-4" />}
+                                    </div>
                                   {(sidebarState !== 'collapsed' || isMobile) && (
-                                    <span>{item.label}</span>
+                                        <span>{item.label}</span>
                                   )}
                                 </SidebarMenuButton>
                               </TooltipTrigger>
@@ -10620,6 +10735,11 @@ function NavTestPageContent() {
                                       } else if (item.label === 'Support') {
                                         console.log('Support clicked')
                                         setShowSports(false)
+                                      } else if (item.label === 'My Bonus') {
+                                        setShowSports(false)
+                                        setAccountBonusTab('available')
+                                        setAccountDrawerView('bonus')
+                                        openAccountDrawer()
                                       }
                                     }}
                                   >
@@ -10711,10 +10831,10 @@ function NavTestPageContent() {
                                     if (isMobile) setOpenMobile(false)
                                     if (item.label === 'Support') {
                                       console.log('Support clicked')
-                                    } else if (item.label === 'Loyalty Club') {
-                                      console.log('Loyalty Club clicked')
-                                    } else if (item.label === 'Rewards') {
-                                      console.log('Rewards clicked')
+                                    } else if (item.label === 'My Bonus') {
+                                      setAccountBonusTab('available')
+                                      setAccountDrawerView('bonus')
+                                      openAccountDrawer()
                                     }
                                   }}
                                   className={cn(
@@ -10930,7 +11050,7 @@ function NavTestPageContent() {
                         }
                       }
                     }} className="w-full">
-                    <AnimateTabsList className={cn(
+                      <AnimateTabsList className={cn(
                         "bg-transparent p-0.5 h-auto gap-1 rounded-3xl border-0 relative transition-colors duration-300 flex-nowrap"
                       )}
                       style={isMobile ? {
@@ -11089,7 +11209,7 @@ function NavTestPageContent() {
                     setVipDrawerOpen={setVipDrawerOpen}
                     setShowVipRewards={setShowVipRewards}
                     setVipActiveTab={setVipActiveTab}
-                    setVipActiveSidebarItem={setVipActiveSidebarItem}
+                      setVipActiveSidebarItem={setVipActiveSidebarItem}
                     activeFilter={vipActiveSidebarItem}
                   />
                 </motion.div>
@@ -11748,25 +11868,25 @@ function NavTestPageContent() {
                           // Sort based on selected filter
                           let sortedGames = [...games]
                           if (!isContinuePlayingPage) {
-                            switch (gameSortFilter) {
-                              case 'popular':
-                                sortedGames.sort((a, b) => b.popularity - a.popularity)
-                                break
-                              case 'hot':
-                                sortedGames.sort((a, b) => b.hotScore - a.hotScore)
-                                break
-                              case 'latest':
-                                sortedGames.sort((a, b) => b.dateAdded.getTime() - a.dateAdded.getTime())
-                                break
-                              case 'oldest':
-                                sortedGames.sort((a, b) => a.dateAdded.getTime() - b.dateAdded.getTime())
-                                break
-                              case 'a-z':
-                                sortedGames.sort((a, b) => a.nameLower.localeCompare(b.nameLower))
-                                break
-                              case 'z-a':
-                                sortedGames.sort((a, b) => b.nameLower.localeCompare(a.nameLower))
-                                break
+                          switch (gameSortFilter) {
+                            case 'popular':
+                              sortedGames.sort((a, b) => b.popularity - a.popularity)
+                              break
+                            case 'hot':
+                              sortedGames.sort((a, b) => b.hotScore - a.hotScore)
+                              break
+                            case 'latest':
+                              sortedGames.sort((a, b) => b.dateAdded.getTime() - a.dateAdded.getTime())
+                              break
+                            case 'oldest':
+                              sortedGames.sort((a, b) => a.dateAdded.getTime() - b.dateAdded.getTime())
+                              break
+                            case 'a-z':
+                              sortedGames.sort((a, b) => a.nameLower.localeCompare(b.nameLower))
+                              break
+                            case 'z-a':
+                              sortedGames.sort((a, b) => b.nameLower.localeCompare(a.nameLower))
+                              break
                             }
                           }
                           
@@ -12683,8 +12803,8 @@ function NavTestPageContent() {
                         {false && <div className={cn("mb-8", isMobile ? "px-3" : "px-6")}>
                           <h2 className="text-lg font-semibold text-black dark:text-white transition-colors duration-300 mb-6">
                             Jackpots Ready to Drop
-                          </h2>
-
+                              </h2>
+                              
                           {(() => {
                             const tilesPerRow = isMobile ? 9 : 10
                             return (
@@ -12702,45 +12822,45 @@ function NavTestPageContent() {
                                   const title = jackpotNames[gameIndex % jackpotNames.length]
 
                                   return (
-                                    <div
+                                      <div 
                                       key={`ready-drop-tile-${rowIndex}-${tileIndex}`}
-                                      data-content-item
+                                        data-content-item 
                                       className={cn(
                                         "w-[132px] h-[174px] md:w-[132px] md:h-[174px] rounded-small bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group border border-white/20 flex-shrink-0",
                                         rowIndex === 0 && tileIndex === 0 && !isMobile ? "ml-0" : ""
                                       )}
-                                      onMouseEnter={(e) => {
+                                        onMouseEnter={(e) => {
                                         e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)'
-                                      }}
-                                      onMouseLeave={(e) => {
-                                        e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
-                                      }}
-                                      onClick={() => {
-                                        setSelectedGame({
+                                        }}
+                                        onMouseLeave={(e) => {
+                                          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
+                                        }}
+                                        onClick={() => {
+                                          setSelectedGame({
                                           title,
-                                          image: imageSrc,
+                                            image: imageSrc,
                                           provider: getTileVendor(gameIndex + 80),
                                           features: ['Progressive Jackpot Pool', 'High Volatility', 'Live Jackpot Ticker']
-                                        })
-                                      }}
-                                    >
-                                      {imageSrc && (
-                                        <Image
-                                          src={imageSrc}
+                                          })
+                                        }}
+                                      >
+                                        {imageSrc && (
+                                          <Image
+                                            src={imageSrc}
                                           alt={`${title} tile`}
-                                          fill
-                                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                                            fill
+                                            className="object-cover group-hover:scale-105 transition-transform duration-300"
                                           sizes="132px"
-                                        />
-                                      )}
+                                          />
+                                        )}
                                       <GameTagBadge tag={getMetaTag(gameIndex + 80)} vendor={getTileVendor(gameIndex + 80)} />
                                       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'color-mix(in srgb, white 6%, transparent)' }} />
-                                    </div>
+                                      </div>
                                   )
                                 })}
                               </div>
                             ))}
-                          </div>
+                            </div>
                             )
                           })()}
                         </div>}
@@ -13768,11 +13888,11 @@ function NavTestPageContent() {
           shouldScaleBackground={false}
         >
           <DrawerContent 
-            showOverlay={isMobile}
+            showOverlay={true}
+            overlayClassName={!isMobile ? "bg-[#0f1728]/52 backdrop-blur-[2px]" : "bg-black/45 backdrop-blur-[1.5px]"}
             className={cn(
-              "w-full sm:max-w-md bg-white text-gray-900 flex flex-col",
-              "border-l border-gray-200",
-              isMobile && "rounded-t-[10px]"
+              "w-full sm:max-w-md bg-[var(--ds-sidebar-bg,#121417)] text-white flex flex-col overscroll-contain outline-none",
+              isMobile ? "!border-0 rounded-t-[10px]" : "border-l border-white/10"
             )}
             style={isMobile ? {
               height: '80vh',
@@ -13789,42 +13909,83 @@ function NavTestPageContent() {
                     <Button 
                       variant="ghost"
                       onClick={() => setAccountDrawerView('account')}
-                      className="h-8 w-8 p-0 hover:bg-gray-100 -ml-2"
+                      className="h-8 w-8 p-0 hover:bg-white/10 -ml-2"
                     >
-                      <IconChevronLeft className="h-5 w-5 text-gray-600" />
+                      <IconChevronLeft className="h-5 w-5 text-white/70" />
                     </Button>
-                    <h2 className="text-lg font-semibold text-gray-900">Notifications</h2>
+                    <h2 className="text-lg font-semibold text-white">Messages</h2>
+                  </div>
+                ) : accountDrawerView === 'profile' ? (
+                  <div className="flex items-center gap-3 flex-1">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setAccountDrawerView('account')}
+                      className="h-8 w-8 p-0 hover:bg-white/10 -ml-2"
+                    >
+                      <IconChevronLeft className="h-5 w-5 text-white/70" />
+                    </Button>
+                    <h2 className="text-lg font-semibold text-white">My Profile</h2>
+                  </div>
+                ) : accountDrawerView === 'bonus' ? (
+                  <div className="flex items-center gap-3 flex-1">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setAccountDrawerView('account')}
+                      className="h-8 w-8 p-0 hover:bg-white/10 -ml-2"
+                    >
+                      <IconChevronLeft className="h-5 w-5 text-white/70" />
+                    </Button>
+                    <h2 className="text-lg font-semibold text-white">My Bonus</h2>
+                  </div>
+                ) : accountDrawerView === 'transactions' ? (
+                  <div className="flex items-center gap-3 flex-1">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setAccountDrawerView('account')}
+                      className="h-8 w-8 p-0 hover:bg-white/10 -ml-2"
+                    >
+                      <IconChevronLeft className="h-5 w-5 text-white/70" />
+                    </Button>
+                    <h2 className="text-lg font-semibold text-white">Transactions History</h2>
                   </div>
                 ) : (
                   <div className="flex items-center gap-3 flex-1">
-                    <Avatar className="h-10 w-10 border border-gray-200">
-                      <AvatarFallback className="bg-gray-100 text-gray-600 flex items-center justify-center text-sm font-semibold">
-                        ch
+                    <Avatar className="h-10 w-10 border border-white/20">
+                      <AvatarFallback className="bg-transparent text-white flex items-center justify-center text-sm font-semibold">
+                        <IconUser className="h-5 w-5" />
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
-                      <div className="text-sm font-medium text-gray-900 text-left">ch</div>
-                      <div className="text-xs text-gray-500 text-left">b1767721</div>
+                      <div className="text-sm font-medium text-white text-left">5Aces</div>
+                      <div className="text-[12px] text-white/55 text-left inline-flex items-center gap-1.5 leading-none mt-0.5">
+                        <span>#290847</span>
+                    <button 
+                          type="button"
+                          onClick={async (e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            try {
+                              await navigator.clipboard.writeText('#290847')
+                              setAccountIdCopied(true)
+                              window.setTimeout(() => setAccountIdCopied(false), 1200)
+                            } catch {
+                              setAccountIdCopied(false)
+                            }
+                          }}
+                          className="h-4 w-4 inline-flex items-center justify-center text-white/55 hover:text-white transition-colors"
+                          aria-label="Copy account ID"
+                        >
+                          {accountIdCopied ? <IconCheck className="h-3 w-3" /> : <IconCopy className="h-3 w-3" />}
+                    </button>
+                      </div>
                     </div>
                   </div>
-                )}
-                <div className="flex items-center gap-2">
-                  {accountDrawerView === 'notifications' ? null : (
-                    <button 
-                      onClick={() => setAccountDrawerView('notifications')}
-                      className={cn(
-                        "h-8 w-8 rounded-full flex items-center justify-center transition-colors flex-shrink-0",
-                        "bg-gray-100 hover:bg-gray-200 relative"
-                      )}
-                    >
-                      <IconBell className="h-4 w-4 text-gray-600" />
-                      <div className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500 border-2 border-white" />
-                    </button>
                   )}
+                <div className="flex items-center gap-2">
                   {!isMobile && (
                     <DrawerClose asChild>
-                      <button className="h-8 w-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors flex-shrink-0">
-                        <IconX className="h-4 w-4 text-gray-600" />
+                      <button className="h-8 w-8 rounded-full bg-white/10 hover:bg-white/15 flex items-center justify-center transition-colors flex-shrink-0">
+                        <IconX className="h-4 w-4 text-white/75" />
                       </button>
                     </DrawerClose>
                   )}
@@ -13832,78 +13993,70 @@ function NavTestPageContent() {
               </div>
             </DrawerHeader>
             
-            <div className={cn("flex-1 overflow-y-auto", isMobile ? "px-4 pt-4 pb-4" : "px-4 pt-6 pb-4")}>
+            <div className={cn("flex-1 overflow-y-auto text-white", isMobile ? "px-4 pt-4 pb-4" : "px-4 pt-6 pb-4")}>
               {accountDrawerView === 'account' ? (
                 <>
                   {/* Balance Information */}
                   <div className="mb-4">
-                    <div className="bg-gray-50 rounded-lg px-3 py-3 space-y-3">
+                    <div className="bg-white/[0.04] border border-white/10 rounded-lg px-3 py-3 space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600">Available Balance</span>
-                        <span className="text-sm font-semibold text-gray-900">
+                        <span className="text-sm text-white/80">Available Balance</span>
+                        <span className="text-sm font-semibold text-white">
                   {currentBrand.symbol}
                   <NumberFlow value={displayBalance} format={{ notation: 'standard', minimumFractionDigits: 2, maximumFractionDigits: 2 }} />
                         </span>
                 </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600">Free Bet</span>
-                        <span className="text-sm font-semibold text-gray-900">$0.00</span>
+                        <span className="text-sm text-white/80">Bonus</span>
+                        <span className="text-sm font-semibold text-white">$0.00</span>
                       </div>
                     </div>
               </div>
               
-                  <Separator className="bg-gray-200 mb-3" />
+                  <Separator className="bg-white/10 mb-3" />
                   
-                  {/* Deposit and Withdraw */}
+                  {/* Wallet CTA */}
                   <div className="space-y-0.5 w-full mb-3">
                     <Button 
                       variant="ghost" 
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-10 px-3"
+                      className="w-full justify-center gap-2 h-10 px-3 border border-[#9a86d1]/75 text-[#121417] font-semibold hover:text-[#121417]"
+                      style={{ backgroundColor: '#c9b4ff', boxShadow: '0 6px 18px rgba(122, 92, 196, 0.28)' }}
                       onClick={() => {
                         setAccountDrawerOpen(false)
                         openDepositDrawer()
                       }}
                     >
-                      <IconCreditCard className="w-5 h-5 mr-3 text-gray-700" />
-                      <span className="flex-1 text-left text-gray-900">Deposit</span>
-                    </Button>
-                    
-                    <Button 
-                      variant="ghost" 
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-10 px-3"
-                    >
-                      <IconArrowRight className="w-5 h-5 mr-3 text-gray-700 rotate-180" />
-                      <span className="flex-1 text-left text-gray-900">Withdraw</span>
+                      <IconWallet className="w-4 h-4" />
+                      <span>Wallet</span>
                     </Button>
                   </div>
                   
-                  <Separator className="bg-gray-200 mb-6" />
+                  <Separator className="bg-white/10 mb-6" />
                   
                   {/* Navigation List */}
                   <div className="space-y-1 w-full mb-8">
                     <Button 
                       variant="ghost" 
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-12 px-3 min-w-0"
+                      className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 min-w-0 transition-colors duration-200"
                     onClick={() => {
-                      setAccountDrawerOpen(false)
-                      router.push('/account')
+                      setAccountDrawerView('profile')
                     }}
                     >
-                      <IconUser className="w-5 h-5 mr-3 text-gray-700" />
-                      <span className="flex-1 text-left text-gray-900">My Account</span>
+                      <IconUser className="w-5 h-5 mr-3 text-white/65 transition-colors duration-200 group-hover:text-white/90" />
+                      <span className="flex-1 text-left text-white">My Profile</span>
                 </Button>
 
                     <Button
                       variant="ghost"
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-12 px-3 min-w-0"
+                      className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 min-w-0 transition-colors duration-200"
                       onClick={() => {
                         setAccountDrawerView('notifications')
                       }}
                     >
-                      <IconBell className="w-5 h-5 mr-3 text-gray-700 flex-shrink-0" />
-                      <span className="flex-1 text-left text-gray-900">Notifications</span>
+                      <IconBell className="w-5 h-5 mr-3 text-white/65 flex-shrink-0 transition-colors duration-200 group-hover:text-white/90" />
+                      <span className="flex-1 text-left text-white">Messages</span>
                       {webInboxUnreadCount > 0 && (
-                        <span className="bg-red-500 text-white text-[10px] font-bold rounded-full min-w-[20px] h-5 px-1.5 flex items-center justify-center">
+                        <span className="bg-[var(--ds-primary,#ff6a1a)] text-white text-[10px] font-bold rounded-full min-w-[20px] h-5 px-1.5 flex items-center justify-center">
                           {webInboxUnreadCount}
                         </span>
                       )}
@@ -13911,71 +14064,713 @@ function NavTestPageContent() {
                     
                     <Button 
                       variant="ghost" 
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-12 px-3 min-w-0"
+                      className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 transition-colors duration-200"
                       onClick={() => {
-                        setAccountDrawerOpen(false)
-                        router.push('/sports?mybets=pending')
+                        setAccountBonusTab('available')
+                        setAccountDrawerView('bonus')
                       }}
                     >
-                      <IconFileText className="w-5 h-5 mr-3 text-gray-700 flex-shrink-0" />
-                      <span className="flex-1 text-left text-gray-900">Pending Bets</span>
-                      <span className="text-sm text-gray-600 ml-auto flex items-center gap-1.5">
-                        <span className="bg-amber-500 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">4</span>
-                        $40.00
-                      </span>
+                      <IconGift className="w-5 h-5 mr-3 text-white/65 transition-colors duration-200 group-hover:text-white/90" />
+                      <span className="flex-1 text-left text-white">My Bonus</span>
                 </Button>
                     
                     <Button 
                       variant="ghost" 
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-12 px-3"
+                      className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 transition-colors duration-200"
+                      onClick={() => {
+                        setAccountTransactionFilterOpen(false)
+                        setAccountDrawerView('transactions')
+                      }}
                     >
-                      <IconGift className="w-5 h-5 mr-3 text-gray-700" />
-                      <span className="flex-1 text-left text-gray-900">My Bonus</span>
+                      <IconCurrencyDollar className="w-5 h-5 mr-3 text-white/65 transition-colors duration-200 group-hover:text-white/90" />
+                      <span className="flex-1 text-left text-white">Transactions History</span>
                 </Button>
                     
                     <Button 
                       variant="ghost" 
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-12 px-3"
+                      className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 transition-colors duration-200"
                     >
-                      <IconCurrencyDollar className="w-5 h-5 mr-3 text-gray-700" />
-                      <span className="flex-1 text-left text-gray-900">Transactions History</span>
+                      <IconTicket className="w-5 h-5 mr-3 text-white/65 transition-colors duration-200 group-hover:text-white/90" />
+                      <span className="flex-1 text-left text-white">Bet History</span>
                 </Button>
                     
                     <Button 
                       variant="ghost" 
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-12 px-3"
+                      className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 transition-colors duration-200"
                     >
-                      <IconTicket className="w-5 h-5 mr-3 text-gray-700" />
-                      <span className="flex-1 text-left text-gray-900">Bet History</span>
+                      <IconUserPlus className="w-5 h-5 mr-3 text-white/65 transition-colors duration-200 group-hover:text-white/90" />
+                      <span className="flex-1 text-left text-white">Refer a Friend</span>
                     </Button>
                     
                     <Button 
                       variant="ghost" 
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-12 px-3"
+                      className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 transition-colors duration-200"
                     >
-                      <IconUserPlus className="w-5 h-5 mr-3 text-gray-700" />
-                      <span className="flex-1 text-left text-gray-900">Refer a Friend</span>
+                      <IconShield className="w-5 h-5 mr-3 text-white/65 transition-colors duration-200 group-hover:text-white/90" />
+                      <span className="flex-1 text-left text-white">Security</span>
                     </Button>
                     
                     <Button 
                       variant="ghost" 
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-12 px-3"
+                      className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 transition-colors duration-200"
                     >
-                      <IconCrown className="w-5 h-5 mr-3 text-gray-700" />
-                      <span className="flex-1 text-left text-gray-900">VIP Rewards</span>
+                      <IconArrowRight className="w-5 h-5 mr-3 text-white/65 transition-colors duration-200 group-hover:text-white/90" />
+                      <span className="flex-1 text-left text-white">Log out</span>
+                    </Button>
+
+              </div>
+                </>
+              ) : accountDrawerView === 'profile' ? (
+                <div className="space-y-4 pb-4" data-account-profile-form="true">
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="space-y-1.5">
+                      <Label className="text-white/90 text-sm">Username</Label>
+                      <div className="relative">
+                        <Input
+                          value={profileForm.username}
+                          readOnly
+                          className="pr-9 bg-white/[0.02] border-white/15 text-white/45 placeholder:text-white/25 focus-visible:ring-white/35 focus-visible:ring-offset-0 focus-visible:border-white/35"
+                        />
+                        <IconLock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/35 pointer-events-none" />
+                      </div>
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-white/90 text-sm">Email</Label>
+                      <div className="relative">
+                        <Input
+                          type="email"
+                          value={profileForm.email}
+                          readOnly
+                          className="pr-9 bg-white/[0.02] border-white/15 text-white/45 placeholder:text-white/25 focus-visible:ring-white/35 focus-visible:ring-offset-0 focus-visible:border-white/35"
+                        />
+                        <IconLock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/35 pointer-events-none" />
+                      </div>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      className="justify-start h-9 px-2 text-white/65 hover:text-white/80 hover:bg-white/5"
+                    >
+                      <IconLifebuoy className="w-4 h-4 mr-2" />
+                      To edit username/email please contact support
                 </Button>
               </div>
                   
-                  <Separator className={cn("bg-gray-200", isMobile ? "my-4" : "my-5")} />
-                  
-                  {/* Logout Button */}
+                  <Separator className="bg-white/10" />
+
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="space-y-1.5">
+                      <Label className="text-white/90 text-sm">Full Name</Label>
+                      <Input
+                        value={profileForm.fullName}
+                        onChange={(e) => setProfileForm((prev) => ({ ...prev, fullName: e.target.value }))}
+                        className="h-12 bg-white/[0.03] border-white/20 text-white placeholder:text-white/35 focus-visible:ring-white/35 focus-visible:ring-offset-0 focus-visible:border-white/35"
+                        placeholder="Enter full name"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="space-y-1.5">
+                      <Label className="text-white/90 text-sm">Gender</Label>
+                      <div className="relative">
+                        <select
+                          value={profileForm.gender}
+                          onChange={(e) => setProfileForm((prev) => ({ ...prev, gender: e.target.value }))}
+                          className="h-10 w-full rounded-md border border-white/20 bg-white/[0.03] px-3 pr-10 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/35 focus:border-white/35 appearance-none"
+                        >
+                          <option value="" disabled className="bg-[#11151d] text-white/60">Gender</option>
+                          <option value="Male" className="bg-[#11151d] text-white">Male</option>
+                          <option value="Female" className="bg-[#11151d] text-white">Female</option>
+                          <option value="Other" className="bg-[#11151d] text-white">Other</option>
+                          <option value="Prefer not to say" className="bg-[#11151d] text-white">Prefer not to say</option>
+                        </select>
+                        <IconChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/70" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator className="bg-white/10" />
+
+                  <div className="space-y-1.5">
+                    <Label className="text-white/90 text-sm">Date of Birth</Label>
+                    <div className="grid grid-cols-3 gap-3">
+                    <div className="space-y-1.5">
+                      <div className="relative">
+                        <select
+                          value={profileForm.day}
+                          onChange={(e) => setProfileForm((prev) => ({ ...prev, day: e.target.value }))}
+                          className="h-10 w-full rounded-md border border-white/20 bg-white/[0.03] px-3 pr-10 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/35 focus:border-white/35 appearance-none"
+                        >
+                          <option value="" disabled className="bg-[#11151d] text-white/60">Day</option>
+                          {Array.from({ length: 31 }).map((_, i) => (
+                            <option key={`day-${i + 1}`} value={`${i + 1}`} className="bg-[#11151d] text-white">{i + 1}</option>
+                          ))}
+                        </select>
+                        <IconChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/70" />
+                      </div>
+                    </div>
+                    <div className="space-y-1.5">
+                      <div className="relative">
+                        <select
+                          value={profileForm.month}
+                          onChange={(e) => setProfileForm((prev) => ({ ...prev, month: e.target.value }))}
+                          className="h-10 w-full rounded-md border border-white/20 bg-white/[0.03] px-3 pr-10 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/35 focus:border-white/35 appearance-none"
+                        >
+                          <option value="" disabled className="bg-[#11151d] text-white/60">Month</option>
+                          {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map((month) => (
+                            <option key={month} value={month} className="bg-[#11151d] text-white">{month}</option>
+                          ))}
+                        </select>
+                        <IconChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/70" />
+                      </div>
+                    </div>
+                    <div className="space-y-1.5">
+                      <div className="relative">
+                        <select
+                          value={profileForm.year}
+                          onChange={(e) => setProfileForm((prev) => ({ ...prev, year: e.target.value }))}
+                          className="h-10 w-full rounded-md border border-white/20 bg-white/[0.03] px-3 pr-10 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/35 focus:border-white/35 appearance-none"
+                        >
+                          <option value="" disabled className="bg-[#11151d] text-white/60">Year</option>
+                          {Array.from({ length: 90 }).map((_, i) => {
+                            const y = `${new Date().getFullYear() - i}`
+                            return <option key={y} value={y} className="bg-[#11151d] text-white">{y}</option>
+                          })}
+                        </select>
+                        <IconChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/70" />
+                      </div>
+                    </div>
+                    </div>
+                  </div>
+
+                  <Separator className="bg-white/10" />
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="space-y-1.5">
+                      <Label className="text-white/90 text-sm">Country</Label>
+                      <div className="relative">
+                        <select
+                          value={profileForm.country}
+                          onChange={(e) => setProfileForm((prev) => ({ ...prev, country: e.target.value }))}
+                          className="h-10 w-full rounded-md border border-white/20 bg-white/[0.03] px-3 pr-10 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/35 focus:border-white/35 appearance-none"
+                        >
+                          <option value="Cyprus" className="bg-[#11151d] text-white">Cyprus</option>
+                          <option value="United Kingdom" className="bg-[#11151d] text-white">United Kingdom</option>
+                          <option value="United States" className="bg-[#11151d] text-white">United States</option>
+                          <option value="Germany" className="bg-[#11151d] text-white">Germany</option>
+                        </select>
+                        <IconChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/70" />
+                      </div>
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-white/90 text-sm">City</Label>
+                      <Input
+                        value={profileForm.city}
+                        onChange={(e) => setProfileForm((prev) => ({ ...prev, city: e.target.value }))}
+                        className="bg-white/[0.03] border-white/20 text-white placeholder:text-white/35 focus-visible:ring-white/35 focus-visible:ring-offset-0 focus-visible:border-white/35"
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="space-y-1.5">
+                      <Label className="text-white/90 text-sm">Address</Label>
+                      <Input
+                        value={profileForm.address}
+                        onChange={(e) => setProfileForm((prev) => ({ ...prev, address: e.target.value }))}
+                        className="h-12 bg-white/[0.03] border-white/20 text-white placeholder:text-white/35 focus-visible:ring-white/35 focus-visible:ring-offset-0 focus-visible:border-white/35"
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="space-y-1.5">
+                      <Label className="text-white/90 text-sm">State Or Province</Label>
+                      <Input
+                        value={profileForm.stateOrProvince}
+                        onChange={(e) => setProfileForm((prev) => ({ ...prev, stateOrProvince: e.target.value }))}
+                        className="bg-white/[0.03] border-white/20 text-white placeholder:text-white/35 focus-visible:ring-white/35 focus-visible:ring-offset-0 focus-visible:border-white/35"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-white/90 text-sm">Postal code</Label>
+                      <Input
+                        value={profileForm.postalCode}
+                        onChange={(e) => setProfileForm((prev) => ({ ...prev, postalCode: e.target.value }))}
+                        className="bg-white/[0.03] border-white/20 text-white placeholder:text-white/35 focus-visible:ring-white/35 focus-visible:ring-offset-0 focus-visible:border-white/35"
+                      />
+                    </div>
+                  </div>
+
+                  <Separator className="bg-white/10" />
+
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="space-y-1.5">
+                      <Label className="text-white/90 text-sm">Mobile number</Label>
+                      <div className="flex items-center rounded-md border border-white/20 bg-white/[0.03]">
+                        <span className="px-3 text-sm text-white/70 border-r border-white/15">{countryDialCode}</span>
+                        <Input
+                          value={profileForm.phone}
+                          onChange={(e) => setProfileForm((prev) => ({ ...prev, phone: e.target.value }))}
+                          className="border-0 bg-transparent text-white placeholder:text-white/35 focus-visible:ring-white/35 focus-visible:ring-offset-0"
+                          placeholder="Phone number"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <Button
+                    className="w-full h-11 text-white font-semibold"
+                    disabled={isProfileSaving}
+                    onClick={() => {
+                      if (isProfileSaving) return
+                      setIsProfileSaving(true)
+                      window.setTimeout(() => {
+                        setIsProfileSaving(false)
+                      }, 1400)
+                    }}
+                    style={{
+                      backgroundColor: 'var(--ds-primary, #ff3b2f)',
+                      backgroundImage: 'var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%))'
+                    }}
+                  >
+                    {isProfileSaving ? (
+                      <span className="inline-flex items-center gap-2">
+                        <IconLoader2 className="h-4 w-4 animate-spin" />
+                        Saving details
+                      </span>
+                    ) : (
+                      'Save'
+                    )}
+                  </Button>
+                </div>
+              ) : accountDrawerView === 'bonus' ? (
+                <div className="space-y-4 pb-4">
+                  <div className="flex items-end gap-5 border-b border-white/10">
+                    <button
+                      type="button"
+                      onClick={() => setAccountBonusTab('available')}
+                      className={cn(
+                        "relative pb-2 text-xs font-medium transition-colors",
+                        accountBonusTab === 'available' ? "text-white" : "text-white/55 hover:text-white/80",
+                      )}
+                    >
+                      Available
+                      <span
+                        className={cn(
+                          "pointer-events-none absolute inset-x-0 -bottom-px h-[2px] rounded-full transition-opacity",
+                          accountBonusTab === 'available' ? "bg-[var(--ds-primary,#ee3536)] opacity-100" : "opacity-0",
+                        )}
+                      />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setAccountBonusTab('active')}
+                      className={cn(
+                        "relative pb-2 text-xs font-medium transition-colors",
+                        accountBonusTab === 'active' ? "text-white" : "text-white/55 hover:text-white/80",
+                      )}
+                    >
+                      Active
+                      <span
+                        className={cn(
+                          "pointer-events-none absolute inset-x-0 -bottom-px h-[2px] rounded-full transition-opacity",
+                          accountBonusTab === 'active' ? "bg-[var(--ds-primary,#ee3536)] opacity-100" : "opacity-0",
+                        )}
+                      />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setAccountBonusTab('history')}
+                      className={cn(
+                        "relative pb-2 text-xs font-medium transition-colors",
+                        accountBonusTab === 'history' ? "text-white" : "text-white/55 hover:text-white/80",
+                      )}
+                    >
+                      History
+                      <span
+                        className={cn(
+                          "pointer-events-none absolute inset-x-0 -bottom-px h-[2px] rounded-full transition-opacity",
+                          accountBonusTab === 'history' ? "bg-[var(--ds-primary,#ee3536)] opacity-100" : "opacity-0",
+                        )}
+                      />
+                    </button>
+                  </div>
+
+                  {accountBonusTab === 'available' ? (
+                    <Card className="bg-white/5 border-white/10 overflow-hidden">
+                      <div className="w-full h-36 bg-white/5 relative overflow-hidden">
+                        <div className="absolute inset-0 tile-shimmer"></div>
+                      </div>
+                      <CardContent className="p-4">
+                        <CardTitle className="text-lg font-semibold text-white mb-2">Weekend Reload</CardTitle>
+                        <p className="text-sm text-white/70 mb-4 line-clamp-3">
+                          Extra bonus funds added on your weekend deposits.
+                        </p>
                   <Button 
                     variant="ghost" 
-                    className="w-full justify-center text-gray-600 hover:bg-gray-100 hover:text-gray-600 h-10 px-2 min-w-0"
+                          className="w-full font-semibold text-[#121417] hover:text-[#121417] border border-[#9a86d1]/75"
+                          style={{ backgroundColor: '#c9b4ff', boxShadow: '0 6px 18px rgba(122, 92, 196, 0.28)' }}
                   >
-                    <span className="text-sm">Log out</span>
+                          More info
                   </Button>
-                </>
+                      </CardContent>
+                    </Card>
+                  ) : accountBonusTab === 'active' ? (
+                    <div className="rounded-small border border-dashed border-white/20 bg-white/[0.02] px-4 py-8 text-center">
+                      <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/[0.03] text-xl">
+                        🔭
+                      </div>
+                      <p className="text-sm font-semibold text-white/90">No active bonus yet</p>
+                      <p className="mt-1 text-xs text-white/55">Check available bonuses to get started.</p>
+                      <Button
+                        variant="ghost"
+                        className="mt-3 h-9 rounded-small border border-[#9a86d1]/75 px-4 text-xs font-semibold text-[#121417] hover:text-[#121417]"
+                        style={{ backgroundColor: '#c9b4ff', boxShadow: '0 6px 18px rgba(122, 92, 196, 0.28)' }}
+                        onClick={() => setAccountBonusTab('available')}
+                      >
+                        Check Available
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="rounded-small border border-white/10 bg-[var(--ds-sidebar-bg,#121417)]/92 backdrop-blur-sm overflow-visible">
+                      <div className="relative flex items-center justify-between border-b border-white/10 px-4 py-3">
+                        <p className="text-sm font-semibold text-white">Bonus History</p>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setAccountBonusFilterOpen((prev) => !prev)}
+                          className="h-8 w-8 rounded-full border border-white/12 bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:text-white focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none"
+                          aria-label="Filter bonus history"
+                        >
+                          <IconFilter className="h-4 w-4" />
+                        </Button>
+                        {accountBonusFilterOpen && (
+                          <div className="absolute right-4 top-[calc(100%-2px)] z-[10070] mt-2 w-52 rounded-md border border-white/12 bg-[#121417] p-3 shadow-[0_12px_34px_rgba(0,0,0,0.52)]">
+                            <div className="space-y-3">
+                              <div>
+                                <p className="text-white/70 text-[11px] font-medium uppercase tracking-wide mb-2">Sort</p>
+                                <div className="space-y-1">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setAccountBonusHistorySort('latest')
+                                      setAccountBonusFilterOpen(false)
+                                    }}
+                                    className={cn(
+                                      "w-full text-left px-2 py-1.5 rounded text-sm transition-colors",
+                                      accountBonusHistorySort === 'latest' ? "bg-white/[0.06] text-white" : "text-white/75 hover:bg-white/[0.03] hover:text-white",
+                                    )}
+                                  >
+                                    Latest
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setAccountBonusHistorySort('oldest')
+                                      setAccountBonusFilterOpen(false)
+                                    }}
+                                    className={cn(
+                                      "w-full text-left px-2 py-1.5 rounded text-sm transition-colors",
+                                      accountBonusHistorySort === 'oldest' ? "bg-white/[0.06] text-white" : "text-white/75 hover:bg-white/[0.03] hover:text-white",
+                                    )}
+                                  >
+                                    Oldest
+                                  </button>
+                                </div>
+                              </div>
+                              <Separator className="bg-white/10" />
+                              <div>
+                                <p className="text-white/70 text-[11px] font-medium uppercase tracking-wide mb-2">Status</p>
+                                <div className="space-y-1">
+                                  {(['ALL', 'ACTIVE', 'EXPIRED', 'CANCELLED', 'COMPLETE'] as const).map((status) => (
+                                    <button
+                                      key={status}
+                                      type="button"
+                                      onClick={() => {
+                                        setAccountBonusHistoryStatusFilter(status)
+                                        setAccountBonusFilterOpen(false)
+                                      }}
+                                      className={cn(
+                                        "w-full text-left px-2 py-1.5 rounded text-sm capitalize transition-colors",
+                                        accountBonusHistoryStatusFilter === status ? "bg-white/[0.06] text-white" : "text-white/75 hover:bg-white/[0.03] hover:text-white",
+                                      )}
+                                    >
+                                      {status === 'ALL' ? 'All statuses' : status.toLowerCase()}
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      {(accountBonusHistoryStatusFilter !== 'ALL' || accountBonusHistorySort !== 'latest') && (
+                        <div className="flex flex-wrap items-center gap-2 border-b border-white/10 px-4 py-2">
+                          {accountBonusHistoryStatusFilter !== 'ALL' && (
+                            <button
+                              type="button"
+                              onClick={() => setAccountBonusHistoryStatusFilter('ALL')}
+                              className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.04] px-2.5 py-1 text-[11px] text-white/85 hover:bg-white/[0.07]"
+                            >
+                              <span>Status: {accountBonusHistoryStatusFilter.toLowerCase()}</span>
+                              <IconX className="h-3 w-3 text-white/70" />
+                            </button>
+                          )}
+                          {accountBonusHistorySort !== 'latest' && (
+                            <button
+                              type="button"
+                              onClick={() => setAccountBonusHistorySort('latest')}
+                              className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.04] px-2.5 py-1 text-[11px] text-white/85 hover:bg-white/[0.07]"
+                            >
+                              <span>{accountBonusHistorySort === 'oldest' ? 'Oldest' : 'Latest'}</span>
+                              <IconX className="h-3 w-3 text-white/70" />
+                            </button>
+                          )}
+                        </div>
+                      )}
+                      <div className="space-y-2 p-2">
+                        {accountBonusHistoryFilteredRows.length === 0 ? (
+                          <div className="rounded-small border border-dashed border-white/20 bg-white/[0.02] px-4 py-6 text-center text-sm text-white/70">
+                            No bonus history for this filter.
+                          </div>
+                        ) : accountBonusHistoryFilteredRows.map((row) => (
+                          <div key={row.id} className="overflow-hidden rounded-small border border-white/10 bg-white/[0.02]">
+                            <button
+                              type="button"
+                              onClick={() => setAccountBonusExpandedId((prev) => (prev === row.id ? null : row.id))}
+                              className={cn(
+                                "w-full px-4 py-3 text-left transition-colors hover:bg-white/[0.015] focus-visible:outline-none focus-visible:ring-0",
+                                accountBonusExpandedId === row.id
+                                  ? "rounded-t-small rounded-b-none"
+                                  : "rounded-small",
+                              )}
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className="h-9 w-9 shrink-0 rounded-full border border-white/15 bg-black/25 flex items-center justify-center">
+                                  <IconGift className="h-4 w-4 text-white/75" />
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                  <p className="truncate text-[15px] font-semibold text-white">{row.code}</p>
+                                  <p className="text-sm text-white/70">{row.amount}</p>
+                                </div>
+                                <span
+                                  className={cn(
+                                    "inline-flex rounded px-2 py-1 text-[10px] font-semibold leading-none",
+                                    row.status === 'ACTIVE' && "bg-emerald-500/20 text-emerald-300",
+                                    row.status === 'EXPIRED' && "bg-orange-500/20 text-orange-300",
+                                    row.status === 'CANCELLED' && "bg-gray-500/25 text-gray-200",
+                                    row.status === 'COMPLETE' && "bg-blue-500/20 text-blue-300",
+                                  )}
+                                >
+                                  {row.status}
+                                </span>
+                                <IconChevronDown
+                                  className={cn(
+                                    "h-4 w-4 shrink-0 text-white/45 transition-transform",
+                                    accountBonusExpandedId === row.id && "rotate-180",
+                                  )}
+                                />
+                              </div>
+                            </button>
+
+                            <AnimatePresence initial={false}>
+                              {accountBonusExpandedId === row.id && (
+                                <motion.div
+                                  key={`${row.id}-details`}
+                                  initial={{ height: 0, opacity: 0 }}
+                                  animate={{ height: 'auto', opacity: 1 }}
+                                  exit={{ height: 0, opacity: 0 }}
+                                  transition={{ duration: 0.2, ease: 'easeOut' }}
+                                  className="overflow-hidden"
+                                >
+                                  <div className="grid grid-cols-2 gap-3 border-t border-white/10 bg-white/[0.03] px-4 pb-3 pt-2 text-xs">
+                                    <div>
+                                      <p className="text-white/45 uppercase tracking-wide text-[10px]">Rollover</p>
+                                      <p className="mt-1 text-white/80">{row.rollover}</p>
+                                    </div>
+                                    <div>
+                                      <p className="text-white/45 uppercase tracking-wide text-[10px]">Date</p>
+                                      <p className="mt-1 text-white/80">{row.date}</p>
+                                    </div>
+                                  </div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : accountDrawerView === 'transactions' ? (
+                <div className="space-y-4 pb-4">
+                  <div className="rounded-small border border-white/10 bg-[var(--ds-sidebar-bg,#121417)]/92 backdrop-blur-sm overflow-visible">
+                    <div className="relative flex items-center justify-between border-b border-white/10 px-4 py-3">
+                      <p className="text-sm font-semibold text-white">Transactions History</p>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setAccountTransactionFilterOpen((prev) => !prev)}
+                        className="h-8 w-8 rounded-full border border-white/12 bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:text-white focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none"
+                        aria-label="Filter transaction history"
+                      >
+                        <IconFilter className="h-4 w-4" />
+                      </Button>
+                      {accountTransactionFilterOpen && (
+                        <div className="absolute right-4 top-[calc(100%-2px)] z-[10070] mt-2 w-56 rounded-md border border-white/12 bg-[#121417] p-3 shadow-[0_12px_34px_rgba(0,0,0,0.52)]">
+                          <div className="space-y-3">
+                            <div>
+                              <p className="text-white/70 text-[11px] font-medium uppercase tracking-wide mb-2">Sort</p>
+                              <div className="space-y-1">
+                                <button type="button" onClick={() => { setAccountTransactionSort('latest'); setAccountTransactionFilterOpen(false) }} className={cn("w-full text-left px-2 py-1.5 rounded text-sm transition-colors", accountTransactionSort === 'latest' ? "bg-white/[0.06] text-white" : "text-white/75 hover:bg-white/[0.03] hover:text-white")}>Latest</button>
+                                <button type="button" onClick={() => { setAccountTransactionSort('oldest'); setAccountTransactionFilterOpen(false) }} className={cn("w-full text-left px-2 py-1.5 rounded text-sm transition-colors", accountTransactionSort === 'oldest' ? "bg-white/[0.06] text-white" : "text-white/75 hover:bg-white/[0.03] hover:text-white")}>Oldest</button>
+                              </div>
+                            </div>
+                            <Separator className="bg-white/10" />
+                            <div>
+                              <p className="text-white/70 text-[11px] font-medium uppercase tracking-wide mb-2">Type</p>
+                              <div className="space-y-1">
+                                {(['ALL', 'DEPOSIT', 'WITHDRAWAL', 'BONUS'] as const).map((type) => (
+                                  <button key={type} type="button" onClick={() => { setAccountTransactionTypeFilter(type); setAccountTransactionFilterOpen(false) }} className={cn("w-full text-left px-2 py-1.5 rounded text-sm capitalize transition-colors", accountTransactionTypeFilter === type ? "bg-white/[0.06] text-white" : "text-white/75 hover:bg-white/[0.03] hover:text-white")}>
+                                    {type === 'ALL' ? 'All types' : type.toLowerCase()}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                            <Separator className="bg-white/10" />
+                            <div>
+                              <p className="text-white/70 text-[11px] font-medium uppercase tracking-wide mb-2">Status</p>
+                              <div className="space-y-1">
+                                {(['ALL', 'COMPLETED', 'PENDING', 'CREDITED'] as const).map((status) => (
+                                  <button key={status} type="button" onClick={() => { setAccountTransactionStatusFilter(status); setAccountTransactionFilterOpen(false) }} className={cn("w-full text-left px-2 py-1.5 rounded text-sm capitalize transition-colors", accountTransactionStatusFilter === status ? "bg-white/[0.06] text-white" : "text-white/75 hover:bg-white/[0.03] hover:text-white")}>
+                                    {status === 'ALL' ? 'All statuses' : status.toLowerCase()}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <div className="space-y-2 p-2">
+                      {accountTransactionFilteredRows.length === 0 ? (
+                        <div className="rounded-small border border-dashed border-white/20 bg-white/[0.02] px-4 py-6 text-center text-sm text-white/70">
+                          No transactions for this filter.
+                        </div>
+                      ) : accountTransactionFilteredRows.map((row) => (
+                        <div key={row.id} className="overflow-hidden rounded-small border border-white/10 bg-white/[0.02]">
+                          <button
+                            type="button"
+                            onClick={() => setAccountTransactionExpandedId((prev) => (prev === row.id ? null : row.id))}
+                            className={cn(
+                              "w-full px-4 py-3 text-left transition-colors hover:bg-white/[0.015] focus-visible:outline-none focus-visible:ring-0",
+                              accountTransactionExpandedId === row.id ? "rounded-t-small rounded-b-none" : "rounded-small",
+                            )}
+                          >
+                            <div className="flex items-center gap-3">
+                              <div
+                                className={cn(
+                                  "h-9 w-9 shrink-0 rounded-full border flex items-center justify-center",
+                                  row.status === 'PENDING' && "border-amber-400/35 bg-amber-500/10",
+                                  row.status !== 'PENDING' && row.type === 'WITHDRAWAL' && "border-rose-400/35 bg-rose-500/10",
+                                  row.status !== 'PENDING' && row.type === 'DEPOSIT' && "border-emerald-400/35 bg-emerald-500/10",
+                                  row.status !== 'PENDING' && row.type === 'BONUS' && "border-blue-400/35 bg-blue-500/10",
+                                )}
+                              >
+                                {row.method === 'System' ? (
+                                  <IconSettings
+                                    className={cn(
+                                      "h-4 w-4",
+                                      row.status === 'PENDING' && "text-amber-300",
+                                      row.status !== 'PENDING' && row.type === 'WITHDRAWAL' && "text-rose-300",
+                                      row.status !== 'PENDING' && row.type === 'DEPOSIT' && "text-emerald-300",
+                                      row.status !== 'PENDING' && row.type === 'BONUS' && "text-blue-300",
+                                    )}
+                                  />
+                                ) : (
+                                  <IconWallet
+                                    className={cn(
+                                      "h-4 w-4",
+                                      row.status === 'PENDING' && "text-amber-300",
+                                      row.status !== 'PENDING' && row.type === 'WITHDRAWAL' && "text-rose-300",
+                                      row.status !== 'PENDING' && row.type === 'DEPOSIT' && "text-emerald-300",
+                                      row.status !== 'PENDING' && row.type === 'BONUS' && "text-blue-300",
+                                    )}
+                                  />
+                                )}
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <p className="truncate text-[15px] font-semibold text-white">{row.date}</p>
+                                <p className="text-sm text-white/70">{row.method}</p>
+                              </div>
+                              <div className="text-right">
+                                <p className={cn("text-sm font-semibold", row.amount.startsWith('+') ? "text-emerald-300" : "text-rose-300")}>{row.amount}</p>
+                                <p className="text-[11px] text-white/55">{row.type}</p>
+                              </div>
+                              <IconChevronDown className={cn("h-4 w-4 shrink-0 text-white/45 transition-transform", accountTransactionExpandedId === row.id && "rotate-180")} />
+                            </div>
+                          </button>
+                          <AnimatePresence initial={false}>
+                            {accountTransactionExpandedId === row.id && (
+                              <motion.div
+                                key={`${row.id}-txn-details`}
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.2, ease: 'easeOut' }}
+                                className="overflow-hidden"
+                              >
+                                <div className="grid grid-cols-2 gap-3 border-t border-white/10 bg-white/[0.03] px-4 pb-3 pt-2 text-xs">
+                                  <div>
+                                    <p className="text-white/45 uppercase tracking-wide text-[10px]">Method</p>
+                                    <p className="mt-1 text-white/80">{row.method}</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-white/45 uppercase tracking-wide text-[10px]">Reference</p>
+                                    <div className="mt-1 flex items-center gap-2">
+                                      <p className="text-white/80 font-mono">{row.reference}</p>
+                                      <button
+                                        type="button"
+                                        onClick={async () => {
+                                          try {
+                                            await navigator.clipboard.writeText(row.reference)
+                                            setAccountTransactionCopiedReferenceId(row.id)
+                                            window.setTimeout(() => setAccountTransactionCopiedReferenceId((prev) => (prev === row.id ? null : prev)), 1200)
+                                          } catch {
+                                            setAccountTransactionCopiedReferenceId(null)
+                                          }
+                                        }}
+                                        className={cn(
+                                          "inline-flex h-5 w-5 items-center justify-center rounded-sm border transition-colors",
+                                          accountTransactionCopiedReferenceId === row.id
+                                            ? "border-emerald-400/35 bg-emerald-500/12 text-emerald-300"
+                                            : "border-white/15 bg-white/[0.04] text-white/65 hover:bg-white/[0.08] hover:text-white/90",
+                                        )}
+                                        aria-label={`Copy transaction reference ${row.reference}`}
+                                      >
+                                        {accountTransactionCopiedReferenceId === row.id ? <IconCheck className="h-3 w-3" /> : <IconCopy className="h-3 w-3" />}
+                                      </button>
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <p className="text-white/45 uppercase tracking-wide text-[10px]">Status</p>
+                                    <span className={cn(
+                                      "mt-1 inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold",
+                                      row.status === 'COMPLETED' && "border-emerald-400/30 bg-emerald-500/10 text-emerald-300",
+                                      row.status === 'PENDING' && "border-amber-400/30 bg-amber-500/10 text-amber-300",
+                                      row.status === 'CREDITED' && "border-blue-400/30 bg-blue-500/10 text-blue-300",
+                                    )}>
+                                      {row.status}
+                                    </span>
+                                  </div>
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               ) : (
                 <>
                   <NotificationHub />
@@ -14438,7 +15233,7 @@ function NavTestPageContent() {
                 >
                   <div className="flex items-center justify-between h-full px-3 relative">
                     {/* Wallet Button - Left */}
-                    <button
+                      <button
                       onClick={() => openDepositDrawer()}
                       className="flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-small border border-[#9a86d1]/75 bg-[#c9b4ff] text-[#121417] transition-colors duration-200 hover:bg-[#cfbcff]"
                       style={{
@@ -14447,7 +15242,7 @@ function NavTestPageContent() {
                     >
                       <IconWallet className="w-3.5 h-3.5 text-[#121417]" />
                       {!isMobile && <span className="text-[11px] font-semibold tracking-wide">WALLET</span>}
-                    </button>
+                  </button>
 
                 {/* Game Name - Center (absolutely positioned) */}
                     <h2 className="absolute left-1/2 -translate-x-1/2 text-sm font-semibold text-white max-w-[50%] truncate px-2">
