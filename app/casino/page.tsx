@@ -10507,21 +10507,13 @@ function NavTestPageContent() {
                                     {Icon && <Icon strokeWidth={1.5} className="w-4 h-4" />}
                                   </div>
                                   {(sidebarState !== 'collapsed' || isMobile) && (
-                                    item.gameName ? (
-                                      <div className="flex flex-col leading-tight">
-                                        <span>{item.label}</span>
-                                        <span className="text-[11px] text-white/40 font-normal">{item.gameName}</span>
-                                      </div>
-                                    ) : (
-                                      <span>{item.label}</span>
-                                    )
+                                    <span>{item.label}</span>
                                   )}
                                 </SidebarMenuButton>
                               </TooltipTrigger>
                               {sidebarState === 'collapsed' && (
                                 <TooltipContent side="right" className="bg-[#2d2d2d] border-white/10 text-white">
                                   <p>{item.label}</p>
-                                  {item.gameName && <p className="text-xs text-white/50">{item.gameName}</p>}
                                 </TooltipContent>
                               )}
                             </Tooltip>
