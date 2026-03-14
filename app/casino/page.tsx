@@ -4060,9 +4060,9 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
           <div 
             className="sticky top-14 z-20 border-b border-white/5"
             style={{
-              backdropFilter: 'blur(16px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(16px) saturate(180%)',
-              backgroundColor: 'rgba(45, 45, 45, 0.92)',
+              backdropFilter: 'none',
+              WebkitBackdropFilter: 'none',
+              backgroundColor: '#2d2d2d',
             }}
           >
             <div 
@@ -7267,9 +7267,9 @@ function PokerLandingPage({ brandPrimary, quickLinksOpen, onNavigate }: { brandP
           <div 
             className="sticky top-14 z-20 border-b border-white/5"
             style={{
-              backdropFilter: 'blur(16px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(16px) saturate(180%)',
-              backgroundColor: 'rgba(45, 45, 45, 0.92)',
+              backdropFilter: 'none',
+              WebkitBackdropFilter: 'none',
+              backgroundColor: '#2d2d2d',
             }}
           >
             <div 
@@ -9095,10 +9095,10 @@ function NavTestPageContent() {
             pointerEvents: quickLinksOpen ? 'auto' : 'none',
             opacity: 1,
             visibility: 'visible',
-            backgroundColor: 'rgba(18, 20, 23, 0.92)',
-            boxShadow: '0 -200px 0 0 rgba(18, 20, 23, 0.94)',
-            backdropFilter: 'blur(8px) saturate(105%)',
-            WebkitBackdropFilter: 'blur(8px) saturate(105%)',
+            backgroundColor: '#121417',
+            boxShadow: '0 -200px 0 0 #121417',
+            backdropFilter: 'none',
+            WebkitBackdropFilter: 'none',
           }}
         >
           <div className="px-3 py-2 flex items-center gap-2 overflow-x-auto scrollbar-hide border-b border-white/10">
@@ -10201,9 +10201,9 @@ function NavTestPageContent() {
               <div 
                 className="sticky top-14 z-20 border-b border-white/5"
                 style={{
-                  backdropFilter: 'blur(16px) saturate(180%)',
-                  WebkitBackdropFilter: 'blur(16px) saturate(180%)',
-                  backgroundColor: 'rgba(18, 20, 23, 0.92)',
+                  backdropFilter: 'none',
+                  WebkitBackdropFilter: 'none',
+                  backgroundColor: '#121417',
                 }}
               >
                 <div 
@@ -10372,7 +10372,7 @@ function NavTestPageContent() {
                                       className={cn(
                                         "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer text-white/70 hover:text-white hover:bg-white/[0.03] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none",
                                         "border border-transparent hover:border-white/[0.08]",
-                                        sidebarState === 'collapsed' && "h-10 w-10 mx-auto p-0 justify-center"
+                                        sidebarState === 'collapsed' && !isMobile && "h-10 w-10 mx-auto p-0 justify-center"
                                       )}
                                     >
                                       <div className="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0 bg-white/[0.03]">
@@ -10382,9 +10382,10 @@ function NavTestPageContent() {
                                             "w-4 h-4 text-white/70",
                                             item.id === 'Wallet' && "text-[#c9b4ff]",
                                           )}
+                                          style={item.id === 'Wallet' ? { color: '#c9b4ff' } : undefined}
                                         />
                                       </div>
-                                      <div className={cn("flex flex-col leading-tight min-w-0", sidebarState === 'collapsed' && "hidden")}>
+                                      <div className={cn("flex flex-col leading-tight min-w-0", sidebarState === 'collapsed' && !isMobile && "hidden")}>
                                         <span>{item.label}</span>
                                         <span className="text-[11px] text-white/40 font-normal">{item.subtitle}</span>
                                       </div>
@@ -10436,7 +10437,7 @@ function NavTestPageContent() {
                                         "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
                                         "data-[active=true]:text-white data-[active=true]:font-medium",
                                         "data-[active=false]:text-white/70 hover:text-white hover:bg-white/5",
-                                        sidebarState === 'collapsed' && "h-10 w-10 mx-auto p-0 justify-center"
+                                        sidebarState === 'collapsed' && !isMobile && "h-10 w-10 mx-auto p-0 justify-center"
                                       )}
                                       style={isActive ? {
                                         backgroundColor: 'transparent',
@@ -10444,7 +10445,7 @@ function NavTestPageContent() {
                                       } : undefined}
                                     >
                                       <Icon strokeWidth={1.5} className="w-5 h-5" />
-                                      <span className={cn("flex-1", sidebarState === 'collapsed' && "hidden")}>{item.label}</span>
+                                      <span className={cn("flex-1", sidebarState === 'collapsed' && !isMobile && "hidden")}>{item.label}</span>
                                     </SidebarMenuButton>
                                   </TooltipTrigger>
                                   {sidebarState === 'collapsed' && (
@@ -10482,13 +10483,13 @@ function NavTestPageContent() {
                                       }}
                                       className={cn(
                                         "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer text-white/70 hover:text-white hover:bg-white/5",
-                                        sidebarState === 'collapsed' && "h-10 w-10 mx-auto p-0 justify-center"
+                                        sidebarState === 'collapsed' && !isMobile && "h-10 w-10 mx-auto p-0 justify-center"
                                       )}
                                     >
                                       <Icon strokeWidth={1.5} className="w-5 h-5" />
-                                      <span className={cn("flex-1", sidebarState === 'collapsed' && "hidden")}>Language</span>
-                                      <span className={cn("text-[11px] text-white/45 mr-1", sidebarState === 'collapsed' && "hidden")}>{headerLanguage}</span>
-                                      <IconChevronDown className={cn("h-4 w-4 transition-transform", mobileLanguageAccordionOpen && "rotate-180", sidebarState === 'collapsed' && "hidden")} />
+                                      <span className={cn("flex-1", sidebarState === 'collapsed' && !isMobile && "hidden")}>Language</span>
+                                      <span className={cn("text-[11px] text-white/45 mr-1", sidebarState === 'collapsed' && !isMobile && "hidden")}>{headerLanguage}</span>
+                                      <IconChevronDown className={cn("h-4 w-4 transition-transform", mobileLanguageAccordionOpen && "rotate-180", sidebarState === 'collapsed' && !isMobile && "hidden")} />
                                     </SidebarMenuButton>
                                   </SidebarMenuItem>
                                   {mobileLanguageAccordionOpen && (
@@ -10534,11 +10535,11 @@ function NavTestPageContent() {
                                       }}
                                       className={cn(
                                         "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer text-white/70 hover:text-white hover:bg-white/5",
-                                        sidebarState === 'collapsed' && "h-10 w-10 mx-auto p-0 justify-center"
+                                        sidebarState === 'collapsed' && !isMobile && "h-10 w-10 mx-auto p-0 justify-center"
                                       )}
                                     >
                                       <Icon strokeWidth={1.5} className="w-5 h-5" />
-                                      <span className={cn(sidebarState === 'collapsed' && "hidden")}>{item.label}</span>
+                                      <span className={cn(sidebarState === 'collapsed' && !isMobile && "hidden")}>{item.label}</span>
                                     </SidebarMenuButton>
                                   </TooltipTrigger>
                                   {sidebarState === 'collapsed' && (
