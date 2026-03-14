@@ -14687,7 +14687,6 @@ function NavTestPageContent() {
                                       row.status === 'PENDING' && "text-amber-300",
                                       row.status !== 'PENDING' && row.type === 'WITHDRAWAL' && "text-rose-300",
                                       row.status !== 'PENDING' && row.type === 'DEPOSIT' && "text-emerald-300",
-                                      row.status !== 'PENDING' && row.type === 'BONUS' && "text-blue-300",
                                     )}
                                   />
                                 )}
