@@ -78,7 +78,8 @@ import {
   Download as IconDownload,
   ExternalLink as IconExternalLink,
   RefreshCw as IconRefresh,
-  Copy as IconCopy
+  Copy as IconCopy,
+  QrCode as IconQrCode
 } from "lucide-react"
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 import Image from 'next/image'
@@ -4216,7 +4217,8 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                   className={cn(
                                     "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
                                     "data-[active=true]:text-white data-[active=true]:font-medium",
-                                    "data-[active=false]:text-white/70 hover:text-white hover:bg-white/5"
+                                    "data-[active=false]:text-white/70 hover:text-white hover:bg-white/5",
+                                    "bg-white/[0.02] border border-white/[0.08] hover:border-white/[0.12]"
                                   )}
                                   style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)' } : undefined}
                                 >
@@ -7897,6 +7899,18 @@ function NavTestPageContent() {
   const [walletAddressInput, setWalletAddressInput] = useState('')
   const [walletCryptoCopied, setWalletCryptoCopied] = useState(false)
   const [walletAddressCopied, setWalletAddressCopied] = useState(false)
+  const [walletNumpadOpen, setWalletNumpadOpen] = useState(false)
+  const [walletQrOpen, setWalletQrOpen] = useState(false)
+  const [walletReceipt, setWalletReceipt] = useState<null | {
+    mode: 'deposit' | 'withdraw'
+    amountEur: string
+    amountCrypto: string
+    address: string
+    currency: string
+    network: string
+    txHash: string
+  }>(null)
+  const [walletReceiptStep, setWalletReceiptStep] = useState(0)
   const [showDepositConfirmation, setShowDepositConfirmation] = useState(false)
   const [depositStep, setDepositStep] = useState<'started' | 'processing' | 'almost' | 'complete'>('started')
   const [transactionId, setTransactionId] = useState<string>('')
@@ -7940,6 +7954,53 @@ function NavTestPageContent() {
   const walletCryptoAmountText = walletCryptoAmount.toFixed(selectedWalletCurrency.decimals)
   const walletNetworks = ['ERC20', 'TRC20', 'BEP20', 'Solana'] as const
   const walletDepositAddress = `${selectedWalletCurrency.code.toLowerCase()}-${walletSelectedNetwork.toLowerCase()}-4f8a7c2e91d3`
+  const sanitizeWalletAmountDraft = (value: string) => {
+    const sanitized = value.replace(/[^\d.]/g, '')
+    const parts = sanitized.split('.')
+    const whole = parts[0] ?? ''
+    const decimals = (parts[1] ?? '').slice(0, 2)
+    return parts.length > 1 ? `${whole}.${decimals}` : whole
+  }
+  const appendWalletAmountToken = (token: string) => {
+    setWalletAmountInput((prev) => {
+      const base = prev.replace(/,/g, '')
+      if (token === 'back') {
+        return base.length > 1 ? base.slice(0, -1) : '0'
+      }
+      if (token === 'clear') return '0'
+      if (token === '.') {
+        if (base.includes('.')) return base
+        return `${base}.`
+      }
+      const nextRaw = base === '0' ? token : `${base}${token}`
+      return sanitizeWalletAmountDraft(nextRaw)
+    })
+  }
+  const walletFakeQrPattern = [
+    "1111111000101",
+    "1000001011101",
+    "1011101010001",
+    "1011101001111",
+    "1011101010001",
+    "1000001010111",
+    "1111111010101",
+    "0000000010101",
+    "1010111110101",
+    "1110100011101",
+    "1000111010001",
+    "1011100011111",
+    "1111111010001",
+  ] as const
+  const walletExplorerBaseByNetwork: Record<string, string> = {
+    ERC20: 'https://etherscan.io/tx/',
+    TRC20: 'https://tronscan.org/#/transaction/',
+    BEP20: 'https://bscscan.com/tx/',
+    Solana: 'https://solscan.io/tx/',
+  }
+  const walletExplorerUrl = walletReceipt
+    ? `${walletExplorerBaseByNetwork[walletReceipt.network] ?? 'https://etherscan.io/tx/'}${walletReceipt.txHash}`
+    : '#'
+  const walletReceiptSteps = ['Submitted', 'Broadcasting', 'Confirming', 'Completed'] as const
   const [showToast, setShowToast] = useState(false)
   const [toastMessage, setToastMessage] = useState('')
   const [toastAction, setToastAction] = useState<{ label: string; onClick: () => void } | null>(null)
@@ -7957,6 +8018,19 @@ function NavTestPageContent() {
     window.addEventListener('profit-boost-optin-toggled', handleProfitBoostOptInToggled as EventListener)
     return () => window.removeEventListener('profit-boost-optin-toggled', handleProfitBoostOptInToggled as EventListener)
   }, [setShowToast, setToastMessage, setToastAction])
+
+  useEffect(() => {
+    if (!walletReceipt) return
+    setWalletReceiptStep(0)
+    const t1 = window.setTimeout(() => setWalletReceiptStep(1), 1200)
+    const t2 = window.setTimeout(() => setWalletReceiptStep(2), 2800)
+    const t3 = window.setTimeout(() => setWalletReceiptStep(3), 5200)
+    return () => {
+      window.clearTimeout(t1)
+      window.clearTimeout(t2)
+      window.clearTimeout(t3)
+    }
+  }, [walletReceipt])
 
   
   const [accountDrawerOpen, setAccountDrawerOpen] = useState(false)
@@ -8836,6 +8910,10 @@ function NavTestPageContent() {
       setTransactionId('')
       setIsDepositLoading(false)
       setStepLoading({started: false, processing: false, almost: false, complete: false})
+      setWalletReceipt(null)
+      setWalletReceiptStep(0)
+      setWalletQrOpen(false)
+      setWalletNumpadOpen(false)
     } else {
       // Close other drawers when deposit drawer opens
       if (isMobile) {
@@ -9060,8 +9138,8 @@ function NavTestPageContent() {
 
   // Top featured casino items (square icon style like poker)
   const casinoTopItems = [
-    { icon: IconHeart, label: 'My Favorites' },
-    { icon: IconRefresh, label: 'Continue Playing' },
+    { icon: IconHeart, label: 'My Favorites', subtitle: 'Liked games' },
+    { icon: IconRefresh, label: 'Continue Playing', subtitle: 'Pick up where you left off.' },
   ]
 
   const sidebarMenuItems = [
@@ -9712,7 +9790,79 @@ function NavTestPageContent() {
                   </DrawerClose>
               </div>
             </DrawerHeader>
-            <div className={cn("flex-1 overflow-y-auto text-white", isMobile ? "px-4 pt-4 pb-4" : "px-4 pt-6 pb-4")} style={{ WebkitOverflowScrolling: 'touch' }}>
+            <div className={cn("flex-1 overflow-y-auto text-white", isMobile ? "px-4 pt-4 pb-4" : "px-4 pt-6 pb-4", isMobile && walletNumpadOpen && "pb-56")} style={{ WebkitOverflowScrolling: 'touch' }}>
+              {walletReceipt ? (
+                <div className="space-y-4">
+                  <div className="relative overflow-hidden rounded-lg border border-dashed border-white/[0.12] bg-white/[0.03] p-3 space-y-2">
+                    <div className="pointer-events-none absolute -left-2 top-[42%] h-4 w-4 rounded-full bg-[var(--ds-sidebar-bg,#121417)] border border-white/[0.06]" />
+                    <div className="pointer-events-none absolute -right-2 top-[42%] h-4 w-4 rounded-full bg-[var(--ds-sidebar-bg,#121417)] border border-white/[0.06]" />
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-semibold text-white">{walletReceipt.mode === 'deposit' ? 'Deposit Receipt' : 'Withdraw Receipt'}</h3>
+                      <span className="text-xs text-white/60">{walletReceipt.network}</span>
+                    </div>
+                    <div className="border-t border-dashed border-white/[0.09]" />
+                    <div className="space-y-1.5 text-xs">
+                      <div className="flex items-center justify-between"><span className="text-white/60">Amount (EUR)</span><span className="text-white/90 font-semibold">€{walletReceipt.amountEur}</span></div>
+                      <div className="flex items-center justify-between"><span className="text-white/60">Amount ({walletReceipt.currency})</span><span className="text-white/90 font-semibold">{walletReceipt.amountCrypto} {walletReceipt.currency}</span></div>
+                      <div className="flex items-center justify-between"><span className="text-white/60">Currency</span><span className="text-white/90 font-semibold">{walletReceipt.currency}</span></div>
+                      <div className="flex items-start justify-between gap-3">
+                        <span className="text-white/60 pt-0.5">Wallet Address</span>
+                        <span className="text-white/90 font-mono text-[11px] text-right break-all">{walletReceipt.address}</span>
+                      </div>
+                    </div>
+                    <div className="border-t border-dashed border-white/[0.09]" />
+                    <a href={walletExplorerUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-xs text-[#c9b4ff] hover:text-[#decfff] transition-colors">
+                      View on blockchain
+                      <IconExternalLink className="h-3.5 w-3.5" />
+                    </a>
+                  </div>
+
+                  <div className="rounded-lg border border-dashed border-white/[0.1] bg-white/[0.02] p-3 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-white/80 font-medium">Processing Progress</span>
+                      <span className="text-xs text-white/60">{walletReceiptStep + 1}/4</span>
+                    </div>
+                    <div className="h-1.5 w-full rounded-full bg-white/[0.06] overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all duration-500"
+                        style={{
+                          width: `${(walletReceiptStep / 3) * 100}%`,
+                          backgroundImage: 'var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%))',
+                        }}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      {walletReceiptSteps.map((step, idx) => (
+                        <div key={step} className="flex items-center gap-2">
+                          <span className={cn(
+                            "h-4 w-4 rounded-full inline-flex items-center justify-center border",
+                            walletReceiptStep >= idx ? "border-emerald-300/60 bg-emerald-400/20" : "border-white/20 bg-transparent"
+                          )}>
+                            {walletReceiptStep >= idx ? <IconCheck className="h-2.5 w-2.5 text-emerald-200" /> : null}
+                          </span>
+                          <span className={cn("text-xs", walletReceiptStep >= idx ? "text-white/90" : "text-white/55")}>{step}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-[11px] text-white/60 leading-relaxed">
+                      Transactions can take up to 10 minutes depending on blockchain network congestion.
+                    </p>
+                  </div>
+
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="w-full justify-center gap-2 h-10 px-3 border border-white/15 bg-transparent text-white text-sm font-semibold hover:text-white hover:bg-white/[0.05]"
+                    onClick={() => {
+                      trackClick('wallet-support', 'Receipt Support CTA')
+                      useChatStore.getState().setIsOpen(true)
+                    }}
+                  >
+                    <IconLifebuoy className="h-4 w-4" />
+                    Support
+                  </Button>
+                </div>
+              ) : (
               <div className="space-y-4">
                 <div className="relative flex items-center gap-1.5 rounded-2xl p-1.5 border border-white/10 bg-white/[0.03]">
                   {(['deposit', 'withdraw'] as const).map((mode) => (
@@ -9819,21 +9969,30 @@ function NavTestPageContent() {
                     <input
                       value={walletAmountInput}
                       onChange={(e) => {
+                        if (isMobile) return
                         const raw = e.target.value.replace(/,/g, '')
-                        const sanitized = raw.replace(/[^\d.]/g, '')
-                        const parts = sanitized.split('.')
-                        const whole = parts[0] ?? ''
-                        const decimals = (parts[1] ?? '').slice(0, 2)
-                        const nextValue = parts.length > 1 ? `${whole}.${decimals}` : whole
-                        setWalletAmountInput(nextValue)
+                        setWalletAmountInput(sanitizeWalletAmountDraft(raw))
                       }}
                       onFocus={() => {
+                        if (isMobile) {
+                          setWalletAmountInput((prev) => prev.replace(/,/g, ''))
+                          setWalletNumpadOpen(true)
+                          return
+                        }
                         setWalletAmountInput((prev) => prev.replace(/,/g, ''))
                       }}
                       onBlur={() => {
+                        if (isMobile) return
                         const parsed = parseWalletFiatAmount(walletAmountInput)
                         setWalletAmountInput(formatWalletFiatAmount(parsed))
                       }}
+                      onClick={() => {
+                        if (!isMobile) return
+                        setWalletAmountInput((prev) => prev.replace(/,/g, ''))
+                        setWalletNumpadOpen(true)
+                      }}
+                      readOnly={isMobile}
+                      inputMode={isMobile ? "none" : "decimal"}
                       className="flex-1 h-14 bg-transparent px-4 text-2xl leading-none text-white/85 placeholder:text-white/45 focus:outline-none"
                       placeholder="0.00"
                     />
@@ -9872,22 +10031,38 @@ function NavTestPageContent() {
                       readOnly
                       className="flex-1 h-12 bg-transparent px-4 text-sm text-white/90 focus:outline-none"
                     />
-                    <button
-                      type="button"
-                      onClick={async () => {
-                        try {
-                          await navigator.clipboard.writeText(walletDepositAddress)
-                          setWalletAddressCopied(true)
-                          window.setTimeout(() => setWalletAddressCopied(false), 1200)
-                        } catch {
-                          setWalletAddressCopied(false)
-                        }
-                      }}
-                      className="h-7 w-7 rounded-[6px] bg-white/[0.08] hover:bg-white/[0.12] inline-flex items-center justify-center transition-colors"
-                      aria-label="Copy deposit wallet address"
-                    >
-                      {walletAddressCopied ? <IconCheck className="w-3.5 h-3.5 text-white/90" /> : <IconCopy className="w-3.5 h-3.5 text-white/75" />}
-                    </button>
+                    <div className="inline-flex items-center gap-2">
+                      {!isMobile && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            setWalletQrOpen(true)
+                          }}
+                          className="h-7 w-7 rounded-[6px] bg-white/[0.08] hover:bg-white/[0.12] inline-flex items-center justify-center transition-colors"
+                          aria-label="Show wallet QR code"
+                        >
+                          <IconQrCode className="w-3.5 h-3.5 text-white/80" />
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          try {
+                            await navigator.clipboard.writeText(walletDepositAddress)
+                            setWalletAddressCopied(true)
+                            window.setTimeout(() => setWalletAddressCopied(false), 1200)
+                          } catch {
+                            setWalletAddressCopied(false)
+                          }
+                        }}
+                        className="h-7 w-7 rounded-[6px] bg-white/[0.08] hover:bg-white/[0.12] inline-flex items-center justify-center transition-colors"
+                        aria-label="Copy deposit wallet address"
+                      >
+                        {walletAddressCopied ? <IconCheck className="w-3.5 h-3.5 text-white/90" /> : <IconCopy className="w-3.5 h-3.5 text-white/75" />}
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <div className="flex rounded-lg overflow-hidden border border-white/10 bg-white/[0.03]">
@@ -9898,6 +10073,62 @@ function NavTestPageContent() {
                       placeholder="Enter wallet address"
                     />
                   </div>
+                )}
+                {walletMode === 'deposit' && walletQrOpen && typeof document !== 'undefined' && createPortal(
+                  <div
+                    className="fixed inset-0 z-[9998] bg-black/60 backdrop-blur-[1.5px] flex items-center justify-center p-4"
+                    onMouseDown={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                    }}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      setWalletQrOpen(false)
+                    }}
+                  >
+                    <div
+                      className="w-full max-w-[280px] rounded-xl border border-white/10 bg-[var(--ds-sidebar-bg,#121417)] p-3 space-y-3 shadow-2xl z-[9999]"
+                      onMouseDown={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-sm font-semibold text-white">Wallet QR</h3>
+                        <button
+                          type="button"
+                          className="h-7 w-7 rounded-[6px] bg-white/[0.08] hover:bg-white/[0.12] inline-flex items-center justify-center transition-colors"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            setWalletQrOpen(false)
+                          }}
+                          aria-label="Close wallet QR popup"
+                        >
+                          <IconX className="h-3.5 w-3.5 text-white/80" />
+                        </button>
+                      </div>
+                      <div className="mx-auto rounded-lg border border-white/10 bg-white p-2 w-[188px]">
+                        <div
+                          className="grid gap-[2px] w-[172px] h-[172px]"
+                          style={{ gridTemplateColumns: 'repeat(13, minmax(0, 1fr))' }}
+                        >
+                          {walletFakeQrPattern.flatMap((row, rowIndex) =>
+                            row.split('').map((cell, cellIndex) => (
+                              <span
+                                key={`modal-${rowIndex}-${cellIndex}`}
+                                className={cn("rounded-[1px]", cell === '1' ? "bg-black" : "bg-white")}
+                              />
+                            ))
+                          )}
+                        </div>
+                      </div>
+                      <p className="text-[11px] text-white/70 break-all">{walletDepositAddress}</p>
+                    </div>
+                  </div>,
+                  document.body
                 )}
 
                 <Separator className="bg-white/[0.025]" />
@@ -9937,18 +10168,72 @@ function NavTestPageContent() {
                   className="w-full justify-center gap-2 h-10 px-3 border border-[#9a86d1]/75 text-[#121417] text-sm font-semibold hover:text-[#121417]"
                   style={{ backgroundColor: '#c9b4ff', boxShadow: '0 6px 18px rgba(122, 92, 196, 0.28)' }}
                   onClick={() => {
+                    const txHash = `0x${Array.from({ length: 32 }, () => Math.floor(Math.random() * 256).toString(16).padStart(2, '0')).join('')}`
+                    const targetAddress = walletMode === 'deposit' ? walletDepositAddress : walletAddressInput.trim()
                     trackAction('wallet-submit', walletMode, {
                       currency: selectedWalletCurrency.code,
                       amountEur: walletAmountInput,
                       amountCrypto: walletCryptoAmountText,
-                      address: walletAddressInput,
+                      address: targetAddress,
                       network: walletSelectedNetwork,
                     })
+                    setWalletNumpadOpen(false)
+                    setWalletReceipt({
+                      mode: walletMode,
+                      amountEur: walletAmountInput,
+                      amountCrypto: walletCryptoAmountText,
+                      address: targetAddress,
+                      currency: selectedWalletCurrency.code,
+                      network: walletSelectedNetwork,
+                      txHash,
+                    })
                   }}
+                  disabled={walletEurAmount <= 0 || (walletMode === 'withdraw' && !walletAddressInput.trim())}
                 >
                   {walletMode === 'deposit' ? `Deposit ${selectedWalletCurrency.code}` : `Withdraw ${selectedWalletCurrency.code}`}
                 </Button>
               </div>
+              )}
+              {isMobile && walletNumpadOpen && typeof document !== 'undefined' && createPortal(
+                <div className="fixed inset-x-0 bottom-0 z-[230] px-3 pb-[calc(env(safe-area-inset-bottom,0px)+8px)]">
+                  <div className="mx-auto max-w-[520px] rounded-t-xl border border-white/10 bg-[var(--ds-sidebar-bg,#121417)] p-2 space-y-2 shadow-2xl">
+                    <div className="grid grid-cols-3 gap-2">
+                      {['1','2','3','4','5','6','7','8','9','.','0','back'].map((key) => (
+                        <button
+                          key={key}
+                          type="button"
+                          onClick={() => appendWalletAmountToken(key)}
+                          className="h-10 rounded-md bg-white/[0.05] border border-white/10 text-white text-sm font-medium hover:bg-white/[0.08] transition-colors"
+                        >
+                          {key === 'back' ? '⌫' : key}
+                        </button>
+                      ))}
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => appendWalletAmountToken('clear')}
+                        className="h-9 rounded-md bg-white/[0.04] border border-white/10 text-white/80 text-xs font-medium hover:bg-white/[0.07] transition-colors"
+                      >
+                        Clear
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const parsed = parseWalletFiatAmount(walletAmountInput)
+                          setWalletAmountInput(formatWalletFiatAmount(parsed))
+                          setWalletNumpadOpen(false)
+                        }}
+                        className="h-9 rounded-md border border-[#9a86d1]/75 text-[#121417] text-xs font-semibold"
+                        style={{ backgroundColor: '#c9b4ff' }}
+                      >
+                        Done
+                      </button>
+                    </div>
+                  </div>
+                </div>,
+                document.body
+              )}
 
               {false && (!showDepositConfirmation ? (
               <>
@@ -10643,7 +10928,7 @@ function NavTestPageContent() {
                                       }}
                                       className={cn(
                                         "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer text-white/70 hover:text-white hover:bg-white/[0.03] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none",
-                                        "border border-transparent hover:border-white/[0.08]",
+                                        "border border-white/[0.04] hover:border-white/[0.08]",
                                         sidebarState === 'collapsed' && !isMobile && "h-10 w-10 mx-auto p-0 justify-center"
                                       )}
                                     >
@@ -10676,7 +10961,7 @@ function NavTestPageContent() {
                       </SidebarGroupContent>
                     </SidebarGroup>
 
-                    <Separator className="bg-white/10 mx-2 my-2" />
+                    <Separator className="bg-white/[0.04] mx-2 my-2" />
 
                     {/* Promotions filters */}
                     <SidebarGroup>
@@ -10803,6 +11088,10 @@ function NavTestPageContent() {
                                         if (isMobile) setOpenMobile(false)
                                         if (item.label === 'Support') {
                                           console.log('Support clicked')
+                                        } else if (item.label === 'My Bonus') {
+                                          setAccountBonusTab('available')
+                                          setAccountDrawerView('bonus')
+                                          openAccountDrawer()
                                         }
                                       }}
                                       className={cn(
@@ -10883,7 +11172,8 @@ function NavTestPageContent() {
                                   className={cn(
                                     "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
                                     "data-[active=true]:text-white data-[active=true]:font-medium",
-                                    "data-[active=false]:text-white/70 hover:text-white hover:bg-white/5"
+                                    "data-[active=false]:text-white/70 hover:text-white hover:bg-white/5",
+                                    "bg-white/[0.02] border border-white/[0.08] hover:border-white/[0.12]"
                                   )}
                                   style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)' } : undefined}
                                 >
@@ -10896,7 +11186,10 @@ function NavTestPageContent() {
                                       {Icon && <Icon strokeWidth={1.5} className="w-4 h-4" />}
                                     </div>
                                   {(sidebarState !== 'collapsed' || isMobile) && (
-                                        <span>{item.label}</span>
+                                    <div className="flex flex-col leading-tight min-w-0">
+                                      <span>{item.label}</span>
+                                      <span className="text-[11px] text-white/40 font-normal mt-0.5">{item.subtitle}</span>
+                                    </div>
                                   )}
                                 </SidebarMenuButton>
                               </TooltipTrigger>

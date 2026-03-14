@@ -12318,7 +12318,8 @@ function NavTestPageContent() {
                                     className={cn(
                                       "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
                                       "data-[active=true]:text-white data-[active=true]:font-medium",
-                                      "data-[active=false]:text-white/70 hover:text-white hover:bg-white/5",
+                                    "data-[active=false]:text-white/70 hover:text-white hover:bg-white/5",
+                                    "bg-white/[0.02] border border-white/[0.08] hover:border-white/[0.12]",
                                       isActive && '[&[data-active=true]]:!bg-[var(--brand-primary)]'
                                     )}
                                     onClick={(e) => {
@@ -12400,8 +12401,9 @@ function NavTestPageContent() {
                                         console.log('Support clicked')
                                         setShowSports(false)
                                       } else if (item.label === 'My Bonus') {
-                                        console.log('My Bonus clicked')
                                         setShowSports(false)
+                                        setShowVipRewards(true)
+                                        setVipActiveSidebarItem('My Bonus')
                                       }
                                     }}
                                   >
