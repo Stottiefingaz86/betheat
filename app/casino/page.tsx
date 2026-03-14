@@ -10361,11 +10361,12 @@ function NavTestPageContent() {
                                       onClick={(e: React.MouseEvent) => {
                                         e.preventDefault()
                                         e.stopPropagation()
-                                        if (isMobile) setOpenMobile(false)
-                                        if (item.id === 'Loyalty Club') {
+                                        if (item.id === 'Daily Races') {
                                           setVipActiveSidebarItem('Races')
-                                        } else if (item.id === 'Help Centre') {
-                                          console.log('Help Centre clicked')
+                                          if (isMobile) setOpenMobile(false)
+                                        } else if (item.id === 'Wallet') {
+                                          openDepositDrawer()
+                                          if (isMobile) setOpenMobile(false)
                                         }
                                       }}
                                       className={cn(
