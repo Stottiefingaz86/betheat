@@ -124,7 +124,6 @@ import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import ChatNavToggle from '@/components/chat/chat-nav-toggle'
 import DynamicIsland from '@/components/dynamic-island'
-import { JackpotOverlay } from '@/components/casino/jackpot-overlay'
 import { NotificationHub } from '@/components/account/notification-hub'
 
 // Helper function to get vendor icon path
@@ -1473,8 +1472,6 @@ function HomePageContent() {
   const [isLandscape, setIsLandscape] = useState(false)
   const [similarGamesDrawerOpen, setSimilarGamesDrawerOpen] = useState(false)
   const [favoritedGames, setFavoritedGames] = useState<Set<number>>(new Set())
-  const [showJackpot, setShowJackpot] = useState(false)
-  const jackpotTimerRef = useRef<NodeJS.Timeout | null>(null)
   const gameLauncherMenuRef = useRef<HTMLDivElement>(null)
   const gameImageRef = useRef<HTMLDivElement>(null)
 
@@ -1766,11 +1763,6 @@ function HomePageContent() {
       setGameLauncherMenuOpen(false)
       setGameImageLoaded(false)
       setIsFullscreen(false)
-      setShowJackpot(false)
-      if (jackpotTimerRef.current) {
-        clearTimeout(jackpotTimerRef.current)
-        jackpotTimerRef.current = null
-      }
       // Animate any pending balance (e.g. jackpot winnings) now that launcher is closed
       const pendingAmount = pendingBalanceRef.current
       if (pendingAmount > 0) {
@@ -1801,24 +1793,8 @@ function HomePageContent() {
       // Reset image loaded state when new game is selected
       setGameImageLoaded(false)
       setIsFullscreen(false)
-      setShowJackpot(false)
     }
   }, [selectedGame])
-
-  // Jackpot overlay — show 5 seconds after game image loads
-  useEffect(() => {
-    if (gameImageLoaded && selectedGame) {
-      jackpotTimerRef.current = setTimeout(() => {
-        setShowJackpot(true)
-      }, 5000)
-    }
-    return () => {
-      if (jackpotTimerRef.current) {
-        clearTimeout(jackpotTimerRef.current)
-        jackpotTimerRef.current = null
-      }
-    }
-  }, [gameImageLoaded, selectedGame])
 
   // Handle fullscreen change events
   useEffect(() => {
@@ -1973,10 +1949,10 @@ function HomePageContent() {
           <div className="px-3 py-2 flex items-center gap-2 overflow-x-auto scrollbar-hide border-b border-white/10">
             {[
               { label: 'Home', onClick: () => { setQuickLinksOpen(false); } },
-              { label: 'Sports', onClick: () => { trackNav('sports', 'Sports'); router.push('/sports/football'); setQuickLinksOpen(false); } },
-              { label: 'In-Play', onClick: () => { trackNav('in-play', 'In-Play'); window.location.href = '/live-betting'; setQuickLinksOpen(false); } },
               { label: 'Casino', onClick: () => { trackNav('casino', 'Casino'); router.push('/casino'); setQuickLinksOpen(false); } },
               { label: 'Live Casino', onClick: () => { trackNav('casino', 'Live Casino'); router.push('/casino?tab=live'); setQuickLinksOpen(false); } },
+              { label: 'Sports', onClick: () => { trackNav('sports', 'Sports'); router.push('/sports/football'); setQuickLinksOpen(false); } },
+              { label: 'In-Play', onClick: () => { trackNav('in-play', 'In-Play'); window.location.href = '/live-betting'; setQuickLinksOpen(false); } },
               { label: 'Promotions', onClick: () => { trackNav('promotions', 'Promotions'); router.push('/casino?vip=true'); setQuickLinksOpen(false); } },
             ].map((item) => (
               <button
@@ -3471,29 +3447,6 @@ function HomePageContent() {
               </div>
 
               {/* Jackpot Win Overlay */}
-              <JackpotOverlay
-                visible={showJackpot}
-                gameName={selectedGame.title}
-                onClose={() => {
-                  setShowJackpot(false)
-                  // Store jackpot winnings — balance will animate when game launcher closes
-                  pendingBalanceRef.current += 250000
-                }}
-                onShareToChat={() => {
-                  setShowJackpot(false)
-                  // Store jackpot winnings — balance will animate when game launcher closes
-                  pendingBalanceRef.current += 250000
-                  // Share jackpot win to chat
-                  const chatStore = useChatStore.getState()
-                  chatStore.setIsOpen(true)
-                  chatStore.shareBetToChat([{
-                    eventName: `🎰 JACKPOT WIN on ${selectedGame.title}`,
-                    selection: 'Mega Jackpot',
-                    odds: '💰',
-                    stake: 250000,
-                  }])
-                }}
-              />
             </motion.div>
           )}
         </AnimatePresence>

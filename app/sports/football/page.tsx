@@ -42,7 +42,44 @@ import {
   FilterIcon,
   ListFilterIcon,
   PlusIcon,
-  TrashIcon
+  TrashIcon,
+  Flame as IconFlame,
+  Gamepad2 as IconDeviceGamepad2,
+  Club as IconCards,
+  CircleHelp as IconHelpCircle,
+  ChevronLeft as IconChevronLeft,
+  ChevronRight as IconChevronRight,
+  ChevronDown as IconChevronDown,
+  ChevronUp as IconChevronUp,
+  Search as IconSearch,
+  X as IconX,
+  Menu as IconMenu2,
+  Wallet as IconWallet,
+  User as IconUser,
+  LifeBuoy as IconLifebuoy,
+  Video as IconVideo,
+  Radio as IconBroadcast,
+  House as IconHome,
+  Zap as IconBolt,
+  Globe as IconWorld,
+  List as IconList,
+  Grid3X3 as IconLayoutGrid,
+  Layers as IconStack,
+  ArrowRight as IconArrowRight,
+  Check as IconCheck,
+  Loader2 as IconLoader2,
+  SlidersHorizontal as IconFilter,
+  Bell as IconBell,
+  Ticket as IconTicket,
+  Clock3 as IconClock,
+  Coins as IconCoins,
+  Download as IconDownload,
+  ExternalLink as IconExternalLink,
+  RefreshCw as IconRefresh,
+  MessageCircle as IconMessageCircle2,
+  Trash2 as IconTrash,
+  Send as IconBrandTelegram,
+  Share2 as IconShare
 } from "lucide-react"
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 import Image from 'next/image'
@@ -63,41 +100,22 @@ import {
   IconDice,
   IconHeart,
   IconStar,
-  IconFlame,
-  IconDeviceGamepad2,
-  IconCards,
   IconDots,
   IconTrophy,
   IconBuilding,
-  IconHelpCircle,
   IconPlayerPlay,
-  IconChevronLeft,
-  IconChevronRight,
-  IconChevronDown,
-  IconChevronUp,
   IconInfoCircle,
   IconLiveView,
-  IconSearch,
   IconPlayerPlay as IconPlay,
-  IconX,
-  IconMenu2,
   IconBrandFacebook,
   IconBrandInstagram,
   IconBrandX,
   IconBrandYoutube,
   IconBrandTiktok,
-  IconWallet,
-  IconUser,
   IconUserCircle,
-  IconLifebuoy,
-  IconVideo,
-  IconBroadcast,
   IconSparkles,
   IconGhost,
-  IconHome,
-  IconBolt,
   IconRocket,
-  IconWorld,
   IconBallFootball,
   IconBallAmericanFootball,
   IconBallTennis,
@@ -107,22 +125,10 @@ import {
   IconGolf,
   IconHorse,
   IconFlag2,
-  IconList,
-  IconLayoutGrid,
-  IconStack,
   IconSearch as IconSearchNew,
-  IconArrowRight,
-  IconCheck,
-  IconLoader2,
-  IconFilter,
-  IconBell,
-  IconTicket,
-  IconClock,
-  IconCoins,
-  IconDownload,
-  IconExternalLink,
-  IconShare
-, IconMessageCircle2, IconTrash, IconBrandTelegram, IconRefresh, IconParachute, IconTargetArrow} from '@tabler/icons-react'
+  IconParachute,
+  IconTargetArrow
+} from '@tabler/icons-react'
 import { SportsTrackerWidget } from '@/components/sports-tracker-widget'
 import { colorTokenMap } from '@/lib/agent/designSystem'
 import { Button } from '@/components/ui/button'
@@ -5798,10 +5804,10 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
             >
               {[
                 { label: 'Home', page: 'home' as const },
-                { label: 'Sports', page: 'sports' as const },
-                { label: 'Live Betting', page: 'liveBetting' as const },
                 { label: 'Casino', page: 'casino' as const },
                 { label: 'Live Casino', page: 'liveCasino' as const },
+                { label: 'Sports', page: 'sports' as const },
+                { label: 'Live Betting', page: 'liveBetting' as const },
                 { label: 'Poker', page: 'poker' as const },
                 { label: 'VIP Rewards', page: 'vipRewards' as const },
               ].map((item) => {
@@ -5894,7 +5900,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
             <SidebarGroup>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  <SidebarMenuItem>
+                  <SidebarMenuItem className="order-3">
                 <Tooltip>
                   <TooltipTrigger asChild>
                         <SidebarMenuButton
@@ -10725,6 +10731,8 @@ function NavTestPageContent() {
     { icon: IconBroadcast, label: 'Live Casino' },
     { icon: IconTrophy, label: 'Tournaments' },
     { icon: IconLifebuoy, label: 'Support' },
+    { icon: IconCrown, label: 'Loyalty Club' },
+    { icon: IconGift, label: 'Rewards' },
     ...(isMobile ? [{ icon: IconWorld, label: 'Language' }] : []),
   ]
 
@@ -10774,13 +10782,13 @@ function NavTestPageContent() {
           <div className="px-3 py-2 flex items-center gap-2 overflow-x-auto scrollbar-hide border-b border-white/10">
                 {[
                   { label: 'Home', onClick: () => { trackNav('home', 'Home'); trackPageView('home', 'Home'); router.push('/'); setQuickLinksOpen(false); } },
-                  { label: 'Sports', onClick: () => { trackNav('sports', 'Sports'); trackPageView('sports', 'Sports'); setShowSports(true); setShowVipRewards(false); router.push('/sports/football'); setQuickLinksOpen(false); } },
-                  { label: 'Esports', onClick: () => { trackNav('esports', 'Esports'); trackPageView('esports', 'Esports'); setShowSports(true); setShowVipRewards(false); router.push('/esports'); setQuickLinksOpen(false); } },
-                  { label: 'Live Betting', onClick: () => { trackNav('live-betting', 'Live Betting'); trackPageView('live-betting', 'Live Betting'); window.location.href = '/live-betting'; setQuickLinksOpen(false); } },
                   { label: 'Casino', onClick: () => { trackNav('casino', 'Casino'); trackPageView('casino', 'Casino'); router.push('/casino'); setQuickLinksOpen(false); } },
                   { label: 'Live Casino', onClick: () => { trackNav('casino', 'Live Casino'); trackPageView('live-casino', 'Live Casino'); router.push('/casino?tab=live'); setQuickLinksOpen(false); } },
+                  { label: 'Sports', onClick: () => { trackNav('sports', 'Sports'); trackPageView('sports', 'Sports'); setShowSports(true); setShowVipRewards(false); router.push('/sports/football'); setQuickLinksOpen(false); } },
+                  { label: 'Live Betting', onClick: () => { trackNav('live-betting', 'Live Betting'); trackPageView('live-betting', 'Live Betting'); window.location.href = '/live-betting'; setQuickLinksOpen(false); } },
                   { label: 'Poker', onClick: () => { trackNav('poker', 'Poker'); trackPageView('poker', 'Poker'); router.push('/casino?poker=true'); setQuickLinksOpen(false); } },
                   { label: 'VIP Rewards', onClick: () => { trackNav('vip-rewards', 'VIP Rewards'); trackPageView('vip-rewards', 'VIP Rewards'); setShowVipRewards(true); setQuickLinksOpen(false); } },
+                  { label: 'Esports', onClick: () => { trackNav('esports', 'Esports'); trackPageView('esports', 'Esports'); setShowSports(true); setShowVipRewards(false); router.push('/esports'); setQuickLinksOpen(false); } },
                   { label: 'Other', onClick: () => { setQuickLinksOpen(false); } },
                 ].map((item) => (
                   <button
@@ -10901,7 +10909,7 @@ function NavTestPageContent() {
                     </Button>
                     <div className="w-px h-5 bg-white/20" />
                   </div>
-                  <SidebarMenuItem>
+                  <SidebarMenuItem className="order-3">
                     <SidebarMenuButton
                       className={cn(
                         "h-10 min-w-[80px] px-4 py-2 rounded-small text-sm font-medium justify-center relative overflow-visible data-[active=true]:bg-transparent [&>span]:!flex-initial",
@@ -10938,7 +10946,7 @@ function NavTestPageContent() {
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   
-                  <SidebarMenuItem>
+                  <SidebarMenuItem className="order-4">
                     <SidebarMenuButton
                       className={cn(
                         "h-10 min-w-[100px] px-4 py-2 rounded-small text-sm font-medium justify-center",
@@ -10957,7 +10965,7 @@ function NavTestPageContent() {
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   
-                  <SidebarMenuItem>
+                  <SidebarMenuItem className="order-1">
                     <SidebarMenuButton
                       className={cn(
                         "h-10 min-w-[80px] px-4 py-2 rounded-small text-sm font-medium justify-center relative overflow-visible data-[active=true]:bg-transparent [&>span]:!flex-initial",
@@ -10991,7 +10999,7 @@ function NavTestPageContent() {
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   
-                  <SidebarMenuItem>
+                  <SidebarMenuItem className="order-2">
                     <SidebarMenuButton
                       className={cn(
                         "h-10 min-w-[100px] px-4 py-2 rounded-small text-sm font-medium justify-center relative overflow-visible data-[active=true]:bg-transparent [&>span]:!flex-initial",
@@ -11025,7 +11033,7 @@ function NavTestPageContent() {
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   
-                  <SidebarMenuItem>
+                  <SidebarMenuItem className="order-6">
                     <SidebarMenuButton
                       className={cn(
                         "h-10 min-w-[80px] px-4 py-2 rounded-small text-sm font-medium justify-center",
@@ -11045,7 +11053,7 @@ function NavTestPageContent() {
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   
-                  <SidebarMenuItem>
+                  <SidebarMenuItem className="order-5">
                     <SidebarMenuButton
                       className={cn(
                         "h-10 min-w-[100px] px-4 py-2 rounded-small text-sm font-medium justify-center relative overflow-visible data-[active=true]:bg-transparent [&>span]:!flex-initial",
@@ -12392,6 +12400,12 @@ function NavTestPageContent() {
                                         // Handle support action (chat/help modal can be wired here)
                                         console.log('Support clicked')
                                         setShowSports(false)
+                                      } else if (item.label === 'Loyalty Club') {
+                                        console.log('Loyalty Club clicked')
+                                        setShowSports(false)
+                                      } else if (item.label === 'Rewards') {
+                                        console.log('Rewards clicked')
+                                        setShowSports(false)
                                       }
                                     }}
                                   >
@@ -12509,12 +12523,14 @@ function NavTestPageContent() {
                   </SidebarGroupContent>
                 </SidebarGroup>
                 <div className="flex-1" />
-                <Separator className="bg-white/10 mx-2" />
+                <Separator className="bg-white/[0.04] mx-2" />
                 <SidebarGroup>
                   <SidebarGroupContent>
                     <SidebarMenu>
                       {[
                         { icon: IconLifebuoy, label: 'Support' },
+                        { icon: IconCrown, label: 'Loyalty Club' },
+                        { icon: IconGift, label: 'Rewards' },
                         ...(isMobile ? [{ icon: IconWorld, label: 'Language' }] : []),
                       ].map((item, index) => {
                         const Icon = item.icon

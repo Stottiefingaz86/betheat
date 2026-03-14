@@ -978,11 +978,11 @@ body {
 /* Betheat override: chips-only sub nav, neutral dark glass (no rail stroke) */
 [data-sub-nav] {
   position: fixed !important;
-  background: rgba(8, 10, 14, 0.68) !important;
+  background: rgba(18, 20, 23, 0.84) !important;
   border-bottom: 0 !important;
   box-shadow: none !important;
-  backdrop-filter: blur(16px) saturate(68%) brightness(0.72) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(68%) brightness(0.72) !important;
+  backdrop-filter: blur(18px) saturate(110%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(110%) !important;
   isolation: isolate !important;
 }
 
@@ -992,27 +992,27 @@ body {
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(7, 10, 14, 0.72) 0%,
-    rgba(7, 10, 14, 0.64) 56%,
-    rgba(7, 10, 14, 0.58) 100%
+    rgba(18, 20, 23, 0.76) 0%,
+    rgba(18, 20, 23, 0.82) 58%,
+    rgba(18, 20, 23, 0.88) 100%
   );
   pointer-events: none;
   z-index: 0;
 }
 
-/* Sub-nav faded divider line */
+/* Fade content as it slides under the sub-nav */
 [data-sub-nav]::after {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0;
-  height: 1px;
+  bottom: -14px;
+  height: 14px;
   background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.018) 0%,
-    rgba(255, 255, 255, 0.045) 50%,
-    rgba(255, 255, 255, 0.018) 100%
+    180deg,
+    rgba(18, 20, 23, 0.62) 0%,
+    rgba(18, 20, 23, 0.3) 55%,
+    rgba(18, 20, 23, 0) 100%
   );
   pointer-events: none;
   z-index: 2;
@@ -1070,7 +1070,7 @@ body {
 [data-sub-nav] [data-state="active"][data-tab-item] {
   background-color: transparent !important;
   background-image: var(--ds-primary-gradient, linear-gradient(112deg, rgba(255, 136, 52, 1) 0%, rgba(255, 109, 42, 0.98) 40%, rgba(236, 73, 46, 0.94) 72%, rgba(168, 44, 42, 0.92) 100%)) !important;
-  color: #fff4ec !important;
+  color: #121417 !important;
   border: 0 !important;
   box-shadow: none !important;
   border-radius: var(--ui-button-radius) !important;
@@ -1098,7 +1098,15 @@ body {
   background-color: transparent !important;
   background-image: none !important;
   box-shadow: none !important;
+  color: rgba(243, 247, 252, 0.96) !important;
   position: relative !important;
+}
+
+[data-nav-header] button[data-active="true"] span,
+[data-nav-header] [role="button"][data-active="true"] span,
+[data-nav-header] button[data-active="true"] svg,
+[data-nav-header] [role="button"][data-active="true"] svg {
+  color: rgba(243, 247, 252, 0.96) !important;
 }
 
 /* Sidebar active buttons that only set inline backgroundColor */
@@ -1507,7 +1515,19 @@ button[data-active="true"][class*="SidebarMenuButton"],
 [data-active="true"][class*="SidebarMenuButton"] {
   background-color: transparent !important;
   background-image: var(--ds-primary-gradient, linear-gradient(112deg, rgba(255, 136, 52, 1) 0%, rgba(255, 109, 42, 0.98) 40%, rgba(236, 73, 46, 0.94) 72%, rgba(168, 44, 42, 0.92) 100%)) !important;
+  color: #121417 !important;
   transition: background-color 0.2s ease-in-out !important;
+}
+
+[data-sidebar="menu-button"][data-active="true"] span,
+[data-sidebar="menu-button"][data-active="true"] svg,
+button[data-active="true"][class*="SidebarMenuButton"] span,
+button[data-active="true"][class*="SidebarMenuButton"] svg,
+[data-active="true"][class*="SidebarMenuButton"] span,
+[data-active="true"][class*="SidebarMenuButton"] svg {
+  color: #121417 !important;
+  font-weight: 500 !important;
+  letter-spacing: inherit !important;
 }
 
 .image-skeleton-fallback {
@@ -1537,7 +1557,28 @@ button[data-active="true"][class*="SidebarMenuButton"],
 .dark\:bg-\[\#1a1a1a\]:is(.dark *),
 [style*="background-color: #1a1a1a"],
 [style*="background-color:#1a1a1a"] {
-  background-color: var(--ds-page-bg, #0d0f12) !important;
+  background-color: var(--ds-page-bg, #121417) !important;
+}
+
+/* Catch arbitrary-opacity variants that were still rendering as flat black */
+[class*="bg-[#1a1a1a]/60"],
+[class*="dark:bg-[#1a1a1a]/60"] {
+  background-color: color-mix(in srgb, var(--ds-page-bg, #121417) 60%, transparent) !important;
+}
+
+[class*="bg-[#1a1a1a]/80"],
+[class*="dark:bg-[#1a1a1a]/80"] {
+  background-color: color-mix(in srgb, var(--ds-page-bg, #121417) 80%, transparent) !important;
+}
+
+[class*="bg-[#1a1a1a]/90"],
+[class*="dark:bg-[#1a1a1a]/90"] {
+  background-color: color-mix(in srgb, var(--ds-page-bg, #121417) 90%, transparent) !important;
+}
+
+/* Keep dark gradients in the same navy family */
+[class*="from-[#1a1a1a]"] {
+  --tw-gradient-from: var(--ds-page-bg, #121417) var(--tw-gradient-from-position) !important;
 }
 
 .bg-\[\#2d2d2d\],
@@ -1549,7 +1590,7 @@ button[data-active="true"][class*="SidebarMenuButton"],
 }
 
 [data-page-bg] {
-  background-color: var(--ds-page-bg, #0d0f12) !important;
+  background-color: var(--ds-page-bg, #121417) !important;
 }
 
 [data-nav-header] {

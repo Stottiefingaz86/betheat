@@ -70,7 +70,8 @@ export default function ChatNavToggle({
               <motion.div
                 initial={{ backdropFilter: "blur(0px)" }}
                 animate={{ backdropFilter: "blur(12px)" }}
-                className="relative flex items-center gap-2 overflow-hidden rounded-[0.56rem] border border-white/10 bg-[#141920]/90 backdrop-blur-md"
+                className="relative flex items-center gap-2 overflow-hidden rounded-[0.56rem] border border-white/10"
+                style={{ backgroundColor: "var(--ds-sidebar-bg, #121417)" }}
               >
                 <div className="ml-3">
                   <Search className="h-4 w-4 text-white/55" />
@@ -140,7 +141,8 @@ export default function ChatNavToggle({
             <motion.div
               initial={{ backdropFilter: "blur(0px)" }}
               animate={{ backdropFilter: "blur(12px)" }}
-              className="relative flex items-center gap-2 overflow-hidden rounded-[0.56rem] border border-white/10 bg-[#141920]/90 backdrop-blur-md"
+              className="relative flex items-center gap-2 overflow-hidden rounded-[0.56rem] border border-white/10"
+              style={{ backgroundColor: "var(--ds-sidebar-bg, #121417)" }}
             >
               <div className="ml-3">
                 <Search className="h-4 w-4 text-white/55" />

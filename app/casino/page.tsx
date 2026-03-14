@@ -44,7 +44,40 @@ import {
   FilterIcon,
   ListFilterIcon,
   PlusIcon,
-  TrashIcon
+  TrashIcon,
+  Flame as IconFlame,
+  Gamepad2 as IconDeviceGamepad2,
+  Club as IconCards,
+  CircleHelp as IconHelpCircle,
+  ChevronLeft as IconChevronLeft,
+  ChevronRight as IconChevronRight,
+  ChevronDown as IconChevronDown,
+  ChevronUp as IconChevronUp,
+  Search as IconSearch,
+  X as IconX,
+  Menu as IconMenu2,
+  Wallet as IconWallet,
+  User as IconUser,
+  LifeBuoy as IconLifebuoy,
+  Video as IconVideo,
+  Radio as IconBroadcast,
+  House as IconHome,
+  Zap as IconBolt,
+  Globe as IconWorld,
+  List as IconList,
+  Grid3X3 as IconLayoutGrid,
+  Layers as IconStack,
+  ArrowRight as IconArrowRight,
+  Check as IconCheck,
+  Loader2 as IconLoader2,
+  SlidersHorizontal as IconFilter,
+  Bell as IconBell,
+  Ticket as IconTicket,
+  Clock3 as IconClock,
+  Coins as IconCoins,
+  Download as IconDownload,
+  ExternalLink as IconExternalLink,
+  RefreshCw as IconRefresh
 } from "lucide-react"
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 import Image from 'next/image'
@@ -62,41 +95,22 @@ import {
   IconDice,
   IconHeart,
   IconStar,
-  IconFlame,
-  IconDeviceGamepad2,
-  IconCards,
   IconDots,
   IconTrophy,
   IconBuilding,
-  IconHelpCircle,
   IconPlayerPlay,
-  IconChevronLeft,
-  IconChevronRight,
-  IconChevronDown,
-  IconChevronUp,
   IconInfoCircle,
   IconLiveView,
-  IconSearch,
   IconPlayerPlay as IconPlay,
-  IconX,
-  IconMenu2,
   IconBrandFacebook,
   IconBrandInstagram,
   IconBrandX,
   IconBrandYoutube,
   IconBrandTiktok,
-  IconWallet,
-  IconUser,
   IconUserCircle,
-  IconLifebuoy,
-  IconVideo,
-  IconBroadcast,
   IconSparkles,
   IconGhost,
-  IconHome,
-  IconBolt,
   IconRocket,
-  IconWorld,
   IconBallFootball,
   IconBallBasketball,
   IconBallAmericanFootball,
@@ -107,28 +121,13 @@ import {
   IconGolf,
   IconHorse,
   IconFlag2,
-  IconList,
-  IconLayoutGrid,
-  IconStack,
   IconSearch as IconSearchNew,
-  IconArrowRight,
-  IconCheck,
-  IconLoader2,
-  IconFilter,
-  IconBell,
-  IconTicket,
-  IconClock,
-  IconCoins,
-  IconDownload,
-  IconExternalLink,
   IconStopwatch,
   IconRosetteFilled,
   IconUsers,
-  IconArrowsSort,
-  IconRefresh
+  IconArrowsSort
 , IconBrandTelegram, IconParachute, IconTargetArrow, IconBrandApple, IconBrandWindows, IconBrandAndroid, IconDeviceDesktop} from '@tabler/icons-react'
 import { colorTokenMap } from '@/lib/agent/designSystem'
-import { JackpotOverlay } from '@/components/casino/jackpot-overlay'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
@@ -474,13 +473,13 @@ function GameTile({ game }: { game: typeof mostPlayedGames[0] }) {
   const metaTag: MetaTag = game.tag === 'Hot' ? 'Hot' : game.tag === 'Early' ? 'Early' : game.tag === 'Exclusive' ? 'Exclusive' : game.tag === '+ New' ? 'New' : getMetaTag(game.id)
   return (
     <div className="relative group cursor-pointer flex-shrink-0">
-      <div className="relative w-[160px] aspect-[4/5] rounded-small overflow-hidden bg-gray-200">
+      <div className="relative w-[132px] aspect-[4/5] rounded-small overflow-hidden bg-gray-200">
         <Image
           src={game.image}
           alt={game.title}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-300"
-          sizes="160px"
+          sizes="132px"
         />
         <GameTagBadge tag={metaTag} vendor={getTileVendor(game.id)} />
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/90 to-transparent p-2">
@@ -646,7 +645,7 @@ function LazyGameTile({ index, columnIndex, rowIndex, onTileClick, isMobile = fa
   // Use regular div on mobile to avoid layout animation issues - no state, no animations
   if (isMobile) {
     return (
-      <div className="w-full aspect-[180/236]">
+      <div className="w-[132px] h-[174px]">
         <div 
           className="w-full h-full rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group"
           onClick={() => {
@@ -679,7 +678,7 @@ function LazyGameTile({ index, columnIndex, rowIndex, onTileClick, isMobile = fa
   return (
     <motion.div
       ref={tileRef}
-      className="w-full aspect-[180/236]"
+      className="w-[132px] h-[174px]"
       initial={{ opacity: 0, scale: 0.85 }}
       animate={isVisible ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.85 }}
       transition={{
@@ -973,43 +972,15 @@ function GameTagBadge({ tag, vendor }: { tag: MetaTag; vendor: string }) {
 
 // ============ LIVE CASINO TILE COMPONENT ============
 
-// Live casino background images by game type
-const liveBlackjackImages = [
-  '/games/BLACKJACK_SQAURE.png',
-  '/games/BLACKJACK_SQAURE.png',
-  '/games/BLACKJACK_SQAURE.png',
-]
-const liveBlackjackRectImages = [
-  '/games/BLACKJACK RECTANGLE.png',
-  '/games/BLACKJACK RECTANGLE.png',
-]
-const liveBlackjackTallImages = [
-  '/games/BLACKJACK_TALL.png',
-  '/games/BLACKJACK_TALL.png',
-]
-const liveRouletteSquareImages = [
-  '/games/roulette_square.png',
-  '/games/roulette_square.png',
-]
-const liveRouletteRectImages = [
-  '/games/roulette_square.png',
-  '/games/roulette_square.png',
-]
-const liveRouletteTallImages = [
-  '/games/roulette_tall.png',
-  '/games/roulette_tall.png',
-]
-const liveBaccaratRectImages = [
-  '/games/baccartae_rectangle.png',
-  '/games/baccartae_rectangle.png',
-]
-const liveBaccaratTallImages = [
-  '/games/baccartae_rectangle.png',
-  '/games/baccartae_rectangle.png',
-]
-const liveBaccaratSquareImages = [
-  '/games/baccartae_rectangle.png',
-  '/games/baccartae_rectangle.png',
+// Live Casino originals (from /public/games/live casino)
+const liveCasinoOriginalImages = [
+  '/games/live%20casino/2dab66d237dc6cf101933228d01706c8b030a73dc40e4c17f5c920d7fa444658.avif',
+  '/games/live%20casino/5e3e937e6d0694a8dce0576719c3db0e66b126d5adf7c4096e4dfe1a39907fdf.avif',
+  '/games/live%20casino/7375f4784040a1162d35caa4ba02eeebcfd36860ab5d5c4e697b33aef5631d8c.avif',
+  '/games/live%20casino/90fbc8abe43e60bf09c6a2554b3b6b1e0664ffb9a7d1a0a7b966a1f44e8ede6e.avif',
+  '/games/live%20casino/e65a14fd91f3f19bd3b81806583419cf2e9e010f5f2b42483ec8a7ce0d3b8fc2.avif',
+  '/games/live%20casino/fe8a138599e05331809e86bc4b7856e930ab799d08ba3fe3a982d0c4920e64a2.avif',
+  '/games/live%20casino/31d384b25e3d6c8704f84b3db84e31bceacf2ff16279fbcc25ad9e1bf55a7564%20%281%29.avif',
 ]
 
 type LiveGameType = 'blackjack' | 'roulette' | 'baccarat' | 'poker'
@@ -1139,25 +1110,8 @@ function getBaccaratResults(index: number): string[] {
 }
 
 // Get live image by game type and shape
-function getLiveImage(gameType: LiveGameType, shape: LiveTileShape, index: number): string {
-  switch (gameType) {
-    case 'blackjack':
-      if (shape === 'tall') return liveBlackjackTallImages[index % liveBlackjackTallImages.length]
-      if (shape === 'rectangle') return liveBlackjackRectImages[index % liveBlackjackRectImages.length]
-      return liveBlackjackImages[index % liveBlackjackImages.length]
-    case 'roulette':
-      if (shape === 'tall') return liveRouletteTallImages[index % liveRouletteTallImages.length]
-      if (shape === 'rectangle') return liveRouletteRectImages[index % liveRouletteRectImages.length]
-      return liveRouletteSquareImages[index % liveRouletteSquareImages.length]
-    case 'baccarat':
-      if (shape === 'tall') return liveBaccaratTallImages[index % liveBaccaratTallImages.length]
-      if (shape === 'square') return liveBaccaratSquareImages[index % liveBaccaratSquareImages.length]
-      return liveBaccaratRectImages[index % liveBaccaratRectImages.length]
-    case 'poker':
-      return liveBlackjackImages[index % liveBlackjackImages.length]
-    default:
-      return liveBlackjackImages[0]
-  }
+function getLiveImage(_gameType: LiveGameType, _shape: LiveTileShape, index: number): string {
+  return liveCasinoOriginalImages[index % liveCasinoOriginalImages.length]
 }
 
 // Live vendor helpers
@@ -1196,16 +1150,19 @@ function LiveCasinoTile({
   style?: React.CSSProperties
 }) {
   const imageSrc = getLiveImage(gameType, shape, index)
-  const vendor = getLiveVendor(index)
   
   return (
     <div 
       data-content-item 
       className={cn(
-        "rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0",
+        "rounded-small cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0",
         className
       )}
-      style={style}
+      style={{
+        ...(style || {}),
+        width: '132px',
+        height: '174px',
+      }}
       onClick={onClick}
     >
       {/* Background Image */}
@@ -1213,68 +1170,12 @@ function LiveCasinoTile({
         src={imageSrc}
         alt={title}
         fill
-        className="object-cover group-hover:scale-105 transition-transform duration-300"
+        className="object-cover"
         sizes={shape === 'tall' ? '200px' : shape === 'rectangle' ? '300px' : '200px'}
       />
       
       {/* Dark gradient overlay for readability */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />
-      
-      {/* Limit Tag - glass pill with record dot */}
-      <div className="absolute top-2 left-2 z-10 flex items-center gap-1 bg-white/10 backdrop-blur-md rounded-full px-2 py-0.5 border border-white/15">
-        <div className="relative w-1.5 h-1.5 flex-shrink-0">
-          <div className="absolute inset-0 rounded-full bg-red-500 animate-ping opacity-75" />
-          <div className="relative w-1.5 h-1.5 rounded-full bg-red-500" />
-        </div>
-        <span className="text-white text-[10px] font-medium">{bettingRange}</span>
-      </div>
-      
-      {/* Content at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 p-2.5 z-10">
-        {/* Game Title */}
-        <div className="mb-1.5">
-          {subtitle && (
-            <div className="text-white/60 text-[10px] font-medium uppercase tracking-wider mb-0.5">{subtitle}</div>
-          )}
-          <div className="text-white font-bold text-sm leading-tight">{title}</div>
-        </div>
-        
-        {/* History Tracker / Seats */}
-        <div className="mb-2">
-          {gameType === 'roulette' && (
-            <RouletteHistory results={getRouletteResults(index)} />
-          )}
-          {gameType === 'baccarat' && (
-            <BaccaratHistory results={getBaccaratResults(index)} />
-          )}
-          {gameType === 'blackjack' && seats && (
-            <BlackjackSeats occupied={seats.occupied} total={seats.total} />
-          )}
-          {gameType === 'poker' && seats && (
-            <BlackjackSeats occupied={seats.occupied} total={seats.total} />
-          )}
-        </div>
-        
-        {/* Vendor & Info */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5">
-            <div className="w-4 h-4 rounded-sm overflow-hidden flex items-center justify-center">
-              <Image
-                src={vendor.logo}
-                alt={vendor.name}
-                width={14}
-                height={14}
-                className="object-contain"
-                unoptimized
-              />
-            </div>
-            <span className="text-white/50 text-[10px] font-medium">{vendor.name}</span>
-          </div>
-          <div className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center">
-            <IconInfoCircle className="w-3.5 h-3.5 text-white/60" strokeWidth={2} />
-          </div>
-        </div>
-      </div>
+      <div className="absolute inset-0 bg-black/10" />
       
       {/* Hover shimmer */}
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 tile-shimmer" />
@@ -2178,7 +2079,7 @@ function PromosPage({
         {/* Promos Section */}
         <div className="w-full">
           {/* Title */}
-          <h1 className="text-2xl md:text-3xl font-bold text-white mb-4 md:mb-6">Promos</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-white mb-4 md:mb-6">Promotions</h1>
 
           {/* Sub nav filters */}
           <div className="mb-6">
@@ -2188,14 +2089,13 @@ function PromosPage({
                   <TabsTab 
                     key={tab}
                     value={tab} 
-                    className="relative z-10 text-white/70 hover:text-white hover:bg-white/5 rounded-2xl px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-white focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none flex items-center gap-1.5 whitespace-nowrap"
+                    className="relative z-10 bg-transparent text-white/70 hover:text-white rounded-none px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-white focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none flex items-center gap-1.5 whitespace-nowrap"
                   >
                     {selectedFilter === tab && (
                       <motion.div
-                        layoutId="activePromosSubNavTab"
-                        className="absolute inset-0 rounded-small -z-10"
+                        layoutId="activePromosUnderline"
+                        className="absolute left-3 right-3 -bottom-0.5 h-[2px] rounded-full"
                         style={{
-                          backgroundColor: 'transparent',
                           backgroundImage: 'var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%))'
                         }}
                         initial={false}
@@ -2220,15 +2120,15 @@ function PromosPage({
                 <CardContent className="p-4">
                   <CardTitle className="text-lg font-semibold text-white mb-2">{promo.title}</CardTitle>
                   <p className="text-sm text-white/70 mb-4 line-clamp-3">{promo.description}</p>
-                  <Button 
-                    variant="ghost" 
-                    className="w-full text-white"
+                  <Button
+                    variant="ghost"
+                    className="w-full font-semibold text-[#121417] hover:text-[#121417] border border-[#9a86d1]/75"
                     style={{
-                      backgroundColor: 'transparent',
-                      backgroundImage: 'var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%))'
+                      backgroundColor: '#c9b4ff',
+                      boxShadow: '0 6px 18px rgba(122, 92, 196, 0.28)',
                     }}
                   >
-                    MORE INFO
+                    More info
                   </Button>
                 </CardContent>
               </Card>
@@ -4443,7 +4343,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
             {/* Spacer to push bottom items down */}
             <div className="flex-1" />
 
-            <Separator className="bg-white/10 mx-2" />
+            <Separator className="bg-white/[0.04] mx-2" />
 
             {/* Bottom section — Support */}
             <SidebarGroup>
@@ -4451,6 +4351,8 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                 <SidebarMenu>
                   {[
                     { icon: IconLifebuoy, label: 'Support' },
+                    { icon: IconCrown, label: 'Loyalty Club' },
+                    { icon: IconGift, label: 'Rewards' },
                   ].map((item, index) => {
                     const Icon = item.icon
                     return (
@@ -7245,6 +7147,8 @@ function PokerLandingPage({ brandPrimary, quickLinksOpen, onNavigate }: { brandP
   // Bottom section (like casino sidebar)
   const pokerBottomItems = [
     { icon: IconLifebuoy, label: 'Support' },
+    { icon: IconCrown, label: 'Loyalty Club' },
+    { icon: IconGift, label: 'Rewards' },
   ]
 
   const topFeatures = [
@@ -7500,7 +7404,7 @@ function PokerLandingPage({ brandPrimary, quickLinksOpen, onNavigate }: { brandP
               </SidebarGroupContent>
             </SidebarGroup>
 
-            <Separator className="bg-white/10 mx-2" />
+            <Separator className="bg-white/[0.04] mx-2" />
 
             {/* POKER nav items */}
             <SidebarGroup>
@@ -7547,7 +7451,7 @@ function PokerLandingPage({ brandPrimary, quickLinksOpen, onNavigate }: { brandP
             {/* Spacer to push bottom items down */}
             <div className="flex-1" />
 
-            <Separator className="bg-white/10 mx-2" />
+            <Separator className="bg-white/[0.04] mx-2" />
 
             {/* Bottom section — Loyalty Hub, Banking, Need Help (like casino) */}
             <SidebarGroup>
@@ -8129,6 +8033,7 @@ function NavTestPageContent() {
   const [showSports, setShowSports] = useState(false) // Always false for casino page
   const [showVipRewards, _setShowVipRewards] = useState(false)
   const [showPoker, _setShowPoker] = useState(false)
+  const lockedMainNavLabels = useMemo(() => new Set(['Home', 'Sports', 'Live Betting', 'In-Play']), [])
   // Wrapper setters that fire page_view events for session flow tracking
   const setShowVipRewards = useCallback((val: boolean) => {
     _setShowVipRewards(val)
@@ -8224,6 +8129,55 @@ function NavTestPageContent() {
   const [tournamentCarouselApi, setTournamentCarouselApi] = useState<CarouselApi>()
   const [tournamentCanScrollPrev, setTournamentCanScrollPrev] = useState(false)
   const [tournamentCanScrollNext, setTournamentCanScrollNext] = useState(false)
+
+  // Jackpots Ready to Drop: sync both rows like one carousel
+  const jackpotsReadyRowRefs = useRef<Array<HTMLDivElement | null>>([])
+  const [jackpotsReadyCanScrollPrev, setJackpotsReadyCanScrollPrev] = useState(false)
+  const [jackpotsReadyCanScrollNext, setJackpotsReadyCanScrollNext] = useState(false)
+
+  const updateJackpotsReadyScrollState = useCallback(() => {
+    const firstRow = jackpotsReadyRowRefs.current[0]
+    if (!firstRow) {
+      setJackpotsReadyCanScrollPrev(false)
+      setJackpotsReadyCanScrollNext(false)
+      return
+    }
+
+    const maxScroll = Math.max(0, firstRow.scrollWidth - firstRow.clientWidth)
+    setJackpotsReadyCanScrollPrev(firstRow.scrollLeft > 2)
+    setJackpotsReadyCanScrollNext(firstRow.scrollLeft < maxScroll - 2)
+  }, [])
+
+  const syncJackpotsReadyRows = useCallback((sourceIndex: number, scrollLeft: number) => {
+    jackpotsReadyRowRefs.current.forEach((row, rowIndex) => {
+      if (!row || rowIndex === sourceIndex) return
+      row.scrollLeft = scrollLeft
+    })
+  }, [])
+
+  const onJackpotsReadyRowScroll = useCallback((sourceIndex: number, scrollLeft: number) => {
+    syncJackpotsReadyRows(sourceIndex, scrollLeft)
+    updateJackpotsReadyScrollState()
+  }, [syncJackpotsReadyRows, updateJackpotsReadyScrollState])
+
+  const scrollJackpotsReadyRows = useCallback((direction: 'left' | 'right', isMobileView: boolean) => {
+    const step = (132 + (isMobileView ? 8 : 12)) * (isMobileView ? 4 : 8)
+    const delta = direction === 'left' ? -step : step
+    jackpotsReadyRowRefs.current.forEach((row) => {
+      row?.scrollBy({ left: delta, behavior: 'smooth' })
+    })
+    setTimeout(updateJackpotsReadyScrollState, 260)
+  }, [updateJackpotsReadyScrollState])
+
+  useEffect(() => {
+    const onResize = () => updateJackpotsReadyScrollState()
+    window.addEventListener('resize', onResize)
+    const t = setTimeout(updateJackpotsReadyScrollState, 0)
+    return () => {
+      clearTimeout(t)
+      window.removeEventListener('resize', onResize)
+    }
+  }, [updateJackpotsReadyScrollState])
   
   // Set up carousel scroll state watchers
   useEffect(() => {
@@ -8402,22 +8356,22 @@ function NavTestPageContent() {
     event: string
     user: string
     time: string
-    betAmount: string
+    multiplier: string
     winAmount?: string
     gameImage?: string
   }>>([])
 
   const casinoJackpotWinnersData = [
-    { id: 'jp1', user: 'LuckyBet', game: 'Mega Moolah', amount: '$250,000.00', time: '2 hrs ago', gameImage: squareTileImages[3] },
-    { id: 'jp2', user: 'Hidden', game: 'Sweet Bonanza', amount: '$87,432.50', time: '5 hrs ago', gameImage: squareTileImages[7] },
-    { id: 'jp3', user: 'CasinoKing', game: 'Gates of Olympus', amount: '$45,120.00', time: '8 hrs ago', gameImage: squareTileImages[1] },
-    { id: 'jp4', user: 'Hidden', game: 'Book of Dead', amount: '$32,750.00', time: '12 hrs ago', gameImage: squareTileImages[1] },
-    { id: 'jp5', user: 'GamerX', game: 'Starburst', amount: '$28,900.75', time: '1 day ago', gameImage: squareTileImages[0] },
-    { id: 'jp6', user: 'Hidden', game: "Gonzo's Quest", amount: '$19,450.00', time: '1 day ago', gameImage: squareTileImages[2] },
-    { id: 'jp7', user: 'HighRoller', game: 'Razor Shark', amount: '$15,230.00', time: '2 days ago', gameImage: squareTileImages[5] },
-    { id: 'jp8', user: 'Hidden', game: 'Big Bass Bonanza', amount: '$12,800.50', time: '2 days ago', gameImage: squareTileImages[6] },
-    { id: 'jp9', user: 'Player1', game: 'Dead or Alive', amount: '$9,500.00', time: '3 days ago', gameImage: squareTileImages[4] },
-    { id: 'jp10', user: 'Hidden', game: 'Mega Moolah', amount: '$8,120.25', time: '3 days ago', gameImage: squareTileImages[3] },
+    { id: 'jp1', user: 'LuckyBet', game: 'Mega Moolah', amount: '€250,000.00', time: '2 hrs ago', gameImage: squareTileImages[3] },
+    { id: 'jp2', user: 'Hidden', game: 'Sweet Bonanza', amount: '€87,432.50', time: '5 hrs ago', gameImage: squareTileImages[7] },
+    { id: 'jp3', user: 'CasinoKing', game: 'Gates of Olympus', amount: '€45,120.00', time: '8 hrs ago', gameImage: squareTileImages[1] },
+    { id: 'jp4', user: 'Hidden', game: 'Book of Dead', amount: '€32,750.00', time: '12 hrs ago', gameImage: squareTileImages[1] },
+    { id: 'jp5', user: 'GamerX', game: 'Starburst', amount: '€28,900.75', time: '1 day ago', gameImage: squareTileImages[0] },
+    { id: 'jp6', user: 'Hidden', game: "Gonzo's Quest", amount: '€19,450.00', time: '1 day ago', gameImage: squareTileImages[2] },
+    { id: 'jp7', user: 'HighRoller', game: 'Razor Shark', amount: '€15,230.00', time: '2 days ago', gameImage: squareTileImages[5] },
+    { id: 'jp8', user: 'Hidden', game: 'Big Bass Bonanza', amount: '€12,800.50', time: '2 days ago', gameImage: squareTileImages[6] },
+    { id: 'jp9', user: 'Player1', game: 'Dead or Alive', amount: '€9,500.00', time: '3 days ago', gameImage: squareTileImages[4] },
+    { id: 'jp10', user: 'Hidden', game: 'Mega Moolah', amount: '€8,120.25', time: '3 days ago', gameImage: squareTileImages[3] },
   ]
 
   const generateCasinoActivity = useCallback(() => {
@@ -8445,9 +8399,9 @@ function NavTestPageContent() {
       ? (Math.random() * 15000 + 1000).toFixed(2)
       : (Math.random() * 5000 + 10).toFixed(2)
 
-    const winAmount = Math.random() > 0.4
-      ? (parseFloat(betAmount) * (Math.random() * 5 + 1)).toFixed(2)
-      : undefined
+    const multiplier = (Math.random() * 19.5 + 0.1).toFixed(2)
+    const payoutRaw = parseFloat(betAmount) * (parseFloat(multiplier) - 1)
+    const payoutAbs = Math.abs(payoutRaw).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 
     return {
       id: `casino-${Date.now()}-${Math.random()}`,
@@ -8455,8 +8409,8 @@ function NavTestPageContent() {
       event: eventData.name,
       user: displayUser,
       time: timeStr,
-      betAmount: `$${parseFloat(betAmount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-      winAmount: winAmount ? `$${parseFloat(winAmount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : undefined,
+      multiplier: `${multiplier}×`,
+      winAmount: `${payoutRaw < 0 ? '-' : ''}€${payoutAbs}`,
       gameImage: eventData.image
     }
   }, [casinoActivityTab])
@@ -8511,8 +8465,6 @@ function NavTestPageContent() {
   const [gameImageLoaded, setGameImageLoaded] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [isLandscape, setIsLandscape] = useState(false)
-  const [showJackpot, setShowJackpot] = useState(false)
-  const jackpotTimerRef = useRef<NodeJS.Timeout | null>(null)
   const gameLauncherMenuRef = useRef<HTMLDivElement>(null)
   const gameImageRef = useRef<HTMLDivElement>(null)
 
@@ -8590,11 +8542,6 @@ function NavTestPageContent() {
       setGameLauncherMenuOpen(false)
       setGameImageLoaded(false)
       setIsFullscreen(false)
-      setShowJackpot(false)
-      if (jackpotTimerRef.current) {
-        clearTimeout(jackpotTimerRef.current)
-        jackpotTimerRef.current = null
-      }
       // Animate any pending balance (e.g. jackpot winnings) now that launcher is closed
       const pendingAmount = pendingBalanceRef.current
       if (pendingAmount > 0) {
@@ -8625,33 +8572,8 @@ function NavTestPageContent() {
       // Reset image loaded state when new game is selected
       setGameImageLoaded(false)
       setIsFullscreen(false)
-      setShowJackpot(false)
     }
   }, [selectedGame])
-
-  // Jackpot overlay — show 10 seconds after game image loads
-  useEffect(() => {
-    if (gameImageLoaded && selectedGame) {
-      jackpotTimerRef.current = setTimeout(() => {
-        setShowJackpot(true)
-      }, 5000)
-    }
-    return () => {
-      if (jackpotTimerRef.current) {
-        clearTimeout(jackpotTimerRef.current)
-        jackpotTimerRef.current = null
-      }
-    }
-  }, [gameImageLoaded, selectedGame])
-
-  // Auto-hide jackpot overlay 5s after it appears.
-  useEffect(() => {
-    if (!showJackpot) return
-    const hideTimer = setTimeout(() => {
-      setShowJackpot(false)
-    }, 5000)
-    return () => clearTimeout(hideTimer)
-  }, [showJackpot])
   
   // Handle fullscreen change events
   useEffect(() => {
@@ -8991,7 +8913,7 @@ function NavTestPageContent() {
   // Top featured casino items (square icon style like poker)
   const casinoTopItems = [
     { icon: IconHeart, label: 'My Favorites' },
-    { icon: IconRefresh, label: 'Last Game Played', gameName: 'Golden Fortune' },
+    { icon: IconRefresh, label: 'Continue Playing' },
   ]
 
   const sidebarMenuItems = [
@@ -9008,6 +8930,8 @@ function NavTestPageContent() {
   // Bottom pinned items — same across all sidebars
   const sidebarBottomItems = [
     { icon: IconLifebuoy, label: 'Support' },
+    { icon: IconCrown, label: 'Loyalty Club' },
+    { icon: IconGift, label: 'Rewards' },
     ...(isMobile ? [{ icon: IconWorld, label: 'Language' }] : []),
   ]
 
@@ -9071,39 +8995,47 @@ function NavTestPageContent() {
           <div className="px-3 py-2 flex items-center gap-2 overflow-x-auto scrollbar-hide border-b border-white/10">
                 {[
                   { label: 'Home', product: null, onClick: () => { trackNav('home', 'Home'); trackPageView('home', 'Home'); setShowSports(false); setShowVipRewards(false); setShowPoker(false); setQuickLinksOpen(false); } },
-                  { label: 'Sports', product: 'sports' as const, onClick: () => { trackNav('sports', 'Sports'); trackPageView('sports', 'Sports'); setShowSports(true); setShowVipRewards(false); setShowPoker(false); setShowAllGames(false); setSelectedCategory(''); setSelectedVendor(''); setQuickLinksOpen(false); window.scrollTo(0, 0); } },
-                  { label: 'Live Betting', product: 'liveBetting' as const, onClick: () => { trackNav('live-betting', 'Live Betting'); trackPageView('live-betting', 'Live Betting'); window.location.href = '/live-betting'; setQuickLinksOpen(false); } },
                   { label: 'Casino', product: 'casino' as const, onClick: () => { trackNav('casino', 'Casino'); trackPageView('casino', 'Casino'); setShowSports(false); setShowVipRewards(false); setShowPoker(false); setActiveSubNav('Lobby'); setQuickLinksOpen(false); } },
                   { label: 'Live Casino', product: 'liveCasino' as const, onClick: () => { trackNav('casino', 'Live Casino'); trackPageView('live-casino', 'Live Casino'); setShowSports(false); setShowVipRewards(false); setShowPoker(false); setActiveSubNav('Live Casino'); setQuickLinksOpen(false); } },
+                  { label: 'Sports', product: 'sports' as const, onClick: () => { trackNav('sports', 'Sports'); trackPageView('sports', 'Sports'); setShowSports(true); setShowVipRewards(false); setShowPoker(false); setShowAllGames(false); setSelectedCategory(''); setSelectedVendor(''); setQuickLinksOpen(false); window.scrollTo(0, 0); } },
+                  { label: 'Live Betting', product: 'liveBetting' as const, onClick: () => { trackNav('live-betting', 'Live Betting'); trackPageView('live-betting', 'Live Betting'); window.location.href = '/live-betting'; setQuickLinksOpen(false); } },
                   { label: 'Poker', product: 'poker' as const, onClick: () => { trackNav('poker', 'Poker'); setShowPoker(true); setShowSports(false); setShowVipRewards(false); setQuickLinksOpen(false); } },
                   { label: 'VIP Rewards', product: 'vipRewards' as const, onClick: () => { trackNav('vip-rewards', 'VIP Rewards'); setShowVipRewards(true); setShowSports(false); setShowPoker(false); setQuickLinksOpen(false); window.scrollTo(0, 0); } },
                   { label: 'Other', product: null, onClick: () => { setQuickLinksOpen(false); } },
                 ].filter(item => !item.product || visibleProducts[item.product]).map((item) => (
+                  (() => {
+                    const isLocked = lockedMainNavLabels.has(item.label)
+                    return (
                   <button
                     key={item.label}
                     onClick={(e) => {
                       e.stopPropagation()
+                      if (isLocked) return
                       setLoadingQuickLink(item.label)
                       item.onClick()
                       setTimeout(() => setLoadingQuickLink(null), 1200)
                     }}
                     className={cn(
-                      "flex-shrink-0 px-3 py-1.5 rounded-small text-xs font-medium transition-colors relative",
+                      "flex-shrink-0 px-3 py-1.5 rounded-small text-xs font-medium transition-colors relative inline-flex items-center gap-1.5",
                       (item.label === 'Casino' && !showSports && !showVipRewards && !showPoker) ||
                       (item.label === 'Sports' && showSports) ||
                       (item.label === 'Poker' && showPoker) ||
                       (item.label === 'VIP Rewards' && showVipRewards)
                         ? "text-white"
-                        : "text-white/70 hover:text-white"
+                        : "text-white/70 hover:text-white",
+                      isLocked && "text-white/35 hover:text-white/35 cursor-not-allowed"
                     )}
+                    aria-disabled={isLocked}
                   >
                     <span className={cn("transition-opacity duration-150", loadingQuickLink === item.label ? "opacity-0" : "opacity-100")}>{item.label}</span>
+                    {isLocked && <IconLock className="w-3 h-3 text-white/35" />}
                     {loadingQuickLink === item.label && (
                       <span className="absolute inset-0 flex items-center justify-center">
                         <IconLoader2 className="w-3.5 h-3.5 text-white animate-spin" />
                       </span>
                     )}
                   </button>
+                )})()
                 ))}
           </div>
         </motion.div>
@@ -9170,7 +9102,11 @@ function NavTestPageContent() {
                   router.push('/')
                 }}
               >
-                {currentBrand.logo}
+                <img
+                  src="/logos/BHGL_logo-1773311608241-DDbBBO6v.png"
+                  alt="Betheat"
+                  className="w-full h-full object-contain"
+                />
               </div>
               </>
             )}
@@ -9196,18 +9132,20 @@ function NavTestPageContent() {
                     <div className="w-px h-5 bg-white/20" />
                   </div>
                   {visibleProducts.sports && (
-                  <SidebarMenuItem>
+                  <SidebarMenuItem className="order-3">
                     <SidebarMenuButton
                       className={cn(
                         "h-10 min-w-[80px] px-4 py-2 rounded-small text-sm font-medium justify-center relative overflow-visible data-[active=true]:bg-transparent [&>span]:!flex-initial",
                         "hover:bg-white/5 hover:text-white transition-colors",
-                        "text-white/70 cursor-pointer",
+                        "text-white/70",
+                        lockedMainNavLabels.has('Sports') ? "opacity-45 cursor-not-allowed hover:text-white/70 hover:bg-transparent" : "cursor-pointer",
                         showSports && "!text-white"
                       )}
                       style={{ pointerEvents: 'auto' } as React.CSSProperties}
                       onClick={(e) => {
                         e.preventDefault()
                         e.stopPropagation()
+                        if (lockedMainNavLabels.has('Sports')) return
                         setShowSports(true)
                         setShowVipRewards(false)
                         setShowPoker(false)
@@ -9230,33 +9168,35 @@ function NavTestPageContent() {
                           transition={{ type: "spring", stiffness: 400, damping: 40 }}
                         />
                       )}
-                      <span className="relative z-10">Sports</span>
+                      <span className="relative z-10 inline-flex items-center gap-1.5">Sports{lockedMainNavLabels.has('Sports') && <IconLock className="w-3 h-3 text-white/45" />}</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   )}
                   
                   {visibleProducts.liveBetting && (
-                  <SidebarMenuItem>
+                  <SidebarMenuItem className="order-4">
                     <SidebarMenuButton
                       className={cn(
                         "h-10 min-w-[100px] px-4 py-2 rounded-small text-sm font-medium justify-center",
                         "hover:bg-white/5 hover:text-white transition-colors",
                         "data-[active=true]:bg-white/10 data-[active=true]:text-white",
-                        "text-white/70 active:bg-white/10 cursor-pointer"
+                        "text-white/70 active:bg-white/10",
+                        lockedMainNavLabels.has('Live Betting') ? "opacity-45 cursor-not-allowed hover:text-white/70 hover:bg-transparent" : "cursor-pointer"
                       )}
                       onClick={(e) => {
                         e.preventDefault()
                         e.stopPropagation()
+                        if (lockedMainNavLabels.has('Live Betting')) return
                         window.location.href = '/live-betting'
                       }}
                     >
-                      Live Betting
+                      <span className="inline-flex items-center gap-1.5">Live Betting{lockedMainNavLabels.has('Live Betting') && <IconLock className="w-3 h-3 text-white/45" />}</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   )}
                   
                   {visibleProducts.casino && (
-                  <SidebarMenuItem>
+                  <SidebarMenuItem className="order-1">
                     <SidebarMenuButton
                       className={cn(
                         "h-10 min-w-[80px] px-4 py-2 rounded-small text-sm font-medium justify-center relative overflow-visible data-[active=true]:bg-transparent [&>span]:!flex-initial",
@@ -9297,7 +9237,7 @@ function NavTestPageContent() {
                   )}
                   
                   {visibleProducts.liveCasino && (
-                  <SidebarMenuItem>
+                  <SidebarMenuItem className="order-2">
                     <SidebarMenuButton
                       className={cn(
                         "h-10 min-w-[100px] px-4 py-2 rounded-small text-sm font-medium justify-center relative overflow-visible data-[active=true]:bg-transparent [&>span]:!flex-initial",
@@ -9339,7 +9279,7 @@ function NavTestPageContent() {
                   )}
                   
                   {visibleProducts.poker && (
-                  <SidebarMenuItem>
+                  <SidebarMenuItem className="order-6">
                     <SidebarMenuButton
                       className={cn(
                         "h-10 min-w-[80px] px-4 py-2 rounded-small text-sm font-medium justify-center relative overflow-visible data-[active=true]:bg-transparent [&>span]:!flex-initial",
@@ -9376,7 +9316,7 @@ function NavTestPageContent() {
                   )}
                   
                   {visibleProducts.vipRewards && (
-                  <SidebarMenuItem>
+                  <SidebarMenuItem className="order-5">
                     <SidebarMenuButton
                       className={cn(
                         "h-10 min-w-[100px] px-4 py-2 rounded-small text-sm font-medium justify-center relative overflow-visible data-[active=true]:bg-transparent [&>span]:!flex-initial",
@@ -9473,12 +9413,12 @@ function NavTestPageContent() {
               }}
               className={cn(
                 "grid items-center rounded-small transition-colors group relative",
-                "border border-white/10 bg-[#141920]/90 hover:bg-[#1a202b]/95",
-                "active:bg-[#1f2834]",
+                "border border-white/10 bg-transparent hover:bg-transparent",
+                "active:bg-transparent",
                 accountDrawerOpen && "text-white",
                 isMobile
-                  ? "grid-cols-[20px_minmax(0,1fr)_20px] gap-1.5 px-2 py-1.5 h-9"
-                  : "grid-cols-[24px_minmax(0,1fr)_24px] gap-2 px-2.5 py-1.5 h-10"
+                  ? "grid-cols-[20px_minmax(0,1fr)] gap-1.5 px-2 py-1.5 h-9"
+                  : "grid-cols-[24px_minmax(0,1fr)] gap-2 px-2.5 py-1.5 h-10"
               )}
               style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer' }}
             >
@@ -9489,7 +9429,7 @@ function NavTestPageContent() {
                 "border border-white/20 group-hover:border-white/40 transition-colors",
                 isMobile ? "h-5 w-5" : "h-6 w-6"
               )}>
-                <AvatarFallback className="bg-white/10 text-white flex items-center justify-center font-semibold tracking-tight" style={{ fontSize: isMobile ? '9px' : '10px' }}>
+                <AvatarFallback className="bg-transparent text-white flex items-center justify-center font-semibold tracking-tight" style={{ fontSize: isMobile ? '9px' : '10px' }}>
                   <IconUser className={cn(isMobile ? "h-2.5 w-2.5" : "h-3 w-3")} />
                 </AvatarFallback>
               </Avatar>
@@ -9503,7 +9443,6 @@ function NavTestPageContent() {
                 <span>€</span>
                 <NumberFlow value={displayBalance} format={{ notation: 'standard', minimumFractionDigits: 2, maximumFractionDigits: 2 }} />
               </div>
-              <div className={cn("shrink-0", isMobile ? "w-5 h-5" : "w-6 h-6")} aria-hidden="true" />
             </Button>
 
             {isMobile && (
@@ -10164,13 +10103,14 @@ function NavTestPageContent() {
                 >
                   {[
                     { label: 'Home', page: 'home' as const },
-                    ...(visibleProducts.sports ? [{ label: 'Sports', page: 'sports' as const }] : []),
-                    ...(visibleProducts.liveBetting ? [{ label: 'Live Betting', page: 'liveBetting' as const }] : []),
                     ...(visibleProducts.casino ? [{ label: 'Casino', page: 'casino' as const }] : []),
                     ...(visibleProducts.liveCasino ? [{ label: 'Live Casino', page: 'liveCasino' as const }] : []),
+                    ...(visibleProducts.sports ? [{ label: 'Sports', page: 'sports' as const }] : []),
+                    ...(visibleProducts.liveBetting ? [{ label: 'Live Betting', page: 'liveBetting' as const }] : []),
                     ...(visibleProducts.poker ? [{ label: 'Poker', page: 'poker' as const }] : []),
                     ...(visibleProducts.vipRewards ? [{ label: 'VIP Rewards', page: 'vipRewards' as const }] : []),
                   ].map((item) => {
+                    const isLocked = lockedMainNavLabels.has(item.label)
                     const isCurrentPage =
                       (item.page === 'sports' && showSports) ||
                       (item.page === 'liveCasino' && !showSports && !showVipRewards && !showPoker && activeSubNav === 'Live Casino') ||
@@ -10181,6 +10121,7 @@ function NavTestPageContent() {
                       <button
                         key={item.label}
                         onClick={() => {
+                          if (isLocked) return
                           setOpenMobile(false)
                           if (item.page === 'sports') {
                             setShowSports(true)
@@ -10227,13 +10168,16 @@ function NavTestPageContent() {
                           }
                         }}
                         className={cn(
-                          "flex-shrink-0 px-3 py-2.5 text-[13px] whitespace-nowrap transition-colors relative",
+                          "flex-shrink-0 px-3 py-2.5 text-[13px] whitespace-nowrap transition-colors relative inline-flex items-center gap-1.5",
                           isCurrentPage 
                             ? "text-white font-bold" 
-                            : "text-white/35 font-medium hover:text-white/60"
+                            : "text-white/35 font-medium hover:text-white/60",
+                          isLocked && "text-white/20 hover:text-white/20 cursor-not-allowed"
                         )}
+                        aria-disabled={isLocked}
                       >
-                        {item.label}
+                        <span>{item.label}</span>
+                        {isLocked && <IconLock className="w-3 h-3 text-white/30" />}
                         {isCurrentPage && (
                           <span className="absolute bottom-0 left-3 right-3 h-[2px] rounded-full" style={{ backgroundColor: 'var(--ds-primary, #ee3536)' }} />
                         )}
@@ -10320,7 +10264,7 @@ function NavTestPageContent() {
                                         sidebarState === 'collapsed' && "h-10 w-10 mx-auto p-0 justify-center"
                                       )}
                                     >
-                                      <div className="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0 bg-white/10">
+                                      <div className="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0 bg-white/[0.045] border border-white/[0.08]">
                                         <Icon strokeWidth={1.5} className="w-4 h-4" />
                                       </div>
                                       <div className={cn("flex flex-col leading-tight min-w-0", sidebarState === 'collapsed' && "hidden")}>
@@ -10399,12 +10343,14 @@ function NavTestPageContent() {
                       </SidebarGroupContent>
                     </SidebarGroup>
                     <div className="flex-1" />
-                    <Separator className="bg-white/10 mx-2" />
+                    <Separator className="bg-white/[0.04] mx-2" />
                     <SidebarGroup>
                       <SidebarGroupContent>
                         <SidebarMenu>
                           {[
                             { icon: IconLifebuoy, label: 'Support' },
+                            { icon: IconCrown, label: 'Loyalty Club' },
+                            { icon: IconGift, label: 'Rewards' },
                             ...(isMobile ? [{ icon: IconWorld, label: 'Language' }] : []),
                           ].map((item, index) => {
                             const Icon = item.icon
@@ -10501,7 +10447,9 @@ function NavTestPageContent() {
                     <SidebarMenu>
                       {casinoTopItems.map((item, index) => {
                         const Icon = item.icon
-                        const isActive = (item.label === 'My Favorites' && selectedCategory === 'Favorites')
+                        const isActive =
+                          (item.label === 'My Favorites' && selectedCategory === 'Favorites') ||
+                          (item.label === 'Continue Playing' && selectedCategory === 'Continue Playing')
                         return (
                           <SidebarMenuItem key={index}>
                             <Tooltip>
@@ -10510,7 +10458,7 @@ function NavTestPageContent() {
                                   isActive={isActive}
                                   data-tour-target={item.label === 'Play Random'
                                     ? 'casino-play-random'
-                                    : item.label === 'Last Game Played'
+                                    : item.label === 'Continue Playing'
                                       ? 'casino-last-played'
                                       : undefined}
                                   onClick={(e) => {
@@ -10534,14 +10482,13 @@ function NavTestPageContent() {
                                         provider: 'Evolution Gaming',
                                         features: ['Random Pick!', 'Surprise Game Feature']
                                       })
-                                    } else if (item.label === 'Last Game Played') {
-                                      // Launch last played game
-                                      setSelectedGame({
-                                        title: 'Golden Fortune',
-                                        image: '/banners/casino/casino_banner1.svg',
-                                        provider: 'Dragon Gaming',
-                                        features: ['Exploding Wilds Every 10 Spins!', 'Free Spins with Up to 10 Wilds on Every Spin!']
-                                      })
+                                    } else if (item.label === 'Continue Playing') {
+                                      // Open a wallpaper-style grid with recent games.
+                                      setActiveSubNav('Lobby')
+                                      setSelectedCategory('Continue Playing')
+                                      setSelectedVendor('')
+                                      setShowAllGames(true)
+                                      setShowSports(false)
                                     }
                                   }}
                                   className={cn(
@@ -10551,7 +10498,12 @@ function NavTestPageContent() {
                                   )}
                                   style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)' } : undefined}
                                 >
-                                  <div className={cn("w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0", isActive ? "bg-white/20" : "bg-white/10")}>
+                                  <div
+                                    className={cn(
+                                      "w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0",
+                                      isActive ? "bg-white/10" : "bg-white/[0.045]"
+                                    )}
+                                  >
                                     {Icon && <Icon strokeWidth={1.5} className="w-4 h-4" />}
                                   </div>
                                   {(sidebarState !== 'collapsed' || isMobile) && (
@@ -10580,7 +10532,7 @@ function NavTestPageContent() {
                   </SidebarGroupContent>
                 </SidebarGroup>
 
-                <Separator className="bg-white/10 mx-2" />
+                <Separator className="bg-white/[0.04] mx-2" />
 
                 {/* Regular casino menu items */}
                 <SidebarGroup>
@@ -10699,7 +10651,7 @@ function NavTestPageContent() {
                 {/* Spacer to push bottom items down */}
                 <div className="flex-1" />
 
-                <Separator className="bg-white/10 mx-2" />
+                <Separator className="bg-white/[0.04] mx-2" />
 
                 {/* Bottom section — Support */}
                 <SidebarGroup>
@@ -10767,6 +10719,10 @@ function NavTestPageContent() {
                                     if (isMobile) setOpenMobile(false)
                                     if (item.label === 'Support') {
                                       console.log('Support clicked')
+                                    } else if (item.label === 'Loyalty Club') {
+                                      console.log('Loyalty Club clicked')
+                                    } else if (item.label === 'Rewards') {
+                                      console.log('Rewards clicked')
                                     }
                                   }}
                                   className={cn(
@@ -10878,14 +10834,6 @@ function NavTestPageContent() {
                     {/* Icon Tabs - Left Side (Desktop Only) */}
                     {!isMobile && (
                       <div className="flex-shrink-0 flex items-center gap-1">
-                        <ChatNavToggle
-                          onSearch={() => {
-                            setSearchOverlayOpen(true)
-                          }}
-                          placeholder="Search games, teams, promotions..."
-                          expandTo="right"
-                          pushSiblingsOnExpand
-                        />
                         <div className="bg-transparent p-0 h-auto gap-1 rounded-3xl border-0 flex items-center transition-colors duration-300">
                           <button
                             onClick={() => {
@@ -11781,7 +11729,8 @@ function NavTestPageContent() {
                           // Generate game data with sortable properties - memoized to prevent regeneration on scroll
                           const gameNames = ['Gold Nugget Rush', 'Mega Fortune', 'Starburst', 'Book of Dead', 'Gonzo\'s Quest', 'Dead or Alive', 'Immortal Romance', 'Thunderstruck', 'Avalon', 'Blood Suckers', 'Mega Moolah', 'Bonanza', 'Razor Shark', 'Sweet Bonanza', 'Gates of Olympus', 'Big Bass Bonanza', 'The Dog House', 'Wolf Gold', 'Fire Strike', 'Chilli Heat']
                           // Increase total games to ensure we always have enough tiles to fill the grid (8 columns max, so generate enough for many full rows)
-                          const totalGames = 240
+                          const isContinuePlayingPage = selectedCategory === 'Continue Playing'
+                          const totalGames = isContinuePlayingPage ? 10 : 240
                           
                           // Seeded random function for consistent values
                           const seededRandom = (seed: number) => {
@@ -11806,25 +11755,27 @@ function NavTestPageContent() {
                           
                           // Sort based on selected filter
                           let sortedGames = [...games]
-                          switch (gameSortFilter) {
-                            case 'popular':
-                              sortedGames.sort((a, b) => b.popularity - a.popularity)
-                              break
-                            case 'hot':
-                              sortedGames.sort((a, b) => b.hotScore - a.hotScore)
-                              break
-                            case 'latest':
-                              sortedGames.sort((a, b) => b.dateAdded.getTime() - a.dateAdded.getTime())
-                              break
-                            case 'oldest':
-                              sortedGames.sort((a, b) => a.dateAdded.getTime() - b.dateAdded.getTime())
-                              break
-                            case 'a-z':
-                              sortedGames.sort((a, b) => a.nameLower.localeCompare(b.nameLower))
-                              break
-                            case 'z-a':
-                              sortedGames.sort((a, b) => b.nameLower.localeCompare(a.nameLower))
-                              break
+                          if (!isContinuePlayingPage) {
+                            switch (gameSortFilter) {
+                              case 'popular':
+                                sortedGames.sort((a, b) => b.popularity - a.popularity)
+                                break
+                              case 'hot':
+                                sortedGames.sort((a, b) => b.hotScore - a.hotScore)
+                                break
+                              case 'latest':
+                                sortedGames.sort((a, b) => b.dateAdded.getTime() - a.dateAdded.getTime())
+                                break
+                              case 'oldest':
+                                sortedGames.sort((a, b) => a.dateAdded.getTime() - b.dateAdded.getTime())
+                                break
+                              case 'a-z':
+                                sortedGames.sort((a, b) => a.nameLower.localeCompare(b.nameLower))
+                                break
+                              case 'z-a':
+                                sortedGames.sort((a, b) => b.nameLower.localeCompare(a.nameLower))
+                                break
+                            }
                           }
                           
                           const categoryKey = selectedCategory || activeSubNav
@@ -11851,7 +11802,7 @@ function NavTestPageContent() {
                           const itemsInLastRow = totalTiles % maxCols
                           const skeletonCount = itemsInLastRow > 0 ? maxCols - itemsInLastRow : 0
                           const skeletonBoxes = Array.from({ length: skeletonCount }).map((_, index) => (
-                            <div key={`skeleton-${categoryKey}-${index}`} className="w-full aspect-[180/236]">
+                            <div key={`skeleton-${categoryKey}-${index}`} className="w-[132px] h-[174px]">
                               <Skeleton 
                                 className="w-full h-full rounded-small bg-white/10 dark:bg-white/10" 
                               />
@@ -11861,7 +11812,7 @@ function NavTestPageContent() {
                           // On mobile, use memoized static div to prevent re-renders during scroll
                           if (isMobile) {
                             return (
-                              <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 3xl:grid-cols-8 gap-3 px-3 md:gap-4 md:px-6" style={{ willChange: 'auto' }}>
+                              <div className="grid [grid-template-columns:repeat(auto-fill,minmax(132px,132px))] justify-start gap-3 px-3 md:gap-4 md:px-6" style={{ willChange: 'auto' }}>
                                 {gameTiles}
                                 {skeletonBoxes}
                         </div>
@@ -11870,7 +11821,7 @@ function NavTestPageContent() {
                           
                           return (
                             <div 
-                              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 3xl:grid-cols-8 gap-4 px-6"
+                              className="grid [grid-template-columns:repeat(auto-fill,minmax(132px,132px))] justify-start gap-4 px-6"
                             >
                               {gameTiles}
                               {skeletonBoxes}
@@ -11972,7 +11923,7 @@ function NavTestPageContent() {
                                         index={index}
                                         brandPrimary={brandPrimary}
                                         seats={{ occupied: bjSeats[index % bjSeats.length].o, total: bjSeats[index % bjSeats.length].t }}
-                                        className="w-[158px] h-[208px] md:w-[180px] md:h-[236px]"
+                                        className="w-[132px] h-[174px] md:w-[132px] md:h-[174px]"
                                         onClick={() => {
                                           setSelectedGame({
                                             title: bjNames[index % bjNames.length],
@@ -12066,7 +12017,7 @@ function NavTestPageContent() {
                                         bettingRange={rouletteLimits[index % rouletteLimits.length]}
                                         index={index}
                                         brandPrimary={brandPrimary}
-                                        className="w-[158px] h-[208px] md:w-[180px] md:h-[236px]"
+                                        className="w-[132px] h-[174px] md:w-[132px] md:h-[174px]"
                                         onClick={() => {
                                           setSelectedGame({
                                             title: rouletteNames[index % rouletteNames.length],
@@ -12160,7 +12111,7 @@ function NavTestPageContent() {
                                         bettingRange={baccaratLimits[index % baccaratLimits.length]}
                                         index={index}
                                         brandPrimary={brandPrimary}
-                                        className="w-[158px] h-[208px] md:w-[180px] md:h-[236px]"
+                                        className="w-[132px] h-[174px] md:w-[132px] md:h-[174px]"
                                       onClick={() => {
                                         setSelectedGame({
                                             title: baccaratNames[index % baccaratNames.length],
@@ -12257,7 +12208,7 @@ function NavTestPageContent() {
                                         index={index + 30}
                                         brandPrimary={brandPrimary}
                                         seats={type === 'blackjack' || type === 'poker' ? { occupied: 3 + (index % 4), total: 7 } : undefined}
-                                        className="w-[158px] h-[208px] md:w-[180px] md:h-[236px]"
+                                        className="w-[132px] h-[174px] md:w-[132px] md:h-[174px]"
                                       onClick={() => {
                                         setSelectedGame({
                                             title: vipNames[index % vipNames.length],
@@ -12353,7 +12304,7 @@ function NavTestPageContent() {
                                         index={index}
                                         brandPrimary={brandPrimary}
                                         seats={{ occupied: pokerSeats[index % pokerSeats.length].o, total: pokerSeats[index % pokerSeats.length].t }}
-                                        className="w-[158px] h-[208px] md:w-[180px] md:h-[236px]"
+                                        className="w-[132px] h-[174px] md:w-[132px] md:h-[174px]"
                                         onClick={() => {
                                           setSelectedGame({
                                             title: pokerNames[index % pokerNames.length],
@@ -12461,7 +12412,7 @@ function NavTestPageContent() {
                                     )}>
                                       <div 
                                         data-content-item 
-                                        className="w-[158px] h-[208px] md:w-[180px] md:h-[236px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
+                                        className="w-[132px] h-[174px] md:w-[132px] md:h-[174px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
                                         onClick={() => {
                                           setSelectedGame({
                                             title: slotNames[index % slotNames.length],
@@ -12477,7 +12428,7 @@ function NavTestPageContent() {
                                             alt={`Game ${index + 1}`}
                                             fill
                                             className="object-cover group-hover:scale-105 transition-transform duration-300"
-                                            sizes="160px"
+                                            sizes="132px"
                                           />
                                         )}
                                         <GameTagBadge tag={slotTag} vendor={slotVendor} />
@@ -12560,7 +12511,7 @@ function NavTestPageContent() {
                                     )}>
                                       <div 
                                         data-content-item 
-                                        className="w-[158px] h-[208px] md:w-[180px] md:h-[236px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
+                                        className="w-[132px] h-[174px] md:w-[132px] md:h-[174px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
                                         onClick={() => {
                                           const originalGameNames = ['Inferno Rush', 'Heat Blackjack', 'Neon Dice', 'Diamond Blaze', 'Molten Mines', 'Keno Heat', 'Turbo Limbo', 'Ring of Fire', 'High Lo Heat', 'Video Poker Pro']
                                           setSelectedGame({
@@ -12576,7 +12527,7 @@ function NavTestPageContent() {
                                           alt={`${gameNames[index] || `Hot Game ${index + 1}`}`}
                                           fill
                                           className="object-cover group-hover:scale-105 transition-transform duration-300"
-                                          sizes="160px"
+                                          sizes="132px"
                                           onError={(e) => {
                                             e.currentTarget.src = squareTileImages[(index + 1) % squareTileImages.length]
                                           }}
@@ -12673,7 +12624,7 @@ function NavTestPageContent() {
                                         index={index + 10}
                                         brandPrimary={brandPrimary}
                                         seats={{ occupied: bjSeats[index % bjSeats.length].o, total: bjSeats[index % bjSeats.length].t }}
-                                        className="w-[158px] h-[208px] md:w-[180px] md:h-[236px]"
+                                        className="w-[132px] h-[174px] md:w-[132px] md:h-[174px]"
                                         onClick={() => {
                                           setSelectedGame({
                                             title: gameNames[index % gameNames.length],
@@ -12736,12 +12687,15 @@ function NavTestPageContent() {
                           </div>
                         )}
                         
-                        {/* Ready to Drop Section */}
-                        <div className={cn("mb-8", isMobile ? "px-3" : "px-6")}>
+                        {/* Jackpots Ready to Drop Section (moved below Crash Games) */}
+                        {false && <div className={cn("mb-8", isMobile ? "px-3" : "px-6")}>
                           <h2 className="text-lg font-semibold text-black dark:text-white transition-colors duration-300 mb-6">
-                            Ready to Drop
+                            Jackpots Ready to Drop
                           </h2>
 
+                          {(() => {
+                            const tilesPerRow = isMobile ? 9 : 10
+                            return (
                           <div className="space-y-3 md:space-y-4">
                             {Array.from({ length: 3 }).map((_, rowIndex) => (
                               <div
@@ -12749,20 +12703,18 @@ function NavTestPageContent() {
                                 className="flex gap-2 md:gap-3 overflow-x-auto scrollbar-hide pb-1"
                                 style={{ WebkitOverflowScrolling: 'touch' }}
                               >
-                                {Array.from({ length: isMobile ? 9 : 8 }).map((__, tileIndex) => {
-                                  const gameIndex = rowIndex * 8 + tileIndex
+                                {Array.from({ length: tilesPerRow }).map((__, tileIndex) => {
+                                  const gameIndex = rowIndex * tilesPerRow + tileIndex
                                   const imageSrc = squareTileImages[gameIndex % squareTileImages.length]
                                   const jackpotNames = ['Mega Moolah', 'Divine Fortune', 'Book of Jackpots', 'Dragon Gold', 'Treasure Vault', 'Grand Spinner', 'Gates of Olympus', 'Cash Volt']
                                   const title = jackpotNames[gameIndex % jackpotNames.length]
-                                  const jackpotValue = 75000 + ((gameIndex * 17243) % 840000)
-                                  const jackpotTicker = `€${jackpotValue.toLocaleString('de-DE')}`
 
                                   return (
                                     <div
                                       key={`ready-drop-tile-${rowIndex}-${tileIndex}`}
                                       data-content-item
                                       className={cn(
-                                        "w-[158px] h-[208px] md:w-[180px] md:h-[236px] rounded-small bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group border border-white/20 flex-shrink-0",
+                                        "w-[132px] h-[174px] md:w-[132px] md:h-[174px] rounded-small bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group border border-white/20 flex-shrink-0",
                                         rowIndex === 0 && tileIndex === 0 && !isMobile ? "ml-0" : ""
                                       )}
                                       onMouseEnter={(e) => {
@@ -12786,16 +12738,10 @@ function NavTestPageContent() {
                                           alt={`${title} tile`}
                                           fill
                                           className="object-cover group-hover:scale-105 transition-transform duration-300"
-                                          sizes="160px"
+                                          sizes="132px"
                                         />
                                       )}
                                       <GameTagBadge tag={getMetaTag(gameIndex + 80)} vendor={getTileVendor(gameIndex + 80)} />
-                                      <div className="absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-black/80 via-black/55 to-transparent p-2.5 md:p-3">
-                                        <p className="text-[11px] md:text-xs font-semibold text-white truncate">{title}</p>
-                                        <p className="text-[10px] md:text-[11px] text-emerald-300/95 font-semibold tracking-wide">
-                                          Jackpot Ticker: {jackpotTicker}
-                                        </p>
-                                      </div>
                                       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'color-mix(in srgb, white 6%, transparent)' }} />
                                     </div>
                                   )
@@ -12803,31 +12749,36 @@ function NavTestPageContent() {
                               </div>
                             ))}
                           </div>
-                        </div>
+                            )
+                          })()}
+                        </div>}
                         
                         {/* Activity Section */}
                         <div className={cn("mb-8", isMobile ? "px-3" : "px-6")}>
                           <Separator className="mb-6 bg-white/10" />
-                          <h2 className="text-lg font-semibold text-white mb-4">Activity</h2>
                           
                           {/* Tabs */}
-                          <div className="mb-4 overflow-x-auto scrollbar-hide" style={{ WebkitOverflowScrolling: 'touch' }}>
-                            <div className="p-0.5 h-auto gap-1 rounded-3xl border border-white/10 backdrop-blur-xl inline-flex w-max bg-[var(--ds-sidebar-bg,#121417)]/90">
-                              {['All Bets', 'Jackpot Winners', 'High Rollers'].map((tab) => (
+                          <div className="mb-4 overflow-x-auto scrollbar-hide pb-1" style={{ WebkitOverflowScrolling: 'touch' }}>
+                            <div className="h-auto gap-1 inline-flex w-max">
+                              {[
+                                { value: 'All Bets', label: 'Activity' },
+                                { value: 'Jackpot Winners', label: 'Jackpot Winners' },
+                                { value: 'High Rollers', label: 'High Rollers' },
+                              ].map((tab) => (
                                 <button
-                                  key={tab}
-                                  onClick={() => setCasinoActivityTab(tab as 'All Bets' | 'Jackpot Winners' | 'High Rollers')}
+                                  key={tab.value}
+                                  onClick={() => setCasinoActivityTab(tab.value as 'All Bets' | 'Jackpot Winners' | 'High Rollers')}
                                   className={cn(
-                                    "relative px-4 py-1 h-9 text-xs font-medium rounded-2xl transition-all duration-300 whitespace-nowrap flex-shrink-0",
-                                    casinoActivityTab === tab
+                                    "relative px-4 py-1 h-9 text-xs font-medium rounded-none transition-colors duration-300 whitespace-nowrap flex-shrink-0",
+                                    casinoActivityTab === tab.value
                                       ? "text-white"
-                                      : "text-white/65 hover:text-white hover:bg-white/5 bg-transparent"
+                                      : "text-white/65 hover:text-white bg-transparent"
                                   )}
                                 >
-                                  {casinoActivityTab === tab && (
+                                  {casinoActivityTab === tab.value && (
                                     <motion.div
-                                      layoutId="casinoActivityTab"
-                                      className="absolute inset-0 rounded-small -z-10"
+                                      layoutId="casinoActivityUnderline"
+                                      className="absolute left-3 right-3 bottom-0 h-[2px] rounded-full"
                                       style={{
                                         backgroundImage: 'var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%))',
                                       }}
@@ -12839,7 +12790,7 @@ function NavTestPageContent() {
                                       }}
                                     />
                                   )}
-                                  <span className="relative z-10 whitespace-nowrap">{tab}</span>
+                                  <span className="relative z-10 whitespace-nowrap">{tab.label}</span>
                                 </button>
                               ))}
                             </div>
@@ -12928,8 +12879,8 @@ function NavTestPageContent() {
                                         <TableHead className="text-white/70 font-medium text-xs">Game</TableHead>
                                         <TableHead className="text-white/70 font-medium text-xs">User</TableHead>
                                         <TableHead className="text-white/70 font-medium text-xs">Time</TableHead>
-                                        <TableHead className="text-white/70 font-medium text-xs">Bet Amount</TableHead>
-                                        <TableHead className="text-white/70 font-medium text-xs">Win Amount</TableHead>
+                                        <TableHead className="text-white/70 font-medium text-xs">Multiplier</TableHead>
+                                        <TableHead className="text-white/70 font-medium text-xs">Payout</TableHead>
                                       </TableRow>
                                     </TableHeader>
                                     <TableBody>
@@ -12991,17 +12942,15 @@ function NavTestPageContent() {
                                               <span className="text-white/60 text-sm">{activity.time}</span>
                                             </TableCell>
                                             <TableCell className="py-3 px-4">
-                                              <div className="flex items-center gap-1.5">
-                                                <IconCoins className="w-3.5 h-3.5 text-green-400" />
-                                                <span className="text-white text-sm font-medium">{activity.betAmount}</span>
-                                              </div>
+                                              <span className="text-white/80 text-sm font-medium">{activity.multiplier}</span>
                                             </TableCell>
                                             <TableCell className="py-3 px-4">
-                                              {activity.winAmount ? (
-                                                <span className="text-green-400 text-sm font-medium">{activity.winAmount}</span>
-                                              ) : (
-                                                <span className="text-white/30 text-sm">-</span>
-                                              )}
+                                              <span className={cn(
+                                                "text-sm font-semibold",
+                                                activity.winAmount?.startsWith('-') ? "text-white/60" : "text-green-400"
+                                              )}>
+                                                {activity.winAmount}
+                                              </span>
                                             </TableCell>
                                           </motion.tr>
                                         ))}
@@ -13057,7 +13006,7 @@ function NavTestPageContent() {
                                     )}>
                                       <div 
                                         data-content-item 
-                                        className="w-[158px] h-[208px] md:w-[180px] md:h-[236px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
+                                        className="w-[132px] h-[174px] md:w-[132px] md:h-[174px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
                                         onClick={() => {
                                           setSelectedGame({
                                             title: popularNames[index % popularNames.length],
@@ -13073,7 +13022,7 @@ function NavTestPageContent() {
                                             alt={popularNames[index % popularNames.length]}
                                             fill
                                             className="object-cover group-hover:scale-105 transition-transform duration-300"
-                                            sizes="160px"
+                                            sizes="132px"
                                           />
                                         )}
                                         <GameTagBadge tag={popularTag} vendor={popularVendor} />
@@ -13163,7 +13112,7 @@ function NavTestPageContent() {
                                         bettingRange={baccaratLimits[index % baccaratLimits.length]}
                                         index={index + 20}
                                         brandPrimary={brandPrimary}
-                                        className="w-[158px] h-[208px] md:w-[180px] md:h-[236px]"
+                                        className="w-[132px] h-[174px] md:w-[132px] md:h-[174px]"
                                         onClick={() => {
                                           setSelectedGame({
                                             title: baccaratNames[index % baccaratNames.length],
@@ -13223,7 +13172,7 @@ function NavTestPageContent() {
                                     )}>
                                       <div 
                                         data-content-item 
-                                        className="w-[158px] h-[208px] md:w-[180px] md:h-[236px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
+                                        className="w-[132px] h-[174px] md:w-[132px] md:h-[174px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
                                         onClick={() => {
                                           setSelectedGame({
                                             title: exclusiveNames[index % exclusiveNames.length],
@@ -13239,7 +13188,7 @@ function NavTestPageContent() {
                                             alt={exclusiveNames[index % exclusiveNames.length]}
                                             fill
                                             className="object-cover group-hover:scale-105 transition-transform duration-300"
-                                            sizes="160px"
+                                            sizes="132px"
                                           />
                                         )}
                                         <GameTagBadge tag="Exclusive" vendor={exclusiveVendor} />
@@ -13296,7 +13245,7 @@ function NavTestPageContent() {
                                     )}>
                                       <div 
                                         data-content-item 
-                                        className="w-[158px] h-[208px] md:w-[180px] md:h-[236px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
+                                        className="w-[132px] h-[174px] md:w-[132px] md:h-[174px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
                                         onClick={() => {
                                           setSelectedGame({
                                             title: crashNames[index % crashNames.length],
@@ -13312,7 +13261,7 @@ function NavTestPageContent() {
                                             alt={crashNames[index % crashNames.length]}
                                             fill
                                             className="object-cover group-hover:scale-105 transition-transform duration-300"
-                                            sizes="160px"
+                                            sizes="132px"
                                           />
                                         )}
                                         <GameTagBadge tag={crashTag} vendor={crashVendor} />
@@ -13324,6 +13273,125 @@ function NavTestPageContent() {
                               </CarouselContent>
                             </Carousel>
                           </div>
+                        </div>
+
+                        {/* Jackpots Ready to Drop Section */}
+                        <div className={cn("mb-8", isMobile ? "px-3" : "px-6")}>
+                          <h2 className="text-lg font-semibold text-black dark:text-white transition-colors duration-300 mb-6">
+                            Jackpots Ready to Drop
+                          </h2>
+
+                          {(() => {
+                            const tilesPerRow = isMobile ? 9 : 10
+                            const rowsPerPage = 2
+                            const jackpotNames = ['Mega Moolah', 'Divine Fortune', 'Book of Jackpots', 'Dragon Gold', 'Treasure Vault', 'Grand Spinner', 'Gates of Olympus', 'Cash Volt']
+                            const totalJackpotGames = 47
+                            const readyDropGames = Array.from({ length: totalJackpotGames }).map((_, gameIndex) => ({
+                              gameIndex,
+                              title: jackpotNames[gameIndex % jackpotNames.length],
+                              imageSrc: squareTileImages[gameIndex % squareTileImages.length]
+                            }))
+                            const totalColumns = Math.ceil(readyDropGames.length / rowsPerPage)
+                            const columnsPerView = tilesPerRow
+                            const totalColumnsWithSkeleton = Math.max(totalColumns, columnsPerView)
+                            const rowsData: Array<Array<typeof readyDropGames[number] | null>> = Array.from({ length: rowsPerPage }, () => [])
+
+                            for (let columnIndex = 0; columnIndex < totalColumnsWithSkeleton; columnIndex++) {
+                              for (let rowIndex = 0; rowIndex < rowsPerPage; rowIndex++) {
+                                const gameIndex = columnIndex * rowsPerPage + rowIndex
+                                rowsData[rowIndex].push(readyDropGames[gameIndex] ?? null)
+                              }
+                            }
+
+                            return (
+                          <div className="relative space-y-3 md:space-y-4">
+                            {!isMobile && (
+                              <>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="absolute -left-3 top-1/2 z-20 -translate-y-1/2 h-9 w-9 rounded-full bg-[var(--ds-sidebar-bg,#121417)]/92 backdrop-blur-sm border border-white/20 hover:bg-[var(--ds-sidebar-bg,#121417)] text-white disabled:opacity-40 disabled:cursor-not-allowed"
+                                  onClick={() => scrollJackpotsReadyRows('left', isMobile)}
+                                  disabled={!jackpotsReadyCanScrollPrev}
+                                  aria-label="Scroll jackpots left"
+                                >
+                                  <IconChevronLeft className="h-4 w-4" strokeWidth={2} />
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="absolute -right-3 top-1/2 z-20 -translate-y-1/2 h-9 w-9 rounded-full bg-[var(--ds-sidebar-bg,#121417)]/92 backdrop-blur-sm border border-white/20 hover:bg-[var(--ds-sidebar-bg,#121417)] text-white disabled:opacity-40 disabled:cursor-not-allowed"
+                                  onClick={() => scrollJackpotsReadyRows('right', isMobile)}
+                                  disabled={!jackpotsReadyCanScrollNext}
+                                  aria-label="Scroll jackpots right"
+                                >
+                                  <IconChevronRight className="h-4 w-4" strokeWidth={2} />
+                                </Button>
+                              </>
+                            )}
+                            {rowsData.map((rowGames, rowIndex) => (
+                              <div
+                                key={`ready-drop-row-after-crash-${rowIndex}`}
+                                ref={(el) => {
+                                  jackpotsReadyRowRefs.current[rowIndex] = el
+                                }}
+                                onScroll={(e) => onJackpotsReadyRowScroll(rowIndex, e.currentTarget.scrollLeft)}
+                                className="flex gap-2 md:gap-3 overflow-x-auto scrollbar-hide pb-1"
+                                style={{ WebkitOverflowScrolling: 'touch' }}
+                              >
+                                {rowGames.map((game, tileIndex) => {
+                                  if (!game) {
+                                    return (
+                                      <div
+                                        key={`ready-drop-skeleton-${rowIndex}-${tileIndex}`}
+                                        className="w-[132px] h-[174px] md:w-[132px] md:h-[174px] rounded-small bg-white/[0.05] border border-white/[0.08] animate-pulse flex-shrink-0"
+                                      />
+                                    )
+                                  }
+
+                                  const tagIndex = game.gameIndex + 80
+                                  return (
+                                    <div
+                                      key={`ready-drop-tile-after-crash-${rowIndex}-${tileIndex}`}
+                                      data-content-item
+                                      className="w-[132px] h-[174px] md:w-[132px] md:h-[174px] rounded-small bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group border border-white/20 flex-shrink-0"
+                                      onMouseEnter={(e) => {
+                                        e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)'
+                                      }}
+                                      onMouseLeave={(e) => {
+                                        e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
+                                      }}
+                                      onClick={() => {
+                                        setSelectedGame({
+                                          title: game.title,
+                                          image: game.imageSrc,
+                                          provider: getTileVendor(tagIndex),
+                                          features: ['Progressive Jackpot Pool', 'High Volatility', 'Live Jackpot Ticker']
+                                        })
+                                      }}
+                                    >
+                                      {game.imageSrc && (
+                                        <Image
+                                          src={game.imageSrc}
+                                          alt={`${game.title} tile`}
+                                          fill
+                                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                                          sizes="132px"
+                                        />
+                                      )}
+                                      <GameTagBadge tag={getMetaTag(tagIndex)} vendor={getTileVendor(tagIndex)} />
+                                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'color-mix(in srgb, white 6%, transparent)' }} />
+                                    </div>
+                                  )
+                                })}
+                              </div>
+                            ))}
+                            <div className="flex justify-center pt-1">
+                              <span className="text-[11px] text-white/45">Swipe to explore jackpots</span>
+                            </div>
+                          </div>
+                            )
+                          })()}
                         </div>
 
                         {/* Free Rolls Tournaments Carousel (removed from casino view) */}
@@ -13481,7 +13549,7 @@ function NavTestPageContent() {
                                     )}>
                                       <div 
                                         data-content-item 
-                                        className="w-[158px] h-[208px] md:w-[180px] md:h-[236px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
+                                        className="w-[132px] h-[174px] md:w-[132px] md:h-[174px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
                                         onClick={() => {
                                           setSelectedGame({
                                             title: instantNames[index % instantNames.length],
@@ -13497,7 +13565,7 @@ function NavTestPageContent() {
                                             alt={instantNames[index % instantNames.length]}
                                             fill
                                             className="object-cover group-hover:scale-105 transition-transform duration-300"
-                                            sizes="160px"
+                                            sizes="132px"
                                           />
                                         )}
                                         <GameTagBadge tag={instantTag} vendor={instantVendor} />
@@ -14521,30 +14589,6 @@ function NavTestPageContent() {
                 )}
               </div>
 
-              {/* Jackpot Win Overlay */}
-              <JackpotOverlay
-                visible={showJackpot}
-                gameName={selectedGame.title}
-                onClose={() => {
-                  setShowJackpot(false)
-                  // Store jackpot winnings — balance will animate when game launcher closes
-                  pendingBalanceRef.current += 250000
-                }}
-                onShareToChat={() => {
-                  setShowJackpot(false)
-                  // Store jackpot winnings — balance will animate when game launcher closes
-                  pendingBalanceRef.current += 250000
-                  // Share jackpot win to chat
-                  const chatStore = useChatStore.getState()
-                  chatStore.setIsOpen(true)
-                  chatStore.shareBetToChat([{
-                    eventName: `🎰 JACKPOT WIN on ${selectedGame.title}`,
-                    selection: 'Mega Jackpot',
-                    odds: '💰',
-                    stake: 250000,
-                  }])
-                }}
-              />
             </motion.div>
           )}
         </AnimatePresence>
@@ -14720,7 +14764,7 @@ function NavTestPageContent() {
               <TourClose className="text-white/70 hover:text-white" />
               <TourHeader className="space-y-1">
                 <TourStepCounter className="text-[11px] uppercase tracking-wide text-white/50" />
-                <TourTitle className="text-base font-semibold text-white">Last Game Played</TourTitle>
+                <TourTitle className="text-base font-semibold text-white">Continue Playing</TourTitle>
                 <TourDescription className="text-sm text-white/70">
                   Return to your most recent game in one tap and continue your session.
                 </TourDescription>

@@ -5,6 +5,7 @@ import GlobalBetslip from '@/components/betslip/global-betslip'
 import BrandSanitizer from '@/components/brand-sanitizer'
 import { PreventOverscroll } from '@/components/prevent-overscroll'
 import EsportsLinkFix from '@/components/navigation/esports-link-fix'
+import FloatingSiteButtons from '@/components/floating-site-buttons'
 import './globals.css'
 
 const figtree = Figtree({
@@ -42,6 +43,7 @@ export default function RootLayout({
           <EsportsLinkFix />
           <PreventOverscroll />
           {children}
+          <FloatingSiteButtons />
           <GlobalBetslip />
         </ThemeProvider>
       </body>

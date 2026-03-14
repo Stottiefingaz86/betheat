@@ -114,11 +114,69 @@ function replaceLegacyLogos(root: ParentNode) {
   })
 }
 
+const MAIN_NAV_ORDER = ['casino', 'live casino', 'sports', 'in-play', 'promotions']
+
+function normalizeLabel(value: string): string {
+  return value.replace(/\s+/g, ' ').trim().toLowerCase()
+}
+
+function navOrderKey(value: string): string | null {
+  const text = normalizeLabel(value)
+  if (text.includes('live betting') || text.includes('in-play')) return 'in-play'
+  if (text.includes('vip rewards') || text.includes('promotions')) return 'promotions'
+  if (text.includes('live casino')) return 'live casino'
+  if (text.includes('casino')) return 'casino'
+  if (text.includes('sports')) return 'sports'
+  return null
+}
+
+function reorderMainNavItems(root: ParentNode) {
+  const headerRoots: Element[] = []
+  if (root instanceof Element && root.matches('[data-nav-header]')) {
+    headerRoots.push(root)
+  }
+  headerRoots.push(...Array.from(root.querySelectorAll('[data-nav-header]')))
+
+  for (const header of headerRoots) {
+    const candidates = Array.from(header.querySelectorAll('div, nav, ul'))
+    for (const container of candidates) {
+      const children = Array.from(container.children)
+      if (children.length < 4) continue
+
+      const entries = children.map((child, index) => {
+        const clickable = child.matches('button, a, [role="button"]')
+          ? child
+          : child.querySelector('button, a, [role="button"]')
+        const text = clickable?.textContent || child.textContent || ''
+        return { child, index, key: navOrderKey(text) }
+      })
+
+      const matchedCount = entries.filter((entry) => entry.key !== null).length
+      if (matchedCount < 4) continue
+
+      const rank = (entry: { key: string | null; index: number }) => {
+        if (!entry.key) return 100 + entry.index
+        const idx = MAIN_NAV_ORDER.indexOf(entry.key)
+        return idx === -1 ? 100 + entry.index : idx
+      }
+
+      const sorted = [...entries].sort((a, b) => rank(a) - rank(b))
+      const changed = sorted.some((entry, i) => entry.child !== children[i])
+      if (!changed) continue
+
+      const frag = document.createDocumentFragment()
+      for (const entry of sorted) frag.appendChild(entry.child)
+      container.appendChild(frag)
+      break
+    }
+  }
+}
+
 function forceLegacyColorReplacement(root: ParentNode) {
   const replacements: Record<string, string> = {
-    'rgb(3, 22, 121)': '#111214',
-    'rgb(3, 13, 38)': '#0d0f12',
-    'rgb(2, 14, 74)': '#181b20',
+    'rgb(3, 22, 121)': '#121417',
+    'rgb(3, 13, 38)': '#121417',
+    'rgb(2, 14, 74)': '#121417',
     'rgb(0, 150, 255)': '#ff6a1a',
     'rgb(0, 135, 246)': '#e65a12',
     'rgb(253, 193, 0)': '#8c9098',
@@ -155,9 +213,9 @@ export default function BrandSanitizer() {
     root.style.setProperty('--brand-primary-hover', '#e65a12')
     root.style.setProperty('--ds-primary-gradient', 'linear-gradient(112deg, rgba(255, 136, 52, 1) 0%, rgba(255, 109, 42, 0.98) 40%, rgba(236, 73, 46, 0.94) 72%, rgba(168, 44, 42, 0.92) 100%)')
     root.style.setProperty('--ds-nav-bg', '#121417')
-    root.style.setProperty('--ds-page-bg', '#0b0c0f')
+    root.style.setProperty('--ds-page-bg', '#121417')
     root.style.setProperty('--ds-sidebar-bg', '#121417')
-    root.style.setProperty('--ds-card-bg', '#16191d')
+    root.style.setProperty('--ds-card-bg', '#121417')
     root.style.setProperty('--ds-accent-green', '#7f848d')
     root.style.setProperty('--ds-primary-text', '#fff4ec')
 
@@ -166,6 +224,7 @@ export default function BrandSanitizer() {
       sanitizeAnchors(scope)
       hideDisallowedNavItems(scope)
       replaceLegacyLogos(scope)
+      reorderMainNavItems(scope)
       forceLegacyColorReplacement(scope)
     }
 
