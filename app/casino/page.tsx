@@ -8095,6 +8095,18 @@ function NavTestPageContent() {
     useChatStore.getState().setIsOpen(false)
   }, [trackClick, trackPageView])
 
+  // Allow other pages (e.g. homepage) to open the exact casino account drawer.
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const shouldOpen = localStorage.getItem('bh-open-casino-account-drawer') === '1'
+    if (!shouldOpen) return
+    localStorage.removeItem('bh-open-casino-account-drawer')
+    setVipDrawerOpen(false)
+    setDepositDrawerOpen(false)
+    setAccountDrawerOpen(true)
+    useChatStore.getState().setIsOpen(false)
+  }, [])
+
   // Panel exclusivity: when chat opens, close all drawers + collapse sidebar
   useEffect(() => {
     const handleChatOpened = () => {

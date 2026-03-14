@@ -31,9 +31,10 @@ import {
   IconCrown,
   IconChevronDown,
   IconHeart,
-  IconMaximize,
   IconLoader2,
   IconClock,
+  IconSearch,
+  IconWorld,
   IconCoins,
   IconBolt,
   IconStar,
@@ -123,43 +124,44 @@ import { UsageBasedPricing } from '@/components/billingsdk/usage-based-pricing'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import ChatNavToggle from '@/components/chat/chat-nav-toggle'
-import DynamicIsland from '@/components/dynamic-island'
 import { NotificationHub } from '@/components/account/notification-hub'
 
 // Helper function to get vendor icon path
 const getVendorIconPath = (vendorName: string): string => {
   const vendorFileMap: Record<string, string> = {
-    'Dragon Gaming': 'Dragon gaming.svg',
+    '7Mojos': 'provider_id_1_7mojos_20251223_1920.svg',
+    'Smartsoft': 'provider_id_44_Smartsoft_20251224_1042.svg',
+    'Aviator': 'provider_id_48_Aviator_20251224_1043.svg',
+    'BF Games': 'provider_id_13_BF games_20251224_1036.svg',
+    'Hacksaw': 'provider_id_30_hacksaw_20260226_1349.svg',
+    'NetEnt': 'provider_id_5_Netent_20251224_1033.svg',
+    'Yggdrasil': 'provider_id_68_Ygg Drasil_20251224_1044.svg',
+    'Habanero': 'provider_id_26_Habanero_20251224_1040.svg',
+    'ELK': 'provider_id_16_ELK_20251224_1037.svg',
+    'GameArt': 'provider_id_24_Gameart_20251224_1039.svg',
+    'Big Time Gaming': 'provider_id_2_BigTimeGaming_20251223_2136.svg',
+    'BGaming': 'provider_id_45_BGaming_20251224_1042.svg',
+    'Kalamba': 'provider_id_36_Kalamba_20251224_1040.svg',
+    'Red Tiger': 'provider_id_7_Red Tiger_20251224_1034.svg',
+    'Reevo': 'provider_id_41_Reevo_20251224_1041.svg',
+    'Synot': 'provider_id_49_Synot_20251224_1043.svg',
+    'GamingCorps': 'provider_id_25_Gamingcorps_20251224_1039.svg',
+    'Spnmnl': 'provider_id_47_spnmnl_20260227_1642.svg',
+    'No Limit City': 'provider_id_6_No Limit City_20251224_1034.svg',
+    'Wazdan': 'provider_id_51_Wazdan_20251224_1044.svg',
+    'Playson': 'provider_id_38_Playson_20251224_1041.svg',
+    'Endorphina': 'provider_id_17_Endorphina_20251224_1037.svg',
+    'Amatic': 'provider_id_11_Amatic_20251224_1036.svg',
+    'CT Interactive': 'provider_id_50_CT Interactive_20251224_1044.svg',
+    'Pragmatic Play': 'provider_id_10_pragmatic-play_20260221_1147.svg',
+    'EGT': 'provider_id_70_EGT_20251224_1045.svg',
+    'Amusnet': 'provider_id_69_Amusnet_20251224_1045.svg',
+    'Pateplay': 'provider_id_8_Pateplay_20251224_1034.svg',
     'BetSoft': 'betsoft.svg',
-    '5 Clover': '5clover.svg',
-    '777Jacks': '777jacks.svg',
-    'Arrow\'s Edge': 'arrows edge.svg',
-    'Blaze': 'blaze.svg',
-    'DeckFresh': 'deckfresh.svg',
-    'DGS Casino Solutions': 'dgs.svg',
-    'Emerald Gate': 'emerald gate.svg',
-    'FDBJ': 'fdbj.svg',
-    'FDRL': 'deckfresh.svg',
-    'Felix': 'felix.svg',
-    'FreshDeck': 'deckfresh.svg',
-    'GLS': 'gls.svg',
-    'i3 Soft': 'i3soft.svg',
-    'KA Gaming': 'kagaming.svg',
-    'Lucky': 'lucky.svg',
-    'Mascot Gaming': 'mascotgaming.svg',
-    'Nucleus': 'nucleus.svg',
     'Onlyplay': 'onlyplay.svg',
-    'Originals': 'orginals.svg',
-    'Popiplay': 'popiplay.svg',
-    'Qora': 'qora.svg',
-    'Red Sparrow': 'red sparrow.svg',
-    'Revolver Gaming': 'revolver.svg',
-    'Rival': 'rival.svg',
-    'Spinthron': 'spinthon.svg',
-    'Twain': 'twain.svg',
-    'VIG': 'vig.svg',
-    'Wingo': 'wingo.svg',
-    'BetOnline': 'orginals.svg',
+    'Nucleus': 'nucleus.svg',
+    'Dragon Gaming': 'Dragon gaming.svg',
+    'Betheat': 'provider_id_10_pragmatic-play_20260221_1147.svg',
   }
   
   if (vendorFileMap[vendorName]) {
@@ -172,21 +174,31 @@ const getVendorIconPath = (vendorName: string): string => {
 
 // Available square tile images
 const squareTileImages = [
-  '/games/square/goldNuggetRush.png',
-  '/games/square/megacrush.png',
-  '/games/square/goldNuggetRush2.png',
-  '/games/square/mrMammoth.png',
-  '/games/square/cocktailWheel.png',
-  '/games/square/takeTheBank.png',
-  '/games/square/hookedOnFishing.png',
-  '/games/square/roulette.png',
-  '/games/square/blackjack.png',
-  '/games/square/baccarat.png',
-  '/games/square/game8.png',
-  '/games/square/game17.png',
-  '/games/square/game18.png',
-  '/games/square/game20.png',
-  '/games/square/game21.png',
+  '/games/31d384b25e3d6c8704f84b3db84e31bceacf2ff16279fbcc25ad9e1bf55a7564.avif',
+  '/games/eaf11ccc50dea10b36385a20d03bb066989b69b03eb0a2260fb9f94b58111908.avif',
+  '/games/85df80b16ad5fc92a2a7a7e9e12f78c75dd1a33eddff36daa8a02dbc7f2eab54.avif',
+  '/games/fad562df401ccfd1dde3707308efab027eea94a6cd11c35d64cc814efbb3a44f.avif',
+  '/games/6cc2e6228b274e48ff6045944b153810db7131ad61d90cabce5aa35176c639e9.avif',
+  '/games/ba877175859e53e10049fb0d90a236e52290b30a74449d386863873e068f05f6.avif',
+  '/games/d0da486c2ef84196c52198fce55b4566303ef3d73d94c675179a8f6c4c5a3781.avif',
+  '/games/41ef135e01539f2cad0971dcc7b49bbf741eccbba3cb25daaa139c8d49dc168d.avif',
+  '/games/282a2fae2d94b39108e30fc0c1a448fcc666f7c804347d51ed4568cd849121b4.avif',
+  '/games/c0be957b99d1a534b8fa221a225e87445766948f0b861b42700ad370fb84e22d.avif',
+  '/games/7cea92185c7ace705297172c7c2d61591a1d51c6ec0e67545493598989e44b22.avif',
+  '/games/d319fe86677108d19df21e0ca027be9c240c347bfd90a9038d16ab76fe9e1b56.avif',
+  '/games/be2e59b9310ae467a892068b7e4afc38458ec87b2cababad70243af2c17f8f9b.avif',
+  '/games/e57824a3bba6f67381074acbdc293efe50bf38966365549a92f454c3a3ffb5ff.avif',
+  '/games/80cef3c2101ccc6abeb74df85fe242c1ba7cb741f4d1c16c8791818721495943.avif',
+  '/games/f21318673c065243f6fcecd14babc84e0e2c3a682fc79d7f5be9334fe5834e4e.avif',
+  '/games/cb8c8e48781137b94c5dea7326d5c4d15b045ee1e8282b8ca674a0ac231914a8.avif',
+  '/games/14d5410c6cf4c303d291262a10e949dc14b0ac2eca2a7a730b0401919c01358e.avif',
+  '/games/c5996d604ffd3f6e1e34d94425948d29f78bbd0a96c9611a78b12de8b4ff7677.avif',
+  '/games/2cb39e9486a6cd37f49767537241fc8b9f5fd302f17a79c06f5220afcea27ea3.avif',
+  '/games/73754d4bf421b78fbd3895bbc7890d379797588cb699d6cbe47f3656aa93613b.avif',
+  '/games/ceb29aff91c7ba3033e44ee289d2eeb4e85088cdb56daac04d2e82a886542b05.avif',
+  '/games/84513d6373e86453b6a8c1a1764787f1a888de7bee155b861f90289513864938.avif',
+  '/games/7a77b3910795bdd5f00f045fc5bab2aca5787542c07d39def8cc8b343aaa2d71.avif',
+  '/games/9407302fecd33613bc716d3b0d4f1e724334321ec910404f6b417284db593d37.avif',
 ]
 
 // Originals tile images (tall rectangles)
@@ -211,6 +223,57 @@ const tileVendors = [
   'Qora', 'Red Sparrow', 'Revolver Gaming', 'Rival', 'Twain',
   'VIG', 'Wingo',
 ]
+
+const priorityVendors = ['Hacksaw', 'NetEnt', 'Yggdrasil', 'Habanero', 'ELK'] as const
+const casinoVendorList = [
+  ...priorityVendors,
+  ...[
+    'Pragmatic Play',
+    'Big Time Gaming',
+    'Red Tiger',
+    'No Limit City',
+    'GameArt',
+    'BGaming',
+    'GamingCorps',
+    'Reevo',
+    'Smartsoft',
+    'Synot',
+    'Aviator',
+    'Wazdan',
+    'Kalamba',
+    'Playson',
+    'Endorphina',
+    'Amatic',
+    'CT Interactive',
+    'EGT',
+    'Amusnet',
+    'Pateplay',
+    'BF Games',
+    '7Mojos',
+    'Spnmnl',
+    'BetSoft',
+    'Onlyplay',
+    'Nucleus',
+    'Dragon Gaming',
+  ].filter((vendor) => !priorityVendors.includes(vendor as (typeof priorityVendors)[number])),
+]
+
+const homepageLeagueTiles = [
+  { label: 'NFL', icon: '/sports%20league/NFL.svg' },
+  { label: 'NBA', icon: '/sports%20league/nba.svg' },
+  { label: 'Premier League', icon: '/sports%20league/prem.svg' },
+  { label: 'Champions', icon: '/sports%20league/champions.svg' },
+  { label: 'F1', icon: '/sports%20league/f1.svg' },
+  { label: 'MLB', icon: '/sports%20league/MLB.svg' },
+  { label: 'NHL', icon: '/sports%20league/NHL.svg' },
+  { label: 'MLS', icon: '/sports%20league/mls.svg' },
+  { label: 'Copa', icon: '/sports%20league/copa.svg' },
+  { label: 'UFC', icon: '/sports%20league/UFC.svg' },
+  { label: 'Boxing WBA', icon: '/sports%20league/Boxing%20WBA.svg' },
+  { label: 'Golf PGA', icon: '/sports%20league/Golf%20pga.svg' },
+  { label: 'ATP', icon: '/sports%20league/ATP.svg' },
+  { label: 'Roland Garros', icon: '/sports%20league/roland%20garros%20tennis.svg' },
+] as const
 
 // Get a vendor deterministically by index
 function getTileVendor(index: number): string {
@@ -360,22 +423,22 @@ function VendorIcon({ vendor }: { vendor: string }) {
   const iconPath = getVendorIconPath(vendor)
   
   if (imageError) {
-    return <div className="w-5 h-5 rounded-full bg-white/10 flex-shrink-0" />
+    return <div className="w-[74px] h-8 rounded-md bg-white/10 flex-shrink-0" />
   }
   
   return (
-    <div className="w-5 h-5 flex-shrink-0 relative flex items-center justify-center overflow-hidden">
+    <div className="w-[74px] h-8 flex-shrink-0 relative flex items-center justify-center overflow-hidden">
       <Image
         src={iconPath}
         alt={`${vendor} logo`}
-        width={20}
-        height={20}
+        width={74}
+        height={32}
         className="object-contain"
         style={{ 
-          width: '20px',
-          height: '20px',
-          maxWidth: '20px',
-          maxHeight: '20px',
+          width: '74px',
+          height: '32px',
+          maxWidth: '74px',
+          maxHeight: '32px',
           objectPosition: 'center'
         }}
         onError={() => setImageError(true)}
@@ -1293,6 +1356,9 @@ function HomePageContent() {
   useRainBalance(setBalance, setDisplayBalance)
   const pendingBalanceRef = useRef(0)
   const [currentTime, setCurrentTime] = useState<string>('')
+  const [searchOverlayOpen, setSearchOverlayOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [headerLanguage, setHeaderLanguage] = useState<'EN' | 'ES' | 'DE' | 'FR' | 'PT'>('EN')
   const [vipDrawerOpen, setVipDrawerOpen] = useState(false)
   const [accountDrawerOpen, setAccountDrawerOpen] = useState(false)
   const [accountDrawerView, setAccountDrawerView] = useState<'account' | 'notifications' | 'createAccount' | 'createAccountConfirmation' | 'login'>('account')
@@ -1373,14 +1439,23 @@ function HomePageContent() {
   const canSubmitLogin = loginForm.identifier.trim().length > 0 && loginForm.password.trim().length >= 6
   const isCreateAccountStepValid = Object.values(createAccountErrors).every((value) => value === '')
 
-  // Mutual exclusion helpers — only one drawer open at a time
-  const openAccountDrawer = useCallback(() => {
-    trackClick('account-drawer', 'My Account')
+  const openAuthModal = useCallback((view: 'login' | 'register') => {
     setVipDrawerOpen(false)
     setDepositDrawerOpen(false)
     setAccountDrawerOpen(true)
+    setAccountDrawerView(view === 'login' ? 'login' : 'createAccount')
     useChatStore.getState().setIsOpen(false)
-  }, [trackClick])
+  }, [])
+
+  // Mutual exclusion helpers — only one drawer open at a time
+  const openAccountDrawer = useCallback(() => {
+    trackClick('account-drawer', 'My Account')
+    try {
+      localStorage.setItem('bh-open-casino-account-drawer', '1')
+    } catch {}
+    router.push('/casino')
+    useChatStore.getState().setIsOpen(false)
+  }, [trackClick, router])
   const openVipDrawer = useCallback(() => {
     trackClick('vip-hub', 'VIP Hub')
     setAccountDrawerOpen(false)
@@ -1536,40 +1611,17 @@ function HomePageContent() {
   const [topEventsScores, setTopEventsScores] = useState<Record<number, { team1: number; team2: number; animating?: { team: number; from: number; to: number } }>>({})
   
   // Activity Leaderboard state
-  const [activityTab, setActivityTab] = useState<'All Bets' | 'Jackpot Winners' | 'High Rollers' | 'Daily Race'>('All Bets')
+  const [activityTab, setActivityTab] = useState<'All Bets' | 'Jackpot Winners' | 'High Rollers'>('All Bets')
   const [activityFeed, setActivityFeed] = useState<Array<{
     id: string
-    type: 'sports' | 'casino'
+    type: 'casino'
     event: string
     user: string
     time: string
-    odds?: string
-    betAmount: string
+    multiplier: string
     winAmount?: string
-    icon: 'football' | 'basketball' | 'tennis' | 'esports' | 'casino'
     gameImage?: string
   }>>([])
-  
-  // Race Leaderboard data
-  const raceLeaderboardData = [
-    { rank: 1, nickname: 'Hidden', wagered: '$100,005.00', prize: '25%', medal: 'gold' as const },
-    { rank: 2, nickname: 'Player_5130165', wagered: '$12,000.00', prize: '18%', medal: 'silver' as const },
-    { rank: 3, nickname: 'Hidden', wagered: '$8,000.00', prize: '16%', medal: 'bronze' as const },
-    { rank: 4, nickname: 'Hidden', wagered: '$6,000.00', prize: '12%' },
-    { rank: 5, nickname: 'Hidden', wagered: '$5,865.00', prize: '10%' },
-    { rank: 6, nickname: 'Hidden', wagered: '$4,986.34', prize: '8%' },
-    { rank: 7, nickname: 'Hidden', wagered: '$4,503.05', prize: '5%' },
-    { rank: 8, nickname: 'Hidden', wagered: '$4,163.80', prize: '3%' },
-    { rank: 9, nickname: 'Hidden', wagered: '$3,123.05', prize: '2%' },
-    { rank: 10, nickname: 'Hidden', wagered: '$2,305.07', prize: '1%' },
-  ]
-  
-  const userRacePosition = {
-    rank: 5708,
-    nickname: 'You',
-    wagered: '$1,250.00',
-    prize: '0.1%'
-  }
   
   // Jackpot Winners data
   const jackpotWinnersData = [
@@ -1585,43 +1637,18 @@ function HomePageContent() {
     { id: 'jp10', user: 'Hidden', game: 'Mega Moolah', amount: '$8,120.25', time: '3 days ago', gameImage: squareTileImages[3] },
   ]
 
-  // Daily Race countdown timer state
-  const [raceHours, setRaceHours] = useState(6)
-  const [raceMinutes, setRaceMinutes] = useState(54)
-  const [raceSeconds, setRaceSeconds] = useState(31)
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setRaceSeconds((s) => {
-        if (s === 0) {
-          setRaceMinutes((m) => {
-            if (m === 0) {
-              setRaceHours((h) => (h === 0 ? 23 : h - 1))
-              return 59
-            }
-            return m - 1
-          })
-          return 59
-        }
-        return s - 1
-      })
-    }, 1000)
-    
-    return () => clearInterval(interval)
-  }, [])
-  
   // Generate mock activity data - casino only
   const generateActivity = useCallback(() => {
     const users = ['Gurvinderdeo', 'Eruyarr4545', 'JadrankaB', 'VUDEMMADHU', 'Dzikiti123', 'Player1', 'GamerX', 'LuckyBet', 'HighRoller', 'CasinoKing']
     const casinoGames = [
-      { name: 'Starburst', icon: 'casino' as const, image: squareTileImages[0] },
-      { name: 'Book of Dead', icon: 'casino' as const, image: squareTileImages[1] },
-      { name: 'Gonzo\'s Quest', icon: 'casino' as const, image: squareTileImages[2] },
-      { name: 'Mega Moolah', icon: 'casino' as const, image: squareTileImages[3] },
-      { name: 'Dead or Alive', icon: 'casino' as const, image: squareTileImages[4] },
-      { name: 'Razor Shark', icon: 'casino' as const, image: squareTileImages[5] },
-      { name: 'Big Bass Bonanza', icon: 'casino' as const, image: squareTileImages[6] },
-      { name: 'Sweet Bonanza', icon: 'casino' as const, image: squareTileImages[7] },
+      { name: 'Starburst', image: squareTileImages[0] },
+      { name: 'Book of Dead', image: squareTileImages[1] },
+      { name: 'Gonzo\'s Quest', image: squareTileImages[2] },
+      { name: 'Mega Moolah', image: squareTileImages[3] },
+      { name: 'Dead or Alive', image: squareTileImages[4] },
+      { name: 'Razor Shark', image: squareTileImages[5] },
+      { name: 'Big Bass Bonanza', image: squareTileImages[6] },
+      { name: 'Sweet Bonanza', image: squareTileImages[7] },
     ]
     
     const now = new Date()
@@ -1633,25 +1660,22 @@ function HomePageContent() {
     const isHidden = Math.random() < 0.6 // 60% chance of being hidden
     const displayUser = isHidden ? 'Hidden' : user
     
-    const betAmount = activityTab === 'High Rollers' 
+    const betAmount = activityTab === 'High Rollers'
       ? (Math.random() * 15000 + 1000).toFixed(2)
       : (Math.random() * 5000 + 10).toFixed(2)
-    
-    // For casino games, calculate win amount (60% chance of winning)
-    const winAmount = Math.random() > 0.4
-      ? (parseFloat(betAmount) * (Math.random() * 5 + 1)).toFixed(2)
-      : undefined
-    
+
+    const multiplier = (Math.random() * 19.5 + 0.1).toFixed(2)
+    const payoutRaw = parseFloat(betAmount) * (parseFloat(multiplier) - 1)
+    const payoutAbs = Math.abs(payoutRaw).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+
     return {
       id: `casino-${Date.now()}-${Math.random()}`,
       type: 'casino' as const,
       event: eventData.name,
       user: displayUser,
       time: timeStr,
-      odds: undefined,
-      betAmount: `$${parseFloat(betAmount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-      winAmount: winAmount ? `$${parseFloat(winAmount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : undefined,
-      icon: eventData.icon,
+      multiplier: `${multiplier}×`,
+      winAmount: `${payoutRaw < 0 ? '-' : ''}$${payoutAbs}`,
       gameImage: eventData.image
     }
   }, [activityTab])
@@ -1870,48 +1894,10 @@ function HomePageContent() {
   const brandPrimaryHover = colorTokenMap['betRed/700']?.hex || '#dc2a2f'
   
   const currentBrand = {
-    name: 'BetOnline',
     symbol: '$',
-    logo: (
-      <svg viewBox="0 0 640 86" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-        <g id="BETONLINE">
-          <path fillRule="evenodd" clipRule="evenodd" d="M113.405 60.8753V61.3718C113.405 61.5704 113.405 61.769 113.505 61.8684V62.2656C113.405 66.6351 112.307 70.3095 110.211 73.2887C108.014 76.2679 105.219 78.7506 101.825 80.5381C98.4308 82.4249 94.5375 83.7159 90.2449 84.5104C85.9523 85.3048 81.6597 85.7021 77.367 85.7021H37.4357V36.4457H37.236C37.236 36.4457 7.08782 34.4596 0 34.4596C0 34.4596 20.1653 32.7714 37.236 32.4734H37.4357L37.3358 0H73.3739C77.5667 0 81.7595 0.297921 85.9523 0.794457C90.1451 1.3903 94.0384 2.38337 97.4325 3.97229C100.827 5.5612 103.722 7.84526 105.818 10.7252C108.014 13.6051 109.112 17.3788 109.112 22.1455C109.112 27.0115 107.615 31.0831 104.52 34.261L103.722 35.0554C103.722 35.0554 103.422 35.4527 102.723 36.0485C101.925 36.6443 101.126 37.2402 99.9282 37.9353C99.8284 37.985 99.7536 38.0346 99.6787 38.0843C99.6038 38.1339 99.5289 38.1836 99.4291 38.2333C93.1399 35.4527 86.0521 33.8637 80.861 32.97C83.9557 31.679 85.2535 30.388 85.6528 29.8915C85.799 29.7461 85.8916 29.6007 86.0091 29.4163C86.0521 29.3488 86.0984 29.2761 86.1519 29.1963C86.8507 28.0046 87.25 26.6143 87.25 25.0254C87.25 23.3372 86.8507 22.0462 86.0521 20.9538C85.1536 19.8614 84.1554 19.067 82.8576 18.4711C81.46 17.776 79.9626 17.3788 78.2655 17.0808C76.5684 16.7829 74.8713 16.6836 73.2741 16.6836H58.9986L59.0984 33.0693H59.7972C82.9574 34.4596 98.7303 38.6305 106.617 45.6813C107.415 46.2771 111.608 49.8522 113.006 56.6051L113.205 57.3002V57.5981C113.205 57.7471 113.23 57.8961 113.255 58.045C113.28 58.194 113.305 58.343 113.305 58.4919V58.8891C113.305 59.2367 113.33 59.5595 113.355 59.8822C113.38 60.205 113.405 60.5277 113.405 60.8753ZM90.5444 63.7552L90.6442 63.5566C91.343 62.2656 93.0401 57.9954 88.8473 52.7321C86.1519 49.6536 79.7629 45.2841 65.4874 41.5104L56.6027 39.4249L57.8007 40.8152L58.0003 41.0139C58.0262 41.0654 58.0723 41.1303 58.1316 41.2138C58.3007 41.4521 58.5772 41.8417 58.7989 42.5035L59.0984 43.3972C59.1068 43.4722 59.1152 43.5465 59.1235 43.6203C59.2143 44.4257 59.2981 45.1688 59.2981 46.0785C59.1983 48.7598 59.0984 61.6697 59.0984 67.3303V69.1178L59.8971 69.2171H77.6665C79.2638 69.2171 80.9609 69.0185 82.6579 68.7205C84.355 68.4226 85.8524 67.8268 87.1502 67.0323C88.448 66.2379 89.5461 65.2448 90.4445 63.9538C90.4445 63.9538 90.5444 63.8545 90.5444 63.7552Z" fill={brandPrimary}/>
-          <path d="M120.693 85.7021V0.0993091H178.194V17.4781H140.558V33.6651H176.197V50.2494H140.658V68.0254H180.39V85.7021H120.693Z" fill={brandPrimary}/>
-          <path d="M257.757 8.54042C261.251 5.16397 265.244 2.38337 269.736 0.0993091H185.781V17.776H209.939V85.7021H230.604V17.776H250.37C252.466 14.3995 254.962 11.321 257.757 8.54042Z" fill={brandPrimary}/>
-          <path fillRule="evenodd" clipRule="evenodd" d="M313.761 3.47575C319.151 5.66051 323.843 8.63973 327.737 12.5127C331.63 16.3857 334.625 20.9538 336.821 26.1178C339.017 31.3811 340.115 37.0416 340.115 43.0993C340.115 49.1571 339.017 54.9169 336.821 60.0808C334.625 65.2448 331.63 69.8129 327.737 73.6859C323.843 77.4596 319.151 80.5381 313.761 82.7229C308.27 84.9076 302.28 86 295.891 86C289.403 86 283.413 84.9076 278.022 82.7229C272.631 80.5381 267.939 77.5589 264.046 73.6859C260.253 69.9122 257.158 65.2448 254.962 60.0808C252.766 54.8176 251.667 49.1571 251.667 43.0993C251.667 37.0416 252.766 31.2818 254.962 26.1178C257.158 20.9538 260.153 16.3857 264.046 12.5127C267.939 8.73903 272.631 5.66051 278.022 3.47575C283.513 1.291 289.502 0.198618 295.891 0.198618C302.38 0.198618 308.37 1.291 313.761 3.47575ZM324.642 55.3141C326.139 51.5404 326.838 47.3695 326.838 43.0993C326.838 38.8291 326.04 34.6582 324.642 30.8845C323.244 27.1109 321.148 23.7344 318.453 20.9538C315.757 18.1732 312.563 15.8891 308.769 14.2009C305.076 12.5127 300.783 11.7182 296.091 11.7182C291.399 11.7182 287.206 12.5127 283.413 14.2009C279.719 15.8891 276.425 18.1732 273.73 20.9538C271.134 23.7344 269.038 27.1109 267.54 30.8845C266.043 34.6582 265.344 38.8291 265.344 43.0993C265.344 47.3695 266.043 51.5404 267.54 55.3141C268.938 59.0878 271.034 62.4642 273.73 65.2448C276.425 68.0254 279.619 70.3095 283.413 71.9977C287.107 73.6859 291.399 74.4804 296.091 74.4804C300.783 74.4804 304.976 73.6859 308.769 71.9977C312.463 70.3095 315.757 68.0254 318.453 65.2448C321.048 62.4642 323.145 59.0878 324.642 55.3141Z" fill="white"/>
-          <path d="M437.847 0.0993091H425.069V85.6028H476.681V74.1824H437.847V0.0993091Z" fill="white"/>
-          <path d="M484.268 0.0993091H497.046V85.7021H484.268V0.0993091Z" fill="white"/>
-          <path d="M594.778 74.1824V48.2633H634.909V36.7436H594.778V11.6189H637.804V0.0993091H582V85.6028H640V74.1824H594.778Z" fill="white"/>
-          <path d="M347.802 0.0993091L405.403 56.903V0.0993091H417.482V85.6028L359.782 29.4942V85.6028H347.802V0.0993091Z" fill="white"/>
-          <path d="M562.333 57.3002L504.633 0.0993091V85.6028H516.712V29.8915L574.313 85.2055V0.0993091H562.333V57.3002Z" fill="white"/>
-        </g>
-      </svg>
-    )
   }
 
-  // Top Sports data - Mix of Premier League, NFL, MLB, NHL
-  const topEventsData = [
-    // Premier League
-    { id: 4, team1: 'Arsenal', team2: 'Chelsea', score: '1 - 0', team1Code: 'ARS', team2Code: 'CHE', team1Percent: 65, team2Percent: 35, time: 'H1 23\'', league: 'Premier League', leagueIcon: '/banners/sports_league/prem.svg', country: 'England', team1Logo: '/team/Arsenal FC.png', team2Logo: '/team/Chelsea FC.png', odds: { team1: '+150', tie: '+280', team2: '+180' } },
-    // NFL
-    { id: 5, team1: 'Kansas City Chiefs', team2: 'Buffalo Bills', score: '24 - 17', team1Code: 'KC', team2Code: 'BUF', team1Percent: 62, team2Percent: 38, time: 'Q3 8\'', league: 'NFL', leagueIcon: '/banners/sports_league/NFL.svg', country: 'USA', team1Logo: 'https://a.espncdn.com/i/teamlogos/nfl/500/kc.png', team2Logo: 'https://a.espncdn.com/i/teamlogos/nfl/500/buf.png', odds: { team1: '-165', tie: '+850', team2: '+140' } },
-    // NHL
-    { id: 6, team1: 'Toronto Maple Leafs', team2: 'Montreal Canadiens', score: '3 - 2', team1Code: 'TOR', team2Code: 'MTL', team1Percent: 55, team2Percent: 45, time: 'P2 8:22', league: 'NHL', leagueIcon: '/banners/sports_league/NHL.svg', country: 'USA/Canada', team1Logo: 'https://a.espncdn.com/i/teamlogos/nhl/500/tor.png', team2Logo: 'https://a.espncdn.com/i/teamlogos/nhl/500/mtl.png', odds: { team1: '-130', tie: '+320', team2: '+110' } },
-    // Premier League
-    { id: 7, team1: 'Liverpool', team2: 'Manchester City', score: '2 - 1', team1Code: 'LIV', team2Code: 'MCI', team1Percent: 58, team2Percent: 42, time: 'H2 67\'', league: 'Premier League', leagueIcon: '/banners/sports_league/prem.svg', country: 'England', team1Logo: '/team/Liverpool FC.png', team2Logo: '/team/Manchester City.png', odds: { team1: '+120', tie: '+260', team2: '+200' } },
-    // MLB
-    { id: 8, team1: 'New York Yankees', team2: 'Boston Red Sox', score: '4 - 2', team1Code: 'NYY', team2Code: 'BOS', team1Percent: 60, team2Percent: 40, time: 'T5', league: 'MLB', leagueIcon: '/banners/sports_league/MLB.svg', country: 'USA', team1Logo: 'https://a.espncdn.com/i/teamlogos/mlb/500/nyy.png', team2Logo: 'https://a.espncdn.com/i/teamlogos/mlb/500/bos.png', odds: { team1: '-140', tie: '+950', team2: '+120' } },
-    // NFL
-    { id: 9, team1: 'Dallas Cowboys', team2: 'Philadelphia Eagles', score: '31 - 28', team1Code: 'DAL', team2Code: 'PHI', team1Percent: 55, team2Percent: 45, time: 'Q4 2\'', league: 'NFL', leagueIcon: '/banners/sports_league/NFL.svg', country: 'USA', team1Logo: 'https://a.espncdn.com/i/teamlogos/nfl/500/dal.png', team2Logo: 'https://a.espncdn.com/i/teamlogos/nfl/500/phi.png', odds: { team1: '+110', tie: '+750', team2: '-130' } },
-    // NHL
-    { id: 10, team1: 'Boston Bruins', team2: 'New York Rangers', score: '4 - 1', team1Code: 'BOS', team2Code: 'NYR', team1Percent: 68, team2Percent: 32, time: 'P3 4:15', league: 'NHL', leagueIcon: '/banners/sports_league/NHL.svg', country: 'USA', team1Logo: 'https://a.espncdn.com/i/teamlogos/nhl/500/bos.png', team2Logo: 'https://a.espncdn.com/i/teamlogos/nhl/500/nyr.png', odds: { team1: '-200', tie: '+380', team2: '+170' } },
-    // Premier League
-    { id: 11, team1: 'Tottenham', team2: 'Newcastle', score: '2 - 1', team1Code: 'TOT', team2Code: 'NEW', team1Percent: 72, team2Percent: 28, time: 'H2 67\'', league: 'Premier League', leagueIcon: '/banners/sports_league/prem.svg', country: 'England', team1Logo: '/team/Tottenham Hotspur.png', team2Logo: '/team/Newcastle United.png', odds: { team1: '-110', tie: '+300', team2: '+250' } },
-    // MLB
-    { id: 12, team1: 'Los Angeles Dodgers', team2: 'San Francisco Giants', score: '5 - 3', team1Code: 'LAD', team2Code: 'SF', team1Percent: 65, team2Percent: 35, time: 'B7', league: 'MLB', leagueIcon: '/banners/sports_league/MLB.svg', country: 'USA', team1Logo: 'https://a.espncdn.com/i/teamlogos/mlb/500/lad.png', team2Logo: 'https://a.espncdn.com/i/teamlogos/mlb/500/sf.png', odds: { team1: '-175', tie: '+900', team2: '+155' } },
-    // NFL
-    { id: 13, team1: 'San Francisco 49ers', team2: 'Seattle Seahawks', score: '21 - 14', team1Code: 'SF', team2Code: 'SEA', team1Percent: 68, team2Percent: 32, time: 'Q2 12\'', league: 'NFL', leagueIcon: '/banners/sports_league/NFL.svg', country: 'USA', team1Logo: 'https://a.espncdn.com/i/teamlogos/nfl/500/sf.png', team2Logo: 'https://a.espncdn.com/i/teamlogos/nfl/500/sea.png', odds: { team1: '-150', tie: '+800', team2: '+130' } },
-  ]
+  const topEventsData: any[] = []
 
   return (
     <div 
@@ -1951,26 +1937,32 @@ function HomePageContent() {
               { label: 'Home', onClick: () => { setQuickLinksOpen(false); } },
               { label: 'Casino', onClick: () => { trackNav('casino', 'Casino'); router.push('/casino'); setQuickLinksOpen(false); } },
               { label: 'Live Casino', onClick: () => { trackNav('casino', 'Live Casino'); router.push('/casino?tab=live'); setQuickLinksOpen(false); } },
-              { label: 'Sports', onClick: () => { trackNav('sports', 'Sports'); router.push('/sports/football'); setQuickLinksOpen(false); } },
-              { label: 'In-Play', onClick: () => { trackNav('in-play', 'In-Play'); window.location.href = '/live-betting'; setQuickLinksOpen(false); } },
+              { label: 'Sports', locked: true, onClick: () => {} },
+              { label: 'In-Play', locked: true, onClick: () => {} },
               { label: 'Promotions', onClick: () => { trackNav('promotions', 'Promotions'); router.push('/casino?vip=true'); setQuickLinksOpen(false); } },
             ].map((item) => (
               <button
                 key={item.label}
                 onClick={(e) => {
                   e.stopPropagation()
+                  if (item.locked) return
                   setLoadingQuickLink(item.label)
                   item.onClick()
                   setTimeout(() => setLoadingQuickLink(null), 1200)
                 }}
                 className={cn(
                   "flex-shrink-0 px-3 py-1.5 rounded-small text-xs font-medium transition-colors relative",
-                  item.label === 'Home'
+                  item.locked
+                    ? "text-white/35 cursor-not-allowed"
+                    : item.label === 'Home'
                     ? "text-white"
                     : "text-white/70 hover:text-white"
                 )}
               >
-                <span className={cn("transition-opacity duration-150", loadingQuickLink === item.label ? "opacity-0" : "opacity-100")}>{item.label}</span>
+                <span className={cn("transition-opacity duration-150 inline-flex items-center gap-1.5", loadingQuickLink === item.label ? "opacity-0" : "opacity-100")}>
+                  {item.locked && <IconLock className="w-3 h-3" />}
+                  {item.label}
+                </span>
                 {loadingQuickLink === item.label && (
                   <span className="absolute inset-0 flex items-center justify-center">
                     <IconLoader2 className="w-3.5 h-3.5 text-white animate-spin" />
@@ -2017,7 +2009,14 @@ function HomePageContent() {
               router.push('/')
             }}
           >
-            {currentBrand.logo}
+            <Image
+              src="/logos/BHGL_logo-1773311608241-DDbBBO6v.png"
+              alt="Betheat"
+              width={120}
+              height={32}
+              className="h-7 w-auto"
+              priority
+            />
           </div>
           
           {/* Navigation Menu - Desktop only */}
@@ -2026,18 +2025,24 @@ function HomePageContent() {
               <SidebarMenu className="flex flex-row items-center gap-2">
                 <SidebarMenuItem>
                   <SidebarMenuButton
-                    className="h-10 min-w-[80px] px-4 py-2 rounded-small text-sm font-medium justify-center hover:bg-white/5 hover:text-white transition-colors text-white/70 cursor-pointer"
-                    onClick={() => { trackNav('sports', 'Sports'); router.push('/sports/football') }}
+                    className="h-10 min-w-[80px] px-4 py-2 rounded-small text-sm font-medium justify-center transition-colors text-white/35 cursor-not-allowed"
+                    onClick={() => {}}
                   >
-                    Sports
+                    <span className="inline-flex items-center gap-1.5">
+                      <IconLock className="w-3.5 h-3.5" />
+                      Sports
+                    </span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
                   <SidebarMenuButton
-                    className="h-10 min-w-[100px] px-4 py-2 rounded-small text-sm font-medium justify-center hover:bg-white/5 hover:text-white transition-colors text-white/70 cursor-pointer"
-                    onClick={() => { trackNav('in-play', 'In-Play'); window.location.href = '/live-betting' }}
+                    className="h-10 min-w-[100px] px-4 py-2 rounded-small text-sm font-medium justify-center transition-colors text-white/35 cursor-not-allowed"
+                    onClick={() => {}}
                   >
-                    In-Play
+                    <span className="inline-flex items-center gap-1.5">
+                      <IconLock className="w-3.5 h-3.5" />
+                      In-Play
+                    </span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
@@ -2070,72 +2075,130 @@ function HomePageContent() {
         </div>
         
         <div className={cn("flex items-center", isMobile ? "gap-2" : "gap-3")} style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative' }}>
-          {isUserLoggedIn ? (
+          {/* Balance and Avatar Button */}
+          <Button
+            variant="ghost"
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              openAccountDrawer()
+            }}
+            className={cn(
+              "grid items-center rounded-small transition-colors group relative",
+              "border border-white/10 bg-transparent hover:bg-transparent",
+              "active:bg-transparent",
+              accountDrawerOpen && "text-white",
+              isMobile
+                ? "grid-cols-[20px_minmax(0,1fr)] gap-1.5 px-2 py-1.5 h-9"
+                : "grid-cols-[24px_minmax(0,1fr)] gap-2 px-2.5 py-1.5 h-10"
+            )}
+            style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer' }}
+          >
+            <div className="relative shrink-0">
+              <Avatar className={cn(
+                "border border-white/20 group-hover:border-white/40 transition-colors",
+                isMobile ? "h-5 w-5" : "h-6 w-6"
+              )}>
+                <AvatarFallback className="bg-transparent text-white flex items-center justify-center font-semibold tracking-tight" style={{ fontSize: isMobile ? '9px' : '10px' }}>
+                  <IconUser className={cn(isMobile ? "h-2.5 w-2.5" : "h-3 w-3")} />
+                </AvatarFallback>
+              </Avatar>
+              <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-[var(--ds-primary,#ff6a1a)]" />
+            </div>
+            <div className={cn(
+              "font-bold text-white tabular-nums transition-all duration-300 flex items-center justify-center text-center whitespace-nowrap min-w-0",
+              isMobile ? "text-[10px] pl-0.5" : "text-xs pl-1.5"
+            )}>
+              <span>€</span>
+              <NumberFlow value={displayBalance} format={{ notation: 'standard', minimumFractionDigits: 2, maximumFractionDigits: 2 }} />
+            </div>
+          </Button>
+
+          {isMobile && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                setSearchOverlayOpen(true)
+              }}
+              className="h-9 w-9 rounded-[0.56rem] border border-white/10 bg-[#141920]/90 text-white/75 hover:bg-[#1a202b]/95"
+              style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer' }}
+            >
+              <IconSearch className="h-4 w-4" />
+            </Button>
+          )}
+
+          {!isMobile && (
             <Button
               variant="ghost"
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
-                openAccountDrawer()
+                openDepositDrawer()
               }}
               className={cn(
-                "flex items-center rounded-small transition-colors group bg-white/5 hover:bg-white/10",
-                isMobile ? "gap-1 px-1.5 py-1" : "gap-1.5 px-2 py-1"
+                "flex items-center gap-1.5 px-4 py-1.5 h-10 rounded-small transition-colors group",
+                "border border-[#9a86d1]/75",
+                "bg-[#c9b4ff] hover:bg-[#cfbcff]",
+                "active:bg-[#bfa7fb]",
+                "text-xs font-semibold text-[#121417] cursor-pointer"
               )}
-              style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer' }}
-            >
-              <Avatar className={cn("border border-white/20 group-hover:border-white/40 transition-colors", isMobile ? "h-5 w-5" : "h-6 w-6")}>
-                <AvatarFallback className="bg-white/10 text-white flex items-center justify-center font-semibold tracking-tight" style={{ fontSize: isMobile ? '9px' : '10px' }}>
-                  <IconUser className={cn(isMobile ? "h-2.5 w-2.5" : "h-3 w-3")} />
-                </AvatarFallback>
-              </Avatar>
-              <span className={cn("font-medium text-white text-right tabular-nums transition-all duration-300", isMobile ? "text-[10px] min-w-[60px]" : "text-xs min-w-[70px]")}>
-                {currentBrand.symbol}
-                <NumberFlow value={displayBalance} format={{ notation: 'standard', minimumFractionDigits: 2, maximumFractionDigits: 2 }} />
-              </span>
-            </Button>
-          ) : (
-            <div className={cn("flex items-center", isMobile ? "gap-1.5" : "gap-2")}>
-              <Button
-                variant="ghost"
-                onClick={() => {
-                  openAccountDrawer()
-                  setAccountDrawerView('login')
-                }}
-                className={cn(
-                  "rounded-small border border-white/45 bg-transparent text-white font-semibold hover:bg-white/10",
-                  isMobile ? "h-8 px-2.5 text-[11px]" : "h-9 px-3 text-xs"
-                )}
-              >
-                Login
-              </Button>
-              <Button
-                variant="ghost"
-                onClick={() => {
-                  openAccountDrawer()
-                  setAccountDrawerView('createAccount')
-                }}
-                className={cn(
-                  "rounded-small border border-emerald-600 bg-emerald-600 text-white font-semibold hover:bg-emerald-500 hover:border-emerald-500",
-                  isMobile ? "h-8 px-2.5 text-[11px]" : "h-9 px-3 text-xs"
-                )}
-              >
-                Create Account
-              </Button>
-            </div>
-          )}
-          
-          {/* Wallet Button - Desktop only */}
-          {!isMobile && isUserLoggedIn && (
-            <Button
-              variant="ghost"
-              onClick={openDepositDrawer}
-              className="flex items-center gap-1.5 px-4 py-1.5 h-10 rounded-small transition-colors group border border-[#9a86d1]/75 bg-[#c9b4ff] hover:bg-[#cfbcff] text-xs font-semibold text-[#121417] cursor-pointer"
-              style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer', boxShadow: '0 6px 18px rgba(122, 92, 196, 0.28)' }}
+              style={{
+                pointerEvents: 'auto',
+                zIndex: 101,
+                position: 'relative',
+                cursor: 'pointer',
+                borderRadius: '0.56rem',
+                boxShadow: '0 6px 18px rgba(122, 92, 196, 0.28)',
+              }}
             >
               <IconWallet className="w-3.5 h-3.5 text-[#121417]" />
-              <span className="text-[#121417]">WALLET</span>
+              <span className="text-[#121417]">Wallet</span>
             </Button>
+          )}
+
+          {!isMobile && (
+            <ChatNavToggle
+              onSearch={() => {
+                setSearchOverlayOpen(true)
+              }}
+              placeholder="Search games, teams, promotions..."
+            />
+          )}
+
+          {!isMobile && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-9 w-9 rounded-[0.56rem] border border-white/10 bg-[#141920]/90 text-white/75 hover:bg-[#1a202b]/95"
+                  style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer' }}
+                >
+                  <IconWorld className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-[140px] bg-[#141920] border-white/10 text-white">
+                {[
+                  { code: 'EN', label: 'English' },
+                  { code: 'ES', label: 'Spanish' },
+                  { code: 'DE', label: 'German' },
+                  { code: 'FR', label: 'French' },
+                  { code: 'PT', label: 'Portuguese' },
+                ].map((lang) => (
+                  <DropdownMenuItem
+                    key={lang.code}
+                    onClick={() => setHeaderLanguage(lang.code as 'EN' | 'ES' | 'DE' | 'FR' | 'PT')}
+                    className="text-white/75 hover:text-white hover:bg-white/5 cursor-pointer flex items-center justify-between"
+                  >
+                    <span>{lang.label}</span>
+                    {headerLanguage === lang.code && <IconCheck className="h-3.5 w-3.5 text-white/90" />}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
         </div>
       </motion.header>
@@ -2156,130 +2219,83 @@ function HomePageContent() {
           style={{ overflow: 'hidden' }}
         />
         
-        {/* Hero Banner Section */}
-        {isMobile ? (
-          /* Mobile: Casino-style SVG banner carousel */
-          <div className="py-4 px-3">
-            <Carousel className="w-full" opts={{ align: 'start', loop: false, duration: 15 }}>
-              <CarouselContent className="-ml-2">
-                {([
-                  { src: '/banners/mobile bannerBanner.svg', alt: 'Flaame Banner', href: 'https://www.flaame.co/' },
-                  { src: '/banners/homepage_banner/28146d45-058f-4ee4-ae3a-bd7ad798b720.png', alt: 'Homepage Banner 1', href: '' },
-                  { src: '/banners/homepage_banner/a8c5b8b0-34a3-47ad-8065-6ab1a4fef39f.png', alt: 'Homepage Banner 2', href: '' },
-                  { src: '/banners/casino/casino_banner 3.svg', alt: 'Casino Banner 3', href: '' },
-                  { src: '/banners/casino/casino_banner4.svg', alt: 'Casino Banner 4', href: '' },
-                  { src: '/banners/casino/casino_Banner5.svg', alt: 'Casino Banner 5', href: '' },
-                ]).map((banner, i) => (
-                  <CarouselItem key={i} className="pl-2 basis-auto flex-shrink-0">
-                    <Card 
-                      className="border-0 relative overflow-hidden flex-shrink-0 cursor-pointer hover:opacity-90 transition-opacity rounded-xl" 
-                      style={{ width: '300px', height: '148px' }}
-                      onClick={() => { if (banner.href) window.open(banner.href, '_blank') }}
-                    >
-                      <Image
-                        src={banner.src}
-                        alt={banner.alt}
-                        width={300}
-                        height={148}
-                        className="object-cover w-full h-full"
-                        unoptimized
-                        priority
-                      />
-                    </Card>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-            </Carousel>
+        {/* Hero Section - Static CTA layout */}
+        <div className={cn("py-4 md:py-6", isMobile ? "px-3" : "px-6")}>
+          <div className={cn("grid gap-3", isMobile ? "grid-cols-1" : "grid-cols-12")}>
+            <div className={cn("rounded-2xl border border-white/10 bg-[#121417] p-4 md:p-5 order-2 md:order-1", isMobile ? "" : "col-span-4 h-[240px]")}>
+              <h3 className="text-white text-2xl md:text-3xl font-bold leading-tight">Get Started</h3>
+              <p className="text-white/70 text-sm mt-1">Join the hottest online cypto casino today!</p>
+
+              <Button
+                className="w-full mt-4 h-11 rounded-small border border-[#ff7a2f]/45 bg-gradient-to-r from-[#ff7a2f] via-[#ff5a14] to-[#9a3f1f] text-white font-bold hover:brightness-110"
+                onClick={() => {
+                  openAuthModal('register')
+                }}
+              >
+                Register Now
+              </Button>
+
+              <div className="my-3 h-px bg-white/10" />
+              <p className="text-white/55 text-xs mb-2">Or continue with</p>
+              <div className="grid grid-cols-2 gap-2">
+                <Button variant="ghost" className="h-10 rounded-small bg-[#1a1d22] border border-white/10 text-white/85 hover:bg-[#22262c] justify-center gap-2">
+                  <Image
+                    src="/games/google-icon-logo.svg"
+                    alt="Google"
+                    width={14}
+                    height={14}
+                    className="w-[14px] h-[14px] object-contain"
+                    unoptimized
+                  />
+                  <span>Google</span>
+                </Button>
+                <Button variant="ghost" className="h-10 rounded-small bg-[#1a1d22] border border-white/10 text-white/85 hover:bg-[#22262c] justify-center gap-2">
+                  <Image
+                    src="/games/MetaMask_Fox.svg.png"
+                    alt="MetaMask"
+                    width={14}
+                    height={14}
+                    className="w-[14px] h-[14px] object-contain"
+                    unoptimized
+                  />
+                  <span>MetaMask</span>
+                </Button>
+              </div>
+            </div>
+
+            <div className={cn("relative rounded-2xl border border-white/10 order-1 md:order-2 isolate", isMobile ? "h-[164px] overflow-hidden" : "col-span-8 h-[240px] overflow-hidden")}>
+              <Carousel className="w-full relative overflow-hidden" opts={{ dragFree: true, containScroll: 'trimSnaps', duration: 15 }}>
+                {!isMobile && (
+                  <>
+                    <CarouselPrevious className="!left-2 !-translate-x-0 h-8 w-8 rounded-full bg-[#1a1a1a]/90 backdrop-blur-sm border border-white/20 hover:bg-[#1a1a1a] hover:border-white/30 text-white z-20" />
+                    <CarouselNext className="!right-2 !-translate-x-0 h-8 w-8 rounded-full bg-[#1a1a1a]/90 backdrop-blur-sm border border-white/20 hover:bg-[#1a1a1a] hover:border-white/30 text-white z-20" />
+                  </>
+                )}
+                <CarouselContent className="ml-0 mr-0">
+                  {[
+                    { src: '/banners/Welcome%20Bonus%20Casinofinale_2cbbd48c-15e7-406d-a2d7-e9cd9b201699_20260121_0703.png', alt: 'Welcome Bonus' },
+                    { src: '/banners/AccaBoostfinale_b1661794-7726-4b87-852f-17eccfc9d7ce_20260121_0703.png', alt: 'Acca Boost' },
+                    { src: '/banners/cashbackfinale_07a0a8f0-480f-42e8-b2a3-322bd1b4156c_20260121_0703.png', alt: 'Weekly Cashback' },
+                    { src: '/banners/cryptofinale_7831bcf7-7a0c-493d-bb7e-7fea7c188d98_20260121_0703.png', alt: 'Crypto Promo' },
+                  ].map((banner, index) => (
+                    <CarouselItem key={index} className={cn("basis-auto flex-shrink-0", index === 0 ? "pl-0" : "pl-2 md:pl-4")}>
+                      <Card data-banner-card className="border-0 relative overflow-hidden flex-shrink-0 cursor-pointer hover:opacity-90 transition-opacity rounded-small w-auto h-auto">
+                        <img
+                          src={banner.src}
+                          alt={banner.alt}
+                          className={cn("block h-auto max-w-none", isMobile ? "w-[300px]" : "w-auto")}
+                        />
+                      </Card>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+              </Carousel>
+            </div>
           </div>
-        ) : (
-          /* Desktop: Full-width banner carousel */
-          <div className="py-4 md:py-6 px-6">
-            <Carousel className="w-full relative" opts={{ align: 'start', loop: false, duration: 15 }}>
-              <CarouselPrevious className="!left-2 !-translate-x-0 h-8 w-8 rounded-full bg-[#1a1a1a]/90 backdrop-blur-sm border border-white/20 hover:bg-[#1a1a1a] hover:border-white/30 text-white z-20" />
-              <CarouselNext className="!right-2 !-translate-x-0 h-8 w-8 rounded-full bg-[#1a1a1a]/90 backdrop-blur-sm border border-white/20 hover:bg-[#1a1a1a] hover:border-white/30 text-white z-20" />
-              <CarouselContent className="ml-0 mr-0">
-                {/* Banner 1 - Originals */}
-                <CarouselItem className="basis-full flex-shrink-0 pl-0 pr-0">
-                  <div className="relative w-full cursor-pointer hover:opacity-90 transition-opacity overflow-hidden rounded-2xl pr-4" style={{ aspectRatio: '4/1', minHeight: '200px' }}>
-                    <Image
-                      src="/banners/homepage_banner/28146d45-058f-4ee4-ae3a-bd7ad798b720.png"
-                      alt="Homepage Banner 1"
-                      fill
-                      className="object-cover"
-                      priority
-                      quality={100}
-                      unoptimized
-                      sizes="100vw"
-                    />
-                  </div>
-                </CarouselItem>
-                {/* Banner 2 */}
-                <CarouselItem className="basis-full flex-shrink-0 pl-0 pr-0">
-                  <div className="relative w-full cursor-pointer hover:opacity-90 transition-opacity overflow-hidden rounded-2xl pr-4" style={{ aspectRatio: '4/1', minHeight: '200px' }}>
-                    <Image
-                      src="/banners/homepage_banner/a8c5b8b0-34a3-47ad-8065-6ab1a4fef39f.png"
-                      alt="Homepage Banner 2"
-                      fill
-                      className="object-cover"
-                      priority
-                      quality={100}
-                      unoptimized
-                      sizes="100vw"
-                    />
-                  </div>
-                </CarouselItem>
-                {/* Banner 3 */}
-                <CarouselItem className="basis-full flex-shrink-0 pl-0 pr-0">
-                  <div className="relative w-full overflow-hidden rounded-2xl pr-4" style={{ aspectRatio: '4/1', minHeight: '200px' }}>
-                    <Image
-                      src="/banners/banner12.svg"
-                      alt="Banner 2"
-                      fill
-                      className="object-cover"
-                      priority
-                      quality={100}
-                      unoptimized
-                      sizes="100vw"
-                    />
-                  </div>
-                </CarouselItem>
-                {/* Banner 4 - Bracket */}
-                <CarouselItem className="basis-full flex-shrink-0 pl-0 pr-0">
-                  <div className="relative w-full cursor-pointer hover:opacity-90 transition-opacity overflow-hidden rounded-2xl pr-4" style={{ aspectRatio: '4/1', minHeight: '200px' }}>
-                    <Image
-                      src="/banners/bracket.svg"
-                      alt="Bracket Banner"
-                      fill
-                      className="object-cover"
-                      priority
-                      quality={100}
-                      unoptimized
-                      sizes="100vw"
-                    />
-                  </div>
-                </CarouselItem>
-                {/* Banner 5 */}
-                <CarouselItem className="basis-full flex-shrink-0 pl-0 pr-0">
-                  <div className="relative w-full cursor-pointer hover:opacity-90 transition-opacity overflow-hidden rounded-2xl pr-4" style={{ aspectRatio: '4/1', minHeight: '200px' }}>
-                    <Image
-                      src="/banners/partners/banner4.svg"
-                      alt="Banner 5"
-                      fill
-                      className="object-cover"
-                      priority
-                      quality={100}
-                      unoptimized
-                      sizes="100vw"
-                    />
-                  </div>
-                </CarouselItem>
-              </CarouselContent>
-            </Carousel>
-          </div>
-        )}
+        </div>
 
         {/* Top Sports Carousel */}
-        <div className="mb-6">
+        {false && (<div className="mb-6">
           <div className={cn("flex items-center justify-between mb-4", isMobile ? "px-3" : "px-6")}>
             <h2 
               className="text-lg font-semibold text-white cursor-pointer hover:text-white/80 transition-colors"
@@ -2332,7 +2348,7 @@ function HomePageContent() {
           </div>
           <div className={cn("relative", isMobile ? "-mx-3" : "-mx-6")}>
             <Carousel setApi={setTopEventsCarouselApi} className="w-full relative" opts={{ dragFree: true, containScroll: 'trimSnaps', duration: 15 }}>
-              <CarouselContent className={cn(isMobile ? "ml-3 mr-0" : "ml-6 mr-0")}>
+              <CarouselContent className={cn(isMobile ? "ml-0 -mr-2" : "ml-0 -mr-4")} style={{ overflow: 'visible' }}>
                 {topEventsData.map((event, index) => {
                   const parseScore = (scoreStr: string) => {
                     const parts = scoreStr.split(' - ')
@@ -2454,12 +2470,43 @@ function HomePageContent() {
               </CarouselContent>
             </Carousel>
           </div>
+        </div>)}
+
+        {/* Sports League Squares */}
+        <div className={cn("mb-6", isMobile ? "px-3" : "px-6")}>
+          <h2 className="text-lg font-semibold text-white mb-4">Sportsbook</h2>
+          <div className="overflow-x-auto scrollbar-hide pb-1" style={{ WebkitOverflowScrolling: 'touch' }}>
+            <div className="inline-flex gap-2 w-max">
+              {homepageLeagueTiles.map((league) => (
+                <button
+                  key={league.label}
+                  disabled
+                  className="w-[84px] h-[76px] rounded-small border border-white/10 bg-white/[0.03] transition-colors p-1.5 flex flex-col items-center justify-center gap-1.5 flex-shrink-0 cursor-not-allowed opacity-65"
+                >
+                  <Image
+                    src={league.icon}
+                    alt={league.label}
+                    width={30}
+                    height={30}
+                    className={cn(
+                      "w-[30px] h-[30px] object-contain opacity-95",
+                      league.label === 'Champions' && "brightness-0 invert"
+                    )}
+                    unoptimized
+                  />
+                  <span className="text-[10px] leading-tight text-white/90 text-center">
+                    {league.label}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Slots Carousel Section */}
         <div className="mb-6">
           <div className={cn("flex items-center justify-between mb-4", isMobile ? "px-3" : "px-6")}>
-            <h2 className="text-lg font-semibold text-white">New Games (128)</h2>
+            <h2 className="text-lg font-semibold text-white">Hot Games</h2>
             <div className="flex items-center gap-2">
               <Button
                 variant="ghost"
@@ -2513,7 +2560,7 @@ function HomePageContent() {
                   return (
                     <CarouselItem key={index} className={cn("pr-0 basis-auto flex-shrink-0", index === 0 ? (isMobile ? "pl-3" : "pl-6") : "pl-2 md:pl-4")}>
                       <div 
-                        className="w-[160px] h-[160px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
+                        className="w-[132px] h-[174px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
                         onClick={() => {
                           setSelectedGame({
                             title: slotNames[index % slotNames.length],
@@ -2529,10 +2576,9 @@ function HomePageContent() {
                             alt={`Slot Game ${index + 1}`}
                             fill
                             className="object-cover group-hover:scale-105 transition-transform duration-300"
-                            sizes="160px"
+                            sizes="132px"
                           />
                         )}
-                        <GameTagBadge tag={getMetaTag(index + 20)} vendor={slotVendor} />
                         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 tile-shimmer" />
                       </div>
                     </CarouselItem>
@@ -2546,7 +2592,7 @@ function HomePageContent() {
         {/* Originals Carousel Section */}
         <div className="mb-6">
           <div className={cn("flex items-center justify-between mb-4", isMobile ? "px-3" : "px-6")}>
-            <h2 className="text-lg font-semibold text-white">Originals (26)</h2>
+            <h2 className="text-lg font-semibold text-white">Exclusives</h2>
             <div className="flex items-center gap-2">
               <Button
                 variant="ghost"
@@ -2593,30 +2639,29 @@ function HomePageContent() {
           <div className={cn("relative", isMobile ? "-mx-3" : "-mx-6")}>
             <Carousel setApi={setOriginalsCarouselApi} className="w-full relative" opts={{ dragFree: true, containScroll: 'trimSnaps', duration: 15 }}>
               <CarouselContent className={cn(isMobile ? "ml-3 mr-0" : "ml-6 mr-0")}>
-                {originalsTileImages.map((imageSrc, index) => {
-                  const gameNames = ['Plinko', 'Blackjack', 'Dice', 'Diamonds', 'Mines', 'Keno', 'Limbo', 'Wheel', 'Hilo', 'Video Poker']
+                {Array.from({ length: 10 }).map((_, index) => {
+                  const imageSrc = squareTileImages[(index + 8) % squareTileImages.length]
+                  const gameNames = ['Diamond Blitz', 'Roulette Royale', 'Crypto Keno', 'Mega Dice', 'Turbo Blackjack', 'Golden Mines', 'Lightning Plinko', 'Betheat Crash', 'High Roller Wheel', 'Vault Poker']
                   return (
                     <CarouselItem key={index} className={cn("pr-0 basis-auto flex-shrink-0", index === 0 ? (isMobile ? "pl-3" : "pl-6") : "pl-2 md:pl-4")}>
                       <div 
-                        className="w-[160px] h-[280px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
+                        className="w-[132px] h-[174px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
                         onClick={() => {
-                          const originalGameNames = ['Plinko', 'Blackjack', 'Dice', 'Diamonds', 'Mines', 'Keno', 'Limbo', 'Wheel', 'Hilo', 'Video Poker']
                           setSelectedGame({
-                            title: originalGameNames[index] || `Originals Game ${index + 1}`,
+                            title: gameNames[index] || `Exclusive Game ${index + 1}`,
                             image: imageSrc,
-                            provider: 'BetOnline',
-                            features: ['Original Game', 'Unique Gameplay', 'Exclusive to BetOnline']
+                            provider: 'Betheat',
+                            features: ['Exclusive Game', 'Unique Gameplay', 'Exclusive to Betheat']
                           })
                         }}
                       >
                         <Image
                           src={imageSrc}
-                          alt={gameNames[index] || `Originals Game ${index + 1}`}
+                          alt={gameNames[index] || `Exclusive Game ${index + 1}`}
                           fill
                           className="object-cover group-hover:scale-105 transition-transform duration-300"
-                          sizes="160px"
+                          sizes="132px"
                         />
-                        <GameTagBadge tag="Original" vendor="Originals" />
                         <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
                           <IconInfoCircle className="w-4 h-4 text-white drop-shadow-lg" strokeWidth={2} />
                         </div>
@@ -2632,10 +2677,7 @@ function HomePageContent() {
 
         {/* Vendors Carousel Section */}
         <div className="mb-6">
-          <div className={cn("flex items-center justify-between mb-4", isMobile ? "px-3" : "px-6")}>
-            <h2 className="text-lg font-semibold text-white">Vendors</h2>
-          </div>
-          <div className={cn("relative", isMobile ? "-mx-3" : "-mx-6")}>
+          <div className={cn("relative", isMobile ? "px-3" : "px-6")}>
             <Carousel setApi={setVendorsCarouselApi} className="w-full relative" opts={{ dragFree: true, containScroll: 'trimSnaps', duration: 15 }}>
               {!isMobile && (
                 <>
@@ -2643,47 +2685,17 @@ function HomePageContent() {
                   <CarouselNext className="!right-2 !-translate-x-0 h-8 w-8 rounded-full bg-[#1a1a1a]/90 backdrop-blur-sm border border-white/20 hover:bg-[#1a1a1a] hover:border-white/30 text-white z-20" />
                 </>
               )}
-              <CarouselContent className={cn(isMobile ? "ml-3 mr-0" : "ml-6 mr-0")}>
-                {[
-                  'Dragon Gaming',
-                  'BetSoft',
-                  '5 Clover',
-                  '777Jacks',
-                  'Arrow\'s Edge',
-                  'Blaze',
-                  'DeckFresh',
-                  'DGS Casino Solutions',
-                  'Emerald Gate',
-                  'FDBJ',
-                  'FDRL',
-                  'Felix',
-                  'FreshDeck',
-                  'GLS',
-                  'i3 Soft',
-                  'KA Gaming',
-                  'Lucky',
-                  'Mascot Gaming',
-                  'Nucleus',
-                  'Onlyplay',
-                  'Originals',
-                  'Popiplay',
-                  'Qora',
-                  'Red Sparrow',
-                  'Revolver Gaming',
-                  'Rival',
-                  'Spinthron',
-                  'Twain',
-                  'VIG',
-                  'Wingo',
-                ].map((vendor, index) => (
-                  <CarouselItem key={vendor} className={cn("pr-0 basis-auto flex-shrink-0", index === 0 ? (isMobile ? "pl-3" : "pl-6") : "pl-2 md:pl-4")}>
+              <CarouselContent className="ml-0 -mr-2 md:-mr-4" style={{ overflow: 'visible' }}>
+                {casinoVendorList.map((vendor, index) => (
+                  <CarouselItem key={vendor} className={cn("pr-0 basis-auto flex-shrink-0", "pl-2 md:pl-4")}>
                     <button
-                      className="group relative bg-gray-100/80 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg px-3 py-2.5 text-xs font-medium text-gray-800 dark:text-white/70 hover:bg-gray-200/80 dark:hover:bg-white/10 hover:text-black dark:hover:text-white transition-all duration-300 whitespace-nowrap overflow-hidden flex items-center gap-2"
+                      aria-label={vendor}
+                      title={vendor}
+                      className="group relative bg-white/[0.03] rounded-small h-[52px] w-[96px] p-0 text-xs font-medium text-white/78 hover:bg-white/[0.06] hover:text-white transition-all duration-300 overflow-hidden flex items-center justify-center"
                       onClick={() => router.push('/casino')}
                     >
                       <VendorIcon vendor={vendor} />
-                      <span className="relative z-10">{vendor}</span>
-                      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out z-0" />
+                      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.07] to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out z-0" />
                     </button>
                   </CarouselItem>
                 ))}
@@ -2693,7 +2705,7 @@ function HomePageContent() {
         </div>
 
         {/* Why BetOnline Section - Updated with left-aligned text and trust image */}
-        <div className={cn("mb-6", isMobile ? "px-3" : "px-6")}>
+        {false && (<div className={cn("mb-6", isMobile ? "px-3" : "px-6")}>
           <h2 className="text-lg font-semibold text-white mb-4">Why BetOnline?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Compare Our Competitors Card */}
@@ -2933,32 +2945,37 @@ function HomePageContent() {
               </div>
             )}
           </div>
-        </div>
+        </div>)}
 
         {/* Activity Section */}
         <div className={cn("mb-6", isMobile ? "px-3" : "px-6")}>
           <Separator className="mb-6 bg-white/10" />
-          <h2 className="text-lg font-semibold text-white mb-4">Activity</h2>
           
-          {/* Tabs - Sub Nav Style */}
-          <div className="mb-4 overflow-x-auto scrollbar-hide" style={{ WebkitOverflowScrolling: 'touch' }}>
-            <div className="bg-white/5 dark:bg-white/5 p-0.5 h-auto gap-1 rounded-3xl border-0 backdrop-blur-xl inline-flex w-max">
-              {['All Bets', 'Jackpot Winners', 'High Rollers', 'Daily Race'].map((tab) => (
+          {/* Tabs - Casino style */}
+          <div className="mb-4 overflow-x-auto scrollbar-hide pb-1" style={{ WebkitOverflowScrolling: 'touch' }}>
+            <div className="h-auto gap-1 inline-flex w-max">
+              {[
+                { value: 'All Bets', label: 'Activity' },
+                { value: 'Jackpot Winners', label: 'Jackpot Winners' },
+                { value: 'High Rollers', label: 'High Rollers' },
+              ].map((tab) => (
                 <button
-                  key={tab}
-                  onClick={() => setActivityTab(tab as 'All Bets' | 'Jackpot Winners' | 'High Rollers' | 'Daily Race')}
+                  key={tab.value}
+                  onClick={() => setActivityTab(tab.value as 'All Bets' | 'Jackpot Winners' | 'High Rollers')}
                   className={cn(
-                    "relative px-4 py-1 h-9 text-xs font-medium rounded-2xl transition-all duration-300 whitespace-nowrap flex-shrink-0",
-                    activityTab === tab
+                    "relative px-4 py-1 h-9 text-xs font-medium rounded-none transition-colors duration-300 whitespace-nowrap flex-shrink-0",
+                    activityTab === tab.value
                       ? "text-white"
-                      : "text-white/70 hover:text-white hover:bg-white/5 dark:hover:bg-white/5 bg-transparent"
+                      : "text-white/65 hover:text-white bg-transparent"
                   )}
                 >
-                  {activityTab === tab && (
+                  {activityTab === tab.value && (
                     <motion.div
-                      layoutId="activityTab"
-                      className="absolute inset-0 rounded-2xl -z-10"
-                      style={{ backgroundColor: '#ee3536' }}
+                      layoutId="homeActivityUnderline"
+                      className="absolute left-3 right-3 bottom-0 h-[2px] rounded-full"
+                      style={{
+                        backgroundImage: 'var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%))',
+                      }}
                       initial={false}
                       transition={{
                         type: "spring",
@@ -2967,70 +2984,17 @@ function HomePageContent() {
                       }}
                     />
                   )}
-                  <span className="relative z-10 whitespace-nowrap">{tab}</span>
+                  <span className="relative z-10 whitespace-nowrap">{tab.label}</span>
                 </button>
               ))}
             </div>
           </div>
 
           {/* Activity Feed Table or Race Leaderboard */}
-          <Card className="bg-white/5 backdrop-blur-sm border-white/10 rounded-small overflow-hidden">
+          <Card className="bg-[var(--ds-sidebar-bg,#121417)]/92 backdrop-blur-sm border-white/10 rounded-small overflow-hidden">
             <CardContent className="p-0">
               <div className="max-h-[500px] overflow-y-auto scrollbar-hide">
-                {activityTab === 'Daily Race' ? (
-                  // Daily Race Table
-                  <div className="bg-[#2d2d2d] dark:bg-[#2d2d2d] border border-white/10 dark:border-white/10 rounded-lg overflow-hidden">
-                    {/* Ends in countdown */}
-                    <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
-                      <span className="text-white/70 text-xs">Ends in</span>
-                      <div className="text-sm font-bold text-white flex items-center gap-1 tabular-nums">
-                        <NumberFlow value={raceHours} />
-                        <span className="mx-1">:</span>
-                        <NumberFlow value={raceMinutes} />
-                        <span className="mx-1">:</span>
-                        <NumberFlow value={raceSeconds} />
-                      </div>
-                    </div>
-                    <div className="overflow-x-auto">
-                      <table className="w-full">
-                        <thead>
-                          <tr className="border-b border-white/10">
-                            <th className="text-left py-3 px-4 text-xs font-medium text-white/70">Rank</th>
-                            <th className="text-left py-3 px-4 text-xs font-medium text-white/70">Nickname</th>
-                            <th className="text-right py-3 px-4 text-xs font-medium text-white/70">Wagered</th>
-                            <th className="text-right py-3 px-4 text-xs font-medium text-white/70">Prize</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {raceLeaderboardData.map((entry) => (
-                            <tr key={entry.rank} className="border-b border-white/10 hover:bg-white/10 transition-colors">
-                              <td className="py-3 px-4">
-                                <div className="flex items-center gap-2">
-                                  {entry.medal === 'gold' && <IconTrophy className="w-5 h-5 text-yellow-400" />}
-                                  {entry.medal === 'silver' && <IconTrophy className="w-5 h-5 text-gray-400" />}
-                                  {entry.medal === 'bronze' && <IconTrophy className="w-5 h-5 text-orange-400" />}
-                                  {!entry.medal && <span className="text-white/70 text-sm">{entry.rank}th</span>}
-                                </div>
-                              </td>
-                              <td className="py-3 px-4 text-white text-sm">{entry.nickname}</td>
-                              <td className="py-3 px-4 text-right text-white text-sm">{entry.wagered}</td>
-                              <td className="py-3 px-4 text-right text-white text-sm font-semibold">{entry.prize}</td>
-                            </tr>
-                          ))}
-                          {/* User's Position Row */}
-                          <tr className="border-t-2 border-white/20 bg-white/5">
-                            <td className="py-3 px-4">
-                              <span className="text-white text-sm font-semibold">{userRacePosition.rank}th</span>
-                            </td>
-                            <td className="py-3 px-4 text-white text-sm font-semibold">{userRacePosition.nickname}</td>
-                            <td className="py-3 px-4 text-right text-white text-sm font-semibold">{userRacePosition.wagered}</td>
-                            <td className="py-3 px-4 text-right text-white text-sm font-semibold">{userRacePosition.prize}</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                ) : activityTab === 'Jackpot Winners' ? (
+                {activityTab === 'Jackpot Winners' ? (
                   // Jackpot Winners Table
                   <Table>
                     <TableHeader>
@@ -3047,7 +3011,7 @@ function HomePageContent() {
                           key={winner.id}
                           className={cn(
                             "border-b border-white/10 hover:bg-white/5 transition-colors",
-                            index === 0 && "bg-amber-500/5"
+                            index === 0 && "bg-white/5"
                           )}
                         >
                           <TableCell className="py-3 px-4">
@@ -3111,8 +3075,8 @@ function HomePageContent() {
                         <TableHead className="text-white/70 font-medium text-xs">Game</TableHead>
                         <TableHead className="text-white/70 font-medium text-xs">User</TableHead>
                         <TableHead className="text-white/70 font-medium text-xs">Time</TableHead>
-                        <TableHead className="text-white/70 font-medium text-xs">Bet Amount</TableHead>
-                        <TableHead className="text-white/70 font-medium text-xs">Win Amount</TableHead>
+                        <TableHead className="text-white/70 font-medium text-xs">Multiplier</TableHead>
+                        <TableHead className="text-white/70 font-medium text-xs">Payout</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -3175,17 +3139,15 @@ function HomePageContent() {
                               <span className="text-white/60 text-sm">{activity.time}</span>
                             </TableCell>
                             <TableCell className="py-3 px-4">
-                              <div className="flex items-center gap-1.5">
-                                <IconCoins className="w-3.5 h-3.5 text-green-400" />
-                                <span className="text-white text-sm font-medium">{activity.betAmount}</span>
-                              </div>
+                              <span className="text-white/80 text-sm font-medium">{activity.multiplier}</span>
                             </TableCell>
                             <TableCell className="py-3 px-4">
-                              {activity.winAmount ? (
-                                <span className="text-green-400 text-sm font-medium">{activity.winAmount}</span>
-                              ) : (
-                                <span className="text-white/30 text-sm">-</span>
-                              )}
+                              <span className={cn(
+                                "text-sm font-semibold",
+                                activity.winAmount?.startsWith('-') ? "text-white/60" : "text-green-400"
+                              )}>
+                                {activity.winAmount}
+                              </span>
                             </TableCell>
                           </motion.tr>
                         )
@@ -3207,7 +3169,7 @@ function HomePageContent() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 z-[200] bg-[#1a1a1a]"
+              className="fixed inset-0 z-[200] bg-[var(--ds-page-bg,#0d0f12)]"
             >
               {/* Rounded Glass Top Bar - Hidden in mobile landscape */}
               {!(isMobile && isLandscape) && (
@@ -3221,107 +3183,29 @@ function HomePageContent() {
                     isMobile ? "h-10" : "h-12"
                   )}
                   style={{
-                    backgroundColor: 'rgba(26, 26, 26, 0.6)',
+                    backgroundColor: 'rgba(18, 20, 23, 0.66)',
                   }}
                 >
                   <div className="flex items-center justify-between h-full px-3 relative">
-                    {/* Hamburger Menu - Left */}
-                    <div className="relative" ref={gameLauncherMenuRef}>
-                      <button
-                        onClick={() => setGameLauncherMenuOpen(!gameLauncherMenuOpen)}
-                        className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
-                      >
-                        <svg
-                          className="w-4 h-4 text-white"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <line x1="4" y1="7" x2="20" y2="7" />
-                          <line x1="6" y1="12" x2="20" y2="12" />
-                          <line x1="4" y1="17" x2="18" y2="17" />
-                        </svg>
-                      </button>
-                      
-                      {/* Dropdown Menu */}
-                      <AnimatePresence>
-                        {gameLauncherMenuOpen && (
-                          <motion.div
-                            initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                            exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                            transition={{ duration: 0.2 }}
-                            className="absolute top-full left-0 mt-2 w-56 bg-[#2d2d2d]/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl overflow-hidden z-50"
-                          >
-                            <div className="py-2">
-                              <button
-                                onClick={() => {
-                                  setGameLauncherMenuOpen(false)
-                                  openDepositDrawer()
-                                }}
-                                className="w-full px-4 py-3 text-left text-white hover:bg-white/10 transition-colors text-sm"
-                              >
-                                Quick Deposit
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setSimilarGamesDrawerOpen(true)
-                                  setGameLauncherMenuOpen(false)
-                                }}
-                                className="w-full px-4 py-3 text-left text-white hover:bg-white/10 transition-colors text-sm"
-                              >
-                                More Games Like This
-                              </button>
-                            </div>
-                            
-                            {/* VIP Progress Bar */}
-                            <div className="px-4 py-3 border-t border-white/10 bg-white/5">
-                              <div className="text-xs text-white/70 mb-2">Gold To Platinum I</div>
-                              <VIPProgressBar value={45} />
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
+                    {/* Wallet Button - Left (casino-style) */}
+                    <button
+                      onClick={() => openDepositDrawer()}
+                      className="flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-small border border-[#9a86d1]/75 bg-[#c9b4ff] text-[#121417] transition-colors duration-200 hover:bg-[#cfbcff]"
+                      style={{
+                        boxShadow: '0 6px 18px rgba(122, 92, 196, 0.28)',
+                      }}
+                    >
+                      <IconWallet className="w-3.5 h-3.5 text-[#121417]" />
+                      {!isMobile && <span className="text-[11px] font-semibold tracking-wide">WALLET</span>}
+                    </button>
 
                     {/* Game Name - Center */}
                     <h2 className="absolute left-1/2 -translate-x-1/2 text-sm font-semibold text-white max-w-[50%] truncate px-2">
                       {selectedGame.title}
                     </h2>
 
-                    {/* Right Icons - Fullscreen, Favorite and Close */}
+                    {/* Right Icons - Favorite and Close */}
                     <div className="flex items-center gap-1">
-                      <button
-                        onClick={() => {
-                          if (!gameImageRef.current) return
-                          
-                          if (!isFullscreen) {
-                            if (gameImageRef.current.requestFullscreen) {
-                              gameImageRef.current.requestFullscreen()
-                            } else if ((gameImageRef.current as any).webkitRequestFullscreen) {
-                              (gameImageRef.current as any).webkitRequestFullscreen()
-                            } else if ((gameImageRef.current as any).msRequestFullscreen) {
-                              (gameImageRef.current as any).msRequestFullscreen()
-                            }
-                            setIsFullscreen(true)
-                          } else {
-                            if (document.exitFullscreen) {
-                              document.exitFullscreen()
-                            } else if ((document as any).webkitExitFullscreen) {
-                              (document as any).webkitExitFullscreen()
-                            } else if ((document as any).msExitFullscreen) {
-                              (document as any).msExitFullscreen()
-                            }
-                            setIsFullscreen(false)
-                          }
-                        }}
-                        className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
-                      >
-                        <IconMaximize className="w-4 h-4 text-white/70 hover:text-white" />
-                      </button>
                       <button 
                         onClick={() => {
                           const gameId = hashGameTitle(selectedGame.title)
@@ -3514,7 +3398,6 @@ function HomePageContent() {
                           sizes="(max-width: 640px) 50vw, 50vw"
                         />
                       )}
-                      <GameTagBadge tag={getMetaTag(index)} vendor={tileVendor} />
                       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 tile-shimmer" />
                     </div>
                   )
@@ -3527,169 +3410,266 @@ function HomePageContent() {
         {/* Footer - Same as casino page */}
         <footer className="bg-[#2d2d2d] border-t border-white/10 text-white mt-12 relative z-0">
           <div className="w-full px-6 py-6">
-            {/* Quick Links Section */}
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6 mb-6">
-              <div>
-                <h3 className="font-semibold mb-3 text-sm">Quick Links</h3>
-                <ul className="space-y-1.5 text-xs text-white/70">
-                  <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Refer A Friend</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Rules</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Banking</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Affiliates</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Terms & Conditions</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Responsible Gaming</a></li>
-                </ul>
-              </div>
-              
+            <div className="md:hidden mb-6">
+              <Accordion type="multiple" className="w-full border-y border-white/10">
+                <AccordionItem value="casino" className="border-white/10">
+                  <AccordionTrigger value="casino" className="text-sm font-semibold py-3">Casino</AccordionTrigger>
+                  <AccordionContent value="casino">
+                    <ul className="space-y-1.5 pb-2 text-xs text-white/70">
+                      <li><a href="#" className="hover:text-white transition-colors">Casino Games</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Slots</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Live Casino</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Roulette</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Blackjack</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Poker</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Publishers</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Promos & Competitions</a></li>
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="sports" className="border-white/10">
+                  <AccordionTrigger value="sports" className="text-sm font-semibold py-3">Sports</AccordionTrigger>
+                  <AccordionContent value="sports">
+                    <ul className="space-y-1.5 pb-2 text-xs text-white/70">
+                      <li><a href="#" className="hover:text-white transition-colors">Sportsbook</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Live Sports</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Soccer</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Basketball</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Tennis</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">eSports</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Bet Bonuses</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Sports Rules</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Racing Rules</a></li>
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="support" className="border-white/10">
+                  <AccordionTrigger value="support" className="text-sm font-semibold py-3">Support</AccordionTrigger>
+                  <AccordionContent value="support">
+                    <ul className="space-y-1.5 pb-2 text-xs text-white/70">
+                      <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Fairness</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Responsible Gaming</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Gaming Help</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Live Support</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Self Exclusion</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Law Enforcement Request</a></li>
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="about" className="border-white/10">
+                  <AccordionTrigger value="about" className="text-sm font-semibold py-3">About Us</AccordionTrigger>
+                  <AccordionContent value="about">
+                    <ul className="space-y-1.5 pb-2 text-xs text-white/70">
+                      <li><a href="#" className="hover:text-white transition-colors">VIP Club</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Affiliate</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">AML Policy</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="payment" className="border-white/10">
+                  <AccordionTrigger value="payment" className="text-sm font-semibold py-3">Payment Info</AccordionTrigger>
+                  <AccordionContent value="payment">
+                    <ul className="space-y-1.5 pb-2 text-xs text-white/70">
+                      <li><a href="#" className="hover:text-white transition-colors">Deposit & Withdrawals</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Currency Guide</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Crypto Guide</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Supported Crypto</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">How Much to Bet With</a></li>
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="faq" className="border-white/10">
+                  <AccordionTrigger value="faq" className="text-sm font-semibold py-3">FAQ</AccordionTrigger>
+                  <AccordionContent value="faq">
+                    <ul className="space-y-1.5 pb-2 text-xs text-white/70">
+                      <li><a href="#" className="hover:text-white transition-colors">How-to Guides</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Online Casino Guide</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Sports Betting Guide</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">How to Live Stream Sports</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">Bonus Guide</a></li>
+                      <li><a href="#" className="hover:text-white transition-colors">House Edge Guide</a></li>
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
+
+            <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-6 gap-6 mb-6">
               <div>
                 <h3 className="font-semibold mb-3 text-sm">Casino</h3>
                 <ul className="space-y-1.5 text-xs text-white/70">
-                  <li><a href="#" className="hover:text-white transition-colors">Play Casino</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Blackjack</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Baccarat</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Craps</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Roulette</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Keno</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Casino Games</a></li>
                   <li><a href="#" className="hover:text-white transition-colors">Slots</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Video Poker</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Live Casino</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Roulette</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Blackjack</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Poker</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Publishers</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Promos & Competitions</a></li>
                 </ul>
               </div>
-              
               <div>
                 <h3 className="font-semibold mb-3 text-sm">Sports</h3>
                 <ul className="space-y-1.5 text-xs text-white/70">
                   <li><a href="#" className="hover:text-white transition-colors">Sportsbook</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">NFL Betting Odds</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">NBA Betting Odds</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">MLB Betting Odds</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">NHL Betting Odds</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">NCAAB Betting Odds</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Super Bowl Betting Odds</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Boxing Betting Odds</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Live Sports</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Soccer</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Basketball</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Tennis</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">eSports</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Bet Bonuses</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Sports Rules</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Racing Rules</a></li>
                 </ul>
               </div>
-              
-              <div>
-                <h3 className="font-semibold mb-3 text-sm">Poker</h3>
-                <ul className="space-y-1.5 text-xs text-white/70">
-                  <li><a href="#" className="hover:text-white transition-colors">Play Poker</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Download</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Texas Holdem</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Omaha Poker</a></li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="font-semibold mb-3 text-sm">Racebook</h3>
-                <ul className="space-y-1.5 text-xs text-white/70">
-                  <li><a href="#" className="hover:text-white transition-colors">Horse Betting</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Kentucky Derby</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Preakness Stakes</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Belmont Stakes</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Breeders Cup</a></li>
-                </ul>
-              </div>
-              
-              <div>
-                <h3 className="font-semibold mb-3 text-sm">Other</h3>
-                <ul className="space-y-1.5 text-xs text-white/70">
-                  <li><a href="#" className="hover:text-white transition-colors">Promos</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">News Room</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Why BetOnline</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">BetOnline Vs Competition</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">VIP Rewards</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Bet TV</a></li>
-                </ul>
-              </div>
-
               <div>
                 <h3 className="font-semibold mb-3 text-sm">Support</h3>
                 <ul className="space-y-1.5 text-xs text-white/70">
-                  <li><a href="#" className="hover:text-white transition-colors">Live Chat</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Help Centre</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Fairness</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Responsible Gaming</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Gaming Help</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Live Support</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Self Exclusion</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Law Enforcement Request</a></li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="font-semibold mb-3 text-sm">About Us</h3>
+                <ul className="space-y-1.5 text-xs text-white/70">
+                  <li><a href="#" className="hover:text-white transition-colors">VIP Club</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Affiliate</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">AML Policy</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="font-semibold mb-3 text-sm">Payment Info</h3>
+                <ul className="space-y-1.5 text-xs text-white/70">
+                  <li><a href="#" className="hover:text-white transition-colors">Deposit & Withdrawals</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Currency Guide</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Crypto Guide</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Supported Crypto</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">How Much to Bet With</a></li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="font-semibold mb-3 text-sm">FAQ</h3>
+                <ul className="space-y-1.5 text-xs text-white/70">
+                  <li><a href="#" className="hover:text-white transition-colors">How-to Guides</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Online Casino Guide</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Sports Betting Guide</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">How to Live Stream Sports</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Bonus Guide</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">House Edge Guide</a></li>
                 </ul>
               </div>
             </div>
 
             <Separator className="bg-white/10 mb-6" />
-
-            {/* Trust & Security Section */}
-            <div className="mb-6">
-              <div className="flex items-center gap-2 mb-3">
-                <h3 className="font-semibold text-base">A TRUSTED & SAFE EXPERIENCE</h3>
-                <IconShield className="w-4 h-4" />
-              </div>
-              <p className="text-xs text-white/70 mb-4 max-w-2xl">
-                At BetOnline, our company's guiding principle is to establish long-lasting, positive relationships with our customers and within the online gaming community for over 25 years.
-              </p>
-              <div className="flex flex-wrap items-center gap-3">
-                {['Bitcoin', 'Ethereum', 'Litecoin', 'USDT', 'USDC', 'BitcoinCash', 'Dogecoin'].map((method) => (
-                  <PaymentLogo key={method} method={method} />
-                ))}
-                {['VISA', 'Mastercard', 'AMEX', 'Discover'].map((method) => (
-                  <PaymentLogo key={method} method={method} />
-                ))}
-                <SecurityBadge name="Responsible Gaming" iconPath="/banners/partners/responsible gaming.webp" />
-                <SecurityBadge name="SSL Secure" iconPath="/logos/payment/ssl-secure.svg" />
-                <div className="flex items-center justify-center w-7 h-7 rounded-full bg-red-500 border-2 border-white">
-                  <span className="text-[10px] font-bold text-white">18+</span>
-                </div>
-              </div>
-            </div>
-
-            <Separator className="bg-white/10 mb-6" />
-
-            {/* Partners & Social Media */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
-              <div className="flex items-center gap-3">
-                <h3 className="font-semibold text-sm">OFFICIAL PARTNERS</h3>
-                <Separator orientation="vertical" className="h-5 bg-white/20" />
-                <div className="flex items-center gap-3">
-                  {['laliga', 'lfa', 'matchroom', 'golden boy'].map((partner) => (
-                    <div key={partner} className="flex items-center justify-center h-7 opacity-80 hover:opacity-100 transition-opacity">
-                      <Image
-                        src={`/banners/partners/${partner}.svg`}
-                        alt={partner}
-                        width={70}
-                        height={28}
-                        className="object-contain"
-                      />
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
+              <div className="w-full">
+                <div className="mt-2 flex items-center gap-2 overflow-x-auto scrollbar-hide py-1 pr-1">
+                  {['btc', 'eth', 'ltc', 'doge', 'bch', 'xrp', 'trx', 'eos', 'usdt', 'bnb', 'usdc', 'dai', 'link', 'ada', 'xmr', 'xtz'].map((symbol) => (
+                    <div key={`footer-crypto-home-${symbol}`} className="group h-10 min-w-[48px] rounded-small border border-white/10 bg-white/[0.03] px-2 inline-flex items-center justify-center text-white/45 transition-all duration-200 hover:border-white/25 hover:bg-white/[0.08] hover:text-white hover:shadow-[0_0_8px_rgba(255,255,255,0.12)]">
+                      <span className={`icon icon-${symbol} text-[20px] leading-[1] transition-all duration-200 group-hover:drop-shadow-[0_0_3px_rgba(255,255,255,0.35)]`} aria-label={symbol.toUpperCase()} />
                     </div>
                   ))}
                 </div>
               </div>
-              <div className="flex items-center gap-1.5">
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-white/70 hover:text-white hover:bg-white/5 rounded-small">
-                  <IconBrandFacebook className="w-4 h-4" />
-                </Button>
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-white/70 hover:text-white hover:bg-white/5 rounded-small">
-                  <IconBrandInstagram className="w-4 h-4" />
-                </Button>
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-white/70 hover:text-white hover:bg-white/5 rounded-small">
-                  <IconBrandX className="w-4 h-4" />
-                </Button>
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-white/70 hover:text-white hover:bg-white/5 rounded-small">
-                  <IconBrandYoutube className="w-4 h-4" />
-                </Button>
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-white/70 hover:text-white hover:bg-white/5 rounded-small">
-                  <IconBrandTiktok className="w-4 h-4" />
-                </Button>
-              </div>
             </div>
-
-            {/* Timestamp and Copyright */}
-            <div className="flex items-center justify-between text-xs text-white/50 pt-2 border-t border-white/5">
-              <div>
-                Copyright ©2024 BetOnline.ag. All rights reserved.
-              </div>
-              <div>
-                {currentTime}
+            <div className="space-y-2 text-xs text-white/60 pt-2 border-t border-white/5">
+              <Image
+                src="/logos/BHGL_logo-1773311608241-DDbBBO6v.png"
+                alt="Betheat"
+                width={180}
+                height={48}
+                className="h-8 w-auto opacity-95"
+              />
+              <p>© 2026 Betheat.net | All Rights Reserved.</p>
+              <p>Website is operated by Entools LTD who will be processing payments for Betheat.net. All video streaming is provided by various third parties and we do not carry any responsibility for actual content, stream quality, or streaming rights.</p>
+              <div className="flex items-center gap-1.5 pt-1">
+                <Button variant="ghost" size="icon" className="h-7 w-7 text-white/70 hover:text-white hover:bg-white/5 rounded-small"><IconBrandFacebook className="w-4 h-4" /></Button>
+                <Button variant="ghost" size="icon" className="h-7 w-7 text-white/70 hover:text-white hover:bg-white/5 rounded-small"><IconBrandInstagram className="w-4 h-4" /></Button>
+                <Button variant="ghost" size="icon" className="h-7 w-7 text-white/70 hover:text-white hover:bg-white/5 rounded-small"><IconBrandX className="w-4 h-4" /></Button>
+                <Button variant="ghost" size="icon" className="h-7 w-7 text-white/70 hover:text-white hover:bg-white/5 rounded-small"><IconBrandYoutube className="w-4 h-4" /></Button>
+                <Button variant="ghost" size="icon" className="h-7 w-7 text-white/70 hover:text-white hover:bg-white/5 rounded-small"><IconBrandTiktok className="w-4 h-4" /></Button>
               </div>
             </div>
           </div>
         </footer>
+
+        {/* Search Overlay (casino-style behavior) */}
+        <AnimatePresence mode="wait">
+          {searchOverlayOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[220] overflow-y-auto"
+              onClick={(e) => {
+                if (e.target === e.currentTarget) {
+                  setSearchOverlayOpen(false)
+                  setSearchQuery('')
+                }
+              }}
+            >
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 20, opacity: 0 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className="min-h-screen bg-[#1a1a1a] text-white"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="sticky top-0 bg-[#1a1a1a]/60 backdrop-blur-xl border-b border-white/10 z-10 px-6 py-4">
+                  <div className="max-w-7xl mx-auto">
+                    <div className="flex items-center justify-end mb-4">
+                      <button
+                        onClick={() => {
+                          setSearchOverlayOpen(false)
+                          setSearchQuery('')
+                        }}
+                        className="p-2 hover:bg-white/10 rounded-small transition-colors"
+                        aria-label="Close search"
+                      >
+                        <IconX className="w-6 h-6 text-white/70 hover:text-white" />
+                      </button>
+                    </div>
+                    <div className="relative">
+                      <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50" />
+                      <input
+                        type="text"
+                        placeholder="Search"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full pl-11 pr-12 py-3 bg-white/5 border border-white/10 rounded-small text-white placeholder:text-white/50 focus:outline-none focus:border-white/20"
+                        autoFocus
+                      />
+                      {searchQuery ? (
+                        <button
+                          className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 hover:bg-white/10 rounded transition-colors"
+                          title="Search"
+                        >
+                          <IconArrowRight className="w-5 h-5 text-white/70 hover:text-white" />
+                        </button>
+                      ) : (
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                          <kbd className="px-2 py-1 text-xs font-semibold text-white/50 bg-white/5 border border-white/10 rounded">↵</kbd>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Account Details Drawer */}
         <Drawer 
@@ -3707,17 +3687,17 @@ function HomePageContent() {
           shouldScaleBackground={false}
         >
           <DrawerContent 
-            showOverlay={isMobile}
+            showOverlay={true}
+            overlayClassName={!isMobile ? "bg-[#0f1728]/52 backdrop-blur-[2px]" : "bg-black/45 backdrop-blur-[1.5px]"}
             className={cn(
-              "w-full sm:max-w-md bg-white text-gray-900 flex flex-col",
-              "border-l border-gray-200",
-              isMobile && "rounded-t-[10px]"
+              "w-full sm:max-w-md bg-[var(--ds-sidebar-bg,#121417)] text-white flex flex-col overscroll-contain outline-none",
+              isMobile ? "!border-0 rounded-t-[10px]" : "border-l border-white/10"
             )}
             style={isMobile ? {
-              height: '100dvh',
-              maxHeight: '100dvh',
-              top: 0,
-              bottom: 'auto',
+              height: '80vh',
+              maxHeight: '80vh',
+              top: 'auto',
+              bottom: 0,
             } : undefined}
           >
             {isMobile && <DrawerHandle />}
@@ -3725,14 +3705,14 @@ function HomePageContent() {
               <div className="flex items-center justify-between gap-3">
                 {accountDrawerView === 'notifications' ? (
                   <div className="flex items-center gap-3 flex-1">
-                    <Button 
+                    <Button
                       variant="ghost"
                       onClick={() => setAccountDrawerView('account')}
-                      className="h-8 w-8 p-0 hover:bg-gray-100 -ml-2"
+                      className="h-8 w-8 p-0 hover:bg-white/10 -ml-2"
                     >
-                      <IconChevronLeft className="h-5 w-5 text-gray-600" />
+                      <IconChevronLeft className="h-5 w-5 text-white/70" />
                     </Button>
-                    <h2 className="text-lg font-semibold text-gray-900">Notifications</h2>
+                    <h2 className="text-lg font-semibold text-white">Messages</h2>
                   </div>
                 ) : accountDrawerView === 'createAccount' || accountDrawerView === 'createAccountConfirmation' || accountDrawerView === 'login' ? (
                   <div className="flex items-center gap-3 flex-1">
@@ -3740,39 +3720,39 @@ function HomePageContent() {
                       <Button
                         variant="ghost"
                         onClick={() => setAccountDrawerView('account')}
-                        className="h-8 w-8 p-0 hover:bg-gray-100 -ml-2"
+                      className="h-8 w-8 p-0 hover:bg-white/10 -ml-2"
                       >
-                        <IconChevronLeft className="h-5 w-5 text-gray-600" />
+                        <IconChevronLeft className="h-5 w-5 text-white/70" />
                       </Button>
                     ) : (
                       <div className="w-6" />
                     )}
-                    <h2 className="text-lg font-semibold text-gray-900">
+                    <h2 className="text-lg font-semibold text-white">
                       {accountDrawerView === 'createAccount' ? 'Create Account' : accountDrawerView === 'login' ? 'Log In' : 'Confirm Your Email'}
                     </h2>
                   </div>
                 ) : isUserLoggedIn ? (
                   <div className="flex items-center gap-3 flex-1">
-                    <Avatar className="h-10 w-10 border border-gray-200">
-                      <AvatarFallback className="bg-gray-100 text-gray-600 flex items-center justify-center text-sm font-semibold">
-                        <IconUser className="h-4 w-4" />
+                    <Avatar className="h-10 w-10 border border-white/20">
+                      <AvatarFallback className="bg-transparent text-white flex items-center justify-center text-sm font-semibold">
+                        <IconUser className="h-5 w-5" />
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
-                      <div className="text-sm font-medium text-gray-900 text-left">CH</div>
-                      <div className="text-xs text-gray-500 text-left">b1767721</div>
+                      <div className="text-sm font-medium text-white text-left">5Aces</div>
+                      <div className="text-xs text-white/55 text-left">#290847</div>
                     </div>
                   </div>
                 ) : (
                   <div className="flex items-center gap-3 flex-1">
-                    <Avatar className="h-10 w-10 border border-gray-200">
-                      <AvatarFallback className="bg-gray-100 text-gray-600 flex items-center justify-center text-sm font-semibold">
-                        <IconUser className="h-4 w-4" />
+                    <Avatar className="h-10 w-10 border border-white/20">
+                      <AvatarFallback className="bg-transparent text-white flex items-center justify-center text-sm font-semibold">
+                        <IconUser className="h-5 w-5" />
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
-                      <div className="text-sm font-medium text-gray-900 text-left">Guest</div>
-                      <div className="text-xs text-gray-500 text-left">Not signed in</div>
+                      <div className="text-sm font-medium text-white text-left">Guest</div>
+                      <div className="text-xs text-white/55 text-left">Not signed in</div>
                     </div>
                   </div>
                 )}
@@ -3782,17 +3762,17 @@ function HomePageContent() {
                       onClick={() => setAccountDrawerView('notifications')}
                       className={cn(
                         "h-8 w-8 rounded-full flex items-center justify-center transition-colors flex-shrink-0",
-                        "bg-gray-100 hover:bg-gray-200 relative"
+                        "bg-white/10 hover:bg-white/15 relative"
                       )}
                     >
-                      <IconBell className="h-4 w-4 text-gray-600" />
-                      <div className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500 border-2 border-white" />
+                      <IconBell className="h-4 w-4 text-white/75" />
+                      <div className="absolute top-0 right-0 h-2 w-2 rounded-full bg-[var(--ds-primary,#ff6a1a)] border-2 border-[#121417]" />
                     </button>
                   )}
                   {!isMobile && (
                     <DrawerClose asChild>
-                      <button className="h-8 w-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors flex-shrink-0">
-                        <IconX className="h-4 w-4 text-gray-600" />
+                      <button className="h-8 w-8 rounded-full bg-white/10 hover:bg-white/15 flex items-center justify-center transition-colors flex-shrink-0">
+                        <IconX className="h-4 w-4 text-white/75" />
                       </button>
                     </DrawerClose>
                   )}
@@ -3801,158 +3781,97 @@ function HomePageContent() {
             </DrawerHeader>
             
             <div
-              className={cn("flex-1 overflow-y-auto overscroll-contain", isMobile ? "px-4 pt-4 pb-4" : "px-4 pt-6 pb-4")}
+              className={cn("flex-1 overflow-y-auto overscroll-contain text-white", isMobile ? "px-4 pt-4 pb-4" : "px-4 pt-6 pb-4")}
               style={isMobile ? { WebkitOverflowScrolling: 'touch', paddingBottom: 'max(env(safe-area-inset-bottom), 14px)' } : undefined}
             >
               {accountDrawerView === 'account' ? (
                 <>
                   {isUserLoggedIn ? (
                     <>
-                  {/* Balance Information */}
-                  <div className="mb-4">
-                    <div className="bg-gray-50 rounded-lg px-3 py-3 space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600">Available Balance</span>
-                        <span className="text-sm font-semibold text-gray-900">
-                          {currentBrand.symbol}
-                          <NumberFlow value={displayBalance} format={{ notation: 'standard', minimumFractionDigits: 2, maximumFractionDigits: 2 }} />
-                        </span>
+                      {/* Balance Information */}
+                      <div className="mb-4">
+                        <div className="bg-white/[0.04] border border-white/10 rounded-lg px-3 py-3 space-y-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-white/80">Available Balance</span>
+                            <span className="text-sm font-semibold text-white">
+                              {currentBrand.symbol}
+                              <NumberFlow value={displayBalance} format={{ notation: 'standard', minimumFractionDigits: 2, maximumFractionDigits: 2 }} />
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-white/80">Bonus</span>
+                            <span className="text-sm font-semibold text-white">$0.00</span>
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600">Free Bet</span>
-                        <span className="text-sm font-semibold text-gray-900">$0.00</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <Separator className="bg-gray-200 mb-3" />
-                  
-                  {/* Deposit and Withdraw */}
-                  <div className="space-y-0.5 w-full mb-3">
-                    <Button 
-                      variant="ghost" 
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-10 px-3"
-                      onClick={() => {
-                        setAccountDrawerOpen(false)
-                        openDepositDrawer()
-                      }}
-                    >
-                      <IconCreditCard className="w-5 h-5 mr-3 text-gray-700" />
-                      <span className="flex-1 text-left text-gray-900">Deposit</span>
-                    </Button>
-                    
-                    <Button 
-                      variant="ghost" 
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-10 px-3"
-                    >
-                      <IconArrowRight className="w-5 h-5 mr-3 text-gray-700 rotate-180" />
-                      <span className="flex-1 text-left text-gray-900">Withdraw</span>
-                    </Button>
-                  </div>
-                  
-                  <Separator className="bg-gray-200 mb-6" />
-                  
-                  {/* Navigation List */}
-                  <div className="space-y-1 w-full mb-8">
-                    <Button 
-                      variant="ghost" 
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-12 px-3 min-w-0"
-                      onClick={() => {
-                        setAccountDrawerOpen(false)
-                        router.push('/account')
-                      }}
-                    >
-                      <IconUser className="w-5 h-5 mr-3 text-gray-700" />
-                      <span className="flex-1 text-left text-gray-900">My Account</span>
-                    </Button>
 
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-12 px-3 min-w-0"
-                      onClick={() => setAccountDrawerView('notifications')}
-                    >
-                      <IconBell className="w-5 h-5 mr-3 text-gray-700 flex-shrink-0" />
-                      <span className="flex-1 text-left text-gray-900">Notifications</span>
-                      {webInboxUnreadCount > 0 && (
-                        <span className="bg-red-500 text-white text-[10px] font-bold rounded-full min-w-[20px] h-5 px-1.5 flex items-center justify-center">
-                          {webInboxUnreadCount}
-                        </span>
-                      )}
-                    </Button>
-                    
-                    <Button 
-                      variant="ghost" 
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-12 px-3 min-w-0"
-                      onClick={() => {
-                        setAccountDrawerOpen(false)
-                        router.push('/sports?mybets=pending')
-                      }}
-                    >
-                      <IconFileText className="w-5 h-5 mr-3 text-gray-700 flex-shrink-0" />
-                      <span className="flex-1 text-left text-gray-900">Pending Bets</span>
-                      <span className="text-sm text-gray-600 ml-auto flex items-center gap-1.5">
-                        <span className="bg-amber-500 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">4</span>
-                        $40.00
-                      </span>
-                    </Button>
-                    
-                    <Button 
-                      variant="ghost" 
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-12 px-3"
-                    >
-                      <IconGift className="w-5 h-5 mr-3 text-gray-700" />
-                      <span className="flex-1 text-left text-gray-900">My Bonus</span>
-                    </Button>
-                    
-                    <Button 
-                      variant="ghost" 
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-12 px-3"
-                    >
-                      <IconCurrencyDollar className="w-5 h-5 mr-3 text-gray-700" />
-                      <span className="flex-1 text-left text-gray-900">Transactions History</span>
-                    </Button>
-                    
-                    <Button 
-                      variant="ghost" 
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-12 px-3"
-                    >
-                      <IconTicket className="w-5 h-5 mr-3 text-gray-700" />
-                      <span className="flex-1 text-left text-gray-900">Bet History</span>
-                    </Button>
-                    
-                    <Button 
-                      variant="ghost" 
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-12 px-3"
-                    >
-                      <IconUserPlus className="w-5 h-5 mr-3 text-gray-700" />
-                      <span className="flex-1 text-left text-gray-900">Refer a Friend</span>
-                    </Button>
-                    
-                    <Button 
-                      variant="ghost" 
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-12 px-3"
-                      onClick={() => {
-                        openVipDrawer()
-                      }}
-                    >
-                      <IconCrown className="w-5 h-5 mr-3 text-gray-700" />
-                      <span className="flex-1 text-left text-gray-900">VIP Rewards</span>
-                    </Button>
-                  </div>
-                  
-                  <Separator className={cn("bg-gray-200", isMobile ? "my-4" : "my-5")} />
-                  
-                  {/* Logout Button */}
-                  <Button 
-                    variant="ghost" 
-                    className="w-full justify-center text-gray-600 hover:bg-gray-100 hover:text-gray-600 h-10 px-2 min-w-0"
-                    onClick={() => {
-                      setIsUserLoggedIn(false)
-                      setAccountDrawerView('account')
-                    }}
-                  >
-                    <span className="text-sm">Log out</span>
-                  </Button>
+                      <Separator className="bg-white/10 mb-3" />
+
+                      <div className="space-y-0.5 w-full mb-3">
+                        <Button
+                          variant="ghost"
+                          className="w-full justify-center gap-2 h-10 px-3 border border-[#9a86d1]/75 text-[#121417] font-semibold hover:text-[#121417]"
+                          style={{ backgroundColor: '#c9b4ff', boxShadow: '0 6px 18px rgba(122, 92, 196, 0.28)' }}
+                          onClick={() => {
+                            setAccountDrawerOpen(false)
+                            openDepositDrawer()
+                          }}
+                        >
+                          <IconWallet className="w-4 h-4" />
+                          <span>Wallet</span>
+                        </Button>
+                      </div>
+
+                      <Separator className="bg-white/10 mb-6" />
+
+                      <div className="space-y-1 w-full mb-8">
+                        <Button variant="ghost" className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 min-w-0 transition-colors duration-200">
+                          <IconUser className="w-5 h-5 mr-3 text-white/65 transition-colors duration-200 group-hover:text-white/90" />
+                          <span className="flex-1 text-left text-white">My Profile</span>
+                        </Button>
+
+                        <Button
+                          variant="ghost"
+                          className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 min-w-0 transition-colors duration-200"
+                          onClick={() => setAccountDrawerView('notifications')}
+                        >
+                          <IconBell className="w-5 h-5 mr-3 text-white/65 flex-shrink-0 transition-colors duration-200 group-hover:text-white/90" />
+                          <span className="flex-1 text-left text-white">Messages</span>
+                          {webInboxUnreadCount > 0 && (
+                            <span className="bg-[var(--ds-primary,#ff6a1a)] text-white text-[10px] font-bold rounded-full min-w-[20px] h-5 px-1.5 flex items-center justify-center">
+                              {webInboxUnreadCount}
+                            </span>
+                          )}
+                        </Button>
+
+                        <Button variant="ghost" className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 transition-colors duration-200">
+                          <IconGift className="w-5 h-5 mr-3 text-white/65 transition-colors duration-200 group-hover:text-white/90" />
+                          <span className="flex-1 text-left text-white">My Bonus</span>
+                        </Button>
+
+                        <Button variant="ghost" className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 transition-colors duration-200">
+                          <IconCurrencyDollar className="w-5 h-5 mr-3 text-white/65 transition-colors duration-200 group-hover:text-white/90" />
+                          <span className="flex-1 text-left text-white">Transactions History</span>
+                        </Button>
+
+                        <Button variant="ghost" className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 transition-colors duration-200">
+                          <IconTicket className="w-5 h-5 mr-3 text-white/65 transition-colors duration-200 group-hover:text-white/90" />
+                          <span className="flex-1 text-left text-white">Bet History</span>
+                        </Button>
+                      </div>
+
+                      <Separator className={cn("bg-white/10", isMobile ? "my-4" : "my-5")} />
+
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-center text-white/60 hover:bg-white/[0.06] hover:text-white/70 h-10 px-2 min-w-0"
+                        onClick={() => {
+                          setIsUserLoggedIn(false)
+                          setAccountDrawerView('account')
+                        }}
+                      >
+                        <span className="text-sm">Log out</span>
+                      </Button>
                     </>
                   ) : (
                     <>
@@ -4833,13 +4752,6 @@ function HomePageContent() {
           </DrawerContent>
         </Drawer>
 
-      {/* Mobile: Dynamic Island Dock - Bottom of screen (hidden during game launcher) */}
-      {isMobile && !selectedGame && (
-        <DynamicIsland
-          showSearch={false}
-          showFavorites={false}
-        />
-      )}
       </div>
     </div>
   )
