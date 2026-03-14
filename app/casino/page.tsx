@@ -264,6 +264,25 @@ import {
 } from '@/components/ui/family-drawer'
 import { NotificationHub } from '@/components/account/notification-hub'
 
+const FOOTER_CRYPTO_LABELS: Record<string, string> = {
+  btc: 'Bitcoin',
+  eth: 'Ethereum',
+  ltc: 'Litecoin',
+  doge: 'Dogecoin',
+  bch: 'Bitcoin Cash',
+  xrp: 'XRP',
+  trx: 'TRON',
+  eos: 'EOS',
+  usdt: 'Tether (USDT)',
+  bnb: 'BNB',
+  usdc: 'USD Coin (USDC)',
+  dai: 'Dai',
+  link: 'Chainlink',
+  ada: 'Cardano',
+  xmr: 'Monero',
+  xtz: 'Tezos',
+}
+
 // Helper function to get vendor icon path
 const getVendorIconPath = (vendorName: string): string => {
   // Map vendor names to actual file names in vendot_logos folder
@@ -3272,8 +3291,8 @@ function VIPRewardsPage({ brandPrimary, setVipDrawerOpen, setVipActiveTab, setSh
                 <ul className="space-y-1.5 text-xs text-white/70">
                   <li><a href="#" className="hover:text-white transition-colors">Promos</a></li>
                   <li><a href="#" className="hover:text-white transition-colors">News Room</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Why BetOnline</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">BetOnline Vs Competition</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Why Betheat</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Betheat vs Competition</a></li>
                   <li><a href="#" className="hover:text-white transition-colors">VIP Rewards</a></li>
                   <li><a href="#" className="hover:text-white transition-colors">Bet TV</a></li>
                 </ul>
@@ -3287,45 +3306,38 @@ function VIPRewardsPage({ brandPrimary, setVipDrawerOpen, setVipActiveTab, setSh
               </div>
             </div>
             <Separator className="bg-white/10 mb-6" />
-            <div className="mb-6">
-              <div className="flex items-center gap-2 mb-3">
-                <h3 className="font-semibold text-base">We accept</h3>
-                <IconShield className="w-4 h-4" />
-              </div>
-              <p className="text-xs text-white/70 mb-4 max-w-2xl">
-                Fast and secure crypto deposits and payouts.
-              </p>
-              <div className="flex flex-wrap items-center gap-3">
-                {['Bitcoin', 'Ethereum', 'Litecoin', 'USDT', 'USDC', 'BitcoinCash', 'Dogecoin'].map((method) => (
-                  <PaymentLogo key={method} method={method} />
-                ))}
-                <SecurityBadge name="Responsible Gaming" iconPath="/banners/partners/responsible gaming.webp" />
-                <SecurityBadge name="SSL Secure" iconPath="/logos/payment/ssl-secure.svg" />
-                <div className="flex items-center justify-center w-7 h-7 rounded-full bg-red-500 border-2 border-white">
-                  <span className="text-[10px] font-bold text-white">18+</span>
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
+              <div className="w-full">
+                <div className="mt-2 flex items-center gap-2 overflow-x-auto scrollbar-hide py-1 pr-1">
+                  {['btc', 'eth', 'ltc', 'doge', 'bch', 'xrp', 'trx', 'eos', 'usdt', 'bnb', 'usdc', 'dai', 'link', 'ada', 'xmr', 'xtz'].map((symbol) => {
+                    const coinLabel = FOOTER_CRYPTO_LABELS[symbol] ?? symbol.toUpperCase()
+                    return (
+                      <Tooltip key={`footer-crypto-vip-${symbol}`}>
+                        <TooltipTrigger asChild>
+                          <div className="group h-10 min-w-[48px] rounded-small border border-white/10 bg-white/[0.03] px-2 inline-flex items-center justify-center text-white/45 transition-all duration-200 hover:border-white/25 hover:bg-white/[0.08] hover:text-white hover:shadow-[0_0_8px_rgba(255,255,255,0.12)]">
+                            <span className={`icon icon-${symbol} text-[20px] leading-[1] transition-all duration-200 group-hover:drop-shadow-[0_0_3px_rgba(255,255,255,0.35)]`} aria-label={coinLabel} />
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent side="top" className="bg-[#2d2d2d] border-white/20 text-white">
+                          <p>{coinLabel}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    )
+                  })}
                 </div>
               </div>
             </div>
-            <Separator className="bg-white/10 mb-6" />
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
-              <div className="flex items-center gap-3">
-                <h3 className="font-semibold text-sm">OFFICIAL PARTNERS</h3>
-                <Separator orientation="vertical" className="h-5 bg-white/20" />
-                <div className="flex items-center gap-3">
-                  {['laliga', 'lfa', 'matchroom', 'golden boy'].map((partner) => (
-                    <div key={partner} className="flex items-center justify-center h-7 opacity-80 hover:opacity-100 transition-opacity">
-                      <Image
-                        src={`/banners/partners/${partner}.svg`}
-                        alt={partner}
-                        width={70}
-                        height={28}
-                        className="object-contain"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="flex items-center gap-1.5">
+            <div className="space-y-2 text-xs text-white/60 pt-2 border-t border-white/5">
+              <Image
+                src="/logos/BHGL_logo-1773311608241-DDbBBO6v.png"
+                alt="Betheat"
+                width={180}
+                height={48}
+                className="h-8 w-auto opacity-95"
+              />
+              <p>© 2026 Betheat.net | All Rights Reserved.</p>
+              <p>Website is operated by Entools LTD who will be processing payments for Betheat.net. All video streaming is provided by various third parties and we do not carry any responsibility for actual content, stream quality, or streaming rights.</p>
+              <div className="flex items-center gap-1.5 pt-1">
                 <Button variant="ghost" size="icon" className="h-7 w-7 text-white/70 hover:text-white hover:bg-white/5 rounded-small">
                   <IconBrandFacebook className="w-4 h-4" />
                 </Button>
@@ -3342,10 +3354,6 @@ function VIPRewardsPage({ brandPrimary, setVipDrawerOpen, setVipActiveTab, setSh
                   <IconBrandTiktok className="w-4 h-4" />
                 </Button>
               </div>
-            </div>
-            <div className="flex items-center justify-between text-xs text-white/50 pt-2 border-t border-white/5">
-              <div>Copyright ©2024 BetOnline.ag. All rights reserved.</div>
-              <div></div>
             </div>
           </div>
         </footer>
@@ -5847,8 +5855,8 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                 <ul className="space-y-1.5 text-xs text-white/70">
                   <li><a href="#" className="hover:text-white transition-colors">Promos</a></li>
                   <li><a href="#" className="hover:text-white transition-colors">News Room</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Why BetOnline</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">BetOnline Vs Competition</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Why Betheat</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Betheat vs Competition</a></li>
                   <li><a href="#" className="hover:text-white transition-colors">VIP Rewards</a></li>
                   <li><a href="#" className="hover:text-white transition-colors">Bet TV</a></li>
                 </ul>
@@ -5864,53 +5872,38 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
             </div>
 
             <Separator className="bg-white/10 mb-6" />
-
-            {/* Trust & Security Section - More compact */}
-            <div className="mb-6">
-              <div className="flex items-center gap-2 mb-3">
-                <h3 className="font-semibold text-base">We accept</h3>
-                <IconShield className="w-4 h-4" />
-              </div>
-              <p className="text-xs text-white/70 mb-4 max-w-2xl">
-                Fast and secure crypto deposits and payouts.
-              </p>
-              <div className="flex flex-wrap items-center gap-3">
-                {/* Crypto payment method logos */}
-                {['Bitcoin', 'Ethereum', 'Litecoin', 'USDT', 'USDC', 'BitcoinCash', 'Dogecoin'].map((method) => (
-                  <PaymentLogo key={method} method={method} />
-                ))}
-                {/* Security badges */}
-                <SecurityBadge name="Responsible Gaming" iconPath="/banners/partners/responsible gaming.webp" />
-                <SecurityBadge name="SSL Secure" iconPath="/logos/payment/ssl-secure.svg" />
-                <div className="flex items-center justify-center w-7 h-7 rounded-full bg-red-500 border-2 border-white">
-                  <span className="text-[10px] font-bold text-white">18+</span>
-            </div>
-          </div>
-        </div>
-
-            <Separator className="bg-white/10 mb-6" />
-
-            {/* Partners & Social Media - More compact */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
-              <div className="flex items-center gap-3">
-                <h3 className="font-semibold text-sm">OFFICIAL PARTNERS</h3>
-                <Separator orientation="vertical" className="h-5 bg-white/20" />
-                <div className="flex items-center gap-3">
-                  {['laliga', 'lfa', 'matchroom', 'golden boy'].map((partner) => (
-                    <div key={partner} className="flex items-center justify-center h-7 opacity-80 hover:opacity-100 transition-opacity">
-                      <Image
-                        src={`/banners/partners/${partner}.svg`}
-                        alt={partner}
-                        width={70}
-                        height={28}
-                        className="object-contain"
-                      />
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
+              <div className="w-full">
+                <div className="mt-2 flex items-center gap-2 overflow-x-auto scrollbar-hide py-1 pr-1">
+                  {['btc', 'eth', 'ltc', 'doge', 'bch', 'xrp', 'trx', 'eos', 'usdt', 'bnb', 'usdc', 'dai', 'link', 'ada', 'xmr', 'xtz'].map((symbol) => {
+                    const coinLabel = FOOTER_CRYPTO_LABELS[symbol] ?? symbol.toUpperCase()
+                    return (
+                      <Tooltip key={`footer-crypto-main-${symbol}`}>
+                        <TooltipTrigger asChild>
+                          <div className="group h-10 min-w-[48px] rounded-small border border-white/10 bg-white/[0.03] px-2 inline-flex items-center justify-center text-white/45 transition-all duration-200 hover:border-white/25 hover:bg-white/[0.08] hover:text-white hover:shadow-[0_0_8px_rgba(255,255,255,0.12)]">
+                            <span className={`icon icon-${symbol} text-[20px] leading-[1] transition-all duration-200 group-hover:drop-shadow-[0_0_3px_rgba(255,255,255,0.35)]`} aria-label={coinLabel} />
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent side="top" className="bg-[#2d2d2d] border-white/20 text-white">
+                          <p>{coinLabel}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    )
+                  })}
                 </div>
-                  ))}
               </div>
-              </div>
-              <div className="flex items-center gap-1.5">
-                {/* Social media icons using Button components */}
+            </div>
+            <div className="space-y-2 text-xs text-white/60 pt-2 border-t border-white/5">
+              <Image
+                src="/logos/BHGL_logo-1773311608241-DDbBBO6v.png"
+                alt="Betheat"
+                width={180}
+                height={48}
+                className="h-8 w-auto opacity-95"
+              />
+              <p>© 2026 Betheat.net | All Rights Reserved.</p>
+              <p>Website is operated by Entools LTD who will be processing payments for Betheat.net. All video streaming is provided by various third parties and we do not carry any responsibility for actual content, stream quality, or streaming rights.</p>
+              <div className="flex items-center gap-1.5 pt-1">
                 <Button variant="ghost" size="icon" className="h-7 w-7 text-white/70 hover:text-white hover:bg-white/5 rounded-small">
                   <IconBrandFacebook className="w-4 h-4" />
                 </Button>
@@ -5926,16 +5919,6 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                 <Button variant="ghost" size="icon" className="h-7 w-7 text-white/70 hover:text-white hover:bg-white/5 rounded-small">
                   <IconBrandTiktok className="w-4 h-4" />
                 </Button>
-              </div>
-            </div>
-
-            {/* Timestamp and Copyright */}
-            <div className="flex items-center justify-between text-xs text-white/50 pt-2 border-t border-white/5">
-              <div>
-                Copyright ©2024 BetOnline.ag. All rights reserved.
-              </div>
-              <div>
-                {typeof currentTime !== 'undefined' ? currentTime : ''}
               </div>
             </div>
           </div>
@@ -7811,8 +7794,8 @@ function PokerLandingPage({ brandPrimary, quickLinksOpen, onNavigate }: { brandP
                   <ul className="space-y-1.5 text-xs text-white/70">
                     <li><a href="#" className="hover:text-white transition-colors">Promos</a></li>
                     <li><a href="#" className="hover:text-white transition-colors">News Room</a></li>
-                    <li><a href="#" className="hover:text-white transition-colors">Why BetOnline</a></li>
-                    <li><a href="#" className="hover:text-white transition-colors">BetOnline Vs Competition</a></li>
+                    <li><a href="#" className="hover:text-white transition-colors">Why Betheat</a></li>
+                    <li><a href="#" className="hover:text-white transition-colors">Betheat vs Competition</a></li>
                     <li><a href="#" className="hover:text-white transition-colors">VIP Rewards</a></li>
                     <li><a href="#" className="hover:text-white transition-colors">Bet TV</a></li>
                   </ul>
@@ -7826,48 +7809,44 @@ function PokerLandingPage({ brandPrimary, quickLinksOpen, onNavigate }: { brandP
                 </div>
               </div>
               <Separator className="bg-white/10 mb-6" />
-              <div className="mb-6">
-                <div className="flex items-center gap-2 mb-3">
-                  <h3 className="font-semibold text-base">We accept</h3>
-                  <IconShield className="w-4 h-4" />
-                </div>
-                <p className="text-xs text-white/70 mb-4 max-w-2xl">
-                  Fast and secure crypto deposits and payouts.
-                </p>
-                <div className="flex flex-wrap items-center gap-3">
-                  {['Bitcoin', 'Ethereum', 'Litecoin', 'USDT', 'USDC', 'BitcoinCash', 'Dogecoin'].map((method) => (
-                    <PaymentLogo key={method} method={method} />
-                  ))}
-                  <SecurityBadge name="Responsible Gaming" iconPath="/banners/partners/responsible gaming.webp" />
-                  <SecurityBadge name="SSL Secure" iconPath="/logos/payment/ssl-secure.svg" />
-                  <div className="flex items-center justify-center w-7 h-7 rounded-full bg-red-500 border-2 border-white">
-                    <span className="text-[10px] font-bold text-white">18+</span>
+              <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
+                <div className="w-full">
+                  <div className="mt-2 flex items-center gap-2 overflow-x-auto scrollbar-hide py-1 pr-1">
+                    {['btc', 'eth', 'ltc', 'doge', 'bch', 'xrp', 'trx', 'eos', 'usdt', 'bnb', 'usdc', 'dai', 'link', 'ada', 'xmr', 'xtz'].map((symbol) => {
+                      const coinLabel = FOOTER_CRYPTO_LABELS[symbol] ?? symbol.toUpperCase()
+                      return (
+                        <Tooltip key={`footer-crypto-poker-${symbol}`}>
+                          <TooltipTrigger asChild>
+                            <div className="group h-10 min-w-[48px] rounded-small border border-white/10 bg-white/[0.03] px-2 inline-flex items-center justify-center text-white/45 transition-all duration-200 hover:border-white/25 hover:bg-white/[0.08] hover:text-white hover:shadow-[0_0_8px_rgba(255,255,255,0.12)]">
+                              <span className={`icon icon-${symbol} text-[20px] leading-[1] transition-all duration-200 group-hover:drop-shadow-[0_0_3px_rgba(255,255,255,0.35)]`} aria-label={coinLabel} />
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent side="top" className="bg-[#2d2d2d] border-white/20 text-white">
+                            <p>{coinLabel}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      )
+                    })}
                   </div>
                 </div>
               </div>
-              <Separator className="bg-white/10 mb-6" />
-              <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
-                <div className="flex items-center gap-3">
-                  <h3 className="font-semibold text-sm">OFFICIAL PARTNERS</h3>
-                  <Separator orientation="vertical" className="h-5 bg-white/20" />
-                  <div className="flex items-center gap-3">
-                    {['laliga', 'lfa', 'matchroom', 'golden boy'].map((partner) => (
-                      <div key={partner} className="flex items-center justify-center h-7 opacity-80 hover:opacity-100 transition-opacity">
-                        <Image src={`/banners/partners/${partner}.svg`} alt={partner} width={70} height={28} className="object-contain" />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex items-center gap-1.5">
+              <div className="space-y-2 text-xs text-white/60 pt-2 border-t border-white/5">
+                <Image
+                  src="/logos/BHGL_logo-1773311608241-DDbBBO6v.png"
+                  alt="Betheat"
+                  width={180}
+                  height={48}
+                  className="h-8 w-auto opacity-95"
+                />
+                <p>© 2026 Betheat.net | All Rights Reserved.</p>
+                <p>Website is operated by Entools LTD who will be processing payments for Betheat.net. All video streaming is provided by various third parties and we do not carry any responsibility for actual content, stream quality, or streaming rights.</p>
+                <div className="flex items-center gap-1.5 pt-1">
                   <Button variant="ghost" size="icon" className="h-7 w-7 text-white/70 hover:text-white hover:bg-white/5 rounded-small"><IconBrandFacebook className="w-4 h-4" /></Button>
                   <Button variant="ghost" size="icon" className="h-7 w-7 text-white/70 hover:text-white hover:bg-white/5 rounded-small"><IconBrandInstagram className="w-4 h-4" /></Button>
                   <Button variant="ghost" size="icon" className="h-7 w-7 text-white/70 hover:text-white hover:bg-white/5 rounded-small"><IconBrandX className="w-4 h-4" /></Button>
                   <Button variant="ghost" size="icon" className="h-7 w-7 text-white/70 hover:text-white hover:bg-white/5 rounded-small"><IconBrandYoutube className="w-4 h-4" /></Button>
                   <Button variant="ghost" size="icon" className="h-7 w-7 text-white/70 hover:text-white hover:bg-white/5 rounded-small"><IconBrandTiktok className="w-4 h-4" /></Button>
                 </div>
-              </div>
-              <div className="flex items-center justify-between text-xs text-white/50 pt-2 border-t border-white/5">
-                <div>Copyright ©2024 BetOnline.ag. All rights reserved.</div>
               </div>
             </div>
           </footer>
@@ -13702,144 +13681,202 @@ function NavTestPageContent() {
             )}
             </AnimatePresence>
               
-              {/* Footer - responsive to sidebar state, hidden on VIP/Sports/Poker pages which have their own layouts */}
-              {!showVipRewards && !showSports && !showPoker && (
+              {/* Footer - responsive to sidebar state, hidden on Sports/Poker pages which have their own layouts */}
+              {!showSports && !showPoker && (
               <footer className="bg-[#2d2d2d] border-t border-white/10 text-white mt-12 relative z-0">
               <div className="w-full px-6 py-6">
-                  {/* Quick Links Section - More compact */}
-                  <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6 mb-6">
-                    <div>
-                      <h3 className="font-semibold mb-3 text-sm">Quick Links</h3>
-                      <ul className="space-y-1.5 text-xs text-white/70">
-                        <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Refer A Friend</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Rules</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Banking</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Affiliates</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Terms & Conditions</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Responsible Gaming</a></li>
-                      </ul>
-                    </div>
-                    
+                  <div className="md:hidden mb-6">
+                    <Accordion type="multiple" className="w-full border-y border-white/10">
+                      <AccordionItem value="casino" className="border-white/10">
+                        <AccordionTrigger className="text-sm font-semibold py-3">Casino</AccordionTrigger>
+                        <AccordionContent>
+                          <ul className="space-y-1.5 pb-2 text-xs text-white/70">
+                            <li><a href="#" className="hover:text-white transition-colors">Casino Games</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Slots</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Live Casino</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Roulette</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Blackjack</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Poker</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Publishers</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Promos & Competitions</a></li>
+                          </ul>
+                        </AccordionContent>
+                      </AccordionItem>
+                      <AccordionItem value="sports" className="border-white/10">
+                        <AccordionTrigger className="text-sm font-semibold py-3">Sports</AccordionTrigger>
+                        <AccordionContent>
+                          <ul className="space-y-1.5 pb-2 text-xs text-white/70">
+                            <li><a href="#" className="hover:text-white transition-colors">Sportsbook</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Live Sports</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Soccer</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Basketball</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Tennis</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">eSports</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Bet Bonuses</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Sports Rules</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Racing Rules</a></li>
+                          </ul>
+                        </AccordionContent>
+                      </AccordionItem>
+                      <AccordionItem value="support" className="border-white/10">
+                        <AccordionTrigger className="text-sm font-semibold py-3">Support</AccordionTrigger>
+                        <AccordionContent>
+                          <ul className="space-y-1.5 pb-2 text-xs text-white/70">
+                            <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Fairness</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Responsible Gaming</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Gaming Help</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Live Support</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Self Exclusion</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Law Enforcement Request</a></li>
+                          </ul>
+                        </AccordionContent>
+                      </AccordionItem>
+                      <AccordionItem value="about" className="border-white/10">
+                        <AccordionTrigger className="text-sm font-semibold py-3">About Us</AccordionTrigger>
+                        <AccordionContent>
+                          <ul className="space-y-1.5 pb-2 text-xs text-white/70">
+                            <li><a href="#" className="hover:text-white transition-colors">VIP Club</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Affiliate</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">AML Policy</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+                          </ul>
+                        </AccordionContent>
+                      </AccordionItem>
+                      <AccordionItem value="payment" className="border-white/10">
+                        <AccordionTrigger className="text-sm font-semibold py-3">Payment Info</AccordionTrigger>
+                        <AccordionContent>
+                          <ul className="space-y-1.5 pb-2 text-xs text-white/70">
+                            <li><a href="#" className="hover:text-white transition-colors">Deposit & Withdrawals</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Currency Guide</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Crypto Guide</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Supported Crypto</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">How Much to Bet With</a></li>
+                          </ul>
+                        </AccordionContent>
+                      </AccordionItem>
+                      <AccordionItem value="faq" className="border-white/10">
+                        <AccordionTrigger className="text-sm font-semibold py-3">FAQ</AccordionTrigger>
+                        <AccordionContent>
+                          <ul className="space-y-1.5 pb-2 text-xs text-white/70">
+                            <li><a href="#" className="hover:text-white transition-colors">How-to Guides</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Online Casino Guide</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Sports Betting Guide</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">How to Live Stream Sports</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">Bonus Guide</a></li>
+                            <li><a href="#" className="hover:text-white transition-colors">House Edge Guide</a></li>
+                          </ul>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+                  </div>
+                  <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-6 gap-6 mb-6">
                     <div>
                       <h3 className="font-semibold mb-3 text-sm">Casino</h3>
                       <ul className="space-y-1.5 text-xs text-white/70">
-                        <li><a href="#" className="hover:text-white transition-colors">Play Casino</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Blackjack</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Baccarat</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Craps</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Roulette</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Keno</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Casino Games</a></li>
                         <li><a href="#" className="hover:text-white transition-colors">Slots</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Video Poker</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Live Casino</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Roulette</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Blackjack</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Poker</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Publishers</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Promos & Competitions</a></li>
                       </ul>
                     </div>
-                    
                     <div>
                       <h3 className="font-semibold mb-3 text-sm">Sports</h3>
                       <ul className="space-y-1.5 text-xs text-white/70">
                         <li><a href="#" className="hover:text-white transition-colors">Sportsbook</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">NFL Betting Odds</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">NBA Betting Odds</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">MLB Betting Odds</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">NHL Betting Odds</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">NCAAB Betting Odds</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Super Bowl Betting Odds</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Boxing Betting Odds</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Live Sports</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Soccer</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Basketball</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Tennis</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">eSports</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Bet Bonuses</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Sports Rules</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Racing Rules</a></li>
                       </ul>
                     </div>
-                    
-                    <div>
-                      <h3 className="font-semibold mb-3 text-sm">Poker</h3>
-                      <ul className="space-y-1.5 text-xs text-white/70">
-                        <li><a href="#" className="hover:text-white transition-colors">Play Poker</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Download</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Texas Holdem</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Omaha Poker</a></li>
-                      </ul>
-                    </div>
-
-                    <div>
-                      <h3 className="font-semibold mb-3 text-sm">Racebook</h3>
-                      <ul className="space-y-1.5 text-xs text-white/70">
-                        <li><a href="#" className="hover:text-white transition-colors">Horse Betting</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Kentucky Derby</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Preakness Stakes</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Belmont Stakes</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Breeders Cup</a></li>
-                      </ul>
-                    </div>
-                    
-                    <div>
-                      <h3 className="font-semibold mb-3 text-sm">Other</h3>
-                      <ul className="space-y-1.5 text-xs text-white/70">
-                        <li><a href="#" className="hover:text-white transition-colors">Promos</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">News Room</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Why BetOnline</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">BetOnline Vs Competition</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">VIP Rewards</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Bet TV</a></li>
-                      </ul>
-                    </div>
-
                     <div>
                       <h3 className="font-semibold mb-3 text-sm">Support</h3>
                       <ul className="space-y-1.5 text-xs text-white/70">
-                        <li><a href="#" className="hover:text-white transition-colors">Live Chat</a></li>
-                        <li><a href="#" className="hover:text-white transition-colors">Help Centre</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Fairness</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Responsible Gaming</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Gaming Help</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Live Support</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Self Exclusion</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Law Enforcement Request</a></li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-3 text-sm">About Us</h3>
+                      <ul className="space-y-1.5 text-xs text-white/70">
+                        <li><a href="#" className="hover:text-white transition-colors">VIP Club</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Affiliate</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">AML Policy</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-3 text-sm">Payment Info</h3>
+                      <ul className="space-y-1.5 text-xs text-white/70">
+                        <li><a href="#" className="hover:text-white transition-colors">Deposit & Withdrawals</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Currency Guide</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Crypto Guide</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Supported Crypto</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">How Much to Bet With</a></li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-3 text-sm">FAQ</h3>
+                      <ul className="space-y-1.5 text-xs text-white/70">
+                        <li><a href="#" className="hover:text-white transition-colors">How-to Guides</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Online Casino Guide</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Sports Betting Guide</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">How to Live Stream Sports</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Bonus Guide</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">House Edge Guide</a></li>
                       </ul>
                     </div>
                   </div>
 
                   <Separator className="bg-white/10 mb-6" />
-
-                  {/* Trust & Security Section - More compact */}
-                  <div className="mb-6">
-                    <div className="flex items-center gap-2 mb-3">
-                      <h3 className="font-semibold text-base">We accept</h3>
-                      <IconShield className="w-4 h-4" />
-                    </div>
-                    <p className="text-xs text-white/70 mb-4 max-w-2xl">
-                      Fast and secure crypto deposits and payouts.
-                    </p>
-                    <div className="flex flex-wrap items-center gap-3">
-                      {/* Crypto payment method logos */}
-                      {['Bitcoin', 'Ethereum', 'Litecoin', 'USDT', 'USDC', 'BitcoinCash', 'Dogecoin'].map((method) => (
-                        <PaymentLogo key={method} method={method} />
-                      ))}
-                      {/* Security badges */}
-                      <SecurityBadge name="Responsible Gaming" iconPath="/banners/partners/responsible gaming.webp" />
-                      <SecurityBadge name="SSL Secure" iconPath="/logos/payment/ssl-secure.svg" />
-                      <div className="flex items-center justify-center w-7 h-7 rounded-full bg-red-500 border-2 border-white">
-                        <span className="text-[10px] font-bold text-white">18+</span>
-                          </div>
+                  <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
+                    <div className="w-full">
+                      <div className="mt-2 flex items-center gap-2 overflow-x-auto scrollbar-hide py-1 pr-1">
+                        {['btc', 'eth', 'ltc', 'doge', 'bch', 'xrp', 'trx', 'eos', 'usdt', 'bnb', 'usdc', 'dai', 'link', 'ada', 'xmr', 'xtz'].map((symbol) => {
+                          const coinLabel = FOOTER_CRYPTO_LABELS[symbol] ?? symbol.toUpperCase()
+                          return (
+                            <Tooltip key={`footer-crypto-shell-${symbol}`}>
+                              <TooltipTrigger asChild>
+                                <div className="group h-10 min-w-[48px] rounded-small border border-white/10 bg-white/[0.03] px-2 inline-flex items-center justify-center text-white/45 transition-all duration-200 hover:border-white/25 hover:bg-white/[0.08] hover:text-white hover:shadow-[0_0_8px_rgba(255,255,255,0.12)]">
+                                  <span className={`icon icon-${symbol} text-[20px] leading-[1] transition-all duration-200 group-hover:drop-shadow-[0_0_3px_rgba(255,255,255,0.35)]`} aria-label={coinLabel} />
+                                </div>
+                              </TooltipTrigger>
+                              <TooltipContent side="top" className="bg-[#2d2d2d] border-white/20 text-white">
+                                <p>{coinLabel}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          )
+                        })}
+                      </div>
                     </div>
                   </div>
-
-                  <Separator className="bg-white/10 mb-6" />
-
-                  {/* Partners & Social Media - More compact */}
-                  <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
-                    <div className="flex items-center gap-3">
-                      <h3 className="font-semibold text-sm">OFFICIAL PARTNERS</h3>
-                      <Separator orientation="vertical" className="h-5 bg-white/20" />
-                      <div className="flex items-center gap-3">
-                        {['laliga', 'lfa', 'matchroom', 'golden boy'].map((partner) => (
-                          <div key={partner} className="flex items-center justify-center h-7 opacity-80 hover:opacity-100 transition-opacity">
-                            <Image
-                              src={`/banners/partners/${partner}.svg`}
-                              alt={partner}
-                              width={70}
-                              height={28}
-                              className="object-contain"
-                            />
-                      </div>
-                        ))}
-                    </div>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      {/* Social media icons using Button components */}
+                  <div className="space-y-2 text-xs text-white/60 pt-2 border-t border-white/5">
+                    <Image
+                      src="/logos/BHGL_logo-1773311608241-DDbBBO6v.png"
+                      alt="Betheat"
+                      width={180}
+                      height={48}
+                      className="h-8 w-auto opacity-95"
+                    />
+                    <p>© 2026 Betheat.net | All Rights Reserved.</p>
+                    <p>Website is operated by Entools LTD who will be processing payments for Betheat.net. All video streaming is provided by various third parties and we do not carry any responsibility for actual content, stream quality, or streaming rights.</p>
+                    <div className="flex items-center gap-1.5 pt-1">
                       <Button variant="ghost" size="icon" className="h-7 w-7 text-white/70 hover:text-white hover:bg-white/5 rounded-small">
                         <IconBrandFacebook className="w-4 h-4" />
                       </Button>
@@ -13855,16 +13892,6 @@ function NavTestPageContent() {
                       <Button variant="ghost" size="icon" className="h-7 w-7 text-white/70 hover:text-white hover:bg-white/5 rounded-small">
                         <IconBrandTiktok className="w-4 h-4" />
                       </Button>
-                    </div>
-                  </div>
-
-                  {/* Timestamp and Copyright */}
-                  <div className="flex items-center justify-between text-xs text-white/50 pt-2 border-t border-white/5">
-                    <div>
-                      Copyright ©2024 BetOnline.ag. All rights reserved.
-                    </div>
-                    <div>
-                      {typeof currentTime !== 'undefined' ? currentTime : ''}
                     </div>
                   </div>
                 </div>

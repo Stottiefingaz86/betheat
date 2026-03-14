@@ -1,3 +1,6 @@
+@import url("https://cdn.jsdelivr.net/npm/crypto-icons@1.0.65/font.min.css");
+@import url("https://cdn.jsdelivr.net/npm/crypto-icons@1.0.65/styles.min.css");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -2055,4 +2058,25 @@ button[class*="h-8 w-8 rounded-small bg-[#1a1a1a]/90"][class*="disabled:cursor-n
 /* Lock vaul drawer — prevent drag, allow open/close animation */
 [data-vaul-no-drag] [data-sidebar="content"] {
   overflow: visible !important;
+}
+
+/* Account profile form fields: use same dark chip tone as sub-nav tabs */
+[data-account-profile-form="true"] input,
+[data-account-profile-form="true"] select,
+[data-account-profile-form="true"] textarea,
+[data-account-profile-form="true"] .bg-white\/\[0\.03\],
+[data-account-profile-form="true"] .bg-white\/\[0\.02\] {
+  background-color: rgba(255, 255, 255, 0.035) !important;
+}
+
+[data-account-profile-form="true"] input:-webkit-autofill,
+[data-account-profile-form="true"] input:-webkit-autofill:hover,
+[data-account-profile-form="true"] input:-webkit-autofill:focus,
+[data-account-profile-form="true"] textarea:-webkit-autofill,
+[data-account-profile-form="true"] select:-webkit-autofill {
+  -webkit-text-fill-color: #ffffff !important;
+  box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.035) inset !important;
+  transition: background-color 9999s ease-out 0s;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  caret-color: #ffffff !important;
 }
