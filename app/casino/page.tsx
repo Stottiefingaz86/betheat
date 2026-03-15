@@ -10195,7 +10195,7 @@ function NavTestPageContent() {
               </div>
               )}
               {isMobile && walletNumpadOpen && typeof document !== 'undefined' && createPortal(
-                <div className="fixed inset-x-0 bottom-0 z-[230] px-3 pb-[calc(env(safe-area-inset-bottom,0px)+8px)]">
+                <div className="fixed inset-x-0 bottom-0 z-[10000] px-3 pb-[calc(env(safe-area-inset-bottom,0px)+8px)]">
                   <div className="mx-auto max-w-[520px] rounded-t-xl border border-white/10 bg-[var(--ds-sidebar-bg,#121417)] p-2 space-y-2 shadow-2xl">
                     <div className="grid grid-cols-3 gap-2">
                       {['1','2','3','4','5','6','7','8','9','.','0','back'].map((key) => (
