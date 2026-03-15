@@ -12578,23 +12578,25 @@ function NavTestPageContent() {
                           )
                         }
                         return (
-                          <SidebarMenuItem key={`vip-bottom-${index}`}>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <SidebarMenuButton
-                                  className="w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer text-white/70 hover:text-white hover:bg-white/5"
-                                >
-                                  <Icon strokeWidth={1.5} className="w-5 h-5" />
-                                  <span>{item.label}</span>
-                                </SidebarMenuButton>
-                              </TooltipTrigger>
-                              {sidebarState === 'collapsed' && (
-                                <TooltipContent side="right" className="bg-[#2d2d2d] border-white/10 text-white">
-                                  <p>{item.label}</p>
-                                </TooltipContent>
-                              )}
-                            </Tooltip>
-                          </SidebarMenuItem>
+                          <React.Fragment key={`vip-bottom-${index}`}>
+                            <SidebarMenuItem>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <SidebarMenuButton
+                                    className="w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer text-white/70 hover:text-white hover:bg-white/5"
+                                  >
+                                    <Icon strokeWidth={1.5} className="w-5 h-5" />
+                                    <span>{item.label}</span>
+                                  </SidebarMenuButton>
+                                </TooltipTrigger>
+                                {sidebarState === 'collapsed' && (
+                                  <TooltipContent side="right" className="bg-[#2d2d2d] border-white/10 text-white">
+                                    <p>{item.label}</p>
+                                  </TooltipContent>
+                                )}
+                              </Tooltip>
+                            </SidebarMenuItem>
+                          </React.Fragment>
                         )
                       })}
                     </SidebarMenu>

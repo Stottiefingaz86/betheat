@@ -9627,7 +9627,7 @@ function NavTestPageContent() {
               }}
               className={cn(
                 "grid items-center rounded-small transition-colors group relative",
-                "border border-white/10 bg-transparent hover:bg-transparent",
+                "bg-white/[0.02] border border-white/[0.08] hover:border-white/[0.12] hover:bg-white/[0.03]",
                 "active:bg-transparent",
                 accountDrawerOpen && "text-white",
                 isMobile
@@ -10843,8 +10843,59 @@ function NavTestPageContent() {
                           {[
                             { id: 'Daily Races', icon: IconTrophy, label: 'Daily Races', subtitle: 'Compete for cash prizes' },
                             { id: 'Wallet', icon: IconWallet, label: 'Wallet', subtitle: 'Deposit or withdraw funds' },
+                            { id: 'Level', icon: IconFlame, label: 'Level 7', subtitle: '350 XP to next level' },
                           ].map((item, index) => {
                             const Icon = item.icon
+                            if (item.id === 'Level') {
+                              return (
+                                <SidebarMenuItem key={`promo-feature-${index}`}>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <SidebarMenuButton
+                                        onClick={(e: React.MouseEvent) => {
+                                          e.preventDefault()
+                                          e.stopPropagation()
+                                          if (isMobile) setOpenMobile(false)
+                                          setAccountBonusTab('available')
+                                          setAccountDrawerView('bonus')
+                                          openAccountDrawer()
+                                        }}
+                                        className={cn(
+                                          "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer text-white/70 hover:text-white hover:bg-white/[0.03] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none",
+                                          "border border-white/[0.04] hover:border-white/[0.08]",
+                                          sidebarState === 'collapsed' && !isMobile && "h-10 w-10 mx-auto p-0 justify-center"
+                                        )}
+                                      >
+                                        <div className="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0 bg-white/[0.03]">
+                                          <IconFlame strokeWidth={1.5} className="w-4 h-4 text-[#ff9254]" />
+                                        </div>
+                                        <div className={cn("flex flex-col leading-tight min-w-0", sidebarState === 'collapsed' && !isMobile && "hidden")}>
+                                          <div className="flex items-center justify-between gap-3">
+                                            <span>Level 7</span>
+                                            <span className="text-[11px] text-white/40 font-normal">350 XP to next level</span>
+                                          </div>
+                                          <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-white/[0.08]">
+                                            <div
+                                              className="h-full rounded-full"
+                                              style={{
+                                                width: '84%',
+                                                background: 'linear-gradient(90deg, #ff9254 0%, #ff6a3d 45%, #b86bff 100%)',
+                                                boxShadow: '0 0 10px rgba(255, 126, 79, 0.30), 0 0 18px rgba(184, 107, 255, 0.15)',
+                                              }}
+                                            />
+                                          </div>
+                                        </div>
+                                      </SidebarMenuButton>
+                                    </TooltipTrigger>
+                                    {sidebarState === 'collapsed' && (
+                                      <TooltipContent side="right" className="bg-[#2d2d2d] border-white/10 text-white">
+                                        <p>Level 7</p>
+                                      </TooltipContent>
+                                    )}
+                                  </Tooltip>
+                                </SidebarMenuItem>
+                              )
+                            }
                               return (
                               <SidebarMenuItem key={`promo-feature-${index}`}>
                                 <Tooltip>
@@ -11064,77 +11115,120 @@ function NavTestPageContent() {
                           (item.label === 'My Favorites' && selectedCategory === 'Favorites') ||
                           (item.label === 'Continue Playing' && selectedCategory === 'Continue Playing')
                         return (
-                          <SidebarMenuItem key={index}>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
+                          <React.Fragment key={index}>
+                            <SidebarMenuItem>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <SidebarMenuButton
+                                    isActive={isActive}
+                                    data-tour-target={item.label === 'Play Random'
+                                      ? 'casino-play-random'
+                                      : item.label === 'Continue Playing'
+                                        ? 'casino-last-played'
+                                        : undefined}
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      e.stopPropagation()
+                                      if (isMobile) setOpenMobile(false)
+                                      setActiveIconTab('search')
+                                      if (item.label === 'My Favorites') {
+                                        setActiveSubNav('Lobby')
+                                        setSelectedCategory('Favorites')
+                                        setSelectedVendor('')
+                                        setShowAllGames(true)
+                                        setShowSports(false)
+                                      } else if (item.label === 'Play Random') {
+                                        // Launch a random game
+                                        const randomIndex = Math.floor(Math.random() * squareTileImages.length)
+                                        const gameNames = ['Gold Nugget Rush', 'Mega Fortune', 'Starburst', 'Book of Dead', 'Gonzo\'s Quest', 'Dead or Alive', 'Immortal Romance', 'Thunderstruck', 'Avalon', 'Blood Suckers']
+                                        setSelectedGame({
+                                          title: gameNames[randomIndex % gameNames.length],
+                                          image: squareTileImages[randomIndex],
+                                          provider: 'Evolution Gaming',
+                                          features: ['Random Pick!', 'Surprise Game Feature']
+                                        })
+                                      } else if (item.label === 'Continue Playing') {
+                                        // Open a wallpaper-style grid with recent games.
+                                        setActiveSubNav('Lobby')
+                                        setSelectedCategory('Continue Playing')
+                                        setSelectedVendor('')
+                                        setShowAllGames(true)
+                                        setShowSports(false)
+                                      }
+                                    }}
+                                    className={cn(
+                                      "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
+                                      "data-[active=true]:text-white data-[active=true]:font-medium",
+                                      "data-[active=false]:text-white/70 hover:text-white hover:bg-white/5",
+                                      "bg-white/[0.02] border border-white/[0.08] hover:border-white/[0.12]"
+                                    )}
+                                    style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)' } : undefined}
+                                  >
+                                    <div
+                                      className={cn(
+                                        "w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0",
+                                        isActive ? "bg-white/10" : "bg-white/[0.045]"
+                                      )}
+                                    >
+                                        {Icon && <Icon strokeWidth={1.5} className="w-4 h-4" />}
+                                      </div>
+                                    {(sidebarState !== 'collapsed' || isMobile) && (
+                                      <div className="flex flex-col leading-tight min-w-0">
+                                        <span>{item.label}</span>
+                                        <span className="text-[11px] text-white/40 font-normal mt-0.5">{item.subtitle}</span>
+                                      </div>
+                                    )}
+                                  </SidebarMenuButton>
+                                </TooltipTrigger>
+                                {sidebarState === 'collapsed' && (
+                                  <TooltipContent side="right" className="bg-[#2d2d2d] border-white/10 text-white">
+                                    <p>{item.label}</p>
+                                  </TooltipContent>
+                                )}
+                              </Tooltip>
+                            </SidebarMenuItem>
+                            {item.label === 'Continue Playing' && (
+                              <SidebarMenuItem>
                                 <SidebarMenuButton
-                                  isActive={isActive}
-                                  data-tour-target={item.label === 'Play Random'
-                                    ? 'casino-play-random'
-                                    : item.label === 'Continue Playing'
-                                      ? 'casino-last-played'
-                                      : undefined}
                                   onClick={(e) => {
                                     e.preventDefault()
                                     e.stopPropagation()
                                     if (isMobile) setOpenMobile(false)
-                                    setActiveIconTab('search')
-                                    if (item.label === 'My Favorites') {
-                                      setActiveSubNav('Lobby')
-                                      setSelectedCategory('Favorites')
-                                      setSelectedVendor('')
-                                      setShowAllGames(true)
-                                      setShowSports(false)
-                                    } else if (item.label === 'Play Random') {
-                                      // Launch a random game
-                                      const randomIndex = Math.floor(Math.random() * squareTileImages.length)
-                                      const gameNames = ['Gold Nugget Rush', 'Mega Fortune', 'Starburst', 'Book of Dead', 'Gonzo\'s Quest', 'Dead or Alive', 'Immortal Romance', 'Thunderstruck', 'Avalon', 'Blood Suckers']
-                                      setSelectedGame({
-                                        title: gameNames[randomIndex % gameNames.length],
-                                        image: squareTileImages[randomIndex],
-                                        provider: 'Evolution Gaming',
-                                        features: ['Random Pick!', 'Surprise Game Feature']
-                                      })
-                                    } else if (item.label === 'Continue Playing') {
-                                      // Open a wallpaper-style grid with recent games.
-                                      setActiveSubNav('Lobby')
-                                      setSelectedCategory('Continue Playing')
-                                      setSelectedVendor('')
-                                      setShowAllGames(true)
-                                      setShowSports(false)
-                                    }
+                                    setAccountBonusTab('available')
+                                    setAccountDrawerView('bonus')
+                                    openAccountDrawer()
                                   }}
                                   className={cn(
                                     "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
-                                    "data-[active=true]:text-white data-[active=true]:font-medium",
-                                    "data-[active=false]:text-white/70 hover:text-white hover:bg-white/5",
-                                    "bg-white/[0.02] border border-white/[0.08] hover:border-white/[0.12]"
+                                    "text-white/70 hover:text-white",
+                                    "bg-white/[0.02] border border-white/[0.08]"
                                   )}
-                                  style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)' } : undefined}
                                 >
-                                  <div
-                                    className={cn(
-                                      "w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0",
-                                      isActive ? "bg-white/10" : "bg-white/[0.045]"
-                                    )}
-                                  >
-                                      {Icon && <Icon strokeWidth={1.5} className="w-4 h-4" />}
-                                    </div>
+                                  <div className="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0 bg-white/[0.045]">
+                                    <IconFlame className="w-4 h-4 text-[#ff9254]" />
+                                  </div>
                                   {(sidebarState !== 'collapsed' || isMobile) && (
-                                    <div className="flex flex-col leading-tight min-w-0">
-                                      <span>{item.label}</span>
-                                      <span className="text-[11px] text-white/40 font-normal mt-0.5">{item.subtitle}</span>
+                                    <div className="flex flex-col leading-tight min-w-0 flex-1">
+                                      <div className="flex items-center justify-between gap-3">
+                                        <span>Level 7</span>
+                                        <span className="text-[11px] text-white/40 font-normal">350 XP to next level</span>
+                                      </div>
+                                      <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-white/[0.08]">
+                                        <div
+                                          className="h-full rounded-full"
+                                          style={{
+                                            width: '84%',
+                                            background: 'linear-gradient(90deg, #ff9254 0%, #ff6a3d 45%, #b86bff 100%)',
+                                            boxShadow: '0 0 10px rgba(255, 126, 79, 0.30), 0 0 18px rgba(184, 107, 255, 0.15)',
+                                          }}
+                                        />
+                                      </div>
                                     </div>
                                   )}
                                 </SidebarMenuButton>
-                              </TooltipTrigger>
-                              {sidebarState === 'collapsed' && (
-                                <TooltipContent side="right" className="bg-[#2d2d2d] border-white/10 text-white">
-                                  <p>{item.label}</p>
-                                </TooltipContent>
-                              )}
-                            </Tooltip>
-                          </SidebarMenuItem>
+                              </SidebarMenuItem>
+                            )}
+                          </React.Fragment>
                         )
                       })}
                     </SidebarMenu>
@@ -11323,38 +11417,40 @@ function NavTestPageContent() {
                           )
                         }
                         return (
-                          <SidebarMenuItem key={index}>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <SidebarMenuButton
-                                  onClick={(e) => {
-                                    e.preventDefault()
-                                    e.stopPropagation()
-                                    if (isMobile) setOpenMobile(false)
-                                    if (item.label === 'Support') {
-                                      console.log('Support clicked')
-                                    } else if (item.label === 'My Bonus') {
-                                      setAccountBonusTab('available')
-                                      setAccountDrawerView('bonus')
-                                      openAccountDrawer()
-                                    }
-                                  }}
-                                  className={cn(
-                                    "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
-                                    "text-white/70 hover:text-white hover:bg-white/5"
-                                  )}
-                                >
-                                  <Icon strokeWidth={1.5} className="w-5 h-5" />
-                                  <span>{item.label}</span>
-                                </SidebarMenuButton>
-                              </TooltipTrigger>
-                              {sidebarState === 'collapsed' && (
-                                <TooltipContent side="right" className="bg-[#2d2d2d] border-white/10 text-white">
-                                  <p>{item.label}</p>
-                                </TooltipContent>
-                              )}
-                            </Tooltip>
-                          </SidebarMenuItem>
+                          <React.Fragment key={index}>
+                            <SidebarMenuItem>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <SidebarMenuButton
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      e.stopPropagation()
+                                      if (isMobile) setOpenMobile(false)
+                                      if (item.label === 'Support') {
+                                        console.log('Support clicked')
+                                      } else if (item.label === 'My Bonus') {
+                                        setAccountBonusTab('available')
+                                        setAccountDrawerView('bonus')
+                                        openAccountDrawer()
+                                      }
+                                    }}
+                                    className={cn(
+                                      "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
+                                      "text-white/70 hover:text-white hover:bg-white/5"
+                                    )}
+                                  >
+                                    <Icon strokeWidth={1.5} className="w-5 h-5" />
+                                    <span>{item.label}</span>
+                                  </SidebarMenuButton>
+                                </TooltipTrigger>
+                                {sidebarState === 'collapsed' && (
+                                  <TooltipContent side="right" className="bg-[#2d2d2d] border-white/10 text-white">
+                                    <p>{item.label}</p>
+                                  </TooltipContent>
+                                )}
+                              </Tooltip>
+                            </SidebarMenuItem>
+                          </React.Fragment>
                         )
                       })}
                     </SidebarMenu>
@@ -14533,6 +14629,15 @@ function NavTestPageContent() {
                   )}
                 <div className="flex items-center gap-2">
                   {!isMobile && (
+                    <button
+                      type="button"
+                      className="h-8 w-8 rounded-full bg-white/10 hover:bg-white/15 flex items-center justify-center transition-colors flex-shrink-0"
+                      aria-label="Language"
+                    >
+                      <IconWorld className="h-4 w-4 text-white/75" />
+                    </button>
+                  )}
+                  {!isMobile && (
                     <DrawerClose asChild>
                       <button className="h-8 w-8 rounded-full bg-white/10 hover:bg-white/15 flex items-center justify-center transition-colors flex-shrink-0">
                         <IconX className="h-4 w-4 text-white/75" />
@@ -14559,6 +14664,27 @@ function NavTestPageContent() {
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-white/80">Bonus</span>
                         <span className="text-sm font-semibold text-white">$0.00</span>
+                      </div>
+                      <div className="border-t border-dashed border-white/[0.1]" />
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.16em] text-white/45">
+                          <IconFlame className="h-3 w-3 text-[#ff9254]" />
+                          <span>Level 7</span>
+                        </div>
+                        <div className="h-1.5 overflow-hidden rounded-full bg-white/[0.08]">
+                          <div
+                            className="h-full rounded-full"
+                            style={{
+                              width: '84%',
+                              background: 'linear-gradient(90deg, #ff9254 0%, #ff6a3d 45%, #b86bff 100%)',
+                              boxShadow: '0 0 10px rgba(255, 126, 79, 0.35), 0 0 20px rgba(184, 107, 255, 0.18)',
+                            }}
+                          />
+                        </div>
+                        <div className="flex items-center justify-between text-[11px] text-white/55">
+                          <span>XP 1,850 / 2,200</span>
+                          <span>350 XP to next level</span>
+                        </div>
                       </div>
                     </div>
               </div>
