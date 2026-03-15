@@ -4218,7 +4218,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                     "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
                                     "data-[active=true]:text-white data-[active=true]:font-medium",
                                     "data-[active=false]:text-white/70 hover:text-white hover:bg-white/5",
-                                    "bg-white/[0.02] border border-white/[0.08] hover:border-white/[0.12]"
+                                    "bg-white/[0.02] border border-white/[0.05] hover:border-white/[0.08]"
                                   )}
                                   style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)' } : undefined}
                                 >
@@ -7899,7 +7899,6 @@ function NavTestPageContent() {
   const [walletAddressInput, setWalletAddressInput] = useState('')
   const [walletCryptoCopied, setWalletCryptoCopied] = useState(false)
   const [walletAddressCopied, setWalletAddressCopied] = useState(false)
-  const [walletNumpadOpen, setWalletNumpadOpen] = useState(false)
   const [walletQrOpen, setWalletQrOpen] = useState(false)
   const [walletReceipt, setWalletReceipt] = useState<null | {
     mode: 'deposit' | 'withdraw'
@@ -7961,21 +7960,6 @@ function NavTestPageContent() {
     const decimals = (parts[1] ?? '').slice(0, 2)
     return parts.length > 1 ? `${whole}.${decimals}` : whole
   }
-  const appendWalletAmountToken = (token: string) => {
-    setWalletAmountInput((prev) => {
-      const base = prev.replace(/,/g, '')
-      if (token === 'back') {
-        return base.length > 1 ? base.slice(0, -1) : '0'
-      }
-      if (token === 'clear') return '0'
-      if (token === '.') {
-        if (base.includes('.')) return base
-        return `${base}.`
-      }
-      const nextRaw = base === '0' ? token : `${base}${token}`
-      return sanitizeWalletAmountDraft(nextRaw)
-    })
-  }
   const walletFakeQrPattern = [
     "1111111000101",
     "1000001011101",
@@ -8031,6 +8015,12 @@ function NavTestPageContent() {
       window.clearTimeout(t3)
     }
   }, [walletReceipt])
+
+  // Keep wallet overlays in sync with drawer lifecycle.
+  useEffect(() => {
+    if (depositDrawerOpen) return
+    setWalletQrOpen(false)
+  }, [depositDrawerOpen])
 
   
   const [accountDrawerOpen, setAccountDrawerOpen] = useState(false)
@@ -8913,7 +8903,6 @@ function NavTestPageContent() {
       setWalletReceipt(null)
       setWalletReceiptStep(0)
       setWalletQrOpen(false)
-      setWalletNumpadOpen(false)
     } else {
       // Close other drawers when deposit drawer opens
       if (isMobile) {
@@ -9769,7 +9758,7 @@ function NavTestPageContent() {
                 showOverlay={true}
                 overlayClassName={!isMobile ? "bg-[#0f1728]/52 backdrop-blur-[2px]" : "bg-black/45 backdrop-blur-[1.5px]"}
                 className={cn(
-                  "w-full sm:max-w-md bg-[var(--ds-sidebar-bg,#121417)] text-white flex flex-col overscroll-contain outline-none",
+                  "w-full sm:max-w-md bg-[var(--ds-sidebar-bg,#121417)] text-white flex flex-col overscroll-contain outline-none relative",
                   isMobile ? "!border-0 rounded-t-[10px]" : "border-l border-white/10"
                 )}
                 style={isMobile ? {
@@ -9790,7 +9779,7 @@ function NavTestPageContent() {
                   </DrawerClose>
               </div>
             </DrawerHeader>
-            <div className={cn("flex-1 overflow-y-auto text-white", isMobile ? "px-4 pt-4 pb-4" : "px-4 pt-6 pb-4", isMobile && walletNumpadOpen && "pb-56")} style={{ WebkitOverflowScrolling: 'touch' }}>
+            <div className={cn("flex-1 overflow-y-auto text-white", isMobile ? "px-4 pt-4 pb-4" : "px-4 pt-6 pb-4")} style={{ WebkitOverflowScrolling: 'touch' }}>
               {walletReceipt ? (
                 <div className="space-y-4">
                   <div className="relative overflow-hidden rounded-lg border border-dashed border-white/[0.12] bg-white/[0.03] p-3 space-y-2">
@@ -9969,30 +9958,18 @@ function NavTestPageContent() {
                     <input
                       value={walletAmountInput}
                       onChange={(e) => {
-                        if (isMobile) return
                         const raw = e.target.value.replace(/,/g, '')
                         setWalletAmountInput(sanitizeWalletAmountDraft(raw))
                       }}
                       onFocus={() => {
-                        if (isMobile) {
-                          setWalletAmountInput((prev) => prev.replace(/,/g, ''))
-                          setWalletNumpadOpen(true)
-                          return
-                        }
                         setWalletAmountInput((prev) => prev.replace(/,/g, ''))
                       }}
                       onBlur={() => {
-                        if (isMobile) return
                         const parsed = parseWalletFiatAmount(walletAmountInput)
                         setWalletAmountInput(formatWalletFiatAmount(parsed))
                       }}
-                      onClick={() => {
-                        if (!isMobile) return
-                        setWalletAmountInput((prev) => prev.replace(/,/g, ''))
-                        setWalletNumpadOpen(true)
-                      }}
-                      readOnly={isMobile}
-                      inputMode={isMobile ? "none" : "decimal"}
+                      inputMode="decimal"
+                      enterKeyHint="done"
                       className="flex-1 h-14 bg-transparent px-4 text-2xl leading-none text-white/85 placeholder:text-white/45 focus:outline-none"
                       placeholder="0.00"
                     />
@@ -10177,7 +10154,6 @@ function NavTestPageContent() {
                       address: targetAddress,
                       network: walletSelectedNetwork,
                     })
-                    setWalletNumpadOpen(false)
                     setWalletReceipt({
                       mode: walletMode,
                       amountEur: walletAmountInput,
@@ -10194,47 +10170,6 @@ function NavTestPageContent() {
                 </Button>
               </div>
               )}
-              {isMobile && walletNumpadOpen && typeof document !== 'undefined' && createPortal(
-                <div className="fixed inset-x-0 bottom-0 z-[10000] px-3 pb-[calc(env(safe-area-inset-bottom,0px)+8px)]">
-                  <div className="mx-auto max-w-[520px] rounded-t-xl border border-white/10 bg-[var(--ds-sidebar-bg,#121417)] p-2 space-y-2 shadow-2xl">
-                    <div className="grid grid-cols-3 gap-2">
-                      {['1','2','3','4','5','6','7','8','9','.','0','back'].map((key) => (
-                        <button
-                          key={key}
-                          type="button"
-                          onClick={() => appendWalletAmountToken(key)}
-                          className="h-10 rounded-md bg-white/[0.05] border border-white/10 text-white text-sm font-medium hover:bg-white/[0.08] transition-colors"
-                        >
-                          {key === 'back' ? '⌫' : key}
-                        </button>
-                      ))}
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <button
-                        type="button"
-                        onClick={() => appendWalletAmountToken('clear')}
-                        className="h-9 rounded-md bg-white/[0.04] border border-white/10 text-white/80 text-xs font-medium hover:bg-white/[0.07] transition-colors"
-                      >
-                        Clear
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const parsed = parseWalletFiatAmount(walletAmountInput)
-                          setWalletAmountInput(formatWalletFiatAmount(parsed))
-                          setWalletNumpadOpen(false)
-                        }}
-                        className="h-9 rounded-md border border-[#9a86d1]/75 text-[#121417] text-xs font-semibold"
-                        style={{ backgroundColor: '#c9b4ff' }}
-                      >
-                        Done
-                      </button>
-                    </div>
-                  </div>
-                </div>,
-                document.body
-              )}
-
               {false && (!showDepositConfirmation ? (
               <>
               <Card className="bg-white border border-gray-200 shadow-sm">
