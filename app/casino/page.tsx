@@ -8688,7 +8688,6 @@ function NavTestPageContent() {
       ...sportsCatalog.map((item, index) => ({
         id: casinoCatalog.length + index,
         image: item.leagueLogo,
-        leagueLogo: item.leagueLogo,
         scope: 'sports' as const,
         ...item,
       })),
