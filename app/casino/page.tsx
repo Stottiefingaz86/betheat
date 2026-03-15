@@ -8646,10 +8646,88 @@ function NavTestPageContent() {
   const [headerLanguage, setHeaderLanguage] = useState<'EN' | 'ES' | 'DE' | 'FR' | 'PT'>('EN')
   const [mobileLanguageAccordionOpen, setMobileLanguageAccordionOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  const [viewMode, setViewMode] = useState<'list' | 'card' | 'pack'>('card')
+  const viewMode: 'list' = 'list'
+  const [searchScope, setSearchScope] = useState<'all' | 'casino' | 'sports'>('all')
+  const searchScopeOptions: Array<'all' | 'casino' | 'sports'> = ['all', 'casino', 'sports']
+  const searchScopeLabels: Record<'all' | 'casino' | 'sports', string> = {
+    all: 'All',
+    casino: 'Casino',
+    sports: 'Sports',
+  }
+  const cycleSearchScope = useCallback(() => {
+    const index = searchScopeOptions.indexOf(searchScope)
+    const next = searchScopeOptions[(index + 1) % searchScopeOptions.length]
+    setSearchScope(next)
+  }, [searchScope])
   const [favoritedGames, setFavoritedGames] = useState<Set<number>>(new Set())
-  const [advancedSearchOpen, setAdvancedSearchOpen] = useState(false)
   const [selectedGame, setSelectedGame] = useState<{ title: string; image: string; provider?: string; features?: string[] } | null>(null)
+  const searchCatalog = useMemo(() => {
+    const casinoCatalog = [
+      { title: 'Gold Nugget Rush', subtitle: 'Slots', provider: 'Dragon Gaming', features: ['Exploding Wilds Every 10 Spins!', 'Free Spins with Up to 10 Wilds on Every Spin!'] },
+      { title: 'Original Plinko', subtitle: 'Crash', provider: 'BETONLINE', features: ['Classic Plinko Action', 'Multiple Betting Ranges'] },
+      { title: 'Cloud Princess', subtitle: 'Live Casino', provider: 'Dragon Gaming', features: ['Live Casino Experience', 'Real-Time Gameplay'] },
+      { title: 'Merge Up', subtitle: 'Instant Wins', provider: 'Dragon Gaming', features: ['Quick rounds', 'Bonus multipliers'] },
+      { title: 'Roulette Live', subtitle: 'Table Games', provider: 'Evolution', features: ['Live dealers', 'HD stream'] },
+      { title: 'Chaos Crew 2', subtitle: 'Slots', provider: 'Hacksaw Gaming', features: ['Bonus buy', 'High volatility'] },
+    ]
+    const sportsCatalog = [
+      { title: 'Arsenal vs Chelsea', subtitle: 'Premier League', provider: 'Sportsbook', teamAName: 'Arsenal', teamBName: 'Chelsea', teamAIcon: '/sports_icons/soccer.svg', teamBIcon: '/sports_icons/soccer.svg', leagueLogo: '/sports league/prem.svg', date: 'Sat 15 Mar', time: '19:45', features: ['Match odds', 'Live betting markets'] },
+      { title: 'Lakers vs Celtics', subtitle: 'NBA', provider: 'Sportsbook', teamAName: 'Lakers', teamBName: 'Celtics', teamAIcon: '/sports_icons/Basketball.svg', teamBIcon: '/sports_icons/Basketball.svg', leagueLogo: '/sports league/nba.svg', date: 'Sun 16 Mar', time: '01:30', features: ['Player props', 'Spread markets'] },
+      { title: 'Chiefs vs Bills', subtitle: 'NFL', provider: 'Sportsbook', teamAName: 'Chiefs', teamBName: 'Bills', teamAIcon: '/sports_icons/football.svg', teamBIcon: '/sports_icons/football.svg', leagueLogo: '/sports league/NFL.svg', date: 'Sun 16 Mar', time: '21:25', features: ['Pre-game lines', 'Live drive betting'] },
+      { title: 'Alcaraz vs Sinner', subtitle: 'ATP', provider: 'Sportsbook', teamAName: 'Alcaraz', teamBName: 'Sinner', teamAIcon: '/sports_icons/tennis.svg', teamBIcon: '/sports_icons/tennis.svg', leagueLogo: '/sports league/ATP.svg', date: 'Mon 17 Mar', time: '14:00', features: ['Set betting', 'Total games markets'] },
+      { title: 'UFC Main Event', subtitle: 'MMA', provider: 'Sportsbook', teamAName: 'Fighter A', teamBName: 'Fighter B', teamAIcon: '/sports_icons/mma.svg', teamBIcon: '/sports_icons/mma.svg', leagueLogo: '/sports league/UFC.svg', date: 'Sat 22 Mar', time: '23:00', features: ['Method of victory', 'Round props'] },
+      { title: 'Real Madrid vs Barca', subtitle: 'La Liga', provider: 'Sportsbook', teamAName: 'Real Madrid', teamBName: 'Barca', teamAIcon: '/sports_icons/soccer.svg', teamBIcon: '/sports_icons/soccer.svg', leagueLogo: '/sports league/copa.svg', date: 'Sun 23 Mar', time: '20:00', features: ['BTTS', 'Corners and cards'] },
+    ]
+    const base = [
+      ...casinoCatalog.map((item, index) => ({
+        id: index,
+        image: squareTileImages[index % squareTileImages.length],
+        scope: 'casino' as const,
+        ...item,
+      })),
+      ...sportsCatalog.map((item, index) => ({
+        id: casinoCatalog.length + index,
+        image: item.leagueLogo,
+        leagueLogo: item.leagueLogo,
+        scope: 'sports' as const,
+        ...item,
+      })),
+    ]
+    return base
+  }, [])
+  const searchResults = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase()
+    return searchCatalog.filter((item) => {
+      const matchesScope = searchScope === 'all' || item.scope === searchScope
+      if (!matchesScope) return false
+      if (!query) return true
+      return `${item.title} ${item.subtitle} ${item.provider}`.toLowerCase().includes(query)
+    })
+  }, [searchCatalog, searchQuery, searchScope])
+  const displayedSearchResults = useMemo(() => {
+    if (searchResults.length > 0) return searchResults
+    const fallback = searchCatalog.filter((item) => searchScope === 'all' || item.scope === searchScope)
+    return fallback.slice(0, 6)
+  }, [searchCatalog, searchResults, searchScope])
+  const closeSearchOverlay = useCallback(() => {
+    setSearchOverlayOpen(false)
+    setSearchQuery('')
+    setActiveSubNav('Lobby')
+    setShowAllGames(false)
+    setSelectedCategory('')
+    setSelectedVendor('')
+    setSelectedGame(null)
+    if (typeof document !== 'undefined') {
+      document.documentElement.style.cursor = 'auto'
+      document.body.style.cursor = 'auto'
+      document.documentElement.style.pointerEvents = 'auto'
+      document.body.style.pointerEvents = 'auto'
+    }
+    setTimeout(() => {
+      const mainContent = document.querySelector('[data-content-item]')
+      if (mainContent) (mainContent as HTMLElement).focus()
+    }, 100)
+  }, [])
   useEffect(() => {
     if (selectedGame) {
       trackPageView('game-launch', `Game: ${selectedGame.title}`)
@@ -9709,7 +9787,8 @@ function NavTestPageContent() {
             {/* Global Search (replaces chat button) - Desktop only */}
             {!isMobile && (
               <ChatNavToggle
-                onSearch={() => {
+                onSearch={(query) => {
+                  setSearchQuery(query)
                   setSearchOverlayOpen(true)
                 }}
                 placeholder="Search games, teams, promotions..."
@@ -15517,12 +15596,7 @@ function NavTestPageContent() {
               style={{ pointerEvents: 'auto' }}
               onClick={(e) => {
                 if (e.target === e.currentTarget) {
-                  setSearchOverlayOpen(false)
-                  setSearchQuery('')
-                  setActiveSubNav('Lobby')
-                  setShowAllGames(false)
-                  setSelectedCategory('')
-                  setSelectedGame(null)
+                  closeSearchOverlay()
                 }
               }}
             >
@@ -15531,112 +15605,72 @@ function NavTestPageContent() {
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: 20, opacity: 0 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
-                className="min-h-screen bg-[#1a1a1a] text-white"
+                className="min-h-screen bg-[var(--ds-sidebar-bg,#121417)] text-white"
                 onClick={(e) => e.stopPropagation()}
               >
                 {/* Search Header */}
-                <div className="sticky top-0 bg-[#1a1a1a]/60 backdrop-blur-xl border-b border-white/10 z-10 px-6 py-4">
+                <div className="sticky top-0 bg-[var(--ds-sidebar-bg,#121417)] z-10 px-4 pt-2 pb-3.5">
                   <div className="max-w-7xl mx-auto">
-                    <div className="flex items-center justify-end mb-4">
+                    <div className="relative flex items-center justify-end gap-3 mb-2">
                       <button
                         onClick={(e) => {
                           e.preventDefault()
                           e.stopPropagation()
-                          setSearchOverlayOpen(false)
-                          setSearchQuery('')
-                          setActiveSubNav('Lobby')
-                          setShowAllGames(false)
-                          setSelectedCategory('')
-                          setSelectedVendor('')
-                          setSelectedGame(null)
-                          // Force focus back to main content
-                          setTimeout(() => {
-                            const mainContent = document.querySelector('[data-content-item]')
-                            if (mainContent) {
-                              (mainContent as HTMLElement).focus()
-                            }
-                          }, 100)
+                          closeSearchOverlay()
                         }}
-                        className="p-2 hover:bg-white/10 rounded-small transition-colors"
+                        className="p-1.5 hover:bg-white/10 rounded-small transition-colors"
                       >
-                        <IconX className="w-6 h-6 text-white/70 hover:text-white" />
+                        <IconX className="w-5 h-5 text-white/70 hover:text-white" />
                       </button>
                     </div>
                     
                     {/* Search Bar */}
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-4">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-3">
                         <div className="flex-1 relative">
-                          <IconSearchNew className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50" />
+                          <IconSearchNew className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/55" />
                           <input
                             type="text"
-                            placeholder="Search"
+                            placeholder="Search games, teams, promos..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter' && searchQuery) {
-                                // Handle search
-                                console.log('Searching for:', searchQuery)
-                              }
-                            }}
-                            className="w-full pl-11 pr-12 py-3 bg-white/5 border border-white/10 rounded-small text-white placeholder:text-white/50 focus:outline-none focus:border-white/20"
+                            className="w-full pl-9 pr-32 py-2.5 bg-[var(--ds-sidebar-bg,#141920)] border border-white/[0.06] rounded-small text-sm text-white placeholder:text-white/45 focus:outline-none focus:border-white/14 focus:ring-0 focus-visible:ring-0"
                             autoFocus
                           />
-                          {searchQuery ? (
+                          <div className="absolute right-2 top-1/2 -translate-y-1/2">
                             <button
-                              onClick={() => {
-                                // Handle search
-                                console.log('Searching for:', searchQuery)
-                              }}
-                              className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 hover:bg-white/10 rounded transition-colors"
-                              title="Search"
+                              type="button"
+                              onClick={cycleSearchScope}
+                              className="inline-flex h-7 min-w-[92px] items-center justify-between gap-2 rounded-[9px] bg-white/[0.03] px-2.5 text-xs text-white/90 transition-colors hover:bg-white/[0.06] focus:outline-none focus:ring-0 focus-visible:ring-0"
+                              aria-label="Cycle search scope"
                             >
-                              <IconArrowRight className="w-5 h-5 text-white/70 hover:text-white" />
+                              <AnimatePresence mode="wait" initial={false}>
+                                <motion.span
+                                  key={searchScope}
+                                  initial={{ opacity: 0, x: 8 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  exit={{ opacity: 0, x: -8 }}
+                                  transition={{ duration: 0.15 }}
+                                  className="font-medium"
+                                >
+                                  {searchScopeLabels[searchScope]}
+                                </motion.span>
+                              </AnimatePresence>
+                              <IconChevronRight className="h-3.5 w-3.5 text-white/75" />
                             </button>
-                          ) : (
-                            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                              <kbd className="px-2 py-1 text-xs font-semibold text-white/50 bg-white/5 border border-white/10 rounded">↵</kbd>
-                            </div>
-                          )}
+                          </div>
                         </div>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <button 
-                          onClick={() => setAdvancedSearchOpen(true)}
-                          className="text-white/70 hover:text-white flex items-center gap-1 text-sm"
-                        >
-                          <IconChevronDown className="w-4 h-4" />
-                          ADVANCED SEARCH
-                        </button>
-                        <span className="text-sm text-white/50">No filters applied</span>
-                      </div>
-                    </div>
-
-                    {/* View Switcher */}
-                    <div className="flex items-center gap-2 mt-4">
-                      <div className="flex p-1 bg-white/5 rounded-full w-fit border border-white/10">
-                        <ViewTab
-                          active={viewMode === 'list'}
-                          onClick={() => setViewMode('list')}
-                          icon={IconList}
-                          label="List"
-                          brandPrimary={brandPrimary}
-                        />
-                        <ViewTab
-                          active={viewMode === 'card'}
-                          onClick={() => setViewMode('card')}
-                          icon={IconLayoutGrid}
-                          label="Card"
-                          brandPrimary={brandPrimary}
-                        />
                       </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Search Results */}
-                <div className="max-w-7xl mx-auto px-6 py-6">
-                  <h3 className="text-lg font-semibold text-white mb-6">Recommended games</h3>
+                <div className="max-w-7xl mx-auto px-4 py-4">
+                  <div className="mb-3 flex items-center justify-between">
+                    <h3 className="text-base font-semibold text-white">Results</h3>
+                    <span className="text-xs text-white/55">{searchResults.length > 0 ? `${searchResults.length} games` : `${displayedSearchResults.length} suggestions`}</span>
+                  </div>
                   <LayoutGroup>
                     <motion.div
                       layout
@@ -15647,45 +15681,34 @@ function NavTestPageContent() {
                         mass: 1
                       }}
                       className={cn(
-                        "w-full relative",
-                        viewMode === 'list' && "flex flex-col gap-4",
-                        viewMode === 'card' && "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4",
-                        viewMode === 'pack' && "h-64 flex items-center justify-center mt-8"
+                        "w-full relative flex flex-col gap-2"
                       )}
                     >
-                      {Array.from({ length: 22 }).map((_, index) => {
-                        const imageSrc = squareTileImages[index % squareTileImages.length]
-                        // Mix of different game types
-                        const gameType = index % 3
-                        const isGoldNugget = gameType === 0
-                        const isPlinko = gameType === 1
-                        const isSubtitle = gameType === 2
-                        
+                      {searchResults.length === 0 && (
+                        <div className="rounded-small border border-white/[0.06] bg-white/[0.02] px-3 py-3 text-sm text-white/65">
+                          No direct matches. Showing suggested results.
+                        </div>
+                      )}
+                      {displayedSearchResults.map((item, index) => {
+                        const imageSrc = item.image
+                        const isGoldNugget = item.title === 'Gold Nugget Rush'
+                        const isPlinko = item.title === 'Original Plinko'
+                        const isSubtitle = item.title === 'Subtitle Title'
+
                         return (
                           <motion.div
-                            key={index}
+                            key={item.id}
                             layout
                             className={cn(
-                              "relative flex items-center z-10 group cursor-pointer",
-                              viewMode === 'list' && "flex-row gap-4 w-full",
-                              viewMode === 'card' && "flex-col gap-3 w-full items-start",
-                              viewMode === 'pack' && "absolute w-56 h-56 items-center justify-center"
+                              "relative flex items-center z-10 group cursor-pointer flex-row gap-3 w-full min-h-[76px]"
                             )}
-                            style={{
-                              zIndex: viewMode === 'pack' ? 22 - index : 1,
-                            }}
+                            style={{ zIndex: 1 }}
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ 
                               opacity: 1, 
-                              ...(viewMode === 'pack' ? {
-                                rotate: index === 0 ? -12 : index === 1 ? 6 : -6,
-                                x: index === 0 ? -25 : index === 1 ? 25 : 0,
-                                y: index === 0 ? -5 : index === 1 ? 5 : 0,
-                              } : {
-                                rotate: 0,
-                                x: 0,
-                                y: 0,
-                              })
+                              rotate: 0,
+                              x: 0,
+                              y: 0,
                             }}
                             transition={{ 
                               type: "spring",
@@ -15695,50 +15718,34 @@ function NavTestPageContent() {
                               delay: index * 0.02
                             }}
                             onClick={() => {
-                              const gameTitle = isGoldNugget ? 'Gold Nugget Rush' : isPlinko ? 'Original Plinko' : 'Subtitle Title'
-                              const provider = isPlinko ? 'BETONLINE' : 'Dragon Gaming'
-                              const features = isGoldNugget 
-                                ? ['Exploding Wilds Every 10 Spins!', 'Free Spins with Up to 10 Wilds on Every Spin!']
-                                : isPlinko
-                                ? ['Classic Plinko Action', 'Multiple Betting Ranges']
-                                : ['Live Casino Experience', 'Real-Time Gameplay']
                               setSelectedGame({
-                                title: gameTitle,
+                                title: item.title,
                                 image: imageSrc,
-                                provider,
-                                features
+                                provider: item.provider,
+                                features: item.features,
                               })
                             }}
                           >
-                            <motion.div
-                              layout
-                              transition={{
-                                type: "spring",
-                                stiffness: 350,
-                                damping: 30,
-                                mass: 1
-                              }}
-                              className={cn(
-                                "relative overflow-hidden shrink-0 bg-white/5 border border-white/10",
-                                viewMode === 'list' && "w-16 h-16 rounded-small",
-                                viewMode === 'card' && "w-full aspect-square rounded-small",
-                                viewMode === 'pack' && "w-full h-full rounded-lg"
-                              )}
-                            >
-                              {imageSrc && (
-                                <Image
-                                  src={imageSrc}
-                                  alt={`Game ${index + 1}`}
-                                  fill
-                                  className={cn(
-                                    "object-cover group-hover:scale-105 transition-transform duration-300",
-                                    viewMode === 'list' && "rounded-small",
-                                    viewMode === 'card' && "rounded-small",
-                                    viewMode === 'pack' && "rounded-lg"
-                                  )}
-                                  sizes={viewMode === 'list' ? "64px" : viewMode === 'card' ? "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw" : "224px"}
-                                />
-                              )}
+                            {item.scope !== 'sports' && (
+                              <motion.div
+                                layout
+                                transition={{
+                                  type: "spring",
+                                  stiffness: 350,
+                                  damping: 30,
+                                  mass: 1
+                                }}
+                                className="relative overflow-hidden shrink-0 bg-white/[0.04] border border-white/[0.07] rounded-small w-16 h-16"
+                              >
+                                {imageSrc && (
+                                  <Image
+                                    src={imageSrc}
+                                    alt={`Game ${index + 1}`}
+                                    fill
+                                    className="transition-transform duration-300 rounded-small object-cover group-hover:scale-105"
+                                    sizes="64px"
+                                  />
+                                )}
                               
                               {/* Top Left Tags */}
                               {viewMode !== 'list' && (
@@ -15798,7 +15805,8 @@ function NavTestPageContent() {
                                 </div>
                               )}
                               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 tile-shimmer" />
-                            </motion.div>
+                              </motion.div>
+                            )}
 
                             {/* List View Info */}
                             <AnimatePresence mode="popLayout" initial={false}>
@@ -15817,13 +15825,39 @@ function NavTestPageContent() {
                                   className="flex flex-1 justify-between items-center min-w-0"
                                 >
                                   <div className="flex flex-col gap-0.5 min-w-0">
-                                    <h3 className="font-medium text-[15px] text-white leading-tight truncate">
-                                      {isGoldNugget ? 'Gold Nugget Rush' : isPlinko ? 'Original Plinko' : 'Subtitle Title'}
-                                    </h3>
+                                    {item.scope === 'sports' ? (
+                                      <div className="flex items-center gap-2.5 min-w-0">
+                                        <div className="flex items-center gap-1.5 shrink-0">
+                                          {item.teamAIcon && (
+                                            <Image src={item.teamAIcon} alt={`${item.teamAName ?? 'Team A'} icon`} width={16} height={16} className="h-4 w-4 object-contain opacity-95" />
+                                          )}
+                                          {item.teamBIcon && item.teamBIcon !== item.teamAIcon && (
+                                            <Image src={item.teamBIcon} alt={`${item.teamBName ?? 'Team B'} icon`} width={16} height={16} className="h-4 w-4 object-contain opacity-95" />
+                                          )}
+                                        </div>
+                                        <h3 className="font-medium text-[15px] text-white leading-tight truncate">
+                                          {(item.teamAName && item.teamBName) ? `${item.teamAName} vs ${item.teamBName}` : item.title}
+                                        </h3>
+                                      </div>
+                                    ) : (
+                                      <h3 className="font-medium text-[15px] text-white leading-tight truncate">
+                                        {item.title}
+                                      </h3>
+                                    )}
                                     <div className="text-white/70 font-medium text-xs flex items-center gap-1.5">
-                                      <span className="truncate">
-                                        {isGoldNugget ? 'Slots' : isPlinko ? 'Crash' : 'Live Casino'}
-                                      </span>
+                                      {item.scope === 'sports' && item.leagueLogo ? (
+                                        <Image
+                                          src={item.leagueLogo}
+                                          alt={`${item.subtitle} logo`}
+                                          width={16}
+                                          height={16}
+                                          className="h-4 w-4 object-contain opacity-85"
+                                        />
+                                      ) : null}
+                                      <span className="truncate">{item.subtitle}</span>
+                                      {item.scope === 'sports' && item.date && item.time ? (
+                                        <span className="text-white/45">· {item.date} {item.time}</span>
+                                      ) : null}
                                     </div>
                                   </div>
 
@@ -15832,10 +15866,10 @@ function NavTestPageContent() {
                                       e.stopPropagation()
                                       setFavoritedGames(prev => {
                                         const newSet = new Set(prev)
-                                        if (newSet.has(index)) {
-                                          newSet.delete(index)
+                                        if (newSet.has(item.id)) {
+                                          newSet.delete(item.id)
                                         } else {
-                                          newSet.add(index)
+                                          newSet.add(item.id)
                                         }
                                         return newSet
                                       })
@@ -15845,7 +15879,7 @@ function NavTestPageContent() {
                                     <IconHeart 
                                       className={cn(
                                         "w-4 h-4 transition-colors",
-                                        favoritedGames.has(index) 
+                                        favoritedGames.has(item.id) 
                                           ? "text-pink-500 fill-pink-500" 
                                           : "text-white/70"
                                       )}
@@ -15861,7 +15895,10 @@ function NavTestPageContent() {
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
                                 transition={{ duration: 0.2 }}
-                                className="absolute -bottom-2 left-20 right-0 h-px bg-white/10"
+                                className={cn(
+                                  "absolute -bottom-1 right-0 h-px bg-white/[0.015]",
+                                  "left-20"
+                                )}
                               />
                             )}
                           </motion.div>
@@ -16117,57 +16154,6 @@ function NavTestPageContent() {
                     </div>
                   )
                 })}
-              </div>
-            </div>
-          </DrawerContent>
-        </Drawer>
-
-        {/* Advanced Search Side Drawer */}
-        <Drawer open={advancedSearchOpen} onOpenChange={setAdvancedSearchOpen} direction={isMobile ? "bottom" : "right"} shouldScaleBackground={false}>
-          <DrawerContent className="w-full sm:max-w-md bg-[var(--ds-sidebar-bg,#141920)] border-l border-white/10 text-white z-[210] relative">
-            <DrawerHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <DrawerTitle className="text-white text-2xl">Advanced Search</DrawerTitle>
-                  <DrawerDescription className="text-white/70">
-                    Filter games by category, provider, and more
-                  </DrawerDescription>
-                </div>
-                <DrawerClose asChild>
-                  <button className="rounded-sm opacity-70 hover:opacity-100 transition-opacity">
-                    <IconX className="h-4 w-4 text-white" />
-                  </button>
-                </DrawerClose>
-              </div>
-            </DrawerHeader>
-            <div className="mt-6 space-y-6">
-              {/* Filter sections will go here */}
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-sm font-semibold mb-3 text-white">Category</h3>
-                  <div className="space-y-2">
-                    {['Slots', 'Blackjack', 'Roulette', 'Baccarat', 'Live Casino', 'Video Poker'].map((category) => (
-                      <label key={category} className="flex items-center gap-2 text-sm text-white/70 hover:text-white cursor-pointer">
-                        <input type="checkbox" className="w-4 h-4 rounded border-white/20 bg-white/5" />
-                        <span>{category}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-                
-                <Separator className="bg-white/10" />
-                
-                <div>
-                  <h3 className="text-sm font-semibold mb-3 text-white">Provider</h3>
-                  <div className="space-y-2">
-                    {['BetOnline', 'Dragon Gaming', 'Evolution', 'Pragmatic Play'].map((provider) => (
-                      <label key={provider} className="flex items-center gap-2 text-sm text-white/70 hover:text-white cursor-pointer">
-                        <input type="checkbox" className="w-4 h-4 rounded border-white/20 bg-white/5" />
-                        <span>{provider}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
               </div>
             </div>
           </DrawerContent>

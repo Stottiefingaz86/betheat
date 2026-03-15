@@ -36,6 +36,16 @@ export default function ChatNavToggle({
     }
   }
 
+  const handleQueryChange = (next: string) => {
+    setQuery(next)
+    if (!onSearch) return
+    if (next.trim().length < 2) return
+    onSearch(next)
+    // Hand off to fullscreen search once user starts typing.
+    setIsExpanded(false)
+    setQuery("")
+  }
+
   if (pushSiblingsOnExpand) {
     return (
       <motion.div
@@ -79,7 +89,7 @@ export default function ChatNavToggle({
                 <input
                   type="text"
                   value={query}
-                  onChange={(e) => setQuery(e.target.value)}
+                  onChange={(e) => handleQueryChange(e.target.value)}
                   placeholder={placeholder}
                   autoFocus
                   className="h-9 flex-1 bg-transparent pr-3 text-sm text-white outline-none placeholder:text-white/45"
@@ -150,7 +160,7 @@ export default function ChatNavToggle({
               <input
                 type="text"
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e) => handleQueryChange(e.target.value)}
                 placeholder={placeholder}
                 autoFocus
                 className="h-10 flex-1 bg-transparent pr-3 text-sm text-white outline-none placeholder:text-white/45"
