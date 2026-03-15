@@ -1358,6 +1358,19 @@ function HomePageContent() {
   const [currentTime, setCurrentTime] = useState<string>('')
   const [searchOverlayOpen, setSearchOverlayOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [registerPopupOpen, setRegisterPopupOpen] = useState(false)
+  const [authPopupView, setAuthPopupView] = useState<'register' | 'login'>('register')
+  const [registerForm, setRegisterForm] = useState({
+    email: '',
+    password: '',
+    mobile: '',
+    username: '',
+  })
+  const [registerCountryCode, setRegisterCountryCode] = useState('+1')
+  const [registerDob, setRegisterDob] = useState({ day: '', month: '', year: '' })
+  const [registerFormTouched, setRegisterFormTouched] = useState(false)
+  const [registerPasswordVisible, setRegisterPasswordVisible] = useState(false)
+  const [loginPopupTouched, setLoginPopupTouched] = useState(false)
   const [headerLanguage, setHeaderLanguage] = useState<'EN' | 'ES' | 'DE' | 'FR' | 'PT'>('EN')
   const [vipDrawerOpen, setVipDrawerOpen] = useState(false)
   const [accountDrawerOpen, setAccountDrawerOpen] = useState(false)
@@ -1438,14 +1451,44 @@ function HomePageContent() {
   const createAccountSelectClass = "h-11 rounded-md border border-gray-300 bg-white px-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-black [&:-webkit-autofill]:shadow-[inset_0_0_0px_1000px_white] [&:-webkit-autofill]:[-webkit-text-fill-color:#111827]"
   const canSubmitLogin = loginForm.identifier.trim().length > 0 && loginForm.password.trim().length >= 6
   const isCreateAccountStepValid = Object.values(createAccountErrors).every((value) => value === '')
-
-  const openAuthModal = useCallback((view: 'login' | 'register') => {
-    setVipDrawerOpen(false)
-    setDepositDrawerOpen(false)
-    setAccountDrawerOpen(true)
-    setAccountDrawerView(view === 'login' ? 'login' : 'createAccount')
-    useChatStore.getState().setIsOpen(false)
-  }, [])
+  const walletFieldClass = "auth-popup-field h-11 w-full rounded-lg border border-white/[0.08] bg-white/[0.025] px-3 text-sm text-white placeholder:text-white/40 focus:border-white/[0.14] focus:bg-white/[0.03] focus:outline-none focus:ring-0 focus-visible:ring-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]"
+  const walletSelectClass = "auth-popup-select h-10 w-full rounded-lg border border-white/[0.08] bg-white/[0.025] px-3 pr-8 text-sm text-white focus:outline-none focus:ring-0 focus-visible:ring-0 focus:border-white/[0.14] focus:bg-white/[0.03] appearance-none shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]"
+  const formatMobileInput = (value: string) => {
+    const digits = value.replace(/\D/g, '').slice(0, 15)
+    if (!digits) return ''
+    if (digits.length <= 3) return `+${digits}`
+    if (digits.length <= 6) return `+${digits.slice(0, 3)} ${digits.slice(3)}`
+    if (digits.length <= 10) return `+${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`
+    return `+${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6, 10)} ${digits.slice(10)}`
+  }
+  const formatLocalMobileInput = (value: string) => {
+    const digits = value.replace(/\D/g, '').slice(0, 12)
+    if (!digits) return ''
+    if (digits.length <= 3) return digits
+    if (digits.length <= 6) return `${digits.slice(0, 3)} ${digits.slice(3)}`
+    if (digits.length <= 10) return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`
+    return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6, 10)} ${digits.slice(10)}`
+  }
+  const registerDobDayNum = Number(registerDob.day)
+  const registerDobMonthNum = Number(registerDob.month)
+  const registerDobYearNum = Number(registerDob.year)
+  const isRegisterDobValid = registerDob.day.length > 0
+    && registerDob.month.length > 0
+    && registerDob.year.length === 4
+    && registerDobDayNum >= 1
+    && registerDobDayNum <= 31
+    && registerDobMonthNum >= 1
+    && registerDobMonthNum <= 12
+    && registerDobYearNum >= 1900
+    && registerDobYearNum <= currentYear
+  const registerFormErrors = {
+    email: /\S+@\S+\.\S+/.test(registerForm.email.trim()) ? '' : 'Please enter a valid email',
+    password: registerForm.password.trim().length >= 6 ? '' : 'Use at least 6 characters',
+    mobile: registerForm.mobile.replace(/\D/g, '').length >= 7 ? '' : 'Please enter a valid mobile number',
+    username: registerForm.username.trim().length >= 3 ? '' : 'Username must be at least 3 characters',
+    dob: isRegisterDobValid ? '' : 'Please add a valid date of birth',
+  }
+  const canSubmitRegisterForm = Object.values(registerFormErrors).every((value) => value === '')
 
   // Mutual exclusion helpers — only one drawer open at a time
   const openAccountDrawer = useCallback(() => {
@@ -2122,7 +2165,7 @@ function HomePageContent() {
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
-                setSearchOverlayOpen(true)
+                router.push('/casino?openSearch=1&from=%2F')
               }}
               className="h-9 w-9 rounded-[0.56rem] border border-white/10 bg-[#141920]/90 text-white/75 hover:bg-[#1a202b]/95"
               style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer' }}
@@ -2162,9 +2205,6 @@ function HomePageContent() {
 
           {!isMobile && (
             <ChatNavToggle
-              onSearch={() => {
-                setSearchOverlayOpen(true)
-              }}
               placeholder="Search games, teams, promotions..."
             />
           )}
@@ -2230,7 +2270,15 @@ function HomePageContent() {
               <Button
                 className="w-full mt-4 h-11 rounded-small border border-[#ff7a2f]/45 bg-gradient-to-r from-[#ff7a2f] via-[#ff5a14] to-[#9a3f1f] text-white font-bold hover:brightness-110"
                 onClick={() => {
-                  openAuthModal('register')
+                  setAuthPopupView('register')
+                  setRegisterForm({ email: '', password: '', mobile: '', username: '' })
+                  setRegisterCountryCode('+1')
+                  setRegisterDob({ day: '', month: '', year: '' })
+                  setRegisterFormTouched(false)
+                  setRegisterPasswordVisible(false)
+                  setLoginForm({ identifier: '', password: '', keepLoggedIn: false })
+                  setLoginPopupTouched(false)
+                  setRegisterPopupOpen(true)
                 }}
               >
                 Register Now
@@ -3603,6 +3651,397 @@ function HomePageContent() {
             </div>
           </div>
         </footer>
+
+        <style jsx global>{`
+          .auth-popup-field,
+          .auth-popup-select {
+            background-color: rgba(255, 255, 255, 0.025) !important;
+          }
+          .auth-popup-field:focus,
+          .auth-popup-select:focus {
+            background-color: rgba(255, 255, 255, 0.03) !important;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02) !important;
+          }
+          .auth-popup-field:-webkit-autofill,
+          .auth-popup-field:-webkit-autofill:hover,
+          .auth-popup-field:-webkit-autofill:focus,
+          .auth-popup-field:-webkit-autofill:active {
+            -webkit-text-fill-color: #ffffff !important;
+            caret-color: #ffffff !important;
+            -webkit-box-shadow: 0 0 0 1000px #141920 inset !important;
+            box-shadow: 0 0 0 1000px #141920 inset !important;
+            border-color: rgba(255, 255, 255, 0.08) !important;
+            transition: background-color 9999s ease-in-out 0s !important;
+          }
+        `}</style>
+
+        {/* Register Popup */}
+        <AnimatePresence>
+          {registerPopupOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className={cn(
+                "fixed inset-0 z-[220]",
+                isMobile ? "bg-black/55 backdrop-blur-sm" : "bg-black/60 backdrop-blur-sm"
+              )}
+              onClick={(e) => {
+                if (e.target === e.currentTarget) setRegisterPopupOpen(false)
+              }}
+            >
+              <motion.div
+                initial={{ opacity: 0, y: 14, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 10, scale: 0.98 }}
+                transition={{ duration: 0.2, ease: 'easeOut' }}
+                className="mx-auto mt-[12vh] w-[min(92vw,560px)] rounded-2xl border border-white/10 bg-[#121416] p-6 shadow-2xl"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2.5">
+                    <img
+                      src="/logos/lockup.png"
+                      alt="Betheat lockup"
+                      className="h-6 w-6 object-contain opacity-95"
+                      onError={(e) => {
+                        e.currentTarget.src = '/logos/BHGL_logo-1773311608241-DDbBBO6v.png'
+                      }}
+                    />
+                    <h3 className="text-white text-xl font-bold">{authPopupView === 'register' ? 'Create account' : 'Login'}</h3>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setRegisterPopupOpen(false)}
+                    className="h-8 w-8 rounded-full bg-white/10 hover:bg-white/15 flex items-center justify-center transition-colors"
+                    aria-label="Close register popup"
+                  >
+                    <IconX className="h-4 w-4 text-white/75" />
+                  </button>
+                </div>
+                <p className="mt-2 text-sm text-white/70">
+                  {authPopupView === 'register'
+                    ? 'Join Betheat in seconds and unlock welcome bonuses.'
+                    : 'Welcome back, sign in to continue.'}
+                </p>
+                <div className="mt-5 inline-flex rounded-small border border-white/[0.08] bg-white/[0.025] p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAuthPopupView('register')
+                      setRegisterFormTouched(false)
+                    }}
+                    className={cn(
+                      "h-8 px-3 rounded-small text-xs font-medium transition-colors outline-none ring-0 shadow-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-none",
+                      authPopupView === 'register'
+                        ? "bg-white/[0.07] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
+                        : "text-white/65 hover:bg-white/[0.03] hover:text-white/90"
+                    )}
+                    style={{ WebkitTapHighlightColor: 'transparent' }}
+                    aria-pressed={authPopupView === 'register'}
+                  >
+                    Create account
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAuthPopupView('login')
+                      setLoginPopupTouched(false)
+                    }}
+                    className={cn(
+                      "h-8 px-3 rounded-small text-xs font-medium transition-colors outline-none ring-0 shadow-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-none",
+                      authPopupView === 'login'
+                        ? "bg-white/[0.07] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
+                        : "text-white/65 hover:bg-white/[0.03] hover:text-white/90"
+                    )}
+                    style={{ WebkitTapHighlightColor: 'transparent' }}
+                    aria-pressed={authPopupView === 'login'}
+                  >
+                    Login
+                  </button>
+                </div>
+
+                {authPopupView === 'register' ? (
+                  <form
+                    className="mt-4 space-y-3.5"
+                    onSubmit={(e) => {
+                      e.preventDefault()
+                      setRegisterFormTouched(true)
+                      if (!canSubmitRegisterForm) return
+                      setIsUserLoggedIn(true)
+                      setRegisterPopupOpen(false)
+                      setRegisterFormTouched(false)
+                      setRegisterForm({ email: '', password: '', mobile: '', username: '' })
+                      setRegisterCountryCode('+1')
+                      setRegisterDob({ day: '', month: '', year: '' })
+                    }}
+                  >
+                    <div className="space-y-1">
+                      <input
+                        type="email"
+                        placeholder="Email address"
+                        value={registerForm.email}
+                        onChange={(e) => setRegisterForm((prev) => ({ ...prev, email: e.target.value }))}
+                        className={walletFieldClass}
+                      />
+                      {registerFormTouched && registerFormErrors.email && (
+                        <p className="text-xs text-[#ff8d8d]">{registerFormErrors.email}</p>
+                      )}
+                    </div>
+                    <div className="space-y-1">
+                      <input
+                        type="text"
+                        placeholder="Username"
+                        value={registerForm.username}
+                        onChange={(e) => setRegisterForm((prev) => ({ ...prev, username: e.target.value }))}
+                        className={walletFieldClass}
+                      />
+                      {registerFormTouched && registerFormErrors.username && (
+                        <p className="text-xs text-[#ff8d8d]">{registerFormErrors.username}</p>
+                      )}
+                    </div>
+                    <div className="space-y-1">
+                      <div className="relative">
+                        <input
+                          type={registerPasswordVisible ? 'text' : 'password'}
+                          placeholder="Create password"
+                          value={registerForm.password}
+                          onChange={(e) => setRegisterForm((prev) => ({ ...prev, password: e.target.value }))}
+                          className={`${walletFieldClass} pr-10`}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setRegisterPasswordVisible((prev) => !prev)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-white/55 hover:text-white/85"
+                          aria-label={registerPasswordVisible ? 'Hide password' : 'Show password'}
+                        >
+                          {registerPasswordVisible ? <IconEyeOff className="w-4 h-4" /> : <IconEye className="w-4 h-4" />}
+                        </button>
+                      </div>
+                      {registerFormTouched && registerFormErrors.password && (
+                        <p className="text-xs text-[#ff8d8d]">{registerFormErrors.password}</p>
+                      )}
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <div className="relative w-[88px] shrink-0">
+                          <select
+                            value={registerCountryCode}
+                            onChange={(e) => setRegisterCountryCode(e.target.value)}
+                            className="auth-popup-select h-11 w-full rounded-lg border border-white/[0.08] bg-white/[0.025] px-3 pr-8 text-sm text-white appearance-none focus:outline-none focus:ring-0 focus:border-white/[0.14] shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]"
+                          >
+                            <option value="+1" className="bg-[#11151d] text-white">+1</option>
+                            <option value="+44" className="bg-[#11151d] text-white">+44</option>
+                            <option value="+34" className="bg-[#11151d] text-white">+34</option>
+                            <option value="+61" className="bg-[#11151d] text-white">+61</option>
+                          </select>
+                          <IconChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-white/70" />
+                        </div>
+                        <input
+                          type="tel"
+                          inputMode="numeric"
+                          placeholder="Mobile number"
+                          value={registerForm.mobile}
+                          onChange={(e) => setRegisterForm((prev) => ({ ...prev, mobile: formatLocalMobileInput(e.target.value) }))}
+                          className={walletFieldClass}
+                        />
+                      </div>
+                      {registerFormTouched && registerFormErrors.mobile && (
+                        <p className="text-xs text-[#ff8d8d]">{registerFormErrors.mobile}</p>
+                      )}
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <div className="relative w-[86px] shrink-0">
+                          <select
+                            value={registerDob.day}
+                            onChange={(e) => setRegisterDob((prev) => ({ ...prev, day: e.target.value }))}
+                            className={walletSelectClass}
+                          >
+                            <option value="" disabled className="bg-[#11151d] text-white/60">DD</option>
+                            {Array.from({ length: 31 }).map((_, i) => (
+                              <option key={`reg-day-${i + 1}`} value={`${i + 1}`} className="bg-[#11151d] text-white">{i + 1}</option>
+                            ))}
+                          </select>
+                          <IconChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-white/70" />
+                        </div>
+                        <div className="relative w-[96px] shrink-0">
+                          <select
+                            value={registerDob.month}
+                            onChange={(e) => setRegisterDob((prev) => ({ ...prev, month: e.target.value }))}
+                            className={walletSelectClass}
+                          >
+                            <option value="" disabled className="bg-[#11151d] text-white/60">MM</option>
+                            {[
+                              { label: 'Jan', value: '1' }, { label: 'Feb', value: '2' }, { label: 'Mar', value: '3' },
+                              { label: 'Apr', value: '4' }, { label: 'May', value: '5' }, { label: 'Jun', value: '6' },
+                              { label: 'Jul', value: '7' }, { label: 'Aug', value: '8' }, { label: 'Sep', value: '9' },
+                              { label: 'Oct', value: '10' }, { label: 'Nov', value: '11' }, { label: 'Dec', value: '12' },
+                            ].map((month) => (
+                              <option key={`reg-month-${month.value}`} value={month.value} className="bg-[#11151d] text-white">{month.label}</option>
+                            ))}
+                          </select>
+                          <IconChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-white/70" />
+                        </div>
+                        <div className="relative w-[106px] shrink-0">
+                          <select
+                            value={registerDob.year}
+                            onChange={(e) => setRegisterDob((prev) => ({ ...prev, year: e.target.value }))}
+                            className={walletSelectClass}
+                          >
+                            <option value="" disabled className="bg-[#11151d] text-white/60">YYYY</option>
+                            {Array.from({ length: 90 }).map((_, i) => {
+                              const y = `${currentYear - i}`
+                              return <option key={`reg-year-${y}`} value={y} className="bg-[#11151d] text-white">{y}</option>
+                            })}
+                          </select>
+                          <IconChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-white/70" />
+                        </div>
+                      </div>
+                      {registerFormTouched && registerFormErrors.dob && (
+                        <p className="text-xs text-[#ff8d8d]">{registerFormErrors.dob}</p>
+                      )}
+                    </div>
+                    <Button
+                      type="submit"
+                      className="mt-3 w-full h-11 rounded-small border border-[#ff7a2f]/45 bg-gradient-to-r from-[#ff7a2f] via-[#ff5a14] to-[#9a3f1f] text-white font-bold hover:brightness-110"
+                    >
+                      Create account
+                    </Button>
+                    <div className="pt-3">
+                      <div className="my-2 h-px bg-white/10" />
+                      <p className="mb-3 mt-3 text-center text-xs text-white/55">Or sign up with</p>
+                      <div className="grid grid-cols-2 gap-2">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          className="h-10 rounded-small bg-[#1a1d22] border border-white/10 text-white/85 hover:bg-[#22262c] justify-center gap-2"
+                        >
+                          <Image
+                            src="/games/google-icon-logo.svg"
+                            alt="Google"
+                            width={14}
+                            height={14}
+                            className="w-[14px] h-[14px] object-contain"
+                            unoptimized
+                          />
+                          <span>Google</span>
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          className="h-10 rounded-small bg-[#1a1d22] border border-white/10 text-white/85 hover:bg-[#22262c] justify-center gap-2"
+                        >
+                          <Image
+                            src="/games/MetaMask_Fox.svg.png"
+                            alt="MetaMask"
+                            width={14}
+                            height={14}
+                            className="w-[14px] h-[14px] object-contain"
+                            unoptimized
+                          />
+                          <span>MetaMask</span>
+                        </Button>
+                      </div>
+                    </div>
+                  </form>
+                ) : (
+                  <form
+                    className="mt-4 space-y-3.5"
+                    onSubmit={(e) => {
+                      e.preventDefault()
+                      setLoginPopupTouched(true)
+                      if (!canSubmitLogin) return
+                      setIsUserLoggedIn(true)
+                      setRegisterPopupOpen(false)
+                      setLoginPopupTouched(false)
+                      setLoginForm({ identifier: '', password: '', keepLoggedIn: false })
+                    }}
+                  >
+                    <div className="space-y-1">
+                      <input
+                        type="text"
+                        placeholder="Email address or username"
+                        value={loginForm.identifier}
+                        onChange={(e) => setLoginForm((prev) => ({ ...prev, identifier: e.target.value }))}
+                        className={walletFieldClass}
+                      />
+                      {loginPopupTouched && loginForm.identifier.trim().length === 0 && (
+                        <p className="text-xs text-[#ff8d8d]">Please enter your email or username</p>
+                      )}
+                    </div>
+                    <div className="space-y-1">
+                      <div className="relative">
+                        <input
+                          type={loginPasswordVisible ? 'text' : 'password'}
+                          placeholder="Password"
+                          value={loginForm.password}
+                          onChange={(e) => setLoginForm((prev) => ({ ...prev, password: e.target.value }))}
+                          className={`${walletFieldClass} pr-10`}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setLoginPasswordVisible((prev) => !prev)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-white/55 hover:text-white/85"
+                          aria-label={loginPasswordVisible ? 'Hide password' : 'Show password'}
+                        >
+                          {loginPasswordVisible ? <IconEyeOff className="w-4 h-4" /> : <IconEye className="w-4 h-4" />}
+                        </button>
+                      </div>
+                      {loginPopupTouched && loginForm.password.trim().length < 6 && (
+                        <p className="text-xs text-[#ff8d8d]">Use at least 6 characters</p>
+                      )}
+                    </div>
+                    <Button
+                      type="submit"
+                      className="mt-2 w-full h-11 rounded-small border border-[#9a86d1]/75 text-[#121417] font-semibold hover:text-[#121417]"
+                      style={{ backgroundColor: '#c9b4ff', boxShadow: '0 6px 18px rgba(122, 92, 196, 0.28)' }}
+                    >
+                      Login
+                    </Button>
+                    <div className="pt-3">
+                      <div className="my-2 h-px bg-white/10" />
+                      <p className="mb-3 mt-3 text-center text-xs text-white/55">Or continue with</p>
+                      <div className="grid grid-cols-2 gap-2">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          className="h-10 rounded-small bg-[#1a1d22] border border-white/10 text-white/85 hover:bg-[#22262c] justify-center gap-2"
+                        >
+                          <Image
+                            src="/games/google-icon-logo.svg"
+                            alt="Google"
+                            width={14}
+                            height={14}
+                            className="w-[14px] h-[14px] object-contain"
+                            unoptimized
+                          />
+                          <span>Google</span>
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          className="h-10 rounded-small bg-[#1a1d22] border border-white/10 text-white/85 hover:bg-[#22262c] justify-center gap-2"
+                        >
+                          <Image
+                            src="/games/MetaMask_Fox.svg.png"
+                            alt="MetaMask"
+                            width={14}
+                            height={14}
+                            className="w-[14px] h-[14px] object-contain"
+                            unoptimized
+                          />
+                          <span>MetaMask</span>
+                        </Button>
+                      </div>
+                    </div>
+                  </form>
+                )}
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Search Overlay (casino-style behavior) */}
         <AnimatePresence mode="wait">

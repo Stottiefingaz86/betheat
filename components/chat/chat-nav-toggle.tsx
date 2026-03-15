@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion"
 import { Search, X } from "lucide-react"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useState } from "react"
 
 type ExpandingSearchDockProps = {
@@ -17,8 +18,19 @@ export default function ChatNavToggle({
   expandTo = "left",
   pushSiblingsOnExpand = false,
 }: ExpandingSearchDockProps) {
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
   const [isExpanded, setIsExpanded] = useState(false)
   const [query, setQuery] = useState("")
+
+  const pushGlobalSearch = (nextQuery: string) => {
+    const originQuery = searchParams?.toString()
+    const origin = `${pathname || "/"}${originQuery ? `?${originQuery}` : ""}`
+    router.push(
+      `/casino?globalSearch=${encodeURIComponent(nextQuery)}&from=${encodeURIComponent(origin)}`
+    )
+  }
 
   const handleExpand = () => {
     setIsExpanded(true)
@@ -33,14 +45,23 @@ export default function ChatNavToggle({
     e.preventDefault()
     if (onSearch && query) {
       onSearch(query)
+      return
+    }
+    if (query.trim().length >= 2) {
+      pushGlobalSearch(query.trim())
+      setIsExpanded(false)
+      setQuery("")
     }
   }
 
   const handleQueryChange = (next: string) => {
     setQuery(next)
-    if (!onSearch) return
     if (next.trim().length < 2) return
-    onSearch(next)
+    if (onSearch) {
+      onSearch(next)
+    } else {
+      pushGlobalSearch(next.trim())
+    }
     // Hand off to fullscreen search once user starts typing.
     setIsExpanded(false)
     setQuery("")

@@ -8646,6 +8646,7 @@ function NavTestPageContent() {
   const [headerLanguage, setHeaderLanguage] = useState<'EN' | 'ES' | 'DE' | 'FR' | 'PT'>('EN')
   const [mobileLanguageAccordionOpen, setMobileLanguageAccordionOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [searchReturnPath, setSearchReturnPath] = useState<string | null>(null)
   const viewMode: 'list' = 'list'
   const [searchScope, setSearchScope] = useState<'all' | 'casino' | 'sports'>('all')
   const searchScopeOptions: Array<'all' | 'casino' | 'sports'> = ['all', 'casino', 'sports']
@@ -8709,8 +8710,10 @@ function NavTestPageContent() {
     return fallback.slice(0, 6)
   }, [searchCatalog, searchResults, searchScope])
   const closeSearchOverlay = useCallback(() => {
+    const returnPath = searchReturnPath
     setSearchOverlayOpen(false)
     setSearchQuery('')
+    setSearchReturnPath(null)
     setActiveSubNav('Lobby')
     setShowAllGames(false)
     setSelectedCategory('')
@@ -8726,7 +8729,10 @@ function NavTestPageContent() {
       const mainContent = document.querySelector('[data-content-item]')
       if (mainContent) (mainContent as HTMLElement).focus()
     }, 100)
-  }, [])
+    if (returnPath && returnPath.startsWith('/') && !returnPath.startsWith('/casino')) {
+      router.push(returnPath)
+    }
+  }, [router, searchReturnPath])
   useEffect(() => {
     if (selectedGame) {
       trackPageView('game-launch', `Game: ${selectedGame.title}`)
@@ -9168,6 +9174,27 @@ function NavTestPageContent() {
       setShowSports(false)
       setShowVipRewards(false)
       // Clean up URL
+      router.replace('/casino', { scroll: false })
+    }
+
+    // Open blank search overlay from global nav triggers.
+    const openSearchParam = searchParams.get('openSearch')
+    const fromParam = searchParams.get('from')
+    const sanitizedFrom = fromParam && fromParam.startsWith('/') && !fromParam.startsWith('//') ? fromParam : null
+    if (openSearchParam === '1') {
+      setSearchScope('all')
+      setSearchReturnPath(sanitizedFrom)
+      setSearchOverlayOpen(true)
+      router.replace('/casino', { scroll: false })
+    }
+
+    // Global nav search handoff from other pages.
+    const globalSearchParam = searchParams.get('globalSearch')
+    if (globalSearchParam && globalSearchParam.trim().length > 0) {
+      setSearchQuery(globalSearchParam)
+      setSearchScope('all')
+      setSearchReturnPath(sanitizedFrom)
+      setSearchOverlayOpen(true)
       router.replace('/casino', { scroll: false })
     }
   }, [searchParams, router])
@@ -10921,7 +10948,7 @@ function NavTestPageContent() {
                           {[
                             { id: 'Daily Races', icon: IconTrophy, label: 'Daily Races', subtitle: 'Compete for cash prizes' },
                             { id: 'Wallet', icon: IconWallet, label: 'Wallet', subtitle: 'Deposit or withdraw funds' },
-                            { id: 'Level', icon: IconFlame, label: 'Level 7', subtitle: '350 XP to next level' },
+                            { id: 'Level', icon: IconCrown, label: 'Level 7', subtitle: '350 XP to next level' },
                           ].map((item, index) => {
                             const Icon = item.icon
                             if (item.id === 'Level') {
@@ -10945,7 +10972,7 @@ function NavTestPageContent() {
                                         )}
                                       >
                                         <div className="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0 bg-white/[0.03]">
-                                          <IconFlame strokeWidth={1.5} className="w-4 h-4 text-[#ff9254]" />
+                                          <IconCrown strokeWidth={1.5} className="w-4 h-4 text-[#c9b4ff]" />
                                         </div>
                                         <div className={cn("flex flex-col leading-tight min-w-0", sidebarState === 'collapsed' && !isMobile && "hidden")}>
                                           <div className="flex items-center justify-between gap-3">
@@ -11283,7 +11310,7 @@ function NavTestPageContent() {
                                   )}
                                 >
                                   <div className="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0 bg-white/[0.045]">
-                                    <IconFlame className="w-4 h-4 text-[#ff9254]" />
+                                    <IconCrown className="w-4 h-4 text-[#c9b4ff]" />
                                   </div>
                                   {(sidebarState !== 'collapsed' || isMobile) && (
                                     <div className="flex flex-col leading-tight min-w-0 flex-1">
@@ -14746,7 +14773,7 @@ function NavTestPageContent() {
                       <div className="border-t border-dashed border-white/[0.1]" />
                       <div className="space-y-2">
                         <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.16em] text-white/45">
-                          <IconFlame className="h-3 w-3 text-[#ff9254]" />
+                          <IconCrown className="h-3 w-3 text-[#c9b4ff]" />
                           <span>Level 7</span>
                         </div>
                         <div className="h-1.5 overflow-hidden rounded-full bg-white/[0.08]">
