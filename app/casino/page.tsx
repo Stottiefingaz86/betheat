@@ -8056,6 +8056,55 @@ function NavTestPageContent() {
       return accountBonusHistorySort === 'latest' ? bTime - aTime : aTime - bTime
     })
   }, [accountBonusHistoryRows, accountBonusHistorySort, accountBonusHistoryStatusFilter])
+  const accountCurrentLevel = 7
+  const accountBonusOffers = [
+    {
+      id: 'offer-weekend-reload',
+      title: 'Weekend Reload',
+      description: 'Extra bonus funds added on your weekend deposits.',
+      requiredLevel: 4,
+      isActive: true,
+    },
+    {
+      id: 'offer-midweek-boost',
+      title: 'Midweek Boost',
+      description: 'Get a midweek top-up on your first Wednesday deposit.',
+      requiredLevel: 6,
+      isActive: false,
+    },
+    {
+      id: 'offer-cashback-pro',
+      title: 'Cashback Pro',
+      description: 'Higher tier cashback rates and faster weekly settlements.',
+      requiredLevel: 10,
+      isActive: false,
+    },
+    {
+      id: 'offer-birthday-reward',
+      title: 'Birthday Reward',
+      description: 'Claim a birthday bonus package during your birthday week.',
+      requiredLevel: 11,
+      isActive: false,
+    },
+    {
+      id: 'offer-vip-risk-free',
+      title: 'VIP Risk Free',
+      description: 'Get a larger protected bet limit on selected sportsbook markets.',
+      requiredLevel: 12,
+      isActive: false,
+    },
+    {
+      id: 'offer-elite-boost',
+      title: 'Elite Deposit Boost',
+      description: 'Premium reload multipliers, priority rewards, and exclusive campaigns.',
+      requiredLevel: 15,
+      isActive: false,
+    },
+  ] as const
+  const accountActiveBonuses = useMemo(
+    () => accountBonusOffers.filter((offer) => offer.isActive && offer.requiredLevel <= accountCurrentLevel),
+    [accountBonusOffers, accountCurrentLevel]
+  )
   const [accountTransactionExpandedId, setAccountTransactionExpandedId] = useState<string | null>(null)
   const [accountTransactionCopiedReferenceId, setAccountTransactionCopiedReferenceId] = useState<string | null>(null)
   const [accountTransactionFilterOpen, setAccountTransactionFilterOpen] = useState(false)
@@ -15177,40 +15226,107 @@ function NavTestPageContent() {
                   </div>
 
                   {accountBonusTab === 'available' ? (
-                    <Card className="bg-white/5 border-white/10 overflow-hidden">
-                      <div className="w-full h-36 bg-white/5 relative overflow-hidden">
-                        <div className="absolute inset-0 tile-shimmer"></div>
+                    <div className="space-y-3">
+                      <div className="w-full rounded-small border border-white/[0.08] bg-white/[0.02] p-2.5">
+                        <div className="flex items-center justify-between text-[10px] text-white/55">
+                          <div className="inline-flex items-center gap-1.5 uppercase tracking-[0.16em]">
+                            <IconCrown className="h-3 w-3 text-[#c9b4ff]" />
+                            <span>Level 7</span>
+                          </div>
+                          <span>350 XP to next level</span>
+                        </div>
+                        <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-white/[0.08]">
+                          <div
+                            className="h-full rounded-full"
+                            style={{
+                              width: '84%',
+                              background: 'linear-gradient(90deg, #ff9254 0%, #ff6a3d 45%, #b86bff 100%)',
+                              boxShadow: '0 0 10px rgba(255, 126, 79, 0.30), 0 0 18px rgba(184, 107, 255, 0.15)',
+                            }}
+                          />
+                        </div>
+                        <div className="mt-2 border-t border-white/10 pt-2 text-xs text-white/70">
+                          Higher levels unlock better bonus offers, including birthday rewards.
+                        </div>
                       </div>
-                      <CardContent className="p-4">
-                        <CardTitle className="text-lg font-semibold text-white mb-2">Weekend Reload</CardTitle>
-                        <p className="text-sm text-white/70 mb-4 line-clamp-3">
-                          Extra bonus funds added on your weekend deposits.
-                        </p>
-                  <Button 
-                    variant="ghost" 
-                          className="w-full font-semibold text-[#121417] hover:text-[#121417] border border-[#9a86d1]/75"
-                          style={{ backgroundColor: '#c9b4ff', boxShadow: '0 6px 18px rgba(122, 92, 196, 0.28)' }}
-                  >
-                          More info
-                  </Button>
-                      </CardContent>
-                    </Card>
-                  ) : accountBonusTab === 'active' ? (
-                    <div className="rounded-small border border-dashed border-white/20 bg-white/[0.02] px-4 py-8 text-center">
-                      <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/[0.03] text-xl">
-                        🔭
+                      <div className="space-y-3">
+                        {accountBonusOffers.map((offer) => {
+                          const isLocked = offer.requiredLevel > accountCurrentLevel
+                          return (
+                            <Card
+                              key={offer.id}
+                              className={cn(
+                                "bg-white/5 border-white/10 overflow-hidden",
+                                isLocked && "opacity-80"
+                              )}
+                            >
+                              <div className="w-full h-28 bg-white/5 relative overflow-hidden">
+                                <div className="absolute inset-0 tile-shimmer" />
+                                <div className="absolute top-3 left-3 inline-flex items-center rounded-full border border-white/15 bg-black/35 px-2 py-1 text-[11px] text-white/85">
+                                  Requires Level {offer.requiredLevel}
+                                </div>
+                              </div>
+                              <CardContent className="p-4">
+                                <CardTitle className="text-lg font-semibold text-white mb-2">{offer.title}</CardTitle>
+                                <p className="text-sm text-white/70 mb-4 line-clamp-3">{offer.description}</p>
+                                <Button
+                                  variant="ghost"
+                                  disabled={isLocked}
+                                  className={cn(
+                                    "w-full font-semibold border",
+                                    isLocked
+                                      ? "border-white/12 bg-white/[0.04] text-white/45 cursor-not-allowed hover:bg-white/[0.04] hover:text-white/45"
+                                      : "text-[#121417] hover:text-[#121417] border-[#9a86d1]/75"
+                                  )}
+                                  style={
+                                    isLocked
+                                      ? undefined
+                                      : { backgroundColor: '#c9b4ff', boxShadow: '0 6px 18px rgba(122, 92, 196, 0.28)' }
+                                  }
+                                >
+                                  {isLocked ? `Unlock at Level ${offer.requiredLevel}` : 'More info'}
+                                </Button>
+                              </CardContent>
+                            </Card>
+                          )
+                        })}
                       </div>
-                      <p className="text-sm font-semibold text-white/90">No active bonus yet</p>
-                      <p className="mt-1 text-xs text-white/55">Check available bonuses to get started.</p>
-                      <Button
-                        variant="ghost"
-                        className="mt-3 h-9 rounded-small border border-[#9a86d1]/75 px-4 text-xs font-semibold text-[#121417] hover:text-[#121417]"
-                        style={{ backgroundColor: '#c9b4ff', boxShadow: '0 6px 18px rgba(122, 92, 196, 0.28)' }}
-                        onClick={() => setAccountBonusTab('available')}
-                      >
-                        Check Available
-                      </Button>
                     </div>
+                  ) : accountBonusTab === 'active' ? (
+                    accountActiveBonuses.length > 0 ? (
+                      <div className="space-y-3">
+                        {accountActiveBonuses.map((offer) => (
+                          <Card key={offer.id} className="bg-white/5 border-white/10 overflow-hidden">
+                            <div className="w-full h-24 bg-white/5 relative overflow-hidden">
+                              <div className="absolute inset-0 tile-shimmer" />
+                              <div className="absolute top-3 left-3 inline-flex items-center rounded-full border border-emerald-300/35 bg-emerald-500/15 px-2 py-1 text-[11px] text-emerald-200">
+                                Active
+                              </div>
+                            </div>
+                            <CardContent className="p-4">
+                              <CardTitle className="text-base font-semibold text-white mb-1">{offer.title}</CardTitle>
+                              <p className="text-sm text-white/70">{offer.description}</p>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="rounded-small border border-dashed border-white/20 bg-white/[0.02] px-4 py-8 text-center">
+                        <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/[0.03] text-xl">
+                          🔭
+                        </div>
+                        <p className="text-sm font-semibold text-white/90">No active bonus yet</p>
+                        <p className="mt-1 text-xs text-white/55">Check available bonuses to get started.</p>
+                        <Button
+                          variant="ghost"
+                          className="mt-3 h-9 rounded-small border border-[#9a86d1]/75 px-4 text-xs font-semibold text-[#121417] hover:text-[#121417]"
+                          style={{ backgroundColor: '#c9b4ff', boxShadow: '0 6px 18px rgba(122, 92, 196, 0.28)' }}
+                          onClick={() => setAccountBonusTab('available')}
+                        >
+                          Check Available
+                        </Button>
+                      </div>
+                    )
                   ) : (
                     <div className="rounded-small border border-white/10 bg-[var(--ds-sidebar-bg,#121417)]/92 backdrop-blur-sm overflow-visible">
                       <div className="relative flex items-center justify-between border-b border-white/10 px-4 py-3">
