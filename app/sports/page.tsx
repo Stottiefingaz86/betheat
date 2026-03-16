@@ -10,7 +10,6 @@ import React from 'react'
 import { createPortal } from 'react-dom'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { BrandLoaderScreen } from '@/components/ui/brand-loader-screen'
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -10398,7 +10397,11 @@ function NavTestPageContent() {
 
   // Don't render until mounted to prevent hydration issues
   if (!mounted || !bootReady) {
-    return <BrandLoaderScreen />
+    return (
+      <div className="min-h-screen w-full bg-[#090f1f] flex items-center justify-center">
+        <div className="h-8 w-8 rounded-full border-2 border-white/20 border-t-white animate-spin" />
+      </div>
+    )
   }
 
   const sidebarMenuItems = [
