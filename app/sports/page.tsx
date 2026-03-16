@@ -6033,12 +6033,18 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                 <SidebarMenu>
                   {sportsFeatures.map((item, index) => {
                     const IconComp = typeof item.icon === 'string' ? null : item.icon
+                    const isItemActive =
+                      item.label === 'My Bets'
+                        ? !!showMyBets
+                        : item.label === 'Home'
+                          ? !showMyBets && !activeSport
+                          : ('active' in item ? !!item.active : false)
                     return (
                       <SidebarMenuItem key={index}>
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <SidebarMenuButton
-                              isActive={item.label === 'My Bets' ? showMyBets : item.label === 'Home' ? !showMyBets && !activeSport : item.active}
+                              isActive={isItemActive}
                               onClick={(e) => {
                                 e.preventDefault()
                                 e.stopPropagation()
@@ -6051,9 +6057,9 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                 "data-[active=false]:text-white/70 hover:text-white",
                                 "hover:bg-white/[0.035] hover:border-white/[0.12]",
                               )}
-                              style={(item.label === 'My Bets' ? showMyBets : item.label === 'Home' ? !showMyBets && !activeSport : item.active) ? { backgroundColor: 'rgba(255, 255, 255, 0.06)', borderColor: 'rgba(255, 255, 255, 0.14)' } : undefined}
+                              style={isItemActive ? { backgroundColor: 'rgba(255, 255, 255, 0.06)', borderColor: 'rgba(255, 255, 255, 0.14)' } : undefined}
                             >
-                              <div className={cn("w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0", (item.label === 'My Bets' ? showMyBets : item.active) ? "bg-white/20" : "bg-white/10")}>
+                              <div className={cn("w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0", isItemActive ? "bg-white/20" : "bg-white/10")}>
                                 {typeof item.icon === 'string' ? <img src={item.icon} alt={item.label} className="w-4 h-4 object-contain" /> : IconComp ? <IconComp strokeWidth={1.5} className="w-4 h-4" /> : null}
                               </div>
                               {(sidebarState !== 'collapsed' || isMobile) && (
