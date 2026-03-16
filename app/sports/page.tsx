@@ -5,11 +5,11 @@ import { ReloadClaim } from '@/components/vip/reload-claim'
 import { CashDropCode } from '@/components/vip/cash-drop-code'
 import { BetAndGet } from '@/components/vip/bet-and-get'
 
-import { Suspense, useState, useEffect, useRef, useCallback, useMemo, useId } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo, useId } from 'react'
 import React from 'react'
 import { createPortal } from 'react-dom'
 import { useIsMobile } from '@/hooks/use-mobile'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -9591,14 +9591,12 @@ function NavTestPageContent() {
   const isMobile = useIsMobile()
   const HEADER_COMPACT_BREAKPOINT = 1180
   const router = useRouter()
-  const searchParams = useSearchParams()
 
   const [loadingNav, setLoadingNav] = useState<string | null>(null)
   const [isTabletHeader, setIsTabletHeader] = useState(false)
   const isCompactHeader = isMobile || isTabletHeader
   const [headerLanguage, setHeaderLanguage] = useState<'EN' | 'ES' | 'DE' | 'FR' | 'PT'>('EN')
   const [mounted, setMounted] = useState(false)
-  const [bootReady, setBootReady] = useState(false)
   const [activeFilter, setActiveFilter] = useState('For You')
   const [activeSubNav, setActiveSubNav] = useState('For You')
   const [gameSortFilter, setGameSortFilter] = useState<string>('popular')
@@ -10012,24 +10010,24 @@ function NavTestPageContent() {
   const [betslipManuallyClosed, setBetslipManuallyClosed] = useState(false)
   const [activeSport, setActiveSport] = useState<string>('')
   
-  // Read sport from URL query param (e.g. /sports?sport=Football)
+  // Read deep-link params from URL (e.g. /sports?sport=Football&mybets=pending)
   useEffect(() => {
-    const sportParam = searchParams.get('sport')
+    if (typeof window === 'undefined') return
+    const params = new URLSearchParams(window.location.search)
+    const sportParam = params.get('sport')
     if (sportParam === 'Soccer' || sportParam === 'Football') {
       setActiveSport(sportParam)
     }
-  }, [searchParams])
 
-  // Deep-link to My Bets from URL query param (e.g. /sports?mybets=pending)
-  useEffect(() => {
-    const mybetsParam = searchParams.get('mybets')
+    const mybetsParam = params.get('mybets')
     if (mybetsParam) {
       const validFilters = ['all', 'cash_out', 'in_play', 'pending', 'graded'] as const
-      const filter = validFilters.find(f => f === mybetsParam) || 'all'
+      const filter = validFilters.find((f) => f === mybetsParam) || 'all'
       setMyBetsInitialFilter(filter)
-      setShowMyBets?.(true); window.scrollTo(0, 0)
+      setShowMyBets?.(true)
+      window.scrollTo(0, 0)
     }
-  }, [searchParams])
+  }, [])
   const [bets, setBets] = useState<Array<{
     id: string
     eventId: number
@@ -10380,12 +10378,6 @@ function NavTestPageContent() {
   }, [])
 
   useEffect(() => {
-    if (!mounted) return
-    const timer = window.setTimeout(() => setBootReady(true), 1200)
-    return () => window.clearTimeout(timer)
-  }, [mounted])
-
-  useEffect(() => {
     if (!mounted || isMobile || !showSports || showVipRewards || showMyBets) return
     if (typeof window === 'undefined') return
 
@@ -10400,9 +10392,9 @@ function NavTestPageContent() {
   }, [mounted, isMobile, showSports, showVipRewards, showMyBets, SPORTS_FEATURE_TOUR_KEY, setBetslipOpen, setBetslipMinimized])
 
   // Don't render until mounted to prevent hydration issues
-  if (!mounted || !bootReady) {
+  if (!mounted) {
     return (
-      <div className="min-h-screen w-full bg-[#090f1f] flex items-center justify-center">
+      <div className="min-h-screen w-full bg-[var(--ds-page-bg,#1a1a1a)] flex items-center justify-center">
         <div className="h-8 w-8 rounded-full border-2 border-white/20 border-t-white animate-spin" />
       </div>
     )
@@ -15658,15 +15650,7 @@ function ViewTab({
 export default function NavTestPage() {
   return (
     <SidebarProvider defaultOpen>
-      <Suspense
-        fallback={
-          <div className="min-h-screen w-full bg-[#090f1f] flex items-center justify-center">
-            <div className="h-8 w-8 rounded-full border-2 border-white/20 border-t-white animate-spin" />
-          </div>
-        }
-      >
-        <NavTestPageContent />
-      </Suspense>
+      <NavTestPageContent />
     </SidebarProvider>
   )
 }
