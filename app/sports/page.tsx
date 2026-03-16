@@ -10469,13 +10469,11 @@ function NavTestPageContent() {
           duration: 0.3
         } : {}}
         style={{ 
-          backgroundColor: 'rgba(18, 20, 23, 0.96)',
+          backgroundColor: 'var(--ds-nav-bg, #121417)',
           pointerEvents: 'auto',
           zIndex: 101,
           position: 'fixed',
           boxShadow: 'none',
-          backdropFilter: 'blur(22px) saturate(112%)',
-          WebkitBackdropFilter: 'blur(22px) saturate(112%)',
         }}
       >
           <div className="flex items-center gap-6">
@@ -10826,7 +10824,7 @@ function NavTestPageContent() {
           <motion.div
             data-sub-nav
             className={cn(
-              "fixed z-[90] bg-white dark:bg-[#1a1a1a]/60 dark:backdrop-blur-xl border-b border-gray-200 dark:border-white/10 py-3 shadow-sm",
+              "fixed z-[90] bg-[var(--ds-page-bg,#1a1a1a)] border-b border-white/10 py-3 shadow-sm",
               isMobile ? "left-0 right-0 overflow-hidden" : "px-6"
             )}
             initial={false}
