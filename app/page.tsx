@@ -14,6 +14,7 @@ import { useTracking } from '@/hooks/use-tracking'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
+import { Globe as IconWorldNav } from 'lucide-react'
 import { 
   IconShield,
   IconChevronLeft,
@@ -34,7 +35,6 @@ import {
   IconLoader2,
   IconClock,
   IconSearch,
-  IconWorld,
   IconCoins,
   IconBolt,
   IconStar,
@@ -2214,14 +2214,14 @@ function HomePageContent() {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  size="icon"
-                  className="h-9 w-9 rounded-[0.56rem] border border-white/10 bg-[#141920]/90 text-white/75 hover:bg-[#1a202b]/95"
+                  className="h-9 rounded-[0.56rem] border border-white/10 bg-[#121416] px-2.5 text-white/75 hover:bg-[#171b22] inline-flex items-center gap-1.5"
                   style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer' }}
                 >
-                  <IconWorld className="h-4 w-4" />
+                  <IconWorldNav className="h-4 w-4" />
+                  <span className="text-[11px] font-medium text-white/70">{headerLanguage}</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-[140px] bg-[#141920] border-white/10 text-white">
+              <DropdownMenuContent align="end" className="w-[140px] bg-[#121416] border-white/10 text-white">
                 {[
                   { code: 'EN', label: 'English' },
                   { code: 'ES', label: 'Spanish' },

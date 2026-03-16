@@ -701,7 +701,7 @@ function LazyGameTile({ index, columnIndex, rowIndex, onTileClick, isMobile = fa
   return (
     <motion.div
       ref={tileRef}
-      className="w-[132px] h-[174px]"
+      className="relative w-full aspect-[132/174]"
       initial={{ opacity: 0, scale: 0.85 }}
       animate={isVisible ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.85 }}
       transition={{
@@ -4747,7 +4747,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                         size="icon" 
                         className="h-8 w-8 text-white/70 hover:text-white hover:bg-white/5 cursor-pointer"
                       >
-                        <IconFilter className="w-4 h-4" />
+                        <IconArrowsSort className="w-4 h-4" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent 
@@ -8029,6 +8029,7 @@ function NavTestPageContent() {
   const [accountIdCopied, setAccountIdCopied] = useState(false)
   const webInboxUnreadCount = 2
   const [accountBonusTab, setAccountBonusTab] = useState<'available' | 'active' | 'history'>('available')
+  const [accountLanguageMenuOpen, setAccountLanguageMenuOpen] = useState(false)
   const [accountBonusExpandedId, setAccountBonusExpandedId] = useState<string | null>(null)
   const [accountBonusFilterOpen, setAccountBonusFilterOpen] = useState(false)
   const [accountBonusHistoryStatusFilter, setAccountBonusHistoryStatusFilter] = useState<'ALL' | 'ACTIVE' | 'EXPIRED' | 'CANCELLED' | 'COMPLETE'>('ALL')
@@ -9875,14 +9876,14 @@ function NavTestPageContent() {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  size="icon"
-                  className="h-9 w-9 rounded-[0.56rem] border border-white/10 bg-[#141920]/90 text-white/75 hover:bg-[#1a202b]/95"
-                style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer' }}
-              >
+                  className="h-9 rounded-[0.56rem] border border-white/10 bg-[#121416] px-2.5 text-white/75 hover:bg-[#171b22] inline-flex items-center gap-1.5"
+                  style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer' }}
+                >
                   <IconWorld className="h-4 w-4" />
+                  <span className="text-[11px] font-medium text-white/70">{headerLanguage}</span>
               </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-[140px] bg-[#141920] border-white/10 text-white">
+              <DropdownMenuContent align="end" className="w-[140px] bg-[#121416] border-white/10 text-white">
                 {[
                   { code: 'EN', label: 'English' },
                   { code: 'ES', label: 'Spanish' },
@@ -12192,7 +12193,7 @@ function NavTestPageContent() {
                                 <button
                                   className="bg-gray-200 dark:bg-white/5 hover:bg-gray-300 dark:hover:bg-white/10 rounded-full p-1.5 h-9 w-9 flex items-center justify-center transition-all duration-300 text-gray-800 dark:text-white/70 hover:text-black dark:hover:text-white"
                                 >
-                                  <IconFilter className="w-4 h-4" />
+                                  <IconArrowsSort className="w-4 h-4" />
                                 </button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end" className="w-48 bg-[#2d2d2d] border-white/10 text-white">
@@ -12664,9 +12665,9 @@ function NavTestPageContent() {
                           // Add skeletons to fill incomplete rows and prevent gaps
                           const totalTiles = gameTiles.length
                           const itemsInLastRow = totalTiles % maxCols
-                          const skeletonCount = itemsInLastRow > 0 ? maxCols - itemsInLastRow : 0
+                          const skeletonCount = isMobile && itemsInLastRow > 0 ? maxCols - itemsInLastRow : 0
                           const skeletonBoxes = Array.from({ length: skeletonCount }).map((_, index) => (
-                            <div key={`skeleton-${categoryKey}-${index}`} className={isMobile ? "w-full aspect-[132/174]" : "w-[132px] h-[174px]"}>
+                            <div key={`skeleton-${categoryKey}-${index}`} className={isMobile ? "w-full aspect-[132/174]" : ""}>
                               <Skeleton 
                                 className="w-full h-full rounded-small bg-white/10 dark:bg-white/10" 
                               />
@@ -12685,7 +12686,8 @@ function NavTestPageContent() {
                           
                           return (
                             <div 
-                              className="grid [grid-template-columns:repeat(auto-fill,minmax(132px,132px))] justify-start gap-4 px-6"
+                              className="grid gap-4 px-6"
+                              style={{ gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))" }}
                             >
                               {gameTiles}
                               {skeletonBoxes}
@@ -14781,15 +14783,39 @@ function NavTestPageContent() {
                     </div>
                   </div>
                   )}
-                <div className="flex items-center gap-2">
-                  {!isMobile && (
-                    <button
-                      type="button"
-                      className="h-8 w-8 rounded-full bg-white/10 hover:bg-white/15 flex items-center justify-center transition-colors flex-shrink-0"
-                      aria-label="Language"
-                    >
-                      <IconWorld className="h-4 w-4 text-white/75" />
-                    </button>
+                <div className="relative flex items-center gap-2">
+                  <button
+                    type="button"
+                    className="h-8 rounded-full bg-white/10 hover:bg-white/15 px-2.5 flex items-center justify-center gap-1.5 transition-colors flex-shrink-0"
+                    aria-label="Language"
+                    onClick={() => setAccountLanguageMenuOpen((prev) => !prev)}
+                  >
+                    <IconWorld className="h-4 w-4 text-white/75" />
+                    <span className="text-[11px] font-medium text-white/70">{headerLanguage}</span>
+                  </button>
+                  {accountLanguageMenuOpen && (
+                    <div className="absolute right-0 top-[calc(100%+8px)] z-[10090] w-[156px] rounded-md border border-white/10 bg-[#121416] p-1.5 shadow-[0_12px_30px_rgba(0,0,0,0.55)]">
+                      {[
+                        { code: 'EN', label: 'English' },
+                        { code: 'ES', label: 'Spanish' },
+                        { code: 'DE', label: 'German' },
+                        { code: 'FR', label: 'French' },
+                        { code: 'PT', label: 'Portuguese' },
+                      ].map((lang) => (
+                        <button
+                          key={lang.code}
+                          type="button"
+                          onClick={() => {
+                            setHeaderLanguage(lang.code as 'EN' | 'ES' | 'DE' | 'FR' | 'PT')
+                            setAccountLanguageMenuOpen(false)
+                          }}
+                          className="w-full rounded-small px-2 py-1.5 text-left text-sm text-white/80 hover:bg-white/[0.06] hover:text-white flex items-center justify-between"
+                        >
+                          <span>{lang.label}</span>
+                          {headerLanguage === lang.code && <IconCheck className="h-3.5 w-3.5 text-white/90" />}
+                        </button>
+                      ))}
+                    </div>
                   )}
                   {!isMobile && (
                     <DrawerClose asChild>
