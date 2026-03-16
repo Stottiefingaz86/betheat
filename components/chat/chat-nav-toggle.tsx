@@ -137,7 +137,7 @@ export default function ChatNavToggle({
 
   return (
     <div
-      className="relative h-8 w-8 flex-shrink-0"
+      className="relative h-9 w-9 flex-shrink-0"
       style={{ pointerEvents: "auto", zIndex: 101 }}
     >
       <AnimatePresence mode="wait">
@@ -148,7 +148,7 @@ export default function ChatNavToggle({
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
             onClick={handleExpand}
-            className="flex h-8 w-8 items-center justify-center rounded-[0.56rem] border border-white/10 bg-white/5 text-white/75 transition-colors hover:bg-white/10"
+            className="flex h-9 w-9 items-center justify-center rounded-[0.56rem] border border-white/[0.08] bg-white/[0.02] text-white/75 transition-colors hover:border-white/[0.12] hover:bg-white/[0.03]"
             aria-label="Open global search"
           >
             <Search className="h-4 w-4" />
