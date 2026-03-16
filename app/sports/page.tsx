@@ -6088,8 +6088,8 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                     onClick={(e) => {
                       e.preventDefault()
                       e.stopPropagation()
-                      setAccountDrawerView('bonus')
-                      openAccountDrawer()
+                      setToastMessage('Bonus is available in My Account.')
+                      setShowToast(true)
                     }}
                     className={cn(
                       "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
@@ -6428,8 +6428,8 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                   return
                                 }
                                 if (item.label === 'My Bonus') {
-                                  setAccountDrawerView('bonus')
-                                  openAccountDrawer()
+                                  setToastMessage('Bonus is available in My Account.')
+                                  setShowToast(true)
                                   if (isMobile) setOpenMobile(false)
                                 }
                               }}
