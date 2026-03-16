@@ -9552,6 +9552,7 @@ function VipDrawerContent({
 
 function NavTestPageContent() {
   const SPORTS_FEATURE_TOUR_KEY = 'bol-sports-feature-tour-v1'
+  const ENABLE_SPORTS_FEATURE_TOUR = false
   const isMobile = useIsMobile()
   const HEADER_COMPACT_BREAKPOINT = 1180
   const router = useRouter()
@@ -10342,6 +10343,7 @@ function NavTestPageContent() {
   }, [])
 
   useEffect(() => {
+    if (!ENABLE_SPORTS_FEATURE_TOUR) return
     if (!mounted || isMobile || !showSports || showVipRewards || showMyBets) return
     if (typeof window === 'undefined') return
 
@@ -10353,7 +10355,7 @@ function NavTestPageContent() {
     }, 550)
 
     return () => window.clearTimeout(timeout)
-  }, [mounted, isMobile, showSports, showVipRewards, showMyBets, SPORTS_FEATURE_TOUR_KEY, setBetslipOpen, setBetslipMinimized])
+  }, [mounted, isMobile, showSports, showVipRewards, showMyBets, SPORTS_FEATURE_TOUR_KEY, setBetslipOpen, setBetslipMinimized, ENABLE_SPORTS_FEATURE_TOUR])
 
   const sidebarMenuItems = [
     { icon: IconHeart, label: 'My Favorites' },
@@ -15373,7 +15375,7 @@ function NavTestPageContent() {
           </DrawerContent>
         </Drawer>
 
-      {mounted && !isMobile && showSports && !showVipRewards && !showMyBets && (
+      {mounted && !isMobile && showSports && !showVipRewards && !showMyBets && ENABLE_SPORTS_FEATURE_TOUR && (
         <Tour
           open={sportsFeatureTourOpen}
           onOpenChange={handleSportsTourOpenChange}
