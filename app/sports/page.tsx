@@ -6376,7 +6376,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                   return
                                 }
                                 if (showMyBets) {
-                                  setShowMyBets(false)
+                                  setShowMyBets?.(false)
                                 }
                                 setActiveSport(sport.label)
                               }}
@@ -10027,7 +10027,7 @@ function NavTestPageContent() {
       const validFilters = ['all', 'cash_out', 'in_play', 'pending', 'graded'] as const
       const filter = validFilters.find(f => f === mybetsParam) || 'all'
       setMyBetsInitialFilter(filter)
-      setShowMyBets(true); window.scrollTo(0, 0)
+      setShowMyBets?.(true); window.scrollTo(0, 0)
     }
   }, [searchParams])
   const [bets, setBets] = useState<Array<{
@@ -10992,7 +10992,7 @@ function NavTestPageContent() {
                       data-active={isActive ? "true" : "false"}
                       onClick={() => {
                         // Deactivate My Bets when clicking a sport
-                        if (showMyBets) setShowMyBets(false)
+                        if (showMyBets) setShowMyBets?.(false)
                         setActiveSport(sport.label)
                       }}
                       className={cn(
