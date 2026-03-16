@@ -10408,7 +10408,7 @@ function NavTestPageContent() {
             opacity: 1,
             visibility: 'visible',
             backgroundColor: 'var(--ds-nav-bg, #2D2E2C)',
-            boxShadow: '0 -200px 0 0 var(--ds-nav-bg, #2D2E2C)',
+            boxShadow: 'none',
           }}
         >
           <div className="px-3 py-2 flex items-center gap-2 overflow-x-auto scrollbar-hide border-b border-white/10">
@@ -10473,7 +10473,7 @@ function NavTestPageContent() {
           pointerEvents: 'auto',
           zIndex: 101,
           position: 'fixed',
-          boxShadow: '0 -200px 0 0 rgba(18, 20, 23, 0.97)',
+          boxShadow: 'none',
           backdropFilter: 'blur(22px) saturate(112%)',
           WebkitBackdropFilter: 'blur(22px) saturate(112%)',
         }}
