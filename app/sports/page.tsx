@@ -3990,7 +3990,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
     }
   }, [showConfirmation])
 
-  // Ensure background remains clickable when betslip is open
+  // Keep drawer overlays from blocking the page when betslip opens
   useEffect(() => {
     if (betslipOpen) {
       // Remove any overlays
@@ -4004,26 +4004,6 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
         })
       }
       
-      // Force wrapper to be non-interactive
-      const makeWrapperNonInteractive = () => {
-        const wrappers = document.querySelectorAll('[data-vaul-drawer-wrapper]')
-        wrappers.forEach((wrapper) => {
-          const el = wrapper as HTMLElement
-          el.style.setProperty('pointer-events', 'none', 'important')
-          el.style.setProperty('background', 'transparent', 'important')
-          
-          // Make all children non-interactive except drawer content
-          Array.from(el.children).forEach((child) => {
-            const childEl = child as HTMLElement
-            if (!childEl.hasAttribute('data-vaul-drawer-direction')) {
-              childEl.style.setProperty('pointer-events', 'none', 'important')
-            } else {
-              childEl.style.setProperty('pointer-events', 'auto', 'important')
-            }
-          })
-        })
-      }
-      
       // Ensure body/html allow clicks
       const enableBodyClicks = () => {
         document.body.style.setProperty('pointer-events', 'auto', 'important')
@@ -4032,32 +4012,16 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
       
       // Run immediately
       removeOverlays()
-      makeWrapperNonInteractive()
       enableBodyClicks()
       
       // Run again after a short delay to catch any dynamically created elements
       const timeout = setTimeout(() => {
         removeOverlays()
-        makeWrapperNonInteractive()
         enableBodyClicks()
       }, 100)
       
-      // Use MutationObserver to catch any new overlays/wrappers
-      const observer = new MutationObserver(() => {
-        removeOverlays()
-        makeWrapperNonInteractive()
-      })
-      
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        attributeFilter: ['data-vaul-overlay', 'data-vaul-drawer-wrapper', 'style']
-      })
-      
       return () => {
         clearTimeout(timeout)
-        observer.disconnect()
         // Restore body styles
         document.body.style.removeProperty('pointer-events')
         document.documentElement.style.removeProperty('pointer-events')
@@ -10390,15 +10354,6 @@ function NavTestPageContent() {
 
     return () => window.clearTimeout(timeout)
   }, [mounted, isMobile, showSports, showVipRewards, showMyBets, SPORTS_FEATURE_TOUR_KEY, setBetslipOpen, setBetslipMinimized])
-
-  // Don't render until mounted to prevent hydration issues
-  if (!mounted) {
-    return (
-      <div className="min-h-screen w-full bg-[var(--ds-page-bg,#1a1a1a)] flex items-center justify-center">
-        <div className="h-8 w-8 rounded-full border-2 border-white/20 border-t-white animate-spin" />
-      </div>
-    )
-  }
 
   const sidebarMenuItems = [
     { icon: IconHeart, label: 'My Favorites' },
