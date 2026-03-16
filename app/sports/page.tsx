@@ -4294,7 +4294,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
       return
     }
     if (showMyBets) {
-      setShowMyBets(false)
+      setShowMyBets?.(false)
     }
     setActiveSport(label)
   }
