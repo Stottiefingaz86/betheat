@@ -5,7 +5,7 @@ import { ReloadClaim } from '@/components/vip/reload-claim'
 import { CashDropCode } from '@/components/vip/cash-drop-code'
 import { BetAndGet } from '@/components/vip/bet-and-get'
 
-import { useState, useEffect, useRef, useCallback, useMemo, useId } from 'react'
+import { Suspense, useState, useEffect, useRef, useCallback, useMemo, useId } from 'react'
 import React from 'react'
 import { createPortal } from 'react-dom'
 import { useIsMobile } from '@/hooks/use-mobile'
@@ -15658,7 +15658,15 @@ function ViewTab({
 export default function NavTestPage() {
   return (
     <SidebarProvider defaultOpen>
-      <NavTestPageContent />
+      <Suspense
+        fallback={
+          <div className="min-h-screen w-full bg-[#090f1f] flex items-center justify-center">
+            <div className="h-8 w-8 rounded-full border-2 border-white/20 border-t-white animate-spin" />
+          </div>
+        }
+      >
+        <NavTestPageContent />
+      </Suspense>
     </SidebarProvider>
   )
 }
