@@ -6,10 +6,11 @@ import { CashDropCode } from '@/components/vip/cash-drop-code'
 import { BetAndGet } from '@/components/vip/bet-and-get'
 
 import { useState, useEffect, useRef, useCallback, useMemo, useId } from 'react'
-import React, { Suspense } from 'react'
+import React from 'react'
 import { createPortal } from 'react-dom'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { BrandLoaderScreen } from '@/components/ui/brand-loader-screen'
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -111,7 +112,9 @@ import {
   IconSearch as IconSearchNew,
   IconArrowRight,
   IconCheck,
+  IconCopy,
   IconLoader2,
+  IconQrcode,
   IconFilter,
   IconBell,
   IconTicket,
@@ -120,7 +123,8 @@ import {
   IconDownload,
   IconExternalLink,
   IconMaximize,
-  IconShare
+  IconShare,
+  IconChartBar
 , IconMessageCircle2, IconTrash, IconBrandTelegram, IconRefresh, IconParachute, IconTargetArrow} from '@tabler/icons-react'
 import { SportsTrackerWidget } from '@/components/sports-tracker-widget'
 import { colorTokenMap } from '@/lib/agent/designSystem'
@@ -1647,7 +1651,7 @@ function PromosPage({ brandPrimary, setVipDrawerOpen, setShowVipRewards, setVipA
                     )}
                     <span className="relative z-10">{tab}</span>
                   </TabsTab>
-                ))}
+              ))}
               </AnimateTabsList>
             </AnimateTabs>
           </div>
@@ -3200,11 +3204,11 @@ const EventMarketsCarousel = React.memo(function EventMarketsCarousel({ event, a
                       return (
                         <button key={`${event.id}-${market.title}-${option.label}-${optionIndex}`}
                           onClick={(e) => { e.preventDefault(); e.stopPropagation(); const en = `${event.team1} v ${event.team2}`; setBets((prev: any[]) => prev.filter((bet: any) => !(bet.eventId === event.id && bet.marketTitle === market.title))); addBetToSlip(event.id, en, market.title, option.label, option.odds) }}
-                          className={`text-white rounded-small w-[68px] h-[38px] flex flex-col items-center justify-center transition-colors cursor-pointer px-2 flex-shrink-0 ${isSelected ? 'bg-red-500 hover:bg-red-600' : 'bg-white/10 hover:bg-white/20'}`}
+                          className={`rounded-small w-[68px] h-[38px] flex flex-col items-center justify-center transition-colors cursor-pointer px-2 flex-shrink-0 ${isSelected ? 'bg-[#c9b4ff] hover:bg-[#c9b4ff] border border-[#c9b4ff] text-[#121417]' : 'bg-white/10 hover:bg-white/20 text-white'}`}
                           onMouseEnter={(e) => { if (!isSelected) e.currentTarget.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--ds-primary').trim() || '#ee3536' }}
                           onMouseLeave={(e) => { if (!isSelected) e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)' }}
                         >
-                          <div className="text-[10px] text-white/70 leading-none mb-0.5 truncate w-full text-center">{option.label}</div>
+                          <div className={`text-[10px] leading-none mb-0.5 truncate w-full text-center ${isSelected ? 'text-[#121417]/80' : 'text-white/70'}`}>{option.label}</div>
                           <div className="text-xs font-bold leading-none">{option.odds}</div>
                         </button>
                       )
@@ -3217,11 +3221,11 @@ const EventMarketsCarousel = React.memo(function EventMarketsCarousel({ event, a
                       return (
                         <button key={optionIndex}
                           onClick={(e) => { e.preventDefault(); e.stopPropagation(); addBetToSlip(event.id, `${event.team1} v ${event.team2}`, market.title, option.label, option.odds) }}
-                          className={`text-white rounded-small w-[68px] h-[38px] flex flex-col items-center justify-center transition-colors cursor-pointer px-2 flex-shrink-0 ${isSelected ? 'bg-red-500 hover:bg-red-600' : 'bg-white/10 hover:bg-white/20'}`}
+                          className={`rounded-small w-[68px] h-[38px] flex flex-col items-center justify-center transition-colors cursor-pointer px-2 flex-shrink-0 ${isSelected ? 'bg-[#c9b4ff] hover:bg-[#c9b4ff] border border-[#c9b4ff] text-[#121417]' : 'bg-white/10 hover:bg-white/20 text-white'}`}
                           onMouseEnter={(e) => { if (!isSelected) e.currentTarget.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--ds-primary').trim() || '#ee3536' }}
                           onMouseLeave={(e) => { if (!isSelected) e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)' }}
                         >
-                          <div className="text-[10px] text-white/70 leading-none mb-0.5 truncate w-full text-center">{option.label}</div>
+                          <div className={`text-[10px] leading-none mb-0.5 truncate w-full text-center ${isSelected ? 'text-[#121417]/80' : 'text-white/70'}`}>{option.label}</div>
                           <div className="text-xs font-bold leading-none">{option.odds}</div>
                         </button>
                       )
@@ -4061,7 +4065,6 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
       }
     }
   }, [betslipOpen])
-  const subNavScrollRef = useRef<HTMLDivElement>(null)
   const [expandedSports, setExpandedSports] = useState<string[]>(['Soccer'])
   const [currentTime, setCurrentTime] = useState<string>('')
   
@@ -4083,6 +4086,11 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
   const [sportsbookSettingsOpen, setSportsbookSettingsOpen] = useState(false)
   const [oddsFormat, setOddsFormat] = useState<'American' | 'Fractional' | 'Decimal'>('American')
   const [betslipOddsSetting, setBetslipOddsSetting] = useState<'dont_accept' | 'higher' | 'any'>('higher')
+  useEffect(() => {
+    const openSettings = () => setSportsbookSettingsOpen(true)
+    window.addEventListener('sportsbook:open-settings', openSettings)
+    return () => window.removeEventListener('sportsbook:open-settings', openSettings)
+  }, [])
   const [showBetConfirmation, setShowBetConfirmation] = useState(false)
   const [sportsOtherDropdownOpen, setSportsOtherDropdownOpen] = useState(false)
 
@@ -4186,8 +4194,6 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
     })
   }, [sgpCarouselApi])
   
-  const sportsTabs = ['Events', 'Outrights', 'Boosts', 'Specials', 'All Leagues']
-  
   const eventOrderOptions = [
     { value: 'Popularity', label: 'Popularity' },
     { value: 'Starting in', label: 'Starting in' },
@@ -4197,20 +4203,15 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
   
   // Sports sidebar menu items
   const sportsFeatures = [
-    { icon: IconHome, label: 'Home' },
-    { icon: IconTicket, label: 'My Bets', action: 'myBets' },
-    { icon: '/sports_icons/my-feed.svg', label: 'My Feed', href: '/sports/my-feed' },
-    { icon: IconBolt, label: 'Live Betting' },
-    { icon: '/sports_icons/World-Cup-2022.svg', label: 'World Cup Hub', active: false },
-    { icon: IconRocket, label: 'Odds Boosters' },
-    { icon: '/sports_icons/Same Game Parlays.svg', label: 'Same Game Parlays' },
-    { icon: '/sports_icons/Mega Parlays.svg', label: 'Mega Parlays' },
+    { icon: IconHome, label: 'Home', subtitle: 'Sports lobby' },
+    { icon: IconTicket, label: 'My Bets', subtitle: 'Track your slips', action: 'myBets' },
+    { icon: IconBolt, label: 'In-Play', subtitle: 'Live events now' },
   ]
   
   const sportsCategories: Array<{ icon: any; label: string; href?: string; active?: boolean; expandable?: boolean; subItems?: Array<{ icon?: any; label: string; badge?: any; subItems?: Array<{ icon?: any; label: string; badge?: any }> }> }> = [
     { icon: '/sports_icons/baseball.svg', label: 'Baseball', href: '/sports/baseball' },
     { icon: '/sports_icons/Basketball.svg', label: 'Basketball', href: '/sports/basketball' },
-    { icon: '/sports_icons/football.svg', label: 'Football', href: '/sports/football' },
+    { icon: '/sports_icons/football.svg', label: 'Football' },
     { icon: '/sports_icons/soccer.svg', label: 'Soccer', href: '/sports/soccer' },
   ]
 
@@ -4235,9 +4236,9 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
     { icon: '/sports_icons/Golf.svg', label: 'Golf', href: '/sports/pool' },
     { icon: '/sports_icons/Hockey.svg', label: 'Hockey', href: '/sports/hockey' },
     { icon: '/sports_icons/Horse-Racing-101.svg', label: 'Horse Racing', href: '/sports/pool' },
-    { icon: '/sports_icons/lacrosse.svg', label: 'Lacrosse', href: '/sports/lacrosse' },
+    { icon: '/sports_icons/zClass_Badminton.svg', label: 'Badminton', href: '/sports/lacrosse' },
     { icon: '/sports_icons/mma.svg', label: 'MMA', href: '/sports/mma' },
-    { icon: '/sports_icons/pool.svg', label: 'Pool', href: '/sports/pool' },
+    { icon: '/sports_icons/zClass_Darts_v2.svg', label: 'Darts', href: '/sports/pool' },
     { icon: '/sports_icons/rugby.svg', label: 'Rugby League', href: '/sports/rugby' },
     { icon: '/sports_icons/rugby.svg', label: 'Rugby Union', href: '/sports/rugby' },
     { icon: '/sports_icons/soccer.svg', label: 'Soccer', href: '/sports/soccer' },
@@ -4278,18 +4279,25 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
     // If currently viewing My Bets and clicking Home, go back to sports
     if (label === 'Home' && showMyBets) {
       setShowMyBets?.(false)
+      setActiveSport('')
       return
+    }
+    if (label === 'Home') {
+      setActiveSport('')
     }
     console.log('Feature clicked:', label)
   }
   
   const handleSportClick = (label: string, href?: string) => {
-    if (href) {
+    if (label === 'My Feed') {
       setLoadingItem(label)
-      router.push(href)
+      router.push('/sports/my-feed')
       return
     }
-    console.log('Sport clicked:', label)
+    if (showMyBets) {
+      setShowMyBets(false)
+    }
+    setActiveSport(label)
   }
   
   // League data for carousel
@@ -4794,7 +4802,6 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
   // Filter events based on active sport
   const filteredLiveEvents = activeSport === 'Football' ? nflLiveEvents : liveEvents.filter(e => e.league !== 'NFL')
   const filteredUpcomingEvents = activeSport === 'Football' ? nflUpcomingEvents : upcomingEvents.filter(e => e.league !== 'NFL')
-
   // Helper function to check if a bet is selected
   const isBetSelected = (eventId: number, marketTitle: string, selection: string) => {
     return bets.some(bet => 
@@ -5832,17 +5839,17 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
         mobileOverlayClassName="!bg-black/30 !backdrop-blur-sm"
         className="!bg-[#2d2d2d] border-r border-white/10 text-white [&>div]:!bg-[#2d2d2d] !h-screen !top-0 !z-[102]"
       >
-        {/* Sidebar Header — sticky, clean (both mobile and desktop) */}
-        <SidebarHeader 
+        {/* Sidebar Header — logo with collapse animation */}
+        <SidebarHeader
           className="px-4 h-14 flex items-center flex-shrink-0 overflow-hidden sticky top-0 z-20"
           style={{
             backdropFilter: isMobile ? 'none' : 'blur(16px) saturate(180%)',
             WebkitBackdropFilter: isMobile ? 'none' : 'blur(16px) saturate(180%)',
-            backgroundColor: isMobile ? '#2d2d2d' : 'rgba(45, 45, 45, 0.75)',
+            backgroundColor: isMobile ? 'var(--ds-sidebar-bg, #141920)' : 'rgba(18, 24, 33, 0.78)',
           }}
         >
           <div className="relative w-full h-full flex items-center justify-center">
-            {/* Close button — right side (absolute so logo stays centred) */}
+            {/* Close button — right side (mobile only) */}
             {isMobile && (
               <button
                 onClick={() => setOpenMobile(false)}
@@ -5858,53 +5865,54 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
             <AnimatePresence mode="wait" initial={false}>
               {(sidebarState === 'collapsed' && !isMobile) ? (
                 <motion.div
-                  key="b-lockup-sports-desktop"
+                  key="b-lockup-casino-desktop"
                   className="flex items-center justify-center"
                   initial={{ opacity: 0, y: 16, scale: 0.75 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 8, transition: { duration: 0.08 } }}
                   transition={{ type: "spring", stiffness: 400, damping: 18, mass: 0.6, delay: 0.2 }}
                 >
-                  <svg viewBox="0 0 114 86" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6">
-                    <path fillRule="evenodd" clipRule="evenodd" d="M113.405 60.8753V61.3718C113.405 61.5704 113.405 61.769 113.505 61.8684V62.2656C113.405 66.6351 112.307 70.3095 110.211 73.2887C108.014 76.2679 105.219 78.7506 101.825 80.5381C98.4308 82.4249 94.5375 83.7159 90.2449 84.5104C85.9523 85.3048 81.6597 85.7021 77.367 85.7021H37.4357V36.4457H37.236C37.236 36.4457 7.08782 34.4596 0 34.4596C0 34.4596 20.1653 32.7714 37.236 32.4734H37.4357L37.3358 0H73.3739C77.5667 0 81.7595 0.297921 85.9523 0.794457C90.1451 1.3903 94.0384 2.38337 97.4325 3.97229C100.827 5.5612 103.722 7.84526 105.818 10.7252C108.014 13.6051 109.112 17.3788 109.112 22.1455C109.112 27.0115 107.615 31.0831 104.52 34.261L103.722 35.0554C103.722 35.0554 103.422 35.4527 102.723 36.0485C101.925 36.6443 101.126 37.2402 99.9282 37.9353C99.8284 37.985 99.7536 38.0346 99.6787 38.0843C99.6038 38.1339 99.5289 38.1836 99.4291 38.2333C93.1399 35.4527 86.0521 33.8637 80.861 32.97C83.9557 31.679 85.2535 30.388 85.6528 29.8915C85.799 29.7461 85.8916 29.6007 86.0091 29.4163C86.0521 29.3488 86.0984 29.2761 86.1519 29.1963C86.8507 28.0046 87.25 26.6143 87.25 25.0254C87.25 23.3372 86.8507 22.0462 86.0521 20.9538C85.1536 19.8614 84.1554 19.067 82.8576 18.4711C81.46 17.776 79.9626 17.3788 78.2655 17.0808C76.5684 16.7829 74.8713 16.6836 73.2741 16.6836H58.9986L59.0984 33.0693H59.7972C82.9574 34.4596 98.7303 38.6305 106.617 45.6813C107.415 46.2771 111.608 49.8522 113.006 56.6051L113.205 57.3002V57.5981C113.205 57.7471 113.23 57.8961 113.255 58.045C113.28 58.194 113.305 58.343 113.305 58.4919V58.8891C113.305 59.2367 113.33 59.5595 113.355 59.8822C113.38 60.205 113.405 60.5277 113.405 60.8753ZM90.5444 63.7552L90.6442 63.5566C91.343 62.2656 93.0401 57.9954 88.8473 52.7321C86.1519 49.6536 79.7629 45.2841 65.4874 41.5104L56.6027 39.4249L57.8007 40.8152L58.0003 41.0139C58.0262 41.0654 58.0723 41.1303 58.1316 41.2138C58.3007 41.4521 58.5772 41.8417 58.7989 42.5035L59.0984 43.3972C59.1068 43.4722 59.1152 43.5465 59.1235 43.6203C59.2143 44.4257 59.2981 45.1688 59.2981 46.0785C59.1983 48.7598 59.0984 61.6697 59.0984 67.3303V69.1178L59.8971 69.2171H77.6665C79.2638 69.2171 80.9609 69.0185 82.6579 68.7205C84.355 68.4226 85.8524 67.8268 87.1502 67.0323C88.448 66.2379 89.5461 65.2448 90.4445 63.9538C90.4445 63.9538 90.5444 63.8545 90.5444 63.7552Z" fill="#ee3536"/>
-                  </svg>
+                  <img
+                    src="/logos/lockup.png"
+                    alt="Betheat lockup"
+                    className="w-6 h-6 object-contain"
+                    onError={(e) => {
+                      e.currentTarget.src = '/logos/BHGL_logo-1773311608241-DDbBBO6v.png'
+                    }}
+                  />
                 </motion.div>
               ) : isMobile ? (
                 <motion.div
-                  key="b-lockup-sports-mobile"
+                  key="b-lockup-casino-mobile"
                   className="flex items-center justify-center"
                   initial={{ opacity: 0, y: 12, scale: 0.8 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{ type: "spring", stiffness: 350, damping: 20, mass: 0.6, delay: 0.05 }}
                 >
-                  <svg viewBox="0 0 114 86" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-7 h-7">
-                    <path fillRule="evenodd" clipRule="evenodd" d="M113.405 60.8753V61.3718C113.405 61.5704 113.405 61.769 113.505 61.8684V62.2656C113.405 66.6351 112.307 70.3095 110.211 73.2887C108.014 76.2679 105.219 78.7506 101.825 80.5381C98.4308 82.4249 94.5375 83.7159 90.2449 84.5104C85.9523 85.3048 81.6597 85.7021 77.367 85.7021H37.4357V36.4457H37.236C37.236 36.4457 7.08782 34.4596 0 34.4596C0 34.4596 20.1653 32.7714 37.236 32.4734H37.4357L37.3358 0H73.3739C77.5667 0 81.7595 0.297921 85.9523 0.794457C90.1451 1.3903 94.0384 2.38337 97.4325 3.97229C100.827 5.5612 103.722 7.84526 105.818 10.7252C108.014 13.6051 109.112 17.3788 109.112 22.1455C109.112 27.0115 107.615 31.0831 104.52 34.261L103.722 35.0554C103.722 35.0554 103.422 35.4527 102.723 36.0485C101.925 36.6443 101.126 37.2402 99.9282 37.9353C99.8284 37.985 99.7536 38.0346 99.6787 38.0843C99.6038 38.1339 99.5289 38.1836 99.4291 38.2333C93.1399 35.4527 86.0521 33.8637 80.861 32.97C83.9557 31.679 85.2535 30.388 85.6528 29.8915C85.799 29.7461 85.8916 29.6007 86.0091 29.4163C86.0521 29.3488 86.0984 29.2761 86.1519 29.1963C86.8507 28.0046 87.25 26.6143 87.25 25.0254C87.25 23.3372 86.8507 22.0462 86.0521 20.9538C85.1536 19.8614 84.1554 19.067 82.8576 18.4711C81.46 17.776 79.9626 17.3788 78.2655 17.0808C76.5684 16.7829 74.8713 16.6836 73.2741 16.6836H58.9986L59.0984 33.0693H59.7972C82.9574 34.4596 98.7303 38.6305 106.617 45.6813C107.415 46.2771 111.608 49.8522 113.006 56.6051L113.205 57.3002V57.5981C113.205 57.7471 113.23 57.8961 113.255 58.045C113.28 58.194 113.305 58.343 113.305 58.4919V58.8891C113.305 59.2367 113.33 59.5595 113.355 59.8822C113.38 60.205 113.405 60.5277 113.405 60.8753ZM90.5444 63.7552L90.6442 63.5566C91.343 62.2656 93.0401 57.9954 88.8473 52.7321C86.1519 49.6536 79.7629 45.2841 65.4874 41.5104L56.6027 39.4249L57.8007 40.8152L58.0003 41.0139C58.0262 41.0654 58.0723 41.1303 58.1316 41.2138C58.3007 41.4521 58.5772 41.8417 58.7989 42.5035L59.0984 43.3972C59.1068 43.4722 59.1152 43.5465 59.1235 43.6203C59.2143 44.4257 59.2981 45.1688 59.2981 46.0785C59.1983 48.7598 59.0984 61.6697 59.0984 67.3303V69.1178L59.8971 69.2171H77.6665C79.2638 69.2171 80.9609 69.0185 82.6579 68.7205C84.355 68.4226 85.8524 67.8268 87.1502 67.0323C88.448 66.2379 89.5461 65.2448 90.4445 63.9538C90.4445 63.9538 90.5444 63.8545 90.5444 63.7552Z" fill="#ee3536"/>
-                  </svg>
+                  <img
+                    src="/logos/lockup.png"
+                    alt="Betheat lockup"
+                    className="w-7 h-7 object-contain"
+                    onError={(e) => {
+                      e.currentTarget.src = '/logos/BHGL_logo-1773311608241-DDbBBO6v.png'
+                    }}
+                  />
                 </motion.div>
               ) : (
                 <motion.div
-                  key="full-logo-sports"
+                  key="full-logo-casino"
                   className="flex items-center"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0, transition: { duration: 0.05 } }}
                   transition={{ duration: 0.1 }}
                 >
-                  {/* Full BETONLINE logo */}
-                  <div className="h-5 w-[110px] flex-shrink-0">
-                    <svg viewBox="0 0 640 86" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-                      <g id="BETONLINE">
-                        <path fillRule="evenodd" clipRule="evenodd" d="M113.405 60.8753V61.3718C113.405 61.5704 113.405 61.769 113.505 61.8684V62.2656C113.405 66.6351 112.307 70.3095 110.211 73.2887C108.014 76.2679 105.219 78.7506 101.825 80.5381C98.4308 82.4249 94.5375 83.7159 90.2449 84.5104C85.9523 85.3048 81.6597 85.7021 77.367 85.7021H37.4357V36.4457H37.236C37.236 36.4457 7.08782 34.4596 0 34.4596C0 34.4596 20.1653 32.7714 37.236 32.4734H37.4357L37.3358 0H73.3739C77.5667 0 81.7595 0.297921 85.9523 0.794457C90.1451 1.3903 94.0384 2.38337 97.4325 3.97229C100.827 5.5612 103.722 7.84526 105.818 10.7252C108.014 13.6051 109.112 17.3788 109.112 22.1455C109.112 27.0115 107.615 31.0831 104.52 34.261L103.722 35.0554C103.722 35.0554 103.422 35.4527 102.723 36.0485C101.925 36.6443 101.126 37.2402 99.9282 37.9353C99.8284 37.985 99.7536 38.0346 99.6787 38.0843C99.6038 38.1339 99.5289 38.1836 99.4291 38.2333C93.1399 35.4527 86.0521 33.8637 80.861 32.97C83.9557 31.679 85.2535 30.388 85.6528 29.8915C85.799 29.7461 85.8916 29.6007 86.0091 29.4163C86.0521 29.3488 86.0984 29.2761 86.1519 29.1963C86.8507 28.0046 87.25 26.6143 87.25 25.0254C87.25 23.3372 86.8507 22.0462 86.0521 20.9538C85.1536 19.8614 84.1554 19.067 82.8576 18.4711C81.46 17.776 79.9626 17.3788 78.2655 17.0808C76.5684 16.7829 74.8713 16.6836 73.2741 16.6836H58.9986L59.0984 33.0693H59.7972C82.9574 34.4596 98.7303 38.6305 106.617 45.6813C107.415 46.2771 111.608 49.8522 113.006 56.6051L113.205 57.3002V57.5981C113.205 57.7471 113.23 57.8961 113.255 58.045C113.28 58.194 113.305 58.343 113.305 58.4919V58.8891C113.305 59.2367 113.33 59.5595 113.355 59.8822C113.38 60.205 113.405 60.5277 113.405 60.8753ZM90.5444 63.7552L90.6442 63.5566C91.343 62.2656 93.0401 57.9954 88.8473 52.7321C86.1519 49.6536 79.7629 45.2841 65.4874 41.5104L56.6027 39.4249L57.8007 40.8152L58.0003 41.0139C58.0262 41.0654 58.0723 41.1303 58.1316 41.2138C58.3007 41.4521 58.5772 41.8417 58.7989 42.5035L59.0984 43.3972C59.1068 43.4722 59.1152 43.5465 59.1235 43.6203C59.2143 44.4257 59.2981 45.1688 59.2981 46.0785C59.1983 48.7598 59.0984 61.6697 59.0984 67.3303V69.1178L59.8971 69.2171H77.6665C79.2638 69.2171 80.9609 69.0185 82.6579 68.7205C84.355 68.4226 85.8524 67.8268 87.1502 67.0323C88.448 66.2379 89.5461 65.2448 90.4445 63.9538C90.4445 63.9538 90.5444 63.8545 90.5444 63.7552Z" fill="#ee3536"/>
-                        <path d="M120.693 85.7021V0.0993091H178.194V17.4781H140.558V33.6651H176.197V50.2494H140.658V68.0254H180.39V85.7021H120.693Z" fill="#ee3536"/>
-                        <path d="M257.757 8.54042C261.251 5.16397 265.244 2.38337 269.736 0.0993091H185.781V17.776H209.939V85.7021H230.604V17.776H250.37C252.466 14.3995 254.962 11.321 257.757 8.54042Z" fill="#ee3536"/>
-                        <path fillRule="evenodd" clipRule="evenodd" d="M313.761 3.47575C319.151 5.66051 323.843 8.63973 327.737 12.5127C331.63 16.3857 334.625 20.9538 336.821 26.1178C339.017 31.3811 340.115 37.0416 340.115 43.0993C340.115 49.1571 339.017 54.9169 336.821 60.0808C334.625 65.2448 331.63 69.8129 327.737 73.6859C323.843 77.4596 319.151 80.5381 313.761 82.7229C308.27 84.9076 302.28 86 295.891 86C289.403 86 283.413 84.9076 278.022 82.7229C272.631 80.5381 267.939 77.5589 264.046 73.6859C260.253 69.9122 257.158 65.2448 254.962 60.0808C252.766 54.8176 251.667 49.1571 251.667 43.0993C251.667 37.0416 252.766 31.2818 254.962 26.1178C257.158 20.9538 260.153 16.3857 264.046 12.5127C267.939 8.73903 272.631 5.66051 278.022 3.47575C283.513 1.291 289.502 0.198618 295.891 0.198618C302.38 0.198618 308.37 1.291 313.761 3.47575ZM324.642 55.3141C326.139 51.5404 326.838 47.3695 326.838 43.0993C326.838 38.8291 326.04 34.6582 324.642 30.8845C323.244 27.1109 321.148 23.7344 318.453 20.9538C315.757 18.1732 312.563 15.8891 308.769 14.2009C305.076 12.5127 300.783 11.7182 296.091 11.7182C291.399 11.7182 287.206 12.5127 283.413 14.2009C279.719 15.8891 276.425 18.1732 273.73 20.9538C271.134 23.7344 269.038 27.1109 267.54 30.8845C266.043 34.6582 265.344 38.8291 265.344 43.0993C265.344 47.3695 266.043 51.5404 267.54 55.3141C268.938 59.0878 271.034 62.4642 273.73 65.2448C276.425 68.0254 279.619 70.3095 283.413 71.9977C287.107 73.6859 291.399 74.4804 296.091 74.4804C300.783 74.4804 304.976 73.6859 308.769 71.9977C312.463 70.3095 315.757 68.0254 318.453 65.2448C321.048 62.4642 323.145 59.0878 324.642 55.3141Z" fill="white"/>
-                        <path d="M437.847 0.0993091H425.069V85.6028H476.681V74.1824H437.847V0.0993091Z" fill="white"/>
-                        <path d="M484.268 0.0993091H497.046V85.7021H484.268V0.0993091Z" fill="white"/>
-                        <path d="M594.778 74.1824V48.2633H634.909V36.7436H594.778V11.6189H637.804V0.0993091H582V85.6028H640V74.1824H594.778Z" fill="white"/>
-                        <path d="M347.802 0.0993091L405.403 56.903V0.0993091H417.482V85.6028L359.782 29.4942V85.6028H347.802V0.0993091Z" fill="white"/>
-                        <path d="M562.333 57.3002L504.633 0.0993091V85.6028H516.712V29.8915L574.313 85.2055V0.0993091H562.333V57.3002Z" fill="white"/>
-                      </g>
-                    </svg>
+                  <div className="h-7 w-[148px] flex-shrink-0">
+                    <img
+                      src="/logos/BHGL_logo-1773311608241-DDbBBO6v.png"
+                      alt="Betheat"
+                      className="w-full h-full object-contain"
+                    />
                   </div>
                 </motion.div>
               )}
@@ -6021,48 +6029,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
 
         <SidebarContent className="overflow-y-auto flex flex-col">
           <TooltipProvider>
-            {/* Settings */}
             <SidebarGroup>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <SidebarMenuButton
-                          className={cn(
-                            "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
-                            "text-white/70 hover:text-white hover:bg-white/5",
-                            sportsbookSettingsOpen && "bg-white/5 text-white"
-                          )}
-                          onClick={() => {
-                            if (isMobile) {
-                              setOpenMobile(false)
-                              setTimeout(() => setSportsbookSettingsOpen(true), 300)
-                            } else {
-                              setSportsbookSettingsOpen(true)
-                            }
-                          }}
-                        >
-                          <div className={cn("w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0", sportsbookSettingsOpen ? "bg-white/20" : "bg-white/10")}>
-                            <IconSettings strokeWidth={1.5} className="w-4 h-4" />
-                          </div>
-                          <span>Settings</span>
-                        </SidebarMenuButton>
-                      </TooltipTrigger>
-                      {sidebarState === 'collapsed' && (
-                        <TooltipContent side="right" className="bg-[#2d2d2d] border-white/10 text-white">
-                          <p>Settings</p>
-                        </TooltipContent>
-                      )}
-                    </Tooltip>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-
-
-            <SidebarGroup>
-              <SidebarGroupLabel className="px-2 py-1 text-xs text-white/50">FEATURES</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
                   {sportsFeatures.map((item, index) => {
@@ -6072,23 +6039,33 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <SidebarMenuButton
-                              isActive={item.label === 'My Bets' ? showMyBets : item.active}
+                              isActive={item.label === 'My Bets' ? showMyBets : item.label === 'Home' ? !showMyBets && !activeSport : item.active}
                               onClick={(e) => {
                                 e.preventDefault()
                                 e.stopPropagation()
                                 handleFeatureClick(item.label, (item as any).href)
                               }}
                               className={cn(
-                                "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
+                                "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer border transition-colors",
+                                "bg-white/[0.02] border-white/[0.08]",
                                 "data-[active=true]:text-white data-[active=true]:font-medium",
-                                "data-[active=false]:text-white/70 hover:text-white hover:bg-white/5",
+                                "data-[active=false]:text-white/70 hover:text-white",
+                                "hover:bg-white/[0.035] hover:border-white/[0.12]",
                               )}
-                              style={(item.label === 'My Bets' ? showMyBets : item.active) ? { backgroundColor: 'var(--ds-primary, #ee3536)' } : undefined}
+                              style={(item.label === 'My Bets' ? showMyBets : item.label === 'Home' ? !showMyBets && !activeSport : item.active) ? { backgroundColor: 'rgba(255, 255, 255, 0.06)', borderColor: 'rgba(255, 255, 255, 0.14)' } : undefined}
                             >
                               <div className={cn("w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0", (item.label === 'My Bets' ? showMyBets : item.active) ? "bg-white/20" : "bg-white/10")}>
-                                {typeof item.icon === 'string' ? <img src={item.icon} alt={item.label} className="w-4 h-4 object-contain" style={(item.label === 'Same Game Parlays' || (item.label === 'My Feed' && item.active)) ? { filter: 'brightness(0) invert(1)' } : undefined} /> : IconComp ? <IconComp strokeWidth={1.5} className="w-4 h-4" /> : null}
+                                {typeof item.icon === 'string' ? <img src={item.icon} alt={item.label} className="w-4 h-4 object-contain" /> : IconComp ? <IconComp strokeWidth={1.5} className="w-4 h-4" /> : null}
                               </div>
-                              <span className="flex items-center gap-1.5">{item.label}{loadingItem === item.label && <IconLoader2 className="w-3 h-3 animate-spin" />}</span>
+                              {(sidebarState !== 'collapsed' || isMobile) && (
+                                <div className="flex flex-col leading-tight min-w-0">
+                                  <span className="flex items-center gap-1.5">
+                                    {item.label}
+                                    {loadingItem === item.label && <IconLoader2 className="w-3 h-3 animate-spin" />}
+                                  </span>
+                                  <span className="text-[11px] text-white/40 font-normal mt-0.5">{item.subtitle}</span>
+                                </div>
+                              )}
                             </SidebarMenuButton>
                           </TooltipTrigger>
                           {sidebarState === 'collapsed' && (
@@ -6101,6 +6078,44 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                     )
                   })}
                 </SidebarMenu>
+                <SidebarMenuItem className="mt-2">
+                  <SidebarMenuButton
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      setAccountBonusTab('available')
+                      setAccountDrawerView('bonus')
+                      openAccountDrawer()
+                    }}
+                    className={cn(
+                      "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
+                      "text-white/70 hover:text-white",
+                      "bg-white/[0.02] border border-white/[0.08]"
+                    )}
+                  >
+                    <div className="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0 bg-white/[0.045]">
+                      <IconCrown className="w-4 h-4 text-[#c9b4ff]" />
+                    </div>
+                    {(sidebarState !== 'collapsed' || isMobile) && (
+                      <div className="flex flex-col leading-tight min-w-0 flex-1">
+                        <div className="flex items-center justify-between gap-3">
+                          <span>Level 7</span>
+                          <span className="text-[11px] text-white/40 font-normal">350 XP to next level</span>
+                        </div>
+                        <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-white/[0.08]">
+                          <div
+                            className="h-full rounded-full"
+                            style={{
+                              width: '84%',
+                              background: 'linear-gradient(90deg, #ff9254 0%, #ff6a3d 45%, #b86bff 100%)',
+                              boxShadow: '0 0 10px rgba(255, 126, 79, 0.30), 0 0 18px rgba(184, 107, 255, 0.15)',
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
               </SidebarGroupContent>
             </SidebarGroup>
 
@@ -6188,7 +6203,6 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <SidebarMenuButton
-                                  isActive={isActive}
                                   onClick={(e) => {
                                     e.preventDefault()
                                     e.stopPropagation()
@@ -6196,12 +6210,11 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                   }}
                                   className={cn(
                                     "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
-                                    "data-[active=true]:text-white data-[active=true]:font-medium",
-                                    "data-[active=false]:text-white/70 hover:text-white hover:bg-white/5"
+                                    "text-white/70 hover:text-white hover:bg-white/5",
+                                    isActive && "text-white"
                                   )}
-                                  style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)' } : undefined}
                                 >
-                                  {typeof sport.icon === 'string' ? <img src={sport.icon} alt={sport.label} className="w-5 h-5 object-contain" /> : IconComp ? <IconComp strokeWidth={1.5} className="w-5 h-5" /> : null}
+                                  {typeof sport.icon === 'string' ? <img src={sport.icon} alt={sport.label} className="w-4 h-4 object-contain" /> : IconComp ? <IconComp strokeWidth={1.5} className="w-4 h-4" /> : null}
                                   <span className="flex items-center gap-1.5">{sport.label}{loadingItem === sport.label && <IconLoader2 className="w-3 h-3 animate-spin" />}</span>
                                   <IconChevronRight className={cn(
                                     "w-4 h-4 ml-auto transition-transform duration-300",
@@ -6307,7 +6320,6 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <SidebarMenuButton
-                                isActive={isActive}
                                 onClick={(e) => {
                                   e.preventDefault()
                                   e.stopPropagation()
@@ -6315,12 +6327,11 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                 }}
                                 className={cn(
                                   "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
-                                  "data-[active=true]:text-white data-[active=true]:font-medium",
-                                  "data-[active=false]:text-white/70 hover:text-white hover:bg-white/5"
+                                  "text-white/70 hover:text-white hover:bg-white/5",
+                                  isActive && "text-white"
                                 )}
-                                style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)' } : undefined}
                               >
-                                {typeof sport.icon === 'string' ? <img src={sport.icon} alt={sport.label} className="w-5 h-5 object-contain" /> : IconComp ? <IconComp strokeWidth={1.5} className="w-5 h-5" /> : null}
+                                {typeof sport.icon === 'string' ? <img src={sport.icon} alt={sport.label} className="w-4 h-4 object-contain" /> : IconComp ? <IconComp strokeWidth={1.5} className="w-4 h-4" /> : null}
                                 <span className="flex items-center gap-1.5">{sport.label}{loadingItem === sport.label && <IconLoader2 className="w-3 h-3 animate-spin" />}</span>
                               </SidebarMenuButton>
                             </TooltipTrigger>
@@ -6355,12 +6366,19 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                               onClick={(e) => {
                                 e.preventDefault()
                                 e.stopPropagation()
-                                setLoadingItem(sport.label)
-                                router.push(sport.href)
+                                if (sport.label === 'My Feed') {
+                                  setLoadingItem(sport.label)
+                                  router.push('/sports/my-feed')
+                                  return
+                                }
+                                if (showMyBets) {
+                                  setShowMyBets(false)
+                                }
+                                setActiveSport(sport.label)
                               }}
                               className="w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer data-[active=false]:text-white/70 hover:text-white hover:bg-white/5"
                             >
-                              {typeof sport.icon === 'string' ? <img src={sport.icon} alt={sport.label} className="w-5 h-5 object-contain" /> : IconComp ? <IconComp strokeWidth={1.5} className="w-5 h-5" /> : null}
+                              {typeof sport.icon === 'string' ? <img src={sport.icon} alt={sport.label} className="w-4 h-4 object-contain" /> : IconComp ? <IconComp strokeWidth={1.5} className="w-4 h-4" /> : null}
                               <span className="flex items-center gap-1.5">{sport.label}{loadingItem === sport.label && <IconLoader2 className="w-3 h-3 animate-spin" />}</span>
                             </SidebarMenuButton>
                           </TooltipTrigger>
@@ -6382,14 +6400,13 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
 
             <Separator className="bg-white/10 mx-2" />
 
-            {/* Bottom section — Loyalty Hub, Banking, Need Help */}
+            {/* Bottom section — same as Casino/Promotions */}
             <SidebarGroup>
               <SidebarGroupContent>
                 <SidebarMenu>
                   {[
-                    { icon: IconCrown, label: 'Loyalty Hub' },
-                    { icon: IconBuilding, label: 'Banking' },
-                    { icon: IconLifebuoy, label: 'Need Help' },
+                    { icon: IconLifebuoy, label: 'Support' },
+                    { icon: IconGift, label: 'My Bonus' },
                   ].map((item, index) => {
                     const Icon = item.icon
                     return (
@@ -6398,6 +6415,21 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                           <TooltipTrigger asChild>
                             <SidebarMenuButton
                               className="w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer text-white/70 hover:text-white hover:bg-white/5"
+                              onClick={(e) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                if (item.label === 'Support') {
+                                  useChatStore.getState().setIsOpen(true)
+                                  if (isMobile) setOpenMobile(false)
+                                  return
+                                }
+                                if (item.label === 'My Bonus') {
+                                  setAccountBonusTab('available')
+                                  setAccountDrawerView('bonus')
+                                  openAccountDrawer()
+                                  if (isMobile) setOpenMobile(false)
+                                }
+                              }}
                             >
                               <Icon strokeWidth={1.5} className="w-5 h-5" />
                               <span>{item.label}</span>
@@ -6529,7 +6561,8 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
           />
         ) : (
         <div className={cn("pt-0 pb-4 overflow-x-hidden", isMobile ? "px-1" : "px-5")}>
-          {/* Breadcrumbs */}
+          {/* Breadcrumbs removed on sports home */}
+          {false && (
           <div className="flex items-center gap-2 mb-4 -mt-1">
             <button 
               onClick={(e) => {
@@ -6731,8 +6764,10 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
+          )}
           
-          {/* Premier League Section - Expandable */}
+          {/* Premier League Section - removed per design request */}
+          {false && (
           <motion.div
             initial={false}
             animate={{ 
@@ -7115,6 +7150,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
               )}
             </AnimatePresence>
           </motion.div>
+          )}
           
           {/* Top Events Section */}
           <div className="mb-8">
@@ -7173,50 +7209,49 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                 <CarouselContent className="ml-6 mr-0">
                   {/* Dynamic Top Events */}
                   {(activeSport === 'Football' ? [
-                    { id: 4, team1: 'Kansas City Chiefs', team2: 'Buffalo Bills', score: '24 - 17', team1Code: 'KC', team2Code: 'BUF', team1Percent: 65, team2Percent: 35, time: 'Q3 8\'', league: 'NFL', leagueIcon: '/banners/sports_league/NFL.svg', country: 'USA', team1NFL: 'KC', team2NFL: 'BUF' },
-                    { id: 5, team1: 'Dallas Cowboys', team2: 'Philadelphia Eagles', score: '31 - 28', team1Code: 'DAL', team2Code: 'PHI', team1Percent: 58, team2Percent: 42, time: 'Q4 2\'', league: 'NFL', leagueIcon: '/banners/sports_league/NFL.svg', country: 'USA', team1NFL: 'DAL', team2NFL: 'PHI' },
-                    { id: 6, team1: 'San Francisco 49ers', team2: 'Seattle Seahawks', score: '21 - 14', team1Code: 'SF', team2Code: 'SEA', team1Percent: 68, team2Percent: 32, time: 'Q2 12\'', league: 'NFL', leagueIcon: '/banners/sports_league/NFL.svg', country: 'USA', team1NFL: 'SF', team2NFL: 'SEA' },
-                    { id: 7, team1: 'Miami Dolphins', team2: 'New York Jets', score: '17 - 10', team1Code: 'MIA', team2Code: 'NYJ', team1Percent: 72, team2Percent: 28, time: 'Q3 5\'', league: 'NFL', leagueIcon: '/banners/sports_league/NFL.svg', country: 'USA', team1NFL: 'MIA', team2NFL: 'NYJ' },
-                    { id: 8, team1: 'Baltimore Ravens', team2: 'Cincinnati Bengals', score: '28 - 21', team1Code: 'BAL', team2Code: 'CIN', team1Percent: 62, team2Percent: 38, time: 'Q4 6\'', league: 'NFL', leagueIcon: '/banners/sports_league/NFL.svg', country: 'USA', team1NFL: 'BAL', team2NFL: 'CIN' },
-                    { id: 9, team1: 'Los Angeles Rams', team2: 'Arizona Cardinals', score: '14 - 14', team1Code: 'LAR', team2Code: 'ARI', team1Percent: 52, team2Percent: 48, time: 'Q2 8\'', league: 'NFL', leagueIcon: '/banners/sports_league/NFL.svg', country: 'USA', team1NFL: 'LAR', team2NFL: 'ARI' },
-                    { id: 10, team1: 'Green Bay Packers', team2: 'Chicago Bears', score: '10 - 7', team1Code: 'GB', team2Code: 'CHI', team1Percent: 58, team2Percent: 42, time: 'Q1 11\'', league: 'NFL', leagueIcon: '/banners/sports_league/NFL.svg', country: 'USA', team1NFL: 'GB', team2NFL: 'CHI' },
-                    { id: 11, team1: 'Pittsburgh Steelers', team2: 'Cleveland Browns', score: '7 - 3', team1Code: 'PIT', team2Code: 'CLE', team1Percent: 55, team2Percent: 45, time: 'Q1 6\'', league: 'NFL', leagueIcon: '/banners/sports_league/NFL.svg', country: 'USA', team1NFL: 'PIT', team2NFL: 'CLE' },
-                    { id: 12, team1: 'Denver Broncos', team2: 'Las Vegas Raiders', score: '35 - 10', team1Code: 'DEN', team2Code: 'LV', team1Percent: 78, team2Percent: 22, time: 'Q4 9\'', league: 'NFL', leagueIcon: '/banners/sports_league/NFL.svg', country: 'USA', team1NFL: 'DEN', team2NFL: 'LV' },
+                    { id: 4, team1: 'Kansas City Chiefs', team2: 'Buffalo Bills', score: '24 - 17', team1Code: 'KC', team2Code: 'BUF', team1Percent: 65, team2Percent: 35, time: 'Q3 8\'', league: 'NFL', leagueIcon: '/sports league/NFL.svg', country: 'USA', team1NFL: 'KC', team2NFL: 'BUF' },
+                    { id: 5, team1: 'Dallas Cowboys', team2: 'Philadelphia Eagles', score: '31 - 28', team1Code: 'DAL', team2Code: 'PHI', team1Percent: 58, team2Percent: 42, time: 'Q4 2\'', league: 'NFL', leagueIcon: '/sports league/NFL.svg', country: 'USA', team1NFL: 'DAL', team2NFL: 'PHI' },
+                    { id: 6, team1: 'San Francisco 49ers', team2: 'Seattle Seahawks', score: '21 - 14', team1Code: 'SF', team2Code: 'SEA', team1Percent: 68, team2Percent: 32, time: 'Q2 12\'', league: 'NFL', leagueIcon: '/sports league/NFL.svg', country: 'USA', team1NFL: 'SF', team2NFL: 'SEA' },
+                    { id: 7, team1: 'Miami Dolphins', team2: 'New York Jets', score: '17 - 10', team1Code: 'MIA', team2Code: 'NYJ', team1Percent: 72, team2Percent: 28, time: 'Q3 5\'', league: 'NFL', leagueIcon: '/sports league/NFL.svg', country: 'USA', team1NFL: 'MIA', team2NFL: 'NYJ' },
+                    { id: 8, team1: 'Baltimore Ravens', team2: 'Cincinnati Bengals', score: '28 - 21', team1Code: 'BAL', team2Code: 'CIN', team1Percent: 62, team2Percent: 38, time: 'Q4 6\'', league: 'NFL', leagueIcon: '/sports league/NFL.svg', country: 'USA', team1NFL: 'BAL', team2NFL: 'CIN' },
+                    { id: 9, team1: 'Los Angeles Rams', team2: 'Arizona Cardinals', score: '14 - 14', team1Code: 'LAR', team2Code: 'ARI', team1Percent: 52, team2Percent: 48, time: 'Q2 8\'', league: 'NFL', leagueIcon: '/sports league/NFL.svg', country: 'USA', team1NFL: 'LAR', team2NFL: 'ARI' },
+                    { id: 10, team1: 'Green Bay Packers', team2: 'Chicago Bears', score: '10 - 7', team1Code: 'GB', team2Code: 'CHI', team1Percent: 58, team2Percent: 42, time: 'Q1 11\'', league: 'NFL', leagueIcon: '/sports league/NFL.svg', country: 'USA', team1NFL: 'GB', team2NFL: 'CHI' },
+                    { id: 11, team1: 'Pittsburgh Steelers', team2: 'Cleveland Browns', score: '7 - 3', team1Code: 'PIT', team2Code: 'CLE', team1Percent: 55, team2Percent: 45, time: 'Q1 6\'', league: 'NFL', leagueIcon: '/sports league/NFL.svg', country: 'USA', team1NFL: 'PIT', team2NFL: 'CLE' },
+                    { id: 12, team1: 'Denver Broncos', team2: 'Las Vegas Raiders', score: '35 - 10', team1Code: 'DEN', team2Code: 'LV', team1Percent: 78, team2Percent: 22, time: 'Q4 9\'', league: 'NFL', leagueIcon: '/sports league/NFL.svg', country: 'USA', team1NFL: 'DEN', team2NFL: 'LV' },
                   ] : [
-                    { id: 4, team1: 'Arsenal', team2: 'Chelsea', score: '1 - 0', team1Code: 'ARS', team2Code: 'CHE', team1Percent: 65, team2Percent: 35, time: 'H1 23\'', league: 'Premier League', leagueIcon: '/banners/sports_league/prem.svg', country: 'England', team1Logo: '/team/Arsenal FC.png', team2Logo: '/team/Chelsea FC.png' },
-                    { id: 5, team1: 'Real Madrid', team2: 'Barcelona', score: '2 - 1', team1Code: 'RMA', team2Code: 'BAR', team1Percent: 58, team2Percent: 42, time: 'H2 71\'', league: 'La Liga', leagueIcon: '/banners/sports_league/laliga.svg', country: 'Spain', team1Logo: '/team/Spain - LaLiga/Real Madrid.png', team2Logo: '/team/Spain - LaLiga/FC Barcelona.png' },
+                    { id: 4, team1: 'Arsenal', team2: 'Chelsea', score: '1 - 0', team1Code: 'ARS', team2Code: 'CHE', team1Percent: 65, team2Percent: 35, time: 'H1 23\'', league: 'Premier League', leagueIcon: '/sports league/prem.svg', country: 'England', team1Logo: '/team/Arsenal FC.png', team2Logo: '/team/Chelsea FC.png' },
+                    { id: 5, team1: 'Real Madrid', team2: 'Barcelona', score: '2 - 1', team1Code: 'RMA', team2Code: 'BAR', team1Percent: 58, team2Percent: 42, time: 'H2 71\'', league: 'La Liga', leagueIcon: '/sports league/champions.svg', country: 'Spain', team1Logo: '/team/Spain - LaLiga/Real Madrid.png', team2Logo: '/team/Spain - LaLiga/FC Barcelona.png' },
                     { id: 6, team1: 'Juventus', team2: 'AC Milan', score: '1 - 2', team1Code: 'JUV', team2Code: 'MIL', team1Percent: 48, team2Percent: 52, time: 'H2 78\'', league: 'Serie A', leagueIcon: '/team/Italy - Serie A/serie A.svg', country: 'Italy', team1Logo: '/team/Italy - Serie A/Juventus FC.png', team2Logo: '/team/Italy - Serie A/AC Milan.png' },
-                    { id: 7, team1: 'Tottenham', team2: 'Newcastle', score: '2 - 1', team1Code: 'TOT', team2Code: 'NEW', team1Percent: 72, team2Percent: 28, time: 'H2 67\'', league: 'Premier League', leagueIcon: '/banners/sports_league/prem.svg', country: 'England', team1Logo: '/team/Tottenham Hotspur.png', team2Logo: '/team/Newcastle United.png' },
+                    { id: 7, team1: 'Tottenham', team2: 'Newcastle', score: '2 - 1', team1Code: 'TOT', team2Code: 'NEW', team1Percent: 72, team2Percent: 28, time: 'H2 67\'', league: 'Premier League', leagueIcon: '/sports league/prem.svg', country: 'England', team1Logo: '/team/Tottenham Hotspur.png', team2Logo: '/team/Newcastle United.png' },
                     { id: 8, team1: 'Inter Milan', team2: 'Napoli', score: '2 - 0', team1Code: 'INT', team2Code: 'NAP', team1Percent: 68, team2Percent: 32, time: 'H1 28\'', league: 'Serie A', leagueIcon: '/team/Italy - Serie A/serie A.svg', country: 'Italy', team1Logo: '/team/Italy - Serie A/Inter Milan.png', team2Logo: '/team/Italy - Serie A/SSC Napoli.png' },
-                    { id: 9, team1: 'Atletico Madrid', team2: 'Sevilla', score: '1 - 1', team1Code: 'ATM', team2Code: 'SEV', team1Percent: 52, team2Percent: 48, time: 'H1 34\'', league: 'La Liga', leagueIcon: '/banners/sports_league/laliga.svg', country: 'Spain', team1Logo: '/team/Spain - LaLiga/Atlético de Madrid.png', team2Logo: '/team/Spain - LaLiga/Sevilla FC.png' },
+                    { id: 9, team1: 'Atletico Madrid', team2: 'Sevilla', score: '1 - 1', team1Code: 'ATM', team2Code: 'SEV', team1Percent: 52, team2Percent: 48, time: 'H1 34\'', league: 'La Liga', leagueIcon: '/sports league/champions.svg', country: 'Spain', team1Logo: '/team/Spain - LaLiga/Atlético de Madrid.png', team2Logo: '/team/Spain - LaLiga/Sevilla FC.png' },
                     { id: 10, team1: 'AS Roma', team2: 'Lazio', score: '0 - 1', team1Code: 'ROM', team2Code: 'LAZ', team1Percent: 42, team2Percent: 58, time: 'H1 18\'', league: 'Serie A', leagueIcon: '/team/Italy - Serie A/serie A.svg', country: 'Italy', team1Logo: '/team/Italy - Serie A/AS Roma.png', team2Logo: '/team/Italy - Serie A/SS Lazio.png' },
-                    { id: 11, team1: 'Manchester United', team2: 'Aston Villa', score: '0 - 1', team1Code: 'MUN', team2Code: 'AVL', team1Percent: 45, team2Percent: 55, time: 'H1 15\'', league: 'Premier League', leagueIcon: '/banners/sports_league/prem.svg', country: 'England', team1Logo: '/team/Manchester United.png', team2Logo: '/team/Aston Villa.png' },
-                    { id: 12, team1: 'Real Sociedad', team2: 'Villarreal', score: '3 - 0', team1Code: 'RSO', team2Code: 'VIL', team1Percent: 78, team2Percent: 22, time: 'H2 58\'', league: 'La Liga', leagueIcon: '/banners/sports_league/laliga.svg', country: 'Spain', team1Logo: '/team/Spain - LaLiga/Real Sociedad.png', team2Logo: '/team/Spain - LaLiga/Villarreal CF.png' },
-                  ]).map((event) => (
-                    <CarouselItem key={event.id} className="pl-2 md:pl-4 basis-auto flex-shrink-0">
-                      <div className="w-[320px] bg-white/5 border border-white/10 rounded-small p-3 relative overflow-hidden flex-shrink-0" style={{ background: 'linear-gradient(to bottom, rgba(238, 53, 54, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)' }}>
+                    { id: 11, team1: 'Manchester United', team2: 'Aston Villa', score: '0 - 1', team1Code: 'MUN', team2Code: 'AVL', team1Percent: 45, team2Percent: 55, time: 'H1 15\'', league: 'Premier League', leagueIcon: '/sports league/prem.svg', country: 'England', team1Logo: '/team/Manchester United.png', team2Logo: '/team/Aston Villa.png' },
+                    { id: 12, team1: 'Real Sociedad', team2: 'Villarreal', score: '3 - 0', team1Code: 'RSO', team2Code: 'VIL', team1Percent: 78, team2Percent: 22, time: 'H2 58\'', league: 'La Liga', leagueIcon: '/sports league/champions.svg', country: 'Spain', team1Logo: '/team/Spain - LaLiga/Real Sociedad.png', team2Logo: '/team/Spain - LaLiga/Villarreal CF.png' },
+                  ]).map((event, index) => {
+                    const topEventDecimalOdds = oddsToDecimal('+350').toFixed(2)
+                    return (
+                    <CarouselItem key={event.id} className={index === 0 ? "pl-0 pr-0 basis-auto flex-shrink-0" : "pl-2 md:pl-4 basis-auto flex-shrink-0"}>
+                      <div className="w-[320px] bg-white/[0.02] border border-white/[0.05] rounded-small p-3 relative overflow-hidden flex-shrink-0">
                         {/* Header: League info and Live status */}
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center gap-1.5">
-                            <img 
-                              src={event.leagueIcon} 
+                            <img
+                              src={event.leagueIcon}
                               alt={event.league}
                               width={16}
                               height={16}
                               className="object-contain"
                               decoding="sync"
                               onError={(e) => {
-                                e.currentTarget.src = '/sports_icons/football.svg'
+                                e.currentTarget.src = '/sports league/prem.svg'
                               }}
                             />
                             <span className="text-[10px] text-white">{event.league} | {event.country}</span>
                           </div>
                           <div className="flex items-center gap-1.5">
-                            <div className="flex items-center gap-0.5 bg-[#ee3536]/20 border border-[#ee3536]/50 rounded px-1 py-0.5 whitespace-nowrap">
-                              <div className="w-1.5 h-1.5 bg-[#ee3536] rounded-full animate-pulse"></div>
-                              <span className="text-[9px] font-semibold text-[#ee3536]">LIVE</span>
-                            </div>
-                            <span className="text-[10px] text-[#ee3536]">{event.time}</span>
+                            <div className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-pulse"></div>
+                            <span className="text-[10px] text-white/70">{event.time}</span>
                           </div>
                         </div>
                         
@@ -7490,24 +7525,25 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                         
                         {/* Moneyline Betting Buttons */}
                         <div className="flex items-center gap-1.5 mb-3">
-                          <button 
+                          <button
+                            type="button"
                             data-event-id={event.id}
                             data-event-name={`${event.team1} v ${event.team2}`}
                             data-market-title="Moneyline"
                             data-selection={event.team1Code}
-                            data-odds="+350"
+                            data-odds={topEventDecimalOdds}
                             onClick={(e) => {
                               e.preventDefault()
                               e.stopPropagation()
-                              addBetToSlip(event.id, `${event.team1} v ${event.team2}`, 'Moneyline', event.team1Code, '+350')
+                              addBetToSlip(event.id, `${event.team1} v ${event.team2}`, 'Moneyline', event.team1Code, topEventDecimalOdds)
                             }}
                             className={cn(
-                              "bg-white/10 text-white rounded-small flex-1 h-[38px] flex flex-col items-center justify-center transition-colors cursor-pointer px-2",
-                              isBetSelected(event.id, 'Moneyline', event.team1Code) && "bg-red-500"
+                              "bg-white/10 text-white rounded-small flex-1 h-[54px] flex flex-col items-center justify-center gap-1 text-center transition-colors cursor-pointer px-2 focus:outline-none focus-visible:outline-none focus-visible:ring-0",
+                              isBetSelected(event.id, 'Moneyline', event.team1Code) && "!bg-[#c9b4ff] !border-[#c9b4ff] text-[#121417]"
                             )}
                             onMouseEnter={(e) => {
                               if (!isBetSelected(event.id, 'Moneyline', event.team1Code)) {
-                                e.currentTarget.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--ds-primary').trim() || '#ee3536'
+                                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.16)'
                               }
                             }}
                             onMouseLeave={(e) => {
@@ -7516,27 +7552,28 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                               }
                             }}
                           >
-                            <div className="text-[10px] text-white/70 leading-none mb-0.5">{event.team1Code}</div>
-                            <div className="text-xs font-bold leading-none">+350</div>
+                            <div className={cn("w-full text-[11px] font-medium leading-tight truncate", isBetSelected(event.id, 'Moneyline', event.team1Code) ? "text-[#121417]/80" : "text-white/70")}>{event.team1}</div>
+                            <div className="text-xs font-bold leading-none">{topEventDecimalOdds}</div>
                           </button>
-                          <button 
+                          <button
+                            type="button"
                             data-event-id={event.id}
                             data-event-name={`${event.team1} v ${event.team2}`}
                             data-market-title="Moneyline"
                             data-selection="Tie"
-                            data-odds="+350"
+                            data-odds={topEventDecimalOdds}
                             onClick={(e) => {
                               e.preventDefault()
                               e.stopPropagation()
-                              addBetToSlip(event.id, `${event.team1} v ${event.team2}`, 'Moneyline', 'Tie', '+350')
+                              addBetToSlip(event.id, `${event.team1} v ${event.team2}`, 'Moneyline', 'Tie', topEventDecimalOdds)
                             }}
                             className={cn(
-                              "bg-white/10 text-white rounded-small flex-1 h-[38px] flex flex-col items-center justify-center transition-colors cursor-pointer px-2",
-                              isBetSelected(event.id, 'Moneyline', 'Tie') && "bg-red-500"
+                              "bg-white/10 text-white rounded-small flex-1 h-[54px] flex flex-col items-center justify-center gap-1 text-center transition-colors cursor-pointer px-2 focus:outline-none focus-visible:outline-none focus-visible:ring-0",
+                              isBetSelected(event.id, 'Moneyline', 'Tie') && "!bg-[#c9b4ff] !border-[#c9b4ff] text-[#121417]"
                             )}
                             onMouseEnter={(e) => {
                               if (!isBetSelected(event.id, 'Moneyline', 'Tie')) {
-                                e.currentTarget.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--ds-primary').trim() || '#ee3536'
+                                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.16)'
                               }
                             }}
                             onMouseLeave={(e) => {
@@ -7545,27 +7582,28 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                               }
                             }}
                           >
-                            <div className="text-[10px] text-white/70 leading-none mb-0.5">Tie</div>
-                            <div className="text-xs font-bold leading-none">+350</div>
+                            <div className={cn("w-full text-[11px] font-medium leading-tight truncate", isBetSelected(event.id, 'Moneyline', 'Tie') ? "text-[#121417]/80" : "text-white/70")}>Draw</div>
+                            <div className="text-xs font-bold leading-none">{topEventDecimalOdds}</div>
                           </button>
-                          <button 
+                          <button
+                            type="button"
                             data-event-id={event.id}
                             data-event-name={`${event.team1} v ${event.team2}`}
                             data-market-title="Moneyline"
                             data-selection={event.team2Code}
-                            data-odds="+350"
+                            data-odds={topEventDecimalOdds}
                             onClick={(e) => {
                               e.preventDefault()
                               e.stopPropagation()
-                              addBetToSlip(event.id, `${event.team1} v ${event.team2}`, 'Moneyline', event.team2Code, '+350')
+                              addBetToSlip(event.id, `${event.team1} v ${event.team2}`, 'Moneyline', event.team2Code, topEventDecimalOdds)
                             }}
                             className={cn(
-                              "bg-white/10 text-white rounded-small flex-1 h-[38px] flex flex-col items-center justify-center transition-colors cursor-pointer px-2",
-                              isBetSelected(event.id, 'Moneyline', event.team2Code) && "bg-red-500"
+                              "bg-white/10 text-white rounded-small flex-1 h-[54px] flex flex-col items-center justify-center gap-1 text-center transition-colors cursor-pointer px-2 focus:outline-none focus-visible:outline-none focus-visible:ring-0",
+                              isBetSelected(event.id, 'Moneyline', event.team2Code) && "!bg-[#c9b4ff] !border-[#c9b4ff] text-[#121417]"
                             )}
                             onMouseEnter={(e) => {
                               if (!isBetSelected(event.id, 'Moneyline', event.team2Code)) {
-                                e.currentTarget.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--ds-primary').trim() || '#ee3536'
+                                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.16)'
                               }
                             }}
                             onMouseLeave={(e) => {
@@ -7574,165 +7612,26 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                               }
                             }}
                           >
-                            <div className="text-[10px] text-white/70 leading-none mb-0.5">{event.team2Code}</div>
-                            <div className="text-xs font-bold leading-none">+350</div>
+                            <div className={cn("w-full text-[11px] font-medium leading-tight truncate", isBetSelected(event.id, 'Moneyline', event.team2Code) ? "text-[#121417]/80" : "text-white/70")}>{event.team2}</div>
+                            <div className="text-xs font-bold leading-none">{topEventDecimalOdds}</div>
                           </button>
                         </div>
                         
-                        {/* Popularity Bar */}
-                        <div className="space-y-0.5">
-                          <div className="text-[10px] text-white/50 text-center mb-1">Moneyline</div>
-                          <div className="flex h-1.5 bg-white/10 rounded-full overflow-hidden">
-                            <div className="bg-[#ee3536] h-full" style={{ width: `${event.team1Percent}%` }}></div>
-                            <div className="bg-white h-full" style={{ width: `${event.team2Percent}%` }}></div>
-                          </div>
-                          <div className="flex items-center justify-between text-[10px]">
-                            <span className="text-white/50">{event.team1Percent}% {event.team1Code}</span>
-                            <span className="text-white/50">{event.team2Percent}% {event.team2Code}</span>
-                          </div>
-                        </div>
+                        {/* Moneyline popularity bar removed per design */}
                       </div>
                     </CarouselItem>
-                  ))}
+                    )
+                  })}
                 </CarouselContent>
               </Carousel>
             </div>
             
-            {/* Sports Sub Nav Tabs - Under Event Cards */}
-            <div className="mt-8 mb-4 overflow-x-hidden" style={{ width: '100%', maxWidth: '100%' }}>
-              <div 
-                ref={subNavScrollRef}
-                className={cn(
-                  "flex items-center gap-1.5",
-                  isMobile && "overflow-x-auto scrollbar-hide"
-                )}
-                onScroll={(e) => {
-                  // Prevent scroll from bubbling up
-                  e.stopPropagation()
-                }}
-                onTouchMove={(e) => {
-                  // Prevent touch scroll from affecting page
-                  if (subNavScrollRef.current) {
-                    const container = subNavScrollRef.current
-                    const { scrollLeft, scrollWidth, offsetWidth } = container
-                    const isAtStart = scrollLeft <= 0
-                    const isAtEnd = scrollLeft >= scrollWidth - offsetWidth - 1
-                    
-                    // If we're at the edges, prevent default to stop page scroll
-                    if (isAtStart || isAtEnd) {
-                      const touch = e.touches[0]
-                      const deltaX = touch.clientX - (container as any).lastTouchX || 0
-                      ;(container as any).lastTouchX = touch.clientX
-                      
-                      if ((isAtStart && deltaX > 0) || (isAtEnd && deltaX < 0)) {
-                        e.preventDefault()
-                      }
-                    }
-                  }
-                }}
-                style={isMobile ? {
-                  scrollBehavior: 'smooth',
-                  WebkitOverflowScrolling: 'touch',
-                  touchAction: 'pan-x',
-                  overscrollBehaviorX: 'contain',
-                  overscrollBehavior: 'contain',
-                  scrollSnapType: 'x mandatory',
-                  width: '100%',
-                  maxWidth: '100%',
-                  paddingLeft: 0,
-                  paddingRight: 0,
-                  marginLeft: 0,
-                  marginRight: 0,
-                  boxSizing: 'border-box',
-                  position: 'relative',
-                  overflowX: 'auto',
-                  overflowY: 'hidden',
-                  isolation: 'isolate'
-                } : {}}
-              >
-                  {/* Text Tabs - Full Width */}
-                  <AnimateTabs value={activeTab} onValueChange={(value) => { 
-                    onTabChange(value)
-                    // Scroll the clicked tab into view on mobile
-                    if (isMobile && subNavScrollRef.current) {
-                      const tabIndex = ['Events', 'Outrights', 'Boosts', 'Specials', 'All Leagues'].indexOf(value)
-                      if (tabIndex !== -1) {
-                        const tabs = subNavScrollRef.current.querySelectorAll('[data-tab-item]')
-                        const targetTab = tabs[tabIndex] as HTMLElement
-                        if (targetTab && subNavScrollRef.current) {
-                          setTimeout(() => {
-                            const container = subNavScrollRef.current!
-                            const tabLeft = targetTab.offsetLeft
-                            const tabWidth = targetTab.offsetWidth
-                            const containerWidth = container.offsetWidth
-                            const scrollLeft = container.scrollLeft
-                            const tabRight = tabLeft + tabWidth
-                            const containerRight = scrollLeft + containerWidth
-                            
-                            // Calculate scroll position to center the tab
-                            let newScrollLeft = tabLeft - (containerWidth / 2) + (tabWidth / 2)
-                            // Ensure we don't scroll beyond bounds
-                            newScrollLeft = Math.max(0, Math.min(newScrollLeft, container.scrollWidth - containerWidth))
-                            
-                            container.scrollTo({ 
-                              left: newScrollLeft, 
-                              behavior: 'smooth' 
-                            })
-                          }, 100)
-                        }
-                      }
-                    }
-                  }} className="w-full">
-                    <AnimateTabsList className={cn(
-                      "bg-white/5 p-0.5 h-auto gap-1 rounded-3xl border-0 relative transition-colors duration-300",
-                      isMobile && "flex-nowrap"
-                    )}
-                    style={isMobile ? {
-                      minWidth: 'max-content',
-                      width: 'max-content',
-                      flexShrink: 0,
-                      marginLeft: '12px',
-                      paddingLeft: 0,
-                      paddingRight: 0,
-                      maxWidth: 'none'
-                    } : {}}
-                    >
-                      {['Events', 'Outrights', 'Boosts', 'Specials', 'All Leagues'].map((tab, index) => (
-                        <TabsTab 
-                          key={tab}
-                          value={tab}
-                          data-tab-item
-                          className={cn(
-                            "relative z-10 text-white/70 hover:text-white hover:bg-white/5 rounded-2xl px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-white focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none",
-                            isMobile && index === ['Events', 'Outrights', 'Boosts', 'Specials', 'All Leagues'].length - 1 && "scroll-snap-end mr-12"
-                          )}
-                        >
-                          {activeTab === tab && (
-                            <motion.div
-                              layoutId="activeSportsTab"
-                              className="absolute inset-0 rounded-2xl -z-10"
-                              style={{ backgroundColor: 'var(--ds-primary, #ee3536)' }}
-                              initial={false}
-                              transition={{
-                                type: "spring",
-                                stiffness: 400,
-                                damping: 40
-                              }}
-                            />
-                          )}
-                          <span className="relative z-10">{tab}</span>
-                        </TabsTab>
-                      ))}
-                    </AnimateTabsList>
-                  </AnimateTabs>
-              </div>
-            </div>
           </div>
           
           {/* Live Events Section - Exactly matching Figma layout */}
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-base font-semibold text-white pl-2">Live</h2>
+              <h2 className="text-base font-semibold text-white pl-2">Live Events</h2>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button 
@@ -7769,81 +7668,117 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                 const currentScore = liveScores[event.id] || (event.score ? { team1: event.score.team1, team2: event.score.team2 } : null)
                 const isAnimatingTeam1 = currentScore?.animating?.team === 1
                 const isAnimatingTeam2 = currentScore?.animating?.team === 2
+                const moneylineMarket =
+                  event.markets.find((market) => market.title.toLowerCase() === 'moneyline') ||
+                  event.markets.find((market) => market.title.toLowerCase().includes('moneyline')) ||
+                  event.markets[0]
+                const marketOptions = moneylineMarket?.options || []
+                const drawOption = marketOptions.find((option) => /tie|draw/i.test(option.label))
+                const nonDrawOptions = marketOptions.filter((option) => !/tie|draw/i.test(option.label))
+                const homeOption = nonDrawOptions[0]
+                const awayOption = nonDrawOptions[1] ?? nonDrawOptions[0]
+                const moneylineSelections = [
+                  { key: 'home', label: event.team1, option: homeOption },
+                  { key: 'draw', label: 'Draw', option: drawOption },
+                  { key: 'away', label: event.team2, option: awayOption },
+                ]
 
                 // Use module-level components (stable identity — no flickering)
                 
                 return (
-                  <div key={event.id} className="bg-white/5 border border-white/10 rounded-small" style={{ overflow: 'visible', width: '100%' }}>
+                  <div key={event.id} className="bg-white/[0.02] border border-white/[0.05] rounded-small" style={{ overflow: 'visible', width: '100%' }}>
                     {/* Header Section - Premier League | England, Soccer */}
                     <div className="px-2.5 py-1.5 flex items-center justify-between">
                       <div className="flex items-center gap-1">
                         {(() => {
-                          const leagueData = leagues.find(l => l.name === event.league)
-                          const isSvgPath = leagueData && typeof leagueData.icon === 'string'
-                          return isSvgPath ? (
-                            <img 
-                              src={leagueData.icon as unknown as string} 
+                          const liveLeagueLogoMap: Record<string, string> = {
+                            'Premier League': '/sports%20league/prem.svg',
+                            'La Liga': '/sports%20league/champions.svg',
+                            'Serie A': '/team/Italy%20-%20Serie%20A/serie%20A.svg',
+                            'NFL': '/sports%20league/NFL.svg',
+                          }
+                          const leagueIcon = liveLeagueLogoMap[event.league]
+                          return leagueIcon ? (
+                            <img
+                              src={leagueIcon}
                               alt={event.league}
-                              width={12}
-                              height={12}
+                              width={14}
+                              height={14}
                               className="object-contain"
                               decoding="sync"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none'
+                                const fallback = e.currentTarget.nextElementSibling as HTMLElement | null
+                                if (fallback) fallback.style.display = 'inline-flex'
+                              }}
                             />
-                          ) : (
-                            <IconTrophy className="w-3 h-3 text-white/70" />
-                          )
+                          ) : null
                         })()}
+                        <span className="hidden items-center"><IconTrophy className="w-3 h-3 text-white/70" /></span>
                         <span className="text-[9px] text-white/70">{event.league}</span>
                         <span className="text-[9px] text-white/50">|</span>
                         <span className="text-[9px] text-white/70">{event.country}</span>
                         <span className="text-[9px] text-white/50">,</span>
                         <span className="text-[9px] text-white/70">{activeSport === 'Football' ? 'Football' : 'Soccer'}</span>
                       </div>
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault()
-                          e.stopPropagation()
-                          setTrackerEvent({ id: event.id, team1: event.team1, team2: event.team2, league: event.league, country: event.country, score: event.score, minute: event.isLive ? "45'" : undefined, isLive: event.isLive, statscoreEventId: 6188732, statscoreConfigId: '60dc694d4321eaff1879f0cf' })
-                        }}
-                        className="text-[10px] text-white/70 hover:text-white transition-colors cursor-pointer flex items-center gap-1"
-                      >
-                        <IconVideo className="w-3 h-3" />
-                        Watch
-                      </button>
                     </div>
                     
-                    {/* Main Content Row - Status, Teams, Score, Markets (Desktop) or just Status, Teams, Score (Mobile) */}
-                    <div className="px-2.5 py-2 flex items-center gap-2" style={{ overflow: 'visible', alignItems: 'center' }}>
-                      {/* Status/Time Badge - Smaller */}
-                      {event.isLive && (
-                        <div className="flex flex-col items-start justify-center gap-0.5 flex-shrink-0 w-[50px]">
-                          <div className="flex items-center gap-0.5 bg-[#ee3536]/20 border border-[#ee3536]/50 rounded px-1 py-0.5 whitespace-nowrap">
-                            <div className="w-1 h-1 bg-[#ee3536] rounded-full animate-pulse"></div>
-                            <span className="text-[8px] font-semibold text-[#ee3536]">LIVE</span>
-                          </div>
-                          <div className="flex items-center gap-0.5">
-                            <span className="text-[8px] font-bold text-white/70">1h</span>
-                          <EventMatchTimer isLive={event.isLive} elapsedSeconds={event.elapsedSeconds || 0} activeSport={activeSport} startTime={event.startTime} />
-                          </div>
-                        </div>
-                      )}
-                      
+                    {/* Main Content Row - Teams, Score, Markets */}
+                    <div className="px-2.5 py-2 flex items-start gap-3 min-h-[76px]" style={{ overflow: 'visible' }}>
                       {/* Teams - Fixed width for alignment with logos */}
-                      <div className={cn("flex flex-col gap-1 min-w-0 justify-center", isMobile ? "flex-1" : "w-[200px] flex-shrink-0")}>
-                        <div className="flex items-center gap-1.5">
-                          <TeamLogo teamName={event.team1} size={activeSport === 'Football' ? 20 : 12} />
-                          <div className="text-[11px] font-semibold text-white truncate leading-tight">{event.team1}</div>
+                      <div className={cn("flex flex-col gap-1.5 min-w-0 justify-start", isMobile ? "w-[185px] flex-shrink-0" : "w-[220px] flex-shrink-0")}>
+                        {event.isLive && (
+                          <div className="flex items-center gap-1.5 min-h-[20px]">
+                            <div className="flex items-center gap-0.5 whitespace-nowrap">
+                              <div className="w-1 h-1 bg-orange-500 rounded-full animate-pulse"></div>
+                            </div>
+                            <div className="flex items-center gap-0.5">
+                              <span className="text-[8px] font-bold text-white/70">1H</span>
+                              <EventMatchTimer isLive={event.isLive} elapsedSeconds={event.elapsedSeconds || 0} activeSport={activeSport} startTime={event.startTime} />
+                            </div>
+                          </div>
+                        )}
+                        <div className="flex items-center gap-2 min-h-[28px]">
+                          <TeamLogo teamName={event.team1} size={activeSport === 'Football' ? 22 : 14} />
+                          <div className="text-[12px] font-semibold text-white truncate leading-tight">{event.team1}</div>
                         </div>
-                        <div className="flex items-center gap-1.5">
-                          <TeamLogo teamName={event.team2} size={activeSport === 'Football' ? 20 : 12} />
-                          <div className="text-[11px] font-semibold text-white truncate leading-tight">{event.team2}</div>
+                        <div className="flex items-center gap-2 min-h-[28px]">
+                          <TeamLogo teamName={event.team2} size={activeSport === 'Football' ? 22 : 14} />
+                          <div className="text-[12px] font-semibold text-white truncate leading-tight">{event.team2}</div>
                         </div>
+                        {event.isLive && (
+                          <div className="flex items-center gap-1.5 min-h-[20px]">
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                setTrackerEvent({ id: event.id, team1: event.team1, team2: event.team2, league: event.league, country: event.country, score: event.score, minute: event.isLive ? "45'" : undefined, isLive: event.isLive, statscoreEventId: 6188732, statscoreConfigId: '60dc694d4321eaff1879f0cf' })
+                              }}
+                              className="h-6 w-6 rounded-small bg-white/[0.04] text-white/70 hover:text-white hover:bg-white/[0.08] transition-colors cursor-pointer flex items-center justify-center"
+                            >
+                              <IconVideo className="w-3 h-3" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                setTrackerEvent({ id: event.id, team1: event.team1, team2: event.team2, league: event.league, country: event.country, score: event.score, minute: event.isLive ? "45'" : undefined, isLive: event.isLive, statscoreEventId: 6188732, statscoreConfigId: '60dc694d4321eaff1879f0cf' })
+                              }}
+                              className="h-6 w-6 rounded-small bg-white/[0.04] text-white/70 hover:text-white hover:bg-white/[0.08] transition-colors cursor-pointer flex items-center justify-center"
+                            >
+                              <IconChartBar className="w-3 h-3" />
+                            </button>
+                            <span className="text-[10px] font-semibold text-white/75 leading-none">+120</span>
+                          </div>
+                        )}
                       </div>
                       
                       {/* Score - Fixed width container for alignment across all events */}
                       {currentScore && (
-                        <div className="flex items-center gap-1.5 flex-shrink-0">
-                          <div className="flex flex-col items-center justify-center gap-0.5">
+                        <div className={cn("flex items-start gap-1.5 flex-shrink-0 w-[44px] justify-center", event.isLive && "mt-[26px]", isMobile && "ml-auto")}>
+                          <div className="flex flex-col items-center justify-center gap-1.5">
                             <motion.div 
                               className={cn(
                                 "border rounded-small px-1.5 py-1.5 w-[28px] h-[28px] flex items-center justify-center transition-all duration-500",
@@ -7885,23 +7820,97 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                               />
                             </motion.div>
                           </div>
-                          <IconChevronRight className="w-3.5 h-3.5 text-white/50 hover:text-white transition-colors cursor-pointer flex-shrink-0" />
                         </div>
                       )}
                       
-                      {/* Betting Markets - Desktop: Inline with teams */}
+                      {/* Moneyline only on right - Home / Draw / Away (desktop) */}
                       {!isMobile && (
-                        <div className="flex-1 relative min-w-0" style={{ overflow: 'visible' }}>
-                          <EventMarketsCarousel event={event} activeSport={activeSport} isBetSelected={isBetSelected} addBetToSlip={addBetToSlip} setBets={setBets} brandPrimary={brandPrimary} isMobile={isMobile} />
-                    </div>
+                        <div className="ml-2 flex-1 self-center min-w-0">
+                          <div className="grid grid-cols-3 gap-1 ml-auto max-w-[560px] h-[72px] overflow-hidden rounded-small border border-white/10">
+                            {moneylineSelections.map((selection) => {
+                              const isSelected = selection.option
+                                ? isBetSelected(event.id, moneylineMarket?.title || 'Moneyline', selection.option.label)
+                                : false
+                              return (
+                                <button
+                                  key={`${event.id}-${selection.key}-desktop`}
+                                  type="button"
+                                  disabled={!selection.option}
+                                  onClick={(e) => {
+                                    e.preventDefault()
+                                    e.stopPropagation()
+                                    if (!selection.option) return
+                                    addBetToSlip(
+                                      event.id,
+                                      `${event.team1} v ${event.team2}`,
+                                      moneylineMarket?.title || 'Moneyline',
+                                      selection.option.label,
+                                      selection.option.odds
+                                    )
+                                  }}
+                                  className={cn(
+                                    "rounded-small h-full flex items-center justify-center transition-colors cursor-pointer px-3",
+                                    !selection.option && "opacity-45 cursor-not-allowed",
+                                    isSelected ? "bg-[#c9b4ff] text-[#121417]" : "bg-white/[0.04] text-white hover:bg-white/[0.08]"
+                                  )}
+                                >
+                                  <div className="flex flex-col items-center justify-center gap-1.5 text-center">
+                                    <div className={cn("text-[11px] leading-tight max-w-[130px] truncate text-center", isSelected ? "text-[#121417]/80" : "text-white/70")}>
+                                      {selection.label}
+                                    </div>
+                                    <div className="text-[28px] font-semibold leading-none tracking-tight">{selection.option?.odds ?? '--'}</div>
+                                  </div>
+                                </button>
+                              )
+                            })}
+                          </div>
+                        </div>
                       )}
+
                     </div>
                     
-                    {/* Betting Markets - Mobile: Under team names */}
+                    {/* Moneyline only - Home / Draw / Away (mobile) */}
                     {isMobile && (
-                      <div className="w-full pb-2" style={{ overflow: 'visible' }}>
-                        <EventMarketsCarousel event={event} activeSport={activeSport} isBetSelected={isBetSelected} addBetToSlip={addBetToSlip} setBets={setBets} brandPrimary={brandPrimary} isMobile={isMobile} />
+                    <div className="px-2.5 pb-2">
+                      <div className="grid grid-cols-3 gap-1 h-[56px] overflow-hidden rounded-small border border-white/10">
+                        {moneylineSelections.map((selection) => {
+                          const isSelected = selection.option
+                            ? isBetSelected(event.id, moneylineMarket?.title || 'Moneyline', selection.option.label)
+                            : false
+                          return (
+                            <button
+                              key={`${event.id}-${selection.key}-mobile`}
+                              type="button"
+                              disabled={!selection.option}
+                              onClick={(e) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                if (!selection.option) return
+                                addBetToSlip(
+                                  event.id,
+                                  `${event.team1} v ${event.team2}`,
+                                  moneylineMarket?.title || 'Moneyline',
+                                  selection.option.label,
+                                  selection.option.odds
+                                )
+                              }}
+                              className={cn(
+                                "rounded-small h-full flex items-center justify-center transition-colors cursor-pointer px-2",
+                                !selection.option && "opacity-45 cursor-not-allowed",
+                                isSelected ? "bg-[#c9b4ff] text-[#121417]" : "bg-white/[0.04] text-white hover:bg-white/[0.08]"
+                              )}
+                            >
+                              <div className="flex flex-col items-center justify-center gap-1 text-center">
+                                <div className={cn("text-[10px] leading-none max-w-[96px] truncate", isSelected ? "text-[#121417]/80" : "text-white/70")}>
+                                  {selection.label}
+                                </div>
+                                <div className="text-[20px] font-semibold leading-none tracking-tight">{selection.option?.odds ?? '--'}</div>
+                              </div>
+                            </button>
+                          )
+                        })}
                       </div>
+                    </div>
                     )}
                   </div>
                 )
@@ -7986,11 +7995,8 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                   </div>
                           {boost.isLive ? (
                             <div className="flex items-center gap-1.5">
-                              <div className="flex items-center gap-0.5 bg-[#ee3536]/20 border border-[#ee3536]/50 rounded px-1 py-0.5 whitespace-nowrap">
-                                <div className="w-1.5 h-1.5 bg-[#ee3536] rounded-full animate-pulse"></div>
-                                <span className="text-[9px] font-semibold text-[#ee3536]">LIVE</span>
-                              </div>
-                              <span className="text-[10px] text-[#ee3536]">{boost.time}</span>
+                              <div className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-pulse"></div>
+                              <span className="text-[10px] text-orange-500">{boost.time}</span>
                             </div>
                           ) : (
                           <span className="text-[10px] text-white">{boost.time}</span>
@@ -8026,10 +8032,9 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                 className={cn(
                                   "rounded-small h-[38px] flex items-center justify-center px-3 border transition-colors cursor-pointer",
                                   bets.some(b => b.eventId === boost.id + 90000) 
-                                    ? "border-transparent text-white" 
+                                    ? "bg-[#c9b4ff] border-[#c9b4ff] text-[#121417]" 
                                     : "bg-white/10 border-white/20 text-white"
                                 )}
-                                style={bets.some(b => b.eventId === boost.id + 90000) ? { backgroundColor: 'var(--ds-primary, #ee3536)' } : undefined}
                       onMouseEnter={(e) => {
                         if (!bets.some(b => b.eventId === boost.id + 90000)) e.currentTarget.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--ds-primary').trim() || '#ee3536'
                       }}
@@ -8167,10 +8172,9 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                           className={cn(
                             "rounded-small h-[34px] flex items-center justify-center px-4 transition-colors cursor-pointer border",
                             bets.some(b => b.eventId === parlay.id + 80000) 
-                              ? "border-transparent text-white" 
+                              ? "bg-[#c9b4ff] border-[#c9b4ff] text-[#121417]" 
                               : "bg-white/10 hover:bg-white/20 border-transparent text-white"
                           )}
-                          style={bets.some(b => b.eventId === parlay.id + 80000) ? { backgroundColor: 'var(--ds-primary, #ee3536)' } : undefined}
                         >
                           <span className="text-xs font-bold text-white leading-none">{parlay.combinedOdds}</span>
                         </button>
@@ -8243,69 +8247,160 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                   return timeStr
                 }
                 
+                const moneylineMarket =
+                  event.markets.find((market) => market.title.toLowerCase() === 'moneyline') ||
+                  event.markets.find((market) => market.title.toLowerCase().includes('moneyline')) ||
+                  event.markets[0]
+                const marketOptions = moneylineMarket?.options || []
+                const drawOption = marketOptions.find((option) => /tie|draw/i.test(option.label))
+                const nonDrawOptions = marketOptions.filter((option) => !/tie|draw/i.test(option.label))
+                const homeOption = nonDrawOptions[0]
+                const awayOption = nonDrawOptions[1] ?? nonDrawOptions[0]
+                const moneylineSelections = [
+                  { key: 'home', label: event.team1, option: homeOption },
+                  { key: 'draw', label: 'Draw', option: drawOption },
+                  { key: 'away', label: event.team2, option: awayOption },
+                ]
+
                 return (
-                  <div key={event.id} className="bg-white/5 border border-white/10 rounded-small" style={{ overflow: 'visible', width: '100%' }}>
-                    {/* Header Section - Premier League | England, Soccer */}
-                    <div className="px-2.5 py-1.5 flex items-center justify-between" style={{ alignItems: 'center' }}>
+                  <div key={event.id} className="bg-white/[0.02] border border-white/[0.05] rounded-small" style={{ overflow: 'visible', width: '100%' }}>
+                    {/* Header Section - Same as live, without watch icon */}
+                    <div className="px-2.5 py-1.5 flex items-center justify-between">
                       <div className="flex items-center gap-1">
                         {(() => {
-                          const leagueData = leagues.find(l => l.name === event.league)
-                          const isSvgPath = leagueData && typeof leagueData.icon === 'string'
-                          return isSvgPath ? (
-                            <img 
-                              src={leagueData.icon as unknown as string} 
+                          const liveLeagueLogoMap: Record<string, string> = {
+                            'Premier League': '/sports%20league/prem.svg',
+                            'La Liga': '/sports%20league/champions.svg',
+                            'Serie A': '/team/Italy%20-%20Serie%20A/serie%20A.svg',
+                            'NFL': '/sports%20league/NFL.svg',
+                          }
+                          const leagueIcon = liveLeagueLogoMap[event.league]
+                          return leagueIcon ? (
+                            <img
+                              src={leagueIcon}
                               alt={event.league}
-                              width={12}
-                              height={12}
+                              width={14}
+                              height={14}
                               className="object-contain"
                               decoding="sync"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none'
+                                const fallback = e.currentTarget.nextElementSibling as HTMLElement | null
+                                if (fallback) fallback.style.display = 'inline-flex'
+                              }}
                             />
-                          ) : (
-                            <IconTrophy className="w-3 h-3 text-white/70" />
-                          )
+                          ) : null
                         })()}
+                        <span className="hidden items-center"><IconTrophy className="w-3 h-3 text-white/70" /></span>
                         <span className="text-[9px] text-white/70">{event.league}</span>
                         <span className="text-[9px] text-white/50">|</span>
                         <span className="text-[9px] text-white/70">{event.country}</span>
                         <span className="text-[9px] text-white/50">,</span>
-                        <span className="text-[9px] text-white/70">Soccer</span>
+                        <span className="text-[9px] text-white/70">{activeSport === 'Football' ? 'Football' : 'Soccer'}</span>
                       </div>
                     </div>
-                    
-                    {/* Main Content Row - Status, Teams, Markets (Desktop) or just Status, Teams (Mobile) */}
-                    <div className="px-2.5 py-2 flex items-center gap-2" style={{ overflow: 'visible', alignItems: 'center' }}>
-                      {/* Status/Time Badge - UPCOMING */}
-                      <div className="flex flex-col items-start justify-center gap-0.5 flex-shrink-0 w-[50px]">
-                        <div className="flex items-center gap-0.5 bg-green-500/20 border border-green-500/50 rounded px-1 py-0.5 whitespace-nowrap">
-                          <span className="text-[8px] font-semibold text-green-400">UPCOMING</span>
-                  </div>
-                        <span className="text-[8px] text-white/70">{parseTimeToMinutes(event.time)}</span>
-                </div>
-                      
-                      {/* Teams - Fixed width for alignment with logos */}
-                      <div className={cn("flex flex-col gap-1 min-w-0 justify-center", isMobile ? "flex-1" : "w-[200px] flex-shrink-0")}>
-                        <div className="flex items-center gap-1.5">
-                          <TeamLogo teamName={event.team1} size={activeSport === 'Football' ? 20 : 12} />
-                          <div className="text-[11px] font-semibold text-white truncate leading-tight">{event.team1}</div>
+
+                    {/* Main Content Row - Same layout as live, without live tag */}
+                    <div className="px-2.5 py-2 flex items-start gap-3 min-h-[76px]" style={{ overflow: 'visible' }}>
+                      <div className={cn("flex flex-col gap-1.5 min-w-0 justify-start", isMobile ? "w-[185px] flex-shrink-0" : "w-[220px] flex-shrink-0")}>
+                        <div className="flex items-center gap-2 min-h-[28px]">
+                          <TeamLogo teamName={event.team1} size={activeSport === 'Football' ? 22 : 14} />
+                          <div className="text-[12px] font-semibold text-white truncate leading-tight">{event.team1}</div>
+                        </div>
+                        <div className="flex items-center gap-2 min-h-[28px]">
+                          <TeamLogo teamName={event.team2} size={activeSport === 'Football' ? 22 : 14} />
+                          <div className="text-[12px] font-semibold text-white truncate leading-tight">{event.team2}</div>
                         </div>
                         <div className="flex items-center gap-1.5">
-                          <TeamLogo teamName={event.team2} size={activeSport === 'Football' ? 20 : 12} />
-                          <div className="text-[11px] font-semibold text-white truncate leading-tight">{event.team2}</div>
+                          <span className="text-[8px] font-semibold text-white/70">STARTS</span>
+                          <span className="text-[8px] text-white/60">{parseTimeToMinutes(event.time)}</span>
                         </div>
                       </div>
-                      
-                      {/* Betting Markets - Desktop: Inline with teams */}
+
                       {!isMobile && (
-                        <div className="flex-1 relative min-w-0" style={{ overflow: 'visible' }}>
-                          <EventMarketsCarousel event={event} activeSport={activeSport} isBetSelected={isBetSelected} addBetToSlip={addBetToSlip} setBets={setBets} brandPrimary={brandPrimary} isMobile={isMobile} />
-                    </div>
+                        <div className="ml-2 flex-1 self-center min-w-0">
+                          <div className="grid grid-cols-3 gap-1 ml-auto max-w-[560px] h-[72px] overflow-hidden rounded-small border border-white/10">
+                            {moneylineSelections.map((selection) => {
+                              const isSelected = selection.option
+                                ? isBetSelected(event.id, moneylineMarket?.title || 'Moneyline', selection.option.label)
+                                : false
+                              return (
+                                <button
+                                  key={`${event.id}-${selection.key}-upcoming-desktop`}
+                                  type="button"
+                                  disabled={!selection.option}
+                                  onClick={(e) => {
+                                    e.preventDefault()
+                                    e.stopPropagation()
+                                    if (!selection.option) return
+                                    addBetToSlip(
+                                      event.id,
+                                      `${event.team1} v ${event.team2}`,
+                                      moneylineMarket?.title || 'Moneyline',
+                                      selection.option.label,
+                                      selection.option.odds
+                                    )
+                                  }}
+                                  className={cn(
+                                    "rounded-small h-full flex items-center justify-center transition-colors cursor-pointer px-3",
+                                    !selection.option && "opacity-45 cursor-not-allowed",
+                                    isSelected ? "bg-[#c9b4ff] text-[#121417]" : "bg-white/[0.04] text-white hover:bg-white/[0.08]"
+                                  )}
+                                >
+                                  <div className="flex flex-col items-center justify-center gap-1.5 text-center">
+                                    <div className={cn("text-[11px] leading-tight max-w-[130px] truncate text-center", isSelected ? "text-[#121417]/80" : "text-white/70")}>
+                                      {selection.label}
+                                    </div>
+                                    <div className="text-[28px] font-semibold leading-none tracking-tight">{selection.option?.odds ?? '--'}</div>
+                                  </div>
+                                </button>
+                              )
+                            })}
+                          </div>
+                        </div>
                       )}
                     </div>
-                    
-                    {/* Betting Markets - Mobile: Under team names */}
+
                     {isMobile && (
-                      <div className="w-full pb-2" style={{ overflow: 'visible' }}>
-                        <EventMarketsCarousel event={event} activeSport={activeSport} isBetSelected={isBetSelected} addBetToSlip={addBetToSlip} setBets={setBets} brandPrimary={brandPrimary} isMobile={isMobile} />
+                      <div className="px-2.5 pb-2">
+                        <div className="grid grid-cols-3 gap-1 h-[56px] overflow-hidden rounded-small border border-white/10">
+                          {moneylineSelections.map((selection) => {
+                            const isSelected = selection.option
+                              ? isBetSelected(event.id, moneylineMarket?.title || 'Moneyline', selection.option.label)
+                              : false
+                            return (
+                              <button
+                                key={`${event.id}-${selection.key}-upcoming-mobile`}
+                                type="button"
+                                disabled={!selection.option}
+                                onClick={(e) => {
+                                  e.preventDefault()
+                                  e.stopPropagation()
+                                  if (!selection.option) return
+                                  addBetToSlip(
+                                    event.id,
+                                    `${event.team1} v ${event.team2}`,
+                                    moneylineMarket?.title || 'Moneyline',
+                                    selection.option.label,
+                                    selection.option.odds
+                                  )
+                                }}
+                                className={cn(
+                                  "rounded-small h-full flex items-center justify-center transition-colors cursor-pointer px-2",
+                                  !selection.option && "opacity-45 cursor-not-allowed",
+                                  isSelected ? "bg-[#c9b4ff] text-[#121417]" : "bg-white/[0.04] text-white hover:bg-white/[0.08]"
+                                )}
+                              >
+                                <div className="flex flex-col items-center justify-center gap-1 text-center">
+                                  <div className={cn("text-[10px] leading-none max-w-[96px] truncate", isSelected ? "text-[#121417]/80" : "text-white/70")}>
+                                    {selection.label}
+                                  </div>
+                                  <div className="text-[20px] font-semibold leading-none tracking-tight">{selection.option?.odds ?? '--'}</div>
+                                </div>
+                              </button>
+                            )
+                          })}
+                        </div>
                       </div>
                     )}
                   </div>
@@ -9491,11 +9586,16 @@ function VipDrawerContent({
 function NavTestPageContent() {
   const SPORTS_FEATURE_TOUR_KEY = 'bol-sports-feature-tour-v1'
   const isMobile = useIsMobile()
+  const HEADER_COMPACT_BREAKPOINT = 1180
   const router = useRouter()
   const searchParams = useSearchParams()
 
   const [loadingNav, setLoadingNav] = useState<string | null>(null)
+  const [isTabletHeader, setIsTabletHeader] = useState(false)
+  const isCompactHeader = isMobile || isTabletHeader
+  const [headerLanguage, setHeaderLanguage] = useState<'EN' | 'ES' | 'DE' | 'FR' | 'PT'>('EN')
   const [mounted, setMounted] = useState(false)
+  const [bootReady, setBootReady] = useState(false)
   const [activeFilter, setActiveFilter] = useState('For You')
   const [activeSubNav, setActiveSubNav] = useState('For You')
   const [gameSortFilter, setGameSortFilter] = useState<string>('popular')
@@ -9507,7 +9607,27 @@ function NavTestPageContent() {
   const [depositAmount, setDepositAmount] = useState(25)
   const [useManualAmount, setUseManualAmount] = useState(false)
   const [selectedCard, setSelectedCard] = useState('Mastercard **** 0740')
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('bitcoin')
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('usdt')
+  const [walletMode, setWalletMode] = useState<'deposit' | 'withdraw'>('deposit')
+  const [walletCurrencyMenuOpen, setWalletCurrencyMenuOpen] = useState(false)
+  const [walletCurrencySearch, setWalletCurrencySearch] = useState('')
+  const [walletNetworkMenuOpen, setWalletNetworkMenuOpen] = useState(false)
+  const [walletSelectedNetwork, setWalletSelectedNetwork] = useState('ERC20')
+  const [walletAmountInput, setWalletAmountInput] = useState('0.00')
+  const [walletAddressInput, setWalletAddressInput] = useState('')
+  const [walletCryptoCopied, setWalletCryptoCopied] = useState(false)
+  const [walletAddressCopied, setWalletAddressCopied] = useState(false)
+  const [walletQrOpen, setWalletQrOpen] = useState(false)
+  const [walletReceipt, setWalletReceipt] = useState<null | {
+    mode: 'deposit' | 'withdraw'
+    amountEur: string
+    amountCrypto: string
+    address: string
+    currency: string
+    network: string
+    txHash: string
+  }>(null)
+  const [walletReceiptStep, setWalletReceiptStep] = useState(0)
   const [showDepositConfirmation, setShowDepositConfirmation] = useState(false)
   const [depositStep, setDepositStep] = useState<'started' | 'processing' | 'almost' | 'complete'>('started')
   const [transactionId, setTransactionId] = useState<string>('')
@@ -9525,10 +9645,78 @@ function NavTestPageContent() {
     almost: false,
     complete: false
   })
+  const walletCurrencies = [
+    { id: 'usdt', code: 'USDT', name: 'USD Tether', iconSymbol: 'usdt', iconBg: 'bg-[#14b8a6]', eurRate: 0.92, decimals: 2, availableBalance: '0.00' },
+    { id: 'btc', code: 'BTC', name: 'Bitcoin', iconSymbol: 'btc', iconBg: 'bg-[#f59e0b]', eurRate: 79400, decimals: 8, availableBalance: '0.00000620' },
+    { id: 'eth', code: 'ETH', name: 'Ethereum', iconSymbol: 'eth', iconBg: 'bg-[#60a5fa]', eurRate: 4100, decimals: 8, availableBalance: '0.00000000' },
+    { id: 'ltc', code: 'LTC', name: 'Litecoin', iconSymbol: 'ltc', iconBg: 'bg-[#3b82f6]', eurRate: 92, decimals: 8, availableBalance: '0.00000000' },
+    { id: 'doge', code: 'DOGE', name: 'Dogecoin', iconSymbol: 'doge', iconBg: 'bg-[#eab308]', eurRate: 0.17, decimals: 8, availableBalance: '0.00000000' },
+    { id: 'xrp', code: 'XRP', name: 'Ripple', iconSymbol: 'xrp', iconBg: 'bg-[#94a3b8]', eurRate: 0.58, decimals: 8, availableBalance: '0.00000000' },
+    { id: 'link', code: 'LINK', name: 'Chainlink', iconSymbol: 'link', iconBg: 'bg-[#2563eb]', eurRate: 16.4, decimals: 8, availableBalance: '0.00000000' },
+  ] as const
+  const selectedWalletCurrency = walletCurrencies.find((currency) => currency.id === selectedPaymentMethod) ?? walletCurrencies[0]
+  const filteredWalletCurrencies = walletCurrencies.filter((currency) =>
+    `${currency.code} ${currency.name}`.toLowerCase().includes(walletCurrencySearch.toLowerCase())
+  )
+  const parseWalletFiatAmount = (value: string) => {
+    const normalized = value.replace(/,/g, '')
+    return Number.parseFloat(normalized) || 0
+  }
+  const formatWalletFiatAmount = (value: number) => new Intl.NumberFormat('en-GB', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value)
+  const walletEurAmount = parseWalletFiatAmount(walletAmountInput)
+  const walletCryptoAmount = walletEurAmount > 0 ? walletEurAmount / selectedWalletCurrency.eurRate : 0
+  const walletCryptoAmountText = walletCryptoAmount.toFixed(selectedWalletCurrency.decimals)
+  const walletNetworks = ['ERC20', 'TRC20', 'BEP20', 'Solana'] as const
+  const walletDepositAddress = `${selectedWalletCurrency.code.toLowerCase()}-${walletSelectedNetwork.toLowerCase()}-4f8a7c2e91d3`
+  const sanitizeWalletAmountDraft = (value: string) => {
+    const sanitized = value.replace(/[^\d.]/g, '')
+    const parts = sanitized.split('.')
+    const whole = parts[0] ?? ''
+    const decimals = (parts[1] ?? '').slice(0, 2)
+    return parts.length > 1 ? `${whole}.${decimals}` : whole
+  }
+  const walletFakeQrPattern = [
+    "1111111000101",
+    "1000001011101",
+    "1011101010001",
+    "1011101001111",
+    "1011101010001",
+    "1000001010111",
+    "1111111010101",
+    "0000000010101",
+    "1010111110101",
+    "1110100011101",
+    "1000111010001",
+    "1011100011111",
+    "1111111010001",
+  ] as const
+  const walletExplorerBaseByNetwork: Record<string, string> = {
+    ERC20: 'https://etherscan.io/tx/',
+    TRC20: 'https://tronscan.org/#/transaction/',
+    BEP20: 'https://bscscan.com/tx/',
+    Solana: 'https://solscan.io/tx/',
+  }
+  const walletExplorerUrl = walletReceipt
+    ? `${walletExplorerBaseByNetwork[walletReceipt.network] ?? 'https://etherscan.io/tx/'}${walletReceipt.txHash}`
+    : '#'
+  const walletReceiptSteps = ['Submitted', 'Broadcasting', 'Confirming', 'Completed'] as const
   const [showToast, setShowToast] = useState(false)
   const [toastMessage, setToastMessage] = useState('')
   const [toastAction, setToastAction] = useState<{ label: string; onClick: () => void } | null>(null)
   const [sportsFeatureTourOpen, setSportsFeatureTourOpen] = useState(false)
+
+  useEffect(() => {
+    const syncTabletHeader = () => {
+      setIsTabletHeader(window.innerWidth < HEADER_COMPACT_BREAKPOINT)
+    }
+
+    syncTabletHeader()
+    window.addEventListener('resize', syncTabletHeader)
+    return () => window.removeEventListener('resize', syncTabletHeader)
+  }, [HEADER_COMPACT_BREAKPOINT])
 
   useEffect(() => {
     const handleProfitBoostOptInToggled = (evt: Event) => {
@@ -9543,11 +9731,182 @@ function NavTestPageContent() {
     return () => window.removeEventListener('profit-boost-optin-toggled', handleProfitBoostOptInToggled as EventListener)
   }, [setShowToast, setToastMessage, setToastAction])
 
+  useEffect(() => {
+    if (!walletReceipt) return
+    setWalletReceiptStep(0)
+    const t1 = window.setTimeout(() => setWalletReceiptStep(1), 1200)
+    const t2 = window.setTimeout(() => setWalletReceiptStep(2), 2800)
+    const t3 = window.setTimeout(() => setWalletReceiptStep(3), 5200)
+    return () => {
+      window.clearTimeout(t1)
+      window.clearTimeout(t2)
+      window.clearTimeout(t3)
+    }
+  }, [walletReceipt])
+
+  useEffect(() => {
+    if (depositDrawerOpen) return
+    setWalletQrOpen(false)
+  }, [depositDrawerOpen])
+
   
   const [accountDrawerOpen, setAccountDrawerOpen] = useState(false)
   const [vipDrawerOpen, setVipDrawerOpen] = useState(false)
-  const [accountDrawerView, setAccountDrawerView] = useState<'account' | 'notifications'>('account')
+  const [accountDrawerView, setAccountDrawerView] = useState<'account' | 'profile' | 'notifications' | 'bonus' | 'transactions'>('account')
+  const [accountIdCopied, setAccountIdCopied] = useState(false)
   const webInboxUnreadCount = 2
+  const [accountBonusTab, setAccountBonusTab] = useState<'available' | 'active' | 'history'>('available')
+  const [accountLanguageMenuOpen, setAccountLanguageMenuOpen] = useState(false)
+  const [accountBonusExpandedId, setAccountBonusExpandedId] = useState<string | null>(null)
+  const [accountBonusFilterOpen, setAccountBonusFilterOpen] = useState(false)
+  const [accountBonusHistoryStatusFilter, setAccountBonusHistoryStatusFilter] = useState<'ALL' | 'ACTIVE' | 'EXPIRED' | 'CANCELLED' | 'COMPLETE'>('ALL')
+  const [accountBonusHistorySort, setAccountBonusHistorySort] = useState<'latest' | 'oldest'>('latest')
+  const accountBonusHistoryRows = [
+    { id: 'b1', code: 'Welcome500', amount: '$4.00', rollover: '$0.00', date: '14/03/2026', status: 'ACTIVE' },
+    { id: 'b2', code: 'Risk Free', amount: '$5.00', rollover: '$0.00', date: '12/03/2026', status: 'EXPIRED' },
+    { id: 'b3', code: 'Freespins 25', amount: '$5.00', rollover: '$0.00', date: '09/03/2026', status: 'EXPIRED' },
+    { id: 'b4', code: 'Risk Free', amount: '$10.00', rollover: '$8.00', date: '07/03/2026', status: 'CANCELLED' },
+    { id: 'b5', code: 'Welcome500', amount: '$4.00', rollover: '$0.00', date: '03/03/2026', status: 'COMPLETE' },
+  ] as const
+  const accountBonusHistoryFilteredRows = useMemo(() => {
+    const parseDate = (value: string) => {
+      const [day, month, year] = value.split('/').map((part) => Number(part))
+      return new Date(year, month - 1, day).getTime()
+    }
+
+    const filtered = accountBonusHistoryRows.filter((row) => (
+      accountBonusHistoryStatusFilter === 'ALL' || row.status === accountBonusHistoryStatusFilter
+    ))
+
+    return [...filtered].sort((a, b) => {
+      const aTime = parseDate(a.date)
+      const bTime = parseDate(b.date)
+      return accountBonusHistorySort === 'latest' ? bTime - aTime : aTime - bTime
+    })
+  }, [accountBonusHistoryRows, accountBonusHistorySort, accountBonusHistoryStatusFilter])
+  const accountCurrentLevel = 7
+  const accountBonusOffers = [
+    {
+      id: 'offer-weekend-reload',
+      title: 'Weekend Reload',
+      description: 'Extra bonus funds added on your weekend deposits.',
+      requiredLevel: 4,
+      isActive: true,
+    },
+    {
+      id: 'offer-midweek-boost',
+      title: 'Midweek Boost',
+      description: 'Get a midweek top-up on your first Wednesday deposit.',
+      requiredLevel: 6,
+      isActive: false,
+    },
+    {
+      id: 'offer-cashback-pro',
+      title: 'Cashback Pro',
+      description: 'Higher tier cashback rates and faster weekly settlements.',
+      requiredLevel: 10,
+      isActive: false,
+    },
+    {
+      id: 'offer-birthday-reward',
+      title: 'Birthday Reward',
+      description: 'Claim a birthday bonus package during your birthday week.',
+      requiredLevel: 11,
+      isActive: false,
+    },
+    {
+      id: 'offer-vip-risk-free',
+      title: 'VIP Risk Free',
+      description: 'Get a larger protected bet limit on selected sportsbook markets.',
+      requiredLevel: 12,
+      isActive: false,
+    },
+    {
+      id: 'offer-elite-boost',
+      title: 'Elite Deposit Boost',
+      description: 'Premium reload multipliers, priority rewards, and exclusive campaigns.',
+      requiredLevel: 15,
+      isActive: false,
+    },
+  ] as const
+  const accountActiveBonuses = useMemo(
+    () => accountBonusOffers.filter((offer) => offer.isActive && offer.requiredLevel <= accountCurrentLevel),
+    [accountBonusOffers, accountCurrentLevel]
+  )
+  const [accountTransactionExpandedId, setAccountTransactionExpandedId] = useState<string | null>(null)
+  const [accountTransactionCopiedReferenceId, setAccountTransactionCopiedReferenceId] = useState<string | null>(null)
+  const [accountTransactionFilterOpen, setAccountTransactionFilterOpen] = useState(false)
+  const [accountTransactionStatusFilter, setAccountTransactionStatusFilter] = useState<'ALL' | 'COMPLETED' | 'PENDING' | 'CREDITED'>('ALL')
+  const [accountTransactionSort, setAccountTransactionSort] = useState<'latest' | 'oldest'>('latest')
+  const [accountTransactionTypeFilter, setAccountTransactionTypeFilter] = useState<'ALL' | 'DEPOSIT' | 'WITHDRAWAL' | 'BONUS'>('ALL')
+  const accountTransactionRows = [
+    { id: 't1', date: '18/02/2026', type: 'DEPOSIT', method: 'Bitcoin', amount: '+$500.00', status: 'COMPLETED', reference: 'TXN-8847291' },
+    { id: 't2', date: '15/02/2026', type: 'WITHDRAWAL', method: 'Bitcoin', amount: '-$200.00', status: 'COMPLETED', reference: 'TXN-8847290' },
+    { id: 't3', date: '12/02/2026', type: 'DEPOSIT', method: 'Credit Card', amount: '+$100.00', status: 'COMPLETED', reference: 'TXN-8847289' },
+    { id: 't4', date: '10/02/2026', type: 'BONUS', method: 'System', amount: '+$25.00', status: 'CREDITED', reference: 'TXN-8847288' },
+    { id: 't5', date: '08/02/2026', type: 'WITHDRAWAL', method: 'Bitcoin', amount: '-$1000.00', status: 'PENDING', reference: 'TXN-8847287' },
+    { id: 't6', date: '05/02/2026', type: 'DEPOSIT', method: 'Ethereum', amount: '+$250.00', status: 'COMPLETED', reference: 'TXN-8847286' },
+  ] as const
+  const accountTransactionFilteredRows = useMemo(() => {
+    const parseDate = (value: string) => {
+      const [day, month, year] = value.split('/').map((part) => Number(part))
+      return new Date(year, month - 1, day).getTime()
+    }
+    const filtered = accountTransactionRows.filter((row) => {
+      const statusOk = accountTransactionStatusFilter === 'ALL' || row.status === accountTransactionStatusFilter
+      const typeOk = accountTransactionTypeFilter === 'ALL' || row.type === accountTransactionTypeFilter
+      return statusOk && typeOk
+    })
+    return [...filtered].sort((a, b) => {
+      const aTime = parseDate(a.date)
+      const bTime = parseDate(b.date)
+      return accountTransactionSort === 'latest' ? bTime - aTime : aTime - bTime
+    })
+  }, [accountTransactionRows, accountTransactionSort, accountTransactionStatusFilter, accountTransactionTypeFilter])
+  const [profileForm, setProfileForm] = useState({
+    username: '5Aces',
+    email: 'christopher.hunt86@gmail.com',
+    fullName: '',
+    day: '',
+    month: '',
+    year: '',
+    gender: '',
+    country: 'Cyprus',
+    city: '',
+    stateOrProvince: '',
+    address: '',
+    code: '',
+    phone: '',
+    postalCode: '',
+  })
+  const [isProfileSaving, setIsProfileSaving] = useState(false)
+  const countryDialCode = useMemo(() => {
+    const dialByCountry: Record<string, string> = {
+      Cyprus: '+357',
+      'United Kingdom': '+44',
+      'United States': '+1',
+      Germany: '+49',
+    }
+    return dialByCountry[profileForm.country] ?? '+357'
+  }, [profileForm.country])
+
+  // Prevent page scroll behind account drawer on desktop.
+  // On mobile, keep body overflow untouched so Vaul drag-to-close stays responsive.
+  useEffect(() => {
+    if (!accountDrawerOpen || isMobile) return
+    const html = document.documentElement
+    const body = document.body
+    const prevHtmlOverflow = html.style.overflow
+    const prevBodyOverflow = body.style.overflow
+
+    html.style.overflow = 'hidden'
+    body.style.overflow = 'hidden'
+
+    return () => {
+      html.style.overflow = prevHtmlOverflow
+      body.style.overflow = prevBodyOverflow
+    }
+  }, [accountDrawerOpen, isMobile])
 
   // Mutual exclusion helpers — only one drawer open at a time
   const openAccountDrawer = useCallback(() => {
@@ -9648,9 +10007,7 @@ function NavTestPageContent() {
   const [betslipOpen, setBetslipOpen] = useState(false)
   const [betslipMinimized, setBetslipMinimized] = useState(false)
   const [betslipManuallyClosed, setBetslipManuallyClosed] = useState(false)
-  const [activeSport, setActiveSport] = useState<string>(() => {
-    return 'Football'
-  })
+  const [activeSport, setActiveSport] = useState<string>('')
   
   // Read sport from URL query param (e.g. /sports?sport=Football)
   useEffect(() => {
@@ -10020,6 +10377,12 @@ function NavTestPageContent() {
   }, [])
 
   useEffect(() => {
+    if (!mounted) return
+    const timer = window.setTimeout(() => setBootReady(true), 1200)
+    return () => window.clearTimeout(timer)
+  }, [mounted])
+
+  useEffect(() => {
     if (!mounted || isMobile || !showSports || showVipRewards || showMyBets) return
     if (typeof window === 'undefined') return
 
@@ -10034,12 +10397,8 @@ function NavTestPageContent() {
   }, [mounted, isMobile, showSports, showVipRewards, showMyBets, SPORTS_FEATURE_TOUR_KEY, setBetslipOpen, setBetslipMinimized])
 
   // Don't render until mounted to prevent hydration issues
-  if (!mounted) {
-    return (
-      <div className="w-full bg-[#1a1a1a] text-white font-figtree overflow-x-hidden min-h-screen flex items-center justify-center">
-        <div className="text-white/70">Loading...</div>
-      </div>
-    )
+  if (!mounted || !bootReady) {
+    return <BrandLoaderScreen />
   }
 
   const sidebarMenuItems = [
@@ -10106,7 +10465,7 @@ function NavTestPageContent() {
                   { label: 'Casino', onClick: () => { router.push('/casino'); setQuickLinksOpen(false); } },
                   { label: 'Live Casino', onClick: () => { router.push('/casino?tab=live'); setQuickLinksOpen(false); } },
                   { label: 'Poker', onClick: () => { router.push('/casino?poker=true'); setQuickLinksOpen(false); } },
-                  { label: 'VIP Rewards', onClick: () => { setShowVipRewards(true); setShowSports(false); setQuickLinksOpen(false); window.scrollTo(0, 0); } },
+                  { label: 'Promotions', onClick: () => { router.push('/casino?vip=true'); setQuickLinksOpen(false); } },
                   { label: 'Other', onClick: () => { setQuickLinksOpen(false); } },
                 ].map((item) => (
                   <button
@@ -10142,7 +10501,7 @@ function NavTestPageContent() {
       <motion.header 
         data-nav-header
         className={cn(
-          "bg-[#2D2E2C] dark:bg-[#2D2E2C] border-b border-white/10 h-16 flex items-center justify-between z-[101] fixed right-0",
+          "border-b border-white/10 h-16 flex items-center justify-between z-[101] fixed right-0 transition-[left,background-color] duration-200 ease-linear",
           isMobile ? "left-0 px-3" : (sidebarOpen ? "left-[16rem] px-6" : "left-[3rem] px-6"),
           isMobile && quickLinksOpen && "border-t-0"
         )}
@@ -10156,12 +10515,13 @@ function NavTestPageContent() {
           duration: 0.3
         } : {}}
         style={{ 
-          backgroundColor: 'var(--ds-nav-bg, #2D2E2C)',
+          backgroundColor: 'rgba(18, 20, 23, 0.96)',
           pointerEvents: 'auto',
-          top: isMobile ? (quickLinksOpen ? 40 : 0) : 0,
           zIndex: 101,
           position: 'fixed',
-          boxShadow: '0 -200px 0 0 var(--ds-nav-bg, #2D2E2C)',
+          boxShadow: '0 -200px 0 0 rgba(18, 20, 23, 0.97)',
+          backdropFilter: 'blur(22px) saturate(112%)',
+          WebkitBackdropFilter: 'blur(22px) saturate(112%)',
         }}
       >
           <div className="flex items-center gap-6">
@@ -10189,90 +10549,41 @@ function NavTestPageContent() {
                 )}
                 <span className="sr-only">Toggle Sidebar</span>
               </Button>
-              <div 
-                className="relative h-8 w-[120px] flex items-center cursor-pointer"
+              <div
+                className="relative h-8 w-[136px] flex items-center cursor-pointer"
                 onClick={() => {
                   router.push('/')
                 }}
               >
-                {currentBrand.logo}
+                <img
+                  src="/logos/BHGL_logo-1773311608241-DDbBBO6v.png"
+                  alt="Betheat"
+                  className="w-full h-full object-contain"
+                />
               </div>
               </>
             )}
             
             {/* Navigation Menu - Desktop only */}
-            {!isMobile && (
+            {!isCompactHeader && (
               <nav className="flex-1 flex items-center z-[110] -ml-1" style={{ pointerEvents: 'auto' }}>
                 <SidebarMenu className="flex flex-row items-center gap-2">
-                  {/* Sidebar collapse toggle — always visible on desktop */}
-                  <div className="flex items-center gap-1.5 mr-1">
+                  {/* Sidebar collapse toggle — left slot to match casino */}
+                  <div className="order-first shrink-0 flex items-center gap-1.5 mr-1">
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => {
-                        if (sidebarState === 'collapsed') {
-                          useChatStore.getState().setIsOpen(false)
-                        }
-                        toggleSidebar()
-                      }}
+                      onClick={() => toggleSidebar()}
                       className="h-8 w-8 text-white/40 hover:text-white hover:bg-white/10"
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="3" y="3" width="18" height="18" rx="2" />
-                        <line x1="9" y1="3" x2="9" y2="21" />
+                      <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none">
+                        <rect x="1" y="2.75" width="14" height="2" rx="1" fill="currentColor" />
+                        <rect x="1" y="7" width="10" height="2" rx="1" fill="currentColor" />
+                        <rect x="1" y="11.25" width="6" height="2" rx="1" fill="currentColor" />
                       </svg>
                     </Button>
                     <div className="w-px h-5 bg-white/20" />
                   </div>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      className={cn(
-                        "h-10 min-w-[80px] px-4 py-2 rounded-small text-sm font-medium justify-center relative overflow-visible data-[active=true]:bg-transparent [&>span]:!flex-initial",
-                        "hover:bg-white/5 hover:text-white transition-colors",
-                        "text-white/70 cursor-pointer",
-                        showSports && "!text-white"
-                      )}
-                      style={{ pointerEvents: 'auto' } as React.CSSProperties}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        e.stopPropagation()
-                        setShowSports(true)
-                        setShowVipRewards(false)
-                        window.scrollTo(0, 0)
-                      }}
-                      data-active={showSports}
-                    >
-                      {showSports && (
-                        <motion.div
-                          layoutId="sportsNavPill" layout="position"
-                          className="absolute inset-0 rounded-small"
-                          style={{ backgroundColor: 'var(--ds-primary, #ee3536)' }}
-                          initial={false}
-                          transition={{ type: "spring", stiffness: 400, damping: 40 }}
-                        />
-                      )}
-                      <span className="relative z-10">Sports</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      className={cn(
-                        "h-10 min-w-[100px] px-4 py-2 rounded-small text-sm font-medium justify-center",
-                        "hover:bg-white/5 hover:text-white transition-colors",
-                        "data-[active=true]:bg-white/10 data-[active=true]:text-white",
-                        "text-white/70 active:bg-white/10 cursor-pointer"
-                      )}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        e.stopPropagation()
-                        window.location.href = '/live-betting'
-                      }}
-                    >
-                      Live Betting
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       className={cn(
@@ -10292,8 +10603,11 @@ function NavTestPageContent() {
                       {!showSports && !showVipRewards && activeSubNav !== 'Live' && (
                         <motion.div
                           layoutId="sportsNavPill" layout="position"
-                          className="absolute inset-0 rounded-small"
-                          style={{ backgroundColor: 'var(--ds-primary, #ee3536)' }}
+                          className="absolute bottom-0 left-3 right-3 h-[2px] rounded-full"
+                          style={{
+                            backgroundColor: 'var(--ds-primary, #ee3536)',
+                            backgroundImage: 'var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%))',
+                          }}
                           initial={false}
                           transition={{ type: "spring", stiffness: 400, damping: 40 }}
                         />
@@ -10321,8 +10635,11 @@ function NavTestPageContent() {
                       {!showSports && !showVipRewards && activeSubNav === 'Live' && (
                         <motion.div
                           layoutId="sportsNavPill" layout="position"
-                          className="absolute inset-0 rounded-small"
-                          style={{ backgroundColor: 'var(--ds-primary, #ee3536)' }}
+                          className="absolute bottom-0 left-3 right-3 h-[2px] rounded-full"
+                          style={{
+                            backgroundColor: 'var(--ds-primary, #ee3536)',
+                            backgroundImage: 'var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%))',
+                          }}
                           initial={false}
                           transition={{ type: "spring", stiffness: 400, damping: 40 }}
                         />
@@ -10330,25 +10647,59 @@ function NavTestPageContent() {
                       <span className="relative z-10">Live Casino</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
-                  
+
+                  <SidebarMenuItem>
+                    <SidebarMenuButton
+                      className={cn(
+                        "h-10 min-w-[80px] px-4 py-2 rounded-small text-sm font-medium justify-center relative overflow-visible data-[active=true]:bg-transparent [&>span]:!flex-initial",
+                        "hover:bg-white/5 hover:text-white transition-colors",
+                        "text-white/70 cursor-pointer",
+                        showSports && "!text-white"
+                      )}
+                      style={{ pointerEvents: 'auto' } as React.CSSProperties}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        setShowSports(true)
+                        setShowVipRewards(false)
+                        window.scrollTo(0, 0)
+                      }}
+                      data-active={showSports}
+                    >
+                      {showSports && (
+                        <motion.div
+                          layoutId="sportsNavPill"
+                          layout="position"
+                          className="absolute bottom-0 left-3 right-3 h-[2px] rounded-full"
+                          style={{
+                            backgroundColor: 'var(--ds-primary, #ee3536)',
+                            backgroundImage: 'var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%))',
+                          }}
+                          initial={false}
+                          transition={{ type: "spring", stiffness: 400, damping: 40 }}
+                        />
+                      )}
+                      <span className="relative z-10">Sports</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       className={cn(
                         "h-10 min-w-[80px] px-4 py-2 rounded-small text-sm font-medium justify-center",
                         "hover:bg-white/5 hover:text-white transition-colors",
-                        "data-[active=true]:bg-white/10 data-[active=true]:text-white",
-                        "text-white/70 active:bg-white/10 cursor-pointer"
+                        "text-white/70 cursor-pointer"
                       )}
                       onClick={(e) => {
                         e.preventDefault()
                         e.stopPropagation()
-                        router.push('/casino?poker=true')
+                        window.location.href = '/live-betting'
                       }}
                     >
-                      Poker
+                      In-Play
                     </SidebarMenuButton>
                   </SidebarMenuItem>
-                  
+
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       className={cn(
@@ -10360,64 +10711,26 @@ function NavTestPageContent() {
                       onClick={(e) => {
                         e.preventDefault()
                         e.stopPropagation()
-                          setShowVipRewards(true)
-                          setShowSports(false)
-                        window.scrollTo(0, 0)
+                        router.push('/casino?vip=true')
                       }}
-                      data-active={showVipRewards}
+                      data-active={false}
                       style={{ pointerEvents: 'auto' } as React.CSSProperties}
                     >
                       {showVipRewards && (
                         <motion.div
-                          layoutId="sportsNavPill" layout="position"
-                          className="absolute inset-0 rounded-small"
-                          style={{ backgroundColor: 'var(--ds-primary, #ee3536)' }}
+                          layoutId="sportsNavPill"
+                          layout="position"
+                          className="absolute bottom-0 left-3 right-3 h-[2px] rounded-full"
+                          style={{
+                            backgroundColor: 'var(--ds-primary, #ee3536)',
+                            backgroundImage: 'var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%))',
+                          }}
                           initial={false}
                           transition={{ type: "spring", stiffness: 400, damping: 40 }}
                         />
                       )}
-                      <span className="relative z-10">VIP Rewards</span>
+                      <span className="relative z-10">Promotions</span>
                     </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  
-                  <SidebarMenuItem>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <SidebarMenuButton
-                          className={cn(
-                            "h-10 min-w-[80px] px-4 py-2 rounded-small text-sm font-medium justify-center",
-                            "hover:bg-white/5 hover:text-white transition-colors",
-                            "data-[active=true]:bg-white/10 data-[active=true]:text-white",
-                            "text-white/70 data-[state=open]:text-white data-[state=open]:bg-white/10"
-                          )}
-                          style={{ pointerEvents: 'auto' }}
-                        >
-                          <span className="flex items-center gap-1">
-                            Other
-                            <IconChevronDown className="h-3 w-3" />
-                          </span>
-                        </SidebarMenuButton>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent 
-                        align="end" 
-                        sideOffset={5}
-                        className="w-[200px] bg-[#2d2d2d] border-white/10 z-[120]"
-                        style={{ zIndex: 120 }}
-                      >
-                        <DropdownMenuItem className="text-white/70 hover:text-white hover:bg-white/5">
-                          <a href="/esports" className="w-full">Esports</a>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="text-white/70 hover:text-white hover:bg-white/5">
-                          <a href="#" className="w-full">Racebook</a>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="text-white/70 hover:text-white hover:bg-white/5">
-                          <a href="#" className="w-full">Contests</a>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="text-white/70 hover:text-white hover:bg-white/5">
-                          <a href="#" className="w-full">Virtuals</a>
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
                   </SidebarMenuItem>
                 </SidebarMenu>
               </nav>
@@ -10426,132 +10739,141 @@ function NavTestPageContent() {
           
           <div className={cn(
             "flex items-center",
-            isMobile ? "gap-2" : "gap-3"
+            isCompactHeader ? "gap-2" : "gap-3"
           )} style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative' }}>
-            {/* VIP Crown Button - After theme toggle on desktop, after balance on mobile */}
-            {!isMobile ? (
-              <button
-                onClick={(e) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  console.log('VIP button clicked')
-                  openVipDrawer()
-                }}
-                className={cn(
-                  "rounded-full bg-yellow-400/20 border border-yellow-400/30 flex items-center justify-center transition-colors",
-                  "hover:bg-yellow-400/30 hover:border-yellow-400/40",
-                  "active:bg-gray-500/20",
-                  vipDrawerOpen && "bg-yellow-400/30 border-yellow-400/40",
-                  "h-8 w-8"
-                )}
-                style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer' }}
-              >
-                <IconCrown className="text-yellow-400 w-4 h-4" />
-              </button>
-            ) : null}
-            
-            {/* Separator - Hide on mobile */}
-            {!isMobile && (
-              <div className="h-6 w-px bg-white/20" />
-            )}
-            
             {/* Balance and Avatar Button */}
             <Button
               variant="ghost"
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
-                console.log('Account button clicked')
                 openAccountDrawer()
               }}
               className={cn(
-                "flex items-center rounded-small transition-colors group",
-                "bg-white/5 hover:bg-white/10",
-                "active:bg-gray-500/20",
+                "grid items-center rounded-small transition-colors group relative",
+                "bg-white/[0.02] border border-white/[0.08] hover:border-white/[0.12] hover:bg-white/[0.03]",
+                "active:bg-transparent",
                 accountDrawerOpen && "text-white",
-                accountDrawerOpen && { backgroundColor: 'var(--ds-primary, #ee3536)' },
-                isMobile ? "gap-1 px-1.5 py-1" : "gap-1.5 px-2 py-1"
+                isCompactHeader
+                  ? "grid-cols-[20px_minmax(0,1fr)] gap-1.5 px-2 py-1.5 h-9"
+                  : "grid-cols-[24px_minmax(0,1fr)] gap-2 px-2.5 py-1.5 h-10"
               )}
               style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer' }}
             >
-              <div className="relative">
+              <div className={cn(
+                "relative shrink-0"
+              )}>
               <Avatar className={cn(
                 "border border-white/20 group-hover:border-white/40 transition-colors",
-                isMobile ? "h-5 w-5" : "h-6 w-6"
+                isCompactHeader ? "h-5 w-5" : "h-6 w-6"
               )}>
-                <AvatarFallback className="bg-white/10 text-white flex items-center justify-center font-semibold tracking-tight" style={{ fontSize: isMobile ? '9px' : '10px' }}>
-                  CH
+                <AvatarFallback className="bg-transparent text-white flex items-center justify-center font-semibold tracking-tight" style={{ fontSize: isCompactHeader ? '9px' : '10px' }}>
+                  <IconUser className={cn(isCompactHeader ? "h-2.5 w-2.5" : "h-3 w-3")} />
                 </AvatarFallback>
               </Avatar>
                 {/* Red dot indicator for notifications */}
-                <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-red-500" />
+                <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-[var(--ds-primary,#ff6a1a)]" />
               </div>
-              <span className={cn(
-                "font-medium text-white text-right tabular-nums transition-all duration-300",
-                isMobile ? "text-[10px] min-w-[60px]" : "text-xs min-w-[70px]"
+              <div className={cn(
+                "font-bold text-white tabular-nums transition-all duration-300 flex items-center justify-center text-center whitespace-nowrap min-w-0",
+                isCompactHeader ? "text-[10px] pl-0.5" : "text-xs pl-1.5"
               )}>
                 {currentBrand.symbol}
                 <NumberFlow value={displayBalance} format={{ notation: 'standard', minimumFractionDigits: 2, maximumFractionDigits: 2 }} />
-              </span>
+              </div>
             </Button>
-            
-            {/* VIP Crown Button - After balance on mobile only */}
-            {isMobile && (
-              <button
+
+            {isCompactHeader && (
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
-                  console.log('VIP button clicked')
-                  openVipDrawer()
+                  setSearchOverlayOpen(true)
                 }}
-                className={cn(
-                  "rounded-full bg-yellow-400/20 border border-yellow-400/30 flex items-center justify-center transition-colors",
-                  "hover:bg-yellow-400/30 hover:border-yellow-400/40",
-                  "active:bg-gray-500/20",
-                  vipDrawerOpen && "bg-yellow-400/30 border-yellow-400/40",
-                  "h-8 w-8"
-                )}
+                className="h-9 w-9 rounded-[0.56rem] border border-white/[0.08] bg-white/[0.02] text-white/75 hover:border-white/[0.12] hover:bg-white/[0.03]"
                 style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer' }}
               >
-                <IconCrown className="text-yellow-400 w-4 h-4" />
-              </button>
+                <IconSearch className="h-4 w-4" />
+              </Button>
             )}
             
 {/* Deposit Button - Desktop only */}
-            {!isMobile && (
+            {!isCompactHeader && (
               <Button
                 variant="ghost"
                 onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
-                  console.log('Deposit button clicked, setting state to true')
                   openDepositDrawer()
                 }}
                 className={cn(
-                  "flex items-center gap-1.5 px-3 py-1.5 rounded-small transition-colors group",
-                  "bg-white/5 hover:bg-white/10",
-                  "active:bg-gray-500/20",
-                  "text-xs font-semibold text-white cursor-pointer"
+                  "flex items-center gap-1.5 px-4 py-1.5 h-10 rounded-small transition-colors group",
+                  "border border-[#9a86d1]/75",
+                  "bg-[#c9b4ff] hover:bg-[#cfbcff]",
+                  "active:bg-[#bfa7fb]",
+                  "text-xs font-semibold text-[#121417] cursor-pointer"
                 )}
-                style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer' }}
+                style={{
+                  pointerEvents: 'auto',
+                  zIndex: 101,
+                  position: 'relative',
+                  cursor: 'pointer',
+                  borderRadius: '0.56rem',
+                  boxShadow: '0 6px 18px rgba(122, 92, 196, 0.28)',
+                }}
               >
-                <IconWallet className="w-3.5 h-3.5 text-white" />
-                <span className="text-white">DEPOSIT</span>
+                <IconWallet className="w-3.5 h-3.5 text-[#121417]" />
+                <span className="text-[#121417]">Wallet</span>
               </Button>
             )}
 
             {/* Chat Toggle - Desktop only, right of deposit */}
-            {!isMobile && <ChatNavToggle />}
+            {!isCompactHeader && <ChatNavToggle />}
+
+            {!isCompactHeader && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="h-9 rounded-[0.56rem] border border-white/[0.08] bg-white/[0.02] px-2.5 text-white/75 hover:border-white/[0.12] hover:bg-white/[0.03] inline-flex items-center gap-1.5"
+                    style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer' }}
+                  >
+                    <IconWorld className="h-4 w-4" />
+                    <span className="text-[11px] font-medium text-white/70">{headerLanguage}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-[140px] bg-[#121416] border-white/10 text-white">
+                  {[
+                    { code: 'EN', label: 'English' },
+                    { code: 'ES', label: 'Spanish' },
+                    { code: 'DE', label: 'German' },
+                    { code: 'FR', label: 'French' },
+                    { code: 'PT', label: 'Portuguese' },
+                  ].map((lang) => (
+                    <DropdownMenuItem
+                      key={lang.code}
+                      onClick={() => setHeaderLanguage(lang.code as 'EN' | 'ES' | 'DE' | 'FR' | 'PT')}
+                      className="text-white/75 hover:text-white hover:bg-white/5 cursor-pointer flex items-center justify-between"
+                    >
+                      <span>{lang.label}</span>
+                      {headerLanguage === lang.code && <IconCheck className="h-3.5 w-3.5 text-white/90" />}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
         </motion.header>
 
-        {/* Sports Sub Nav - Sticky with glass effect — hide during page transitions (e.g. sports→VIP) */}
+        {/* Sports Sub Nav - Casino-style shell */}
         {showSports && !isPageTransitioning && (
           <motion.div
             data-sub-nav
             className={cn(
-              "fixed z-[100] bg-white/60 dark:bg-[#1a1a1a]/60 backdrop-blur-xl border-b border-white/10 py-3 shadow-sm",
-              isMobile ? "left-0 right-0" : "px-6"
+              "fixed z-[90] bg-white dark:bg-[#1a1a1a]/60 dark:backdrop-blur-xl border-b border-gray-200 dark:border-white/10 py-3 shadow-sm",
+              isMobile ? "left-0 right-0 overflow-hidden" : "px-6"
             )}
             initial={false}
             animate={{
@@ -10583,66 +10905,30 @@ function NavTestPageContent() {
             }}
           >
             <div className="flex items-center gap-1.5">
-              {/* Search Icon - Desktop Only, Left of My Bets */}
-              {!isMobile && (
-                <div className="flex-shrink-0">
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault()
-                      e.stopPropagation()
-                      setSearchOverlayOpen(true)                    }}
-                    className="flex flex-col items-center justify-center gap-1 min-w-[60px] px-2 py-1.5 rounded-small transition-colors hover:bg-white/5 cursor-pointer"
-                    style={{ pointerEvents: 'auto', zIndex: 10 }}
-                  >
-                    <IconSearch className="w-5 h-5 text-white/70" />
-                    <span className="text-[10px] text-white/70 font-medium">Search</span>
-                  </button>
-                </div>
-              )}
-              
-              {/* My Bets Button - Always visible, doesn't scroll */}
+              {/* Settings button - fixed in sub nav */}
               <div className="flex-shrink-0 relative">
                 <button
-                  data-tour-target="sports-my-bets"
+                  data-subnav-plain="true"
                   onClick={(e) => {
                     e.preventDefault()
                     e.stopPropagation()
-                    // Clear alert when My Bets is clicked
-                    setMyBetsAlertCount(0)
-                    setMyBetsInitialFilter('all')
-                    setShowMyBets(true); window.scrollTo(0, 0)
+                    window.dispatchEvent(new CustomEvent('sportsbook:open-settings'))
                   }}
                   className={cn(
-                    "flex flex-col items-center justify-center gap-1 min-w-[60px] px-2 py-1.5 rounded-small transition-all duration-300 cursor-pointer relative",
-                    showMyBets ? "bg-white/10" : "hover:bg-white/5",
+                    "appearance-none border-0 shadow-none outline-none bg-transparent hover:bg-white/5 flex flex-col items-center justify-center gap-1 min-w-[60px] px-2 py-1.5 rounded-small transition-all duration-300 cursor-pointer relative",
                     isMobile && "pb-3"
                   )}
-                  style={{ position: 'relative', overflow: 'visible' }}
+                  style={{ position: 'relative', overflow: 'visible', WebkitAppearance: 'none', MozAppearance: 'none' }}
                 >
-                  <div className="relative">
-                  <IconTicket className={cn("w-5 h-5 transition-opacity duration-300", showMyBets ? "opacity-100 text-white" : "opacity-70 text-white/70")} />
-                    {myBetsAlertCount > 0 && (
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ type: "spring", stiffness: 500, damping: 15 }}
-                        className="absolute -top-0.5 -right-0.5 h-3.5 w-3.5 rounded-full bg-red-500 flex items-center justify-center shadow-lg"
-                      >
-                        <span className="text-[8px] font-bold text-white leading-none">
-                          {myBetsAlertCount > 9 ? '9+' : myBetsAlertCount}
-                        </span>
-                      </motion.div>
-                    )}
-                  </div>
-                  <span className={cn("text-[10px] font-medium transition-colors duration-300", showMyBets ? "text-white" : "text-white/70")}>My Bets</span>
-                  {/* Red underline indicator */}
-                  <div 
+                  <IconSettings className="w-5 h-5 text-white/70 transition-opacity duration-300" />
+                  <span className="text-[10px] font-medium text-white/70 transition-colors duration-300">Settings</span>
+                  <div
                     className={cn(
                       "absolute left-1/2 -translate-x-1/2 h-0.5 rounded-full transition-all duration-300 ease-in-out z-10",
-                      showMyBets ? "w-8 opacity-100" : "w-0 opacity-0",
+                      "w-0 opacity-0",
                       isMobile ? "bottom-0" : "-bottom-2"
                     )}
-                    style={showMyBets ? { backgroundColor: 'var(--ds-primary, #ee3536)' } : {}}
+                    style={{ backgroundColor: 'var(--ds-primary, #ee3536)' }}
                   />
                 </button>
               </div>
@@ -10677,7 +10963,6 @@ function NavTestPageContent() {
                 } as React.CSSProperties}
               >
                 {[
-                  { icon: '/sports_icons/my-feed.svg', label: 'My Feed' },
                   { icon: '/sports_icons/baseball.svg', label: 'Baseball' },
                   { icon: '/sports_icons/soccer.svg', label: 'Soccer' },
                   { icon: '/sports_icons/tennis.svg', label: 'Tennis' },
@@ -10688,50 +10973,32 @@ function NavTestPageContent() {
                   { icon: '/sports_icons/rugby.svg', label: 'Rugby' },
                   { icon: '/sports_icons/Hockey.svg', label: 'Hockey' },
                   { icon: '/sports_icons/Basketball.svg', label: 'Basketball' },
-                  { icon: '/sports_icons/pool.svg', label: 'Pool' },
-                  { icon: '/sports_icons/lacrosse.svg', label: 'Lacrosse' },
+                  { icon: '/sports_icons/zClass_Darts_v2.svg', label: 'Darts' },
+                  { icon: '/sports_icons/zClass_Badminton.svg', label: 'Badminton' },
                 ].map((sport, index) => {
                   const isActive = sport.label === activeSport && !showMyBets
                   return (
                     <button
                       key={sport.label}
                       type="button"
-                      data-tour-target={sport.label === 'My Feed' ? 'sports-my-feed' : undefined}
+                      data-subnav-plain="true"
+                      data-active={isActive ? "true" : "false"}
                       onClick={() => {
                         // Deactivate My Bets when clicking a sport
                         if (showMyBets) setShowMyBets(false)
-                        const sportRoutes: Record<string, string> = {
-                          'My Feed': '/sports/my-feed',
-                          'Baseball': '/sports/baseball',
-                          'Soccer': '/sports/soccer',
-                          'Tennis': '/sports/tennis',
-                          'Table Tennis': '/sports/table-tennis',
-                          'Football': '/sports/football',
-                          'Volleyball': '/sports/volleyball',
-                          'MMA': '/sports/mma',
-                          'Rugby': '/sports/rugby',
-                          'Hockey': '/sports/hockey',
-                          'Basketball': '/sports/basketball',
-                          'Pool': '/sports/pool',
-                          'Lacrosse': '/sports/lacrosse',
-                        }
-                        const route = sportRoutes[sport.label]
-                        if (route) {
-                          setLoadingNav(sport.label)
-                          router.push(route)
-                          return
-                        }
                         setActiveSport(sport.label)
                       }}
                       className={cn(
-                        "flex flex-col items-center justify-center gap-1 min-w-[60px] px-2 py-1.5 rounded-small transition-all duration-300 cursor-pointer flex-shrink-0 relative", loadingNav === sport.label && "opacity-40",
-                        "hover:bg-white/5 active:bg-white/15",
+                        "appearance-none border-0 shadow-none outline-none bg-transparent hover:bg-white/5 flex flex-col items-center justify-center gap-1 min-w-[56px] px-2 py-1.5 rounded-small transition-all duration-300 cursor-pointer flex-shrink-0 relative",
                         isActive && "bg-white/10",
+                        loadingNav === sport.label && "opacity-40",
                         isMobile && "pb-3" // Add extra padding bottom on mobile to accommodate the red line
                       )}
                       style={{
                         position: 'relative',
                         overflow: 'visible',
+                        WebkitAppearance: 'none',
+                        MozAppearance: 'none',
                         zIndex: isActive ? 10 : 1,
                         pointerEvents: 'auto',
                         userSelect: 'none',
@@ -10741,8 +11008,8 @@ function NavTestPageContent() {
                       <img
                         src={sport.icon}
                         alt={sport.label}
-                        width={20}
-                        height={20}
+                        width={16}
+                        height={16}
                         className={cn(
                           "object-contain transition-opacity duration-300 pointer-events-none",
                           isActive ? "opacity-100" : "opacity-70"
@@ -10787,11 +11054,11 @@ function NavTestPageContent() {
         {/* Deposit Drawer - Rendered outside header to avoid conflicts */}
         <Drawer open={depositDrawerOpen} onOpenChange={handleDepositDrawerOpenChange} direction={isMobile ? "bottom" : "right"} shouldScaleBackground={false}>
           <DrawerContent 
-                showOverlay={isMobile}
+                showOverlay={true}
+                overlayClassName={!isMobile ? "bg-[#0f1728]/52 backdrop-blur-[2px]" : "bg-black/45 backdrop-blur-[1.5px]"}
                 className={cn(
-                  "bg-white text-gray-900 flex flex-col relative",
-                  "w-full sm:max-w-md border-l border-gray-200 overflow-hidden",
-                  isMobile && "rounded-t-[10px]"
+                  "w-full sm:max-w-md bg-[var(--ds-sidebar-bg,#121417)] text-white flex flex-col overscroll-contain outline-none",
+                  isMobile ? "!border-0 rounded-t-[10px]" : "border-l border-white/10"
                 )}
                 style={isMobile ? {
                   height: '80vh',
@@ -10803,425 +11070,387 @@ function NavTestPageContent() {
                 {isMobile && <DrawerHandle variant="dark" />}
             
                 {!isMobile && (
-              <DrawerHeader className="relative flex-shrink-0 px-4 pt-4 pb-2">
+              <DrawerHeader className="relative flex-shrink-0 px-4 pt-4 pb-2 border-b border-white/10 bg-[var(--ds-sidebar-bg,#121417)]">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-base font-semibold text-gray-900">Quick Deposit</h2>
+                  <h2 className="text-base font-semibold text-white">Wallet</h2>
                   <DrawerClose asChild>
-                    <button className="h-8 w-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors flex-shrink-0">
-                      <IconX className="h-4 w-4 text-gray-600" />
+                    <button className="h-8 w-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors flex-shrink-0">
+                      <IconX className="h-4 w-4 text-white/80" />
                     </button>
                   </DrawerClose>
               </div>
             </DrawerHeader>
             )}
-            <div className={cn("w-full overflow-y-auto flex-1 min-h-0", isMobile ? "px-4 pt-4 pb-6" : "px-4 pt-4 pb-4")} style={{ WebkitOverflowScrolling: 'touch', overflowY: 'auto', flex: '1 1 auto', minHeight: 0, paddingBottom: isMobile ? 'env(safe-area-inset-bottom, 20px)' : undefined }}>
-              {!showDepositConfirmation ? (
-              <>
-              <Card className="bg-white border border-gray-200 shadow-sm">
-                <CardContent className={cn(isMobile ? "p-4" : "p-5")}>
-                  {/* Saved Methods Dropdown */}
-                  <div className={cn(isMobile ? "mb-4" : "mb-5")}>
-                    <div className={cn("flex items-center justify-between", isMobile ? "mb-3" : "mb-3")}>
-                      <label className="block text-sm font-semibold text-gray-900">
-                        Saved Methods
-                      </label>
-                      <button
-                        onClick={() => {
-                          console.log("Add new deposit method clicked");
-                          // Handle adding new deposit method
+            <div className={cn("flex-1 overflow-y-auto text-white", isMobile ? "px-4 pt-4 pb-4" : "px-4 pt-6 pb-4")} style={{ WebkitOverflowScrolling: 'touch' }}>
+              {walletReceipt ? (
+                <div className="space-y-4">
+                  <div className="relative overflow-hidden rounded-lg border border-dashed border-white/[0.12] bg-white/[0.03] p-3 space-y-2">
+                    <div className="pointer-events-none absolute -left-2 top-[42%] h-4 w-4 rounded-full bg-[var(--ds-sidebar-bg,#121417)] border border-white/[0.06]" />
+                    <div className="pointer-events-none absolute -right-2 top-[42%] h-4 w-4 rounded-full bg-[var(--ds-sidebar-bg,#121417)] border border-white/[0.06]" />
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-semibold text-white">{walletReceipt.mode === 'deposit' ? 'Deposit Receipt' : 'Withdraw Receipt'}</h3>
+                      <span className="text-xs text-white/60">{walletReceipt.network}</span>
+                    </div>
+                    <div className="border-t border-dashed border-white/[0.09]" />
+                    <div className="space-y-1.5 text-xs">
+                      <div className="flex items-center justify-between"><span className="text-white/60">Amount (EUR)</span><span className="text-white/90 font-semibold">EUR {walletReceipt.amountEur}</span></div>
+                      <div className="flex items-center justify-between"><span className="text-white/60">Amount ({walletReceipt.currency})</span><span className="text-white/90 font-semibold">{walletReceipt.amountCrypto} {walletReceipt.currency}</span></div>
+                      <div className="flex items-center justify-between"><span className="text-white/60">Currency</span><span className="text-white/90 font-semibold">{walletReceipt.currency}</span></div>
+                      <div className="flex items-start justify-between gap-3">
+                        <span className="text-white/60 pt-0.5">Wallet Address</span>
+                        <span className="text-white/90 font-mono text-[11px] text-right break-all">{walletReceipt.address}</span>
+                      </div>
+                    </div>
+                    <div className="border-t border-dashed border-white/[0.09]" />
+                    <a href={walletExplorerUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-xs text-[#c9b4ff] hover:text-[#decfff] transition-colors">
+                      View on blockchain
+                      <IconExternalLink className="h-3.5 w-3.5" />
+                    </a>
+                  </div>
+
+                  <div className="rounded-lg border border-dashed border-white/[0.1] bg-white/[0.02] p-3 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-white/80 font-medium">Processing Progress</span>
+                      <span className="text-xs text-white/60">{walletReceiptStep + 1}/4</span>
+                    </div>
+                    <div className="h-1.5 w-full rounded-full bg-white/[0.06] overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all duration-500"
+                        style={{
+                          width: `${(walletReceiptStep / 3) * 100}%`,
+                          backgroundImage: 'var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%))',
                         }}
-                        className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      {walletReceiptSteps.map((step, idx) => (
+                        <div key={step} className="flex items-center gap-2">
+                          <span className={cn(
+                            "h-4 w-4 rounded-full inline-flex items-center justify-center border",
+                            walletReceiptStep >= idx ? "border-emerald-300/60 bg-emerald-400/20" : "border-white/20 bg-transparent"
+                          )}>
+                            {walletReceiptStep >= idx ? <IconCheck className="h-2.5 w-2.5 text-emerald-200" /> : null}
+                          </span>
+                          <span className={cn("text-xs", walletReceiptStep >= idx ? "text-white/90" : "text-white/55")}>{step}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-[11px] text-white/60 leading-relaxed">
+                      Transactions can take up to 10 minutes depending on blockchain network congestion.
+                    </p>
+                  </div>
+                </div>
+              ) : (
+              <div className="space-y-4">
+                <div className="relative flex items-center gap-1.5 rounded-2xl p-1.5 border border-white/10 bg-white/[0.03]">
+                  {(['deposit', 'withdraw'] as const).map((mode) => (
+                    <button
+                      key={mode}
+                      type="button"
+                      onClick={() => setWalletMode(mode)}
+                      className={cn(
+                        "relative z-10 text-white/70 hover:text-white hover:bg-white/[0.04] rounded-2xl px-4 py-1 h-9 text-[11px] font-medium transition-colors duration-300 ease-in-out focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none flex-1",
+                        walletMode === mode && "text-white"
+                      )}
+                    >
+                      {walletMode === mode && (
+                        <motion.div
+                          layoutId="walletModeTab"
+                          layout="position"
+                          className="absolute inset-0 rounded-small -z-10"
+                          style={{
+                            backgroundColor: 'transparent',
+                            backgroundImage: 'var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%))',
+                          }}
+                          transition={{ type: "spring", stiffness: 400, damping: 40 }}
+                        />
+                      )}
+                      {mode === 'deposit' ? 'Deposit' : 'Withdraw'}
+                    </button>
+                  ))}
+                </div>
+
+                {walletMode === 'withdraw' && (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-white/60">Available Balance</span>
+                      <span className="text-xs text-white/90 font-bold inline-flex items-center gap-0.5">
+                        <span>EUR</span>
+                        <NumberFlow value={displayBalance} format={{ notation: 'standard', minimumFractionDigits: 2, maximumFractionDigits: 2 }} />
+                      </span>
+                    </div>
+                    <Separator className="bg-white/[0.025]" />
+                  </>
+                )}
+                <div className="text-xs text-white/80 font-medium">Select Crypto</div>
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setWalletCurrencyMenuOpen((prev) => !prev)}
+                    className="w-full rounded-lg border border-white/10 bg-white/[0.04] px-3 py-3 flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className={cn("h-10 w-10 rounded-full flex items-center justify-center text-white text-xs font-bold", selectedWalletCurrency.iconBg)}>
+                        <span className={`icon icon-${selectedWalletCurrency.iconSymbol} text-[18px] leading-[1]`} aria-label={selectedWalletCurrency.code} />
+                      </div>
+                      <div className="text-left min-w-0">
+                        <div className="text-white text-lg leading-none font-semibold">{selectedWalletCurrency.code}</div>
+                        <div className="text-white/60 text-xs leading-tight mt-1">{selectedWalletCurrency.name}</div>
+                      </div>
+                    </div>
+                    <IconChevronDown className={cn("h-4 w-4 text-white/70 transition-transform", walletCurrencyMenuOpen && "rotate-180")} />
+                  </button>
+                  {walletCurrencyMenuOpen && (
+                    <div className="mt-2 rounded-lg border border-white/10 bg-[var(--ds-sidebar-bg,#121417)] p-3 max-h-[360px] overflow-y-auto">
+                      <div className="relative mb-3">
+                        <IconSearch className="w-4 h-4 text-white/50 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <input
+                          value={walletCurrencySearch}
+                          onChange={(e) => setWalletCurrencySearch(e.target.value)}
+                          placeholder="Search Currencies"
+                          className="w-full pl-10 pr-3 py-3 bg-white/5 border border-white/10 rounded-small text-white placeholder:text-white/50 focus:outline-none focus:border-white/20"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        {filteredWalletCurrencies.map((currency) => (
+                          <button
+                            key={currency.id}
+                            type="button"
+                            onClick={() => {
+                              setSelectedPaymentMethod(currency.id)
+                              setWalletCurrencyMenuOpen(false)
+                            }}
+                            className="w-full rounded-small px-2 py-2.5 flex items-center justify-between hover:bg-white/[0.06] transition-colors"
+                          >
+                            <div className="flex items-center gap-3 min-w-0">
+                              <div className={cn("h-10 w-10 rounded-full flex items-center justify-center text-white text-[10px] font-bold", currency.iconBg)}>
+                                <span className={`icon icon-${currency.iconSymbol} text-[18px] leading-[1]`} aria-label={currency.code} />
+                              </div>
+                              <div className="text-left min-w-0">
+                                <div className="text-white text-sm font-semibold">{currency.code}</div>
+                                <div className="text-white/60 text-xs">{currency.name}</div>
+                              </div>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-xs text-white/80 font-medium">Select Amount (EUR) *</span>
+                </div>
+                <div className="rounded-lg overflow-hidden border border-white/10 bg-white/[0.03]">
+                  <div className="flex">
+                    <span className="h-14 px-4 inline-flex items-center text-xl text-white/70 border-r border-white/10">EUR</span>
+                    <input
+                      value={walletAmountInput}
+                      onChange={(e) => {
+                        const raw = e.target.value.replace(/,/g, '')
+                        setWalletAmountInput(sanitizeWalletAmountDraft(raw))
+                      }}
+                      onFocus={() => {
+                        setWalletAmountInput((prev) => prev.replace(/,/g, ''))
+                      }}
+                      onBlur={() => {
+                        const parsed = parseWalletFiatAmount(walletAmountInput)
+                        setWalletAmountInput(formatWalletFiatAmount(parsed))
+                      }}
+                      inputMode="decimal"
+                      enterKeyHint="done"
+                      className="flex-1 h-14 bg-transparent px-4 text-2xl leading-none text-white/85 placeholder:text-white/45 focus:outline-none"
+                      placeholder="0.00"
+                    />
+                  </div>
+                  <div className="px-4 py-2 border-t border-white/[0.03] flex items-center justify-between gap-2">
+                    <span className="text-xs leading-none font-semibold text-white/90 whitespace-nowrap">
+                      {walletCryptoAmountText} {selectedWalletCurrency.code}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        try {
+                          await navigator.clipboard.writeText(walletCryptoAmountText)
+                          setWalletCryptoCopied(true)
+                          window.setTimeout(() => setWalletCryptoCopied(false), 1200)
+                        } catch {
+                          setWalletCryptoCopied(false)
+                        }
+                      }}
+                      className="h-7 w-7 rounded-[6px] bg-white/[0.08] hover:bg-white/[0.12] inline-flex items-center justify-center transition-colors"
+                      aria-label="Copy crypto amount"
+                    >
+                      {walletCryptoCopied ? <IconCheck className="h-3.5 w-3.5 text-white/90" /> : <IconCopy className="h-3.5 w-3.5 text-white/75" />}
+                    </button>
+                  </div>
+                </div>
+                <Separator className="bg-white/[0.025]" />
+
+                <div className="text-xs text-white/80 font-medium">
+                  {walletMode === 'deposit' ? 'Deposit Wallet Address' : 'Enter Wallet Address *'}
+                </div>
+                {walletMode === 'deposit' ? (
+                  <div className="flex items-center pr-4 rounded-lg overflow-hidden border border-white/10 bg-white/[0.03]">
+                    <input
+                      value={walletDepositAddress}
+                      readOnly
+                      className="flex-1 h-12 bg-transparent px-4 text-sm text-white/90 focus:outline-none"
+                    />
+                    <div className="inline-flex items-center gap-2">
+                      {!isMobile && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            setWalletQrOpen(true)
+                          }}
+                          className="h-7 w-7 rounded-[6px] bg-white/[0.08] hover:bg-white/[0.12] inline-flex items-center justify-center transition-colors"
+                          aria-label="Show wallet QR code"
+                        >
+                          <IconQrcode className="w-3.5 h-3.5 text-white/80" />
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          try {
+                            await navigator.clipboard.writeText(walletDepositAddress)
+                            setWalletAddressCopied(true)
+                            window.setTimeout(() => setWalletAddressCopied(false), 1200)
+                          } catch {
+                            setWalletAddressCopied(false)
+                          }
+                        }}
+                        className="h-7 w-7 rounded-[6px] bg-white/[0.08] hover:bg-white/[0.12] inline-flex items-center justify-center transition-colors"
+                        aria-label="Copy deposit wallet address"
                       >
-                        + Add Method
+                        {walletAddressCopied ? <IconCheck className="w-3.5 h-3.5 text-white/90" /> : <IconCopy className="w-3.5 h-3.5 text-white/75" />}
                       </button>
                     </div>
-                    <div className="relative">
-                      <div className="relative">
-                        <select
-                          value={selectedPaymentMethod}
-                          onChange={(e) => setSelectedPaymentMethod(e.target.value)}
-                          className="w-full px-4 py-3.5 bg-white border-2 border-gray-200 rounded-lg text-gray-900 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400 appearance-none cursor-pointer hover:border-gray-300 transition-all shadow-sm pr-12"
-                        >
-                          <option value="bitcoin">Bitcoin</option>
-                          <option value="card1">Mastercard **** 0740</option>
-                          <option value="card2">Visa **** 5234</option>
-                          <option value="card3">American Express **** 1234</option>
-                        </select>
-                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                          <IconChevronDown className="h-4 w-4 text-gray-600" />
-                        </div>
-                      </div>
-                    </div>
                   </div>
-
-                  <Separator className={cn("bg-gray-200", isMobile ? "my-4" : "my-5")} />
-
-                  {/* Deposit Amount */}
-                  <div>
-                    {!useManualAmount ? (
-                      <>
-                        <UsageBasedPricing
-                          className="w-full"
-                          min={25}
-                          max={10000}
-                          snapTo={25}
-                          currency={currentBrand.symbol}
-                          basePrice={0}
-                          includedCredits={0}
-                          value={depositAmount}
-                          onChange={setDepositAmount}
-                          onChangeEnd={(v) => {
-                            console.log("Deposit amount committed:", v);
-                            setDepositAmount(v);
-                          }}
-                          title=""
-                          subtitle=""
-                        />
-                        <div className="flex items-center justify-end mt-3">
-                          <button
-                            onClick={() => setUseManualAmount(true)}
-                            className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
-                          >
-                            + Add Manual Amount
-                          </button>
-                        </div>
-                      </>
-                    ) : (
-                      <div className={cn("space-y-3", isMobile && "space-y-2")}>
-                        <div>
-                          <label className={cn("block font-semibold text-gray-900 mb-2", isMobile ? "text-xs" : "text-sm")}>
-                            Deposit Amount
-                          </label>
-                          <Input
-                            type="number"
-                            min={25}
-                            max={10000}
-                            step={0.01}
-                            value={depositAmount}
-                            onChange={(e) => {
-                              const value = parseFloat(e.target.value) || 0;
-                              if (value >= 25 && value <= 10000) {
-                                setDepositAmount(value);
-                              } else if (value > 10000) {
-                                setDepositAmount(10000);
-                              } else if (value < 25 && e.target.value !== '') {
-                                setDepositAmount(25);
-                              }
-                            }}
-                            onBlur={(e) => {
-                              const value = parseFloat(e.target.value) || 25;
-                              if (value < 25) {
-                                setDepositAmount(25);
-                              } else if (value > 10000) {
-                                setDepositAmount(10000);
-                              } else {
-                                setDepositAmount(value);
-                              }
-                            }}
-                            className={cn(
-                              "w-full bg-white border-2 border-gray-200 rounded-lg text-gray-900 font-medium focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400 hover:border-gray-300 transition-all",
-                              isMobile ? "px-3 py-2.5 text-sm" : "px-4 py-3 text-base"
-                            )}
-                            placeholder="Enter amount (25 - 10,000)"
-                          />
-                          <p className={cn("text-gray-500 mt-1.5", isMobile ? "text-[10px]" : "text-xs")}>
-                            Min. {currentBrand.symbol}25 / Max. {currentBrand.symbol}10,000
-                          </p>
-                        </div>
-                        <div className="flex items-center justify-end">
-                          <button
-                            onClick={() => setUseManualAmount(false)}
-                            className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
-                          >
-                            Use Slider
-                          </button>
-                        </div>
-                      </div>
-                    )}
+                ) : (
+                  <div className="flex rounded-lg overflow-hidden border border-white/10 bg-white/[0.03]">
+                    <input
+                      value={walletAddressInput}
+                      onChange={(e) => setWalletAddressInput(e.target.value)}
+                      className="flex-1 h-12 bg-transparent px-4 text-sm text-white placeholder:text-white/45 focus:outline-none"
+                      placeholder="Enter wallet address"
+                    />
                   </div>
-
-                  <Separator className={cn("bg-gray-200", isMobile ? "my-6" : "my-8")} />
-
-                  {/* Deposit Summary */}
-                  <div>
-                    <div className={cn("bg-gray-50 rounded-lg", isMobile ? "space-y-2 p-3" : "space-y-2 p-4")}>
-                      <div className={cn("flex justify-between", isMobile ? "text-xs" : "text-sm")}>
-                        <span className="text-gray-600">Deposit Amount:</span>
-                        <span className="text-gray-900 font-medium">{currentBrand.symbol}{depositAmount.toFixed(2)}</span>
-                      </div>
-                      <div className={cn("flex justify-between", isMobile ? "text-xs" : "text-sm")}>
-                        <span className="text-gray-600">Fee (9.75%):</span>
-                        <span className="text-gray-900 font-medium">{currentBrand.symbol}{(depositAmount * 0.0975).toFixed(2)}</span>
-                      </div>
-                      <div className={cn("flex justify-between pt-1.5 border-t border-gray-200", isMobile ? "text-sm" : "text-base")}>
-                        <span className="text-gray-900 font-semibold">Total Amount:</span>
-                        <span className="text-gray-900 font-bold">{currentBrand.symbol}{(depositAmount + depositAmount * 0.0975).toFixed(2)}</span>
-                      </div>
-                    </div>
-                    <Button
-                      type="button"
-                      onClick={() => {
-                        console.log("Deposit: Proceed with amount:", depositAmount);
-                        // Show loading state
-                        setIsDepositLoading(true)
-                        
-                        // Generate transaction ID
-                        const txId = Math.floor(Math.random() * 10000000).toString()
-                        setTransactionId(txId)
-                        
-                        // After 1 second, show confirmation screen and start stepper
-                        setTimeout(() => {
-                          setIsDepositLoading(false)
-                          setShowDepositConfirmation(true)
-                          
-                          // Start with loading state for 'started'
-                          setStepLoading({started: true, processing: false, almost: false, complete: false})
-                          setTimeout(() => {
-                            setDepositStep('started')
-                            setStepLoading({started: false, processing: true, almost: false, complete: false})
-                            setTimeout(() => {
-                              setDepositStep('processing')
-                              setStepLoading({started: false, processing: false, almost: true, complete: false})
-                              setTimeout(() => {
-                                setDepositStep('almost')
-                                setStepLoading({started: false, processing: false, almost: false, complete: true})
-                                setTimeout(() => {
-                                  setDepositStep('complete')
-                                  setStepLoading({started: false, processing: false, almost: false, complete: false})
-                                }, 800)
-                              }, 1500)
-                            }, 800)
-                          }, 500)
-                        }, 1000)
+                )}
+                {walletMode === 'deposit' && walletQrOpen && typeof document !== 'undefined' && createPortal(
+                  <div
+                    className="fixed inset-0 z-[9998] bg-black/60 backdrop-blur-[1.5px] flex items-center justify-center p-4"
+                    onMouseDown={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                    }}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      setWalletQrOpen(false)
+                    }}
+                  >
+                    <div
+                      className="w-full max-w-[280px] rounded-xl border border-white/10 bg-[var(--ds-sidebar-bg,#121417)] p-3 space-y-3 shadow-2xl z-[9999]"
+                      onMouseDown={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
                       }}
-                      disabled={depositAmount < 25 || depositAmount > 10000 || isDepositLoading}
-                      className={cn("w-full bg-[#059669] text-white hover:bg-[#10b981] disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed rounded-md font-semibold transition-colors cursor-pointer", isMobile ? "h-11 mt-4 text-sm" : "h-12 mt-4")}
-                      style={{ pointerEvents: 'auto', zIndex: 10 }}
+                      onClick={(e) => e.stopPropagation()}
                     >
-                      {isDepositLoading ? (
-                        <div className="flex items-center justify-center gap-2">
-                          <IconLoader2 className="w-4 h-4 animate-spin" />
-                          <span>Processing...</span>
-                        </div>
-                      ) : (
-                        `DEPOSIT ${currentBrand.symbol}${depositAmount > 0 ? depositAmount.toFixed(2) : "0.00"}`
-                      )}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Trust Section */}
-              <div className={cn("border-t border-gray-200", isMobile ? "mt-4 pt-4" : "mt-5 pt-5 pb-4")} style={isMobile ? { paddingBottom: '0px', marginBottom: 0 } : undefined}>
-                <div className={cn("flex flex-col items-center", isMobile ? "gap-2" : "gap-2.5")}>
-                  {/* Security Badges */}
-                  <div className={cn("flex items-center", isMobile ? "gap-2" : "gap-3")}>
-                    <div className={cn("flex items-center text-gray-600", isMobile ? "gap-1" : "gap-1.5")}>
-                      <IconShield className={cn("text-green-600", isMobile ? "w-3 h-3" : "w-3.5 h-3.5")} />
-                      <span className={cn("font-medium", isMobile ? "text-[10px]" : "text-xs")}>SSL Encrypted</span>
-                    </div>
-                    <div className={cn("bg-gray-300", isMobile ? "w-px h-2.5" : "w-px h-3.5")} />
-                    <div className={cn("flex items-center text-gray-600", isMobile ? "gap-1" : "gap-1.5")}>
-                      <IconLock className={cn("text-blue-600", isMobile ? "w-3 h-3" : "w-3.5 h-3.5")} />
-                      <span className={cn("font-medium", isMobile ? "text-[10px]" : "text-xs")}>Secure Payment</span>
-                    </div>
-                  </div>
-
-                  {/* Trust Statement */}
-                  <p className={cn("text-gray-500 text-center max-w-sm leading-tight", isMobile ? "text-[10px]" : "text-xs")}>
-                    Your payment information is secure and encrypted. We never store your full card details.
-                  </p>
-                </div>
-              </div>
-              </>
-              ) : (
-                /* Deposit Confirmation Screen */
-                <div className="space-y-6">
-                  {/* Header Section */}
-                  <div className="space-y-1">
-                    <h2 className="text-2xl font-bold text-gray-900">Your deposit is on the way...</h2>
-                    <p className="text-gray-500 text-sm">Transaction ID: {transactionId}</p>
-                  </div>
-
-                  {/* Deposit Details Card */}
-                  <Card className="bg-gray-50 border border-gray-200">
-                    <CardContent className="p-4">
-                      <div className="space-y-3">
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">Deposit Amount</span>
-                          <span className="text-lg font-semibold text-gray-900">{currentBrand.symbol}{depositAmount.toFixed(2)}</span>
-                        </div>
-                        <Separator className="bg-gray-200" />
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">Payment Method</span>
-                          <span className="text-sm font-medium text-gray-900">
-                            {selectedPaymentMethod === 'bitcoin' ? 'Bitcoin' : 
-                             selectedPaymentMethod === 'card1' ? 'Mastercard **** 0740' :
-                             selectedPaymentMethod === 'card2' ? 'Visa **** 5234' :
-                             selectedPaymentMethod === 'card3' ? 'American Express **** 1234' : selectedPaymentMethod}
-                          </span>
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-sm font-semibold text-white">Wallet QR</h3>
+                        <button
+                          type="button"
+                          className="h-7 w-7 rounded-[6px] bg-white/[0.08] hover:bg-white/[0.12] inline-flex items-center justify-center transition-colors"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            setWalletQrOpen(false)
+                          }}
+                          aria-label="Close wallet QR popup"
+                        >
+                          <IconX className="h-3.5 w-3.5 text-white/80" />
+                        </button>
+                      </div>
+                      <div className="mx-auto rounded-lg border border-white/10 bg-white p-2 w-[188px]">
+                        <div
+                          className="grid gap-[2px] w-[172px] h-[172px]"
+                          style={{ gridTemplateColumns: 'repeat(13, minmax(0, 1fr))' }}
+                        >
+                          {walletFakeQrPattern.flatMap((row, rowIndex) =>
+                            row.split('').map((cell, cellIndex) => (
+                              <span
+                                key={`modal-${rowIndex}-${cellIndex}`}
+                                className={cn("rounded-[1px]", cell === '1' ? "bg-black" : "bg-white")}
+                              />
+                            ))
+                          )}
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
-                    
-                    {/* Stepper Progress Card */}
-                    <Card className="bg-white border border-gray-200 shadow-sm">
-                      <CardContent className="p-4">
-                        <div className="relative">
-                          <div className="flex items-start justify-between px-1">
-                            {/* Started Step */}
-                            <div className="flex flex-col items-center flex-1 min-w-0">
-                              <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 transition-all ${
-                                depositStep === 'started' || depositStep === 'processing' || depositStep === 'almost' || depositStep === 'complete'
-                                  ? 'bg-[#059669] shadow-sm' : 'bg-gray-200 border-2 border-gray-300'
-                              }`}>
-                                {stepLoading.started ? (
-                                  <IconLoader2 className="w-4 h-4 text-white animate-spin" />
-                                ) : depositStep === 'started' || depositStep === 'processing' || depositStep === 'almost' || depositStep === 'complete' ? (
-                                  <IconCheck className="w-5 h-5 text-white" />
-                                ) : null}
-                              </div>
-                              <span className="text-gray-900 text-xs font-medium whitespace-nowrap">Started</span>
-                            </div>
-                            
-                            {/* Connector Line */}
-                            <div className={`flex-1 h-1 mt-5 mx-2 transition-all rounded-full ${
-                              depositStep === 'processing' || depositStep === 'almost' || depositStep === 'complete'
-                                ? 'bg-[#059669]' : 'bg-gray-200'
-                            }`} />
-                            
-                            {/* Processing Step */}
-                            <div className="flex flex-col items-center flex-1 min-w-0">
-                              <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 transition-all ${
-                                depositStep === 'processing'
-                                  ? 'bg-white border-2 border-gray-300 shadow-sm' 
-                                  : depositStep === 'almost' || depositStep === 'complete'
-                                  ? 'bg-[#059669] shadow-sm'
-                                  : 'bg-gray-200 border-2 border-gray-300'
-                              }`}>
-                                {stepLoading.processing ? (
-                                  <IconLoader2 className="w-4 h-4 text-gray-900 animate-spin" />
-                                ) : depositStep === 'processing' ? (
-                                  <IconLoader2 className="w-4 h-4 text-gray-900 animate-spin" />
-                                ) : depositStep === 'almost' || depositStep === 'complete' ? (
-                                  <IconCheck className="w-5 h-5 text-white" />
-                                ) : (
-                                  <span className="text-gray-400 text-xs font-bold">B</span>
-                                )}
-                              </div>
-                              <span className={`text-xs font-medium whitespace-nowrap ${
-                                depositStep === 'processing' || depositStep === 'almost' || depositStep === 'complete'
-                                  ? 'text-gray-900' : 'text-gray-500'
-                              }`}>Processing</span>
-                            </div>
-                            
-                            {/* Connector Line */}
-                            <div className={`flex-1 h-1 mt-5 mx-2 transition-all rounded-full ${
-                              depositStep === 'almost' || depositStep === 'complete'
-                                ? 'bg-[#059669]' : 'bg-gray-200'
-                            }`} />
-                            
-                            {/* Almost Done Step */}
-                            <div className="flex flex-col items-center flex-1 min-w-0">
-                              <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 transition-all ${
-                                depositStep === 'almost' || depositStep === 'complete'
-                                  ? 'bg-[#059669] shadow-sm' : 'bg-gray-200 border-2 border-gray-300'
-                              }`}>
-                                {stepLoading.almost ? (
-                                  <IconLoader2 className="w-4 h-4 text-white animate-spin" />
-                                ) : depositStep === 'almost' || depositStep === 'complete' ? (
-                                  <IconCheck className="w-5 h-5 text-white" />
-                                ) : null}
-                              </div>
-                              <span className={`text-xs font-medium whitespace-nowrap ${
-                                depositStep === 'almost' || depositStep === 'complete'
-                                  ? 'text-gray-900' : 'text-gray-500'
-                              }`}>Almost Done</span>
-                            </div>
-                            
-                            {/* Connector Line */}
-                            <div className={`flex-1 h-1 mt-5 mx-2 transition-all rounded-full ${
-                              depositStep === 'complete'
-                                ? 'bg-[#059669]' : 'bg-gray-200'
-                            }`} />
-                            
-                            {/* Complete Step */}
-                            <div className="flex flex-col items-center flex-1 min-w-0">
-                              <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 transition-all ${
-                                depositStep === 'complete'
-                                  ? 'bg-[#059669] shadow-sm' : 'bg-gray-200 border-2 border-gray-300'
-                              }`}>
-                                {stepLoading.complete ? (
-                                  <IconLoader2 className="w-4 h-4 text-white animate-spin" />
-                                ) : depositStep === 'complete' ? (
-                                  <IconCheck className="w-5 h-5 text-white" />
-                                ) : null}
-                              </div>
-                              <span className={`text-xs font-medium whitespace-nowrap ${
-                                depositStep === 'complete'
-                                  ? 'text-gray-900' : 'text-gray-500'
-                              }`}>Complete</span>
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
+                      <p className="text-[11px] text-white/70 break-all">{walletDepositAddress}</p>
+                    </div>
+                  </div>,
+                  document.body
+                )}
 
-                    {/* Play Now Button */}
-                    {depositStep === 'complete' && (
-                      <Button
-                        variant="ghost"
-                        onClick={() => {
-                          // Close drawer first
-                          setShowDepositConfirmation(false)
-                          setDepositDrawerOpen(false)
-                          setDepositStep('started')
-                          setStepLoading({started: false, processing: false, almost: false, complete: false})
-                          
-                          // Wait for drawer to close, then animate balance
-                          setTimeout(() => {
-                            // Update balance and animate roll-up
-                            const newBalance = balance + depositAmount
-                            setBalance(newBalance)
-                            
-                            // Animate the balance roll-up
-                            const startBalance = displayBalance
-                            const endBalance = newBalance
-                            const duration = 1000 // 1 second
-                            const startTime = Date.now()
-                            
-                            const animate = () => {
-                              const elapsed = Date.now() - startTime
-                              const progress = Math.min(elapsed / duration, 1)
-                              // Easing function for smooth animation
-                              const easeOutCubic = 1 - Math.pow(1 - progress, 3)
-                              const currentBalance = Math.round(startBalance + (endBalance - startBalance) * easeOutCubic)
-                              setDisplayBalance(currentBalance)
-                              
-                              if (progress < 1) {
-                                requestAnimationFrame(animate)
-                              } else {
-                                // Show toast after animation completes
-                                const message = `Deposit of ${currentBrand.symbol}${depositAmount.toFixed(2)} was successful`
-                                console.log('Showing toast:', message)
-                                setToastMessage(message)
-                                setShowToast(true)
-                                setTimeout(() => {
-                                  console.log('Hiding toast')
-                                  setShowToast(false)
-                                }, 3000)
-                              }
-                            }
-                            requestAnimationFrame(animate)
-                          }, 300) // Small delay to ensure drawer is closed
-                        }}
-                        className="w-full h-11 mt-4 border-2 border-gray-300 text-gray-900 hover:bg-gray-50 hover:border-gray-400 rounded-md font-semibold transition-colors"
-                      >
-                        Play Now
-                      </Button>
-                    )}
+                <Separator className="bg-white/[0.025]" />
+                <div className="text-xs text-white/80 font-medium">Select Network *</div>
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setWalletNetworkMenuOpen((prev) => !prev)}
+                    className="w-full h-11 rounded-lg border border-white/10 bg-white/[0.04] px-4 flex items-center justify-between text-left"
+                  >
+                    <span className="text-xs text-white font-medium">{walletSelectedNetwork}</span>
+                    <IconChevronDown className={cn("h-4 w-4 text-white/70 transition-transform", walletNetworkMenuOpen && "rotate-180")} />
+                  </button>
+                  {walletNetworkMenuOpen && (
+                    <div className="mt-2 rounded-lg border border-white/10 bg-[var(--ds-sidebar-bg,#121417)] p-2">
+                      {walletNetworks.map((network) => (
+                        <button
+                          key={network}
+                          type="button"
+                          onClick={() => {
+                            setWalletSelectedNetwork(network)
+                            setWalletNetworkMenuOpen(false)
+                          }}
+                          className={cn(
+                            "w-full text-left rounded-small px-3 py-2 text-xs transition-colors",
+                            walletSelectedNetwork === network ? "bg-white/10 text-white" : "text-white/70 hover:bg-white/[0.06] hover:text-white"
+                          )}
+                        >
+                          {network}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
+                <Button
+                  type="button"
+                  className="w-full justify-center gap-2 h-10 px-3 border border-[#9a86d1]/75 text-[#121417] text-sm font-semibold hover:text-[#121417]"
+                  style={{ backgroundColor: '#c9b4ff', boxShadow: '0 6px 18px rgba(122, 92, 196, 0.28)' }}
+                  onClick={() => {
+                    const txHash = `0x${Array.from({ length: 32 }, () => Math.floor(Math.random() * 256).toString(16).padStart(2, '0')).join('')}`
+                    const targetAddress = walletMode === 'deposit' ? walletDepositAddress : walletAddressInput.trim()
+                    setWalletReceipt({
+                      mode: walletMode,
+                      amountEur: walletAmountInput,
+                      amountCrypto: walletCryptoAmountText,
+                      address: targetAddress,
+                      currency: selectedWalletCurrency.code,
+                      network: walletSelectedNetwork,
+                      txHash,
+                    })
+                  }}
+                  disabled={walletEurAmount <= 0 || (walletMode === 'withdraw' && !walletAddressInput.trim())}
+                >
+                  {walletMode === 'deposit' ? `Deposit ${selectedWalletCurrency.code}` : `Withdraw ${selectedWalletCurrency.code}`}
+                </Button>
+              </div>
               )}
             </div>
           </DrawerContent>
@@ -13390,11 +13619,11 @@ function NavTestPageContent() {
           shouldScaleBackground={false}
         >
           <DrawerContent 
-            showOverlay={isMobile}
+            showOverlay={true}
+            overlayClassName={!isMobile ? "bg-[#0f1728]/52 backdrop-blur-[2px]" : "bg-black/45 backdrop-blur-[1.5px]"}
             className={cn(
-              "w-full sm:max-w-md bg-white text-gray-900 flex flex-col",
-              "border-l border-gray-200",
-              isMobile && "rounded-t-[10px]"
+              "w-full sm:max-w-md bg-[var(--ds-sidebar-bg,#121417)] text-white flex flex-col overscroll-contain outline-none",
+              isMobile ? "!border-0 rounded-t-[10px]" : "border-l border-white/10"
             )}
             style={isMobile ? {
               height: '80vh',
@@ -13411,42 +13640,116 @@ function NavTestPageContent() {
                     <Button 
                       variant="ghost"
                       onClick={() => setAccountDrawerView('account')}
-                      className="h-8 w-8 p-0 hover:bg-gray-100 -ml-2"
+                      className="h-8 w-8 p-0 hover:bg-white/10 -ml-2"
                     >
-                      <IconChevronLeft className="h-5 w-5 text-gray-600" />
+                      <IconChevronLeft className="h-5 w-5 text-white/70" />
                     </Button>
-                    <h2 className="text-lg font-semibold text-gray-900">Notifications</h2>
+                    <h2 className="text-lg font-semibold text-white">Messages</h2>
+                  </div>
+                ) : accountDrawerView === 'profile' ? (
+                  <div className="flex items-center gap-3 flex-1">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setAccountDrawerView('account')}
+                      className="h-8 w-8 p-0 hover:bg-white/10 -ml-2"
+                    >
+                      <IconChevronLeft className="h-5 w-5 text-white/70" />
+                    </Button>
+                    <h2 className="text-lg font-semibold text-white">My Profile</h2>
+                  </div>
+                ) : accountDrawerView === 'bonus' ? (
+                  <div className="flex items-center gap-3 flex-1">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setAccountDrawerView('account')}
+                      className="h-8 w-8 p-0 hover:bg-white/10 -ml-2"
+                    >
+                      <IconChevronLeft className="h-5 w-5 text-white/70" />
+                    </Button>
+                    <h2 className="text-lg font-semibold text-white">My Bonus</h2>
+                  </div>
+                ) : accountDrawerView === 'transactions' ? (
+                  <div className="flex items-center gap-3 flex-1">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setAccountDrawerView('account')}
+                      className="h-8 w-8 p-0 hover:bg-white/10 -ml-2"
+                    >
+                      <IconChevronLeft className="h-5 w-5 text-white/70" />
+                    </Button>
+                    <h2 className="text-lg font-semibold text-white">Transactions History</h2>
                   </div>
                 ) : (
                   <div className="flex items-center gap-3 flex-1">
-                    <Avatar className="h-10 w-10 border border-gray-200">
-                      <AvatarFallback className="bg-gray-100 text-gray-600 flex items-center justify-center text-sm font-semibold">
-                        ch
+                    <Avatar className="h-10 w-10 border border-white/20">
+                      <AvatarFallback className="bg-transparent text-white flex items-center justify-center text-sm font-semibold">
+                        <IconUser className="h-5 w-5" />
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
-                      <div className="text-sm font-medium text-gray-900 text-left">ch</div>
-                      <div className="text-xs text-gray-500 text-left">b1767721</div>
+                      <div className="text-sm font-medium text-white text-left">5Aces</div>
+                      <div className="text-[12px] text-white/55 text-left inline-flex items-center gap-1.5 leading-none mt-0.5">
+                        <span>#290847</span>
+                        <button
+                          type="button"
+                          onClick={async (e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            try {
+                              await navigator.clipboard.writeText('#290847')
+                              setAccountIdCopied(true)
+                              window.setTimeout(() => setAccountIdCopied(false), 1200)
+                            } catch {
+                              setAccountIdCopied(false)
+                            }
+                          }}
+                          className="h-4 w-4 inline-flex items-center justify-center text-white/55 hover:text-white transition-colors"
+                          aria-label="Copy account ID"
+                        >
+                          {accountIdCopied ? <IconCheck className="h-3 w-3" /> : <IconCopy className="h-3 w-3" />}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )}
-                <div className="flex items-center gap-2">
-                  {accountDrawerView === 'notifications' ? null : (
-                    <button 
-                      onClick={() => setAccountDrawerView('notifications')}
-                      className={cn(
-                        "h-8 w-8 rounded-full flex items-center justify-center transition-colors flex-shrink-0",
-                        "bg-gray-100 hover:bg-gray-200 relative"
-                      )}
-                    >
-                      <IconBell className="h-4 w-4 text-gray-600" />
-                      <div className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500 border-2 border-white" />
-                    </button>
+                <div className="relative flex items-center gap-2">
+                  <button
+                    type="button"
+                    className="h-8 rounded-full bg-white/10 hover:bg-white/15 px-2.5 flex items-center justify-center gap-1.5 transition-colors flex-shrink-0"
+                    aria-label="Language"
+                    onClick={() => setAccountLanguageMenuOpen((prev) => !prev)}
+                  >
+                    <IconWorld className="h-4 w-4 text-white/75" />
+                    <span className="text-[11px] font-medium text-white/70">{headerLanguage}</span>
+                  </button>
+                  {accountLanguageMenuOpen && (
+                    <div className="absolute right-0 top-[calc(100%+8px)] z-[10090] w-[156px] rounded-md border border-white/10 bg-[#121416] p-1.5 shadow-[0_12px_30px_rgba(0,0,0,0.55)]">
+                      {[
+                        { code: 'EN', label: 'English' },
+                        { code: 'ES', label: 'Spanish' },
+                        { code: 'DE', label: 'German' },
+                        { code: 'FR', label: 'French' },
+                        { code: 'PT', label: 'Portuguese' },
+                      ].map((lang) => (
+                        <button
+                          key={lang.code}
+                          type="button"
+                          onClick={() => {
+                            setHeaderLanguage(lang.code as 'EN' | 'ES' | 'DE' | 'FR' | 'PT')
+                            setAccountLanguageMenuOpen(false)
+                          }}
+                          className="w-full rounded-small px-2 py-1.5 text-left text-sm text-white/80 hover:bg-white/[0.06] hover:text-white flex items-center justify-between"
+                        >
+                          <span>{lang.label}</span>
+                          {headerLanguage === lang.code && <IconCheck className="h-3.5 w-3.5 text-white/90" />}
+                        </button>
+                      ))}
+                    </div>
                   )}
                   {!isMobile && (
                     <DrawerClose asChild>
-                      <button className="h-8 w-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors flex-shrink-0">
-                        <IconX className="h-4 w-4 text-gray-600" />
+                      <button className="h-8 w-8 rounded-full bg-white/10 hover:bg-white/15 flex items-center justify-center transition-colors flex-shrink-0">
+                        <IconX className="h-4 w-4 text-white/75" />
                       </button>
                     </DrawerClose>
                   )}
@@ -13454,77 +13757,91 @@ function NavTestPageContent() {
               </div>
             </DrawerHeader>
             
-            <div className={cn("flex-1 overflow-y-auto", isMobile ? "px-4 pt-4 pb-4" : "px-4 pt-6 pb-4")}>
+            <div className={cn("flex-1 overflow-y-auto overscroll-contain text-white", isMobile ? "px-4 pt-4 pb-4" : "px-4 pt-6 pb-4")}>
               {accountDrawerView === 'account' ? (
                 <>
                   {/* Balance Information */}
                   <div className="mb-4">
-                    <div className="bg-gray-50 rounded-lg px-3 py-3 space-y-3">
+                    <div className="bg-white/[0.04] border border-white/10 rounded-lg px-3 py-3 space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600">Available Balance</span>
-                        <span className="text-sm font-semibold text-gray-900">
+                        <span className="text-sm text-white/80">Available Balance</span>
+                        <span className="text-sm font-semibold text-white">
                   {currentBrand.symbol}
                   <NumberFlow value={displayBalance} format={{ notation: 'standard', minimumFractionDigits: 2, maximumFractionDigits: 2 }} />
                         </span>
                 </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600">Free Bet</span>
-                        <span className="text-sm font-semibold text-gray-900">$0.00</span>
+                        <span className="text-sm text-white/80">Bonus</span>
+                        <span className="text-sm font-semibold text-white">$0.00</span>
+                      </div>
+                      <div className="border-t border-dashed border-white/[0.1]" />
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.16em] text-white/45">
+                          <IconCrown className="h-3 w-3 text-[#c9b4ff]" />
+                          <span>Level 7</span>
+                        </div>
+                        <div className="h-1.5 overflow-hidden rounded-full bg-white/[0.08]">
+                          <div
+                            className="h-full rounded-full"
+                            style={{
+                              width: '84%',
+                              background: 'linear-gradient(90deg, #ff9254 0%, #ff6a3d 45%, #b86bff 100%)',
+                              boxShadow: '0 0 10px rgba(255, 126, 79, 0.35), 0 0 20px rgba(184, 107, 255, 0.18)',
+                            }}
+                          />
+                        </div>
+                        <div className="flex items-center justify-between text-[11px] text-white/55">
+                          <span>XP 1,850 / 2,200</span>
+                          <span>350 XP to next level</span>
+                        </div>
                       </div>
                     </div>
               </div>
               
-                  <Separator className="bg-gray-200 mb-3" />
+                  <Separator className="bg-white/10 mb-3" />
                   
-                  {/* Deposit and Withdraw */}
+                  {/* Wallet CTA */}
                   <div className="space-y-0.5 w-full mb-3">
                     <Button 
                       variant="ghost" 
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-10 px-3"
+                      className="w-full justify-center gap-2 h-10 px-3 border border-[#9a86d1]/75 text-[#121417] font-semibold hover:text-[#121417]"
+                      style={{ backgroundColor: '#c9b4ff', boxShadow: '0 6px 18px rgba(122, 92, 196, 0.28)' }}
                       onClick={() => {
+                        setAccountDrawerOpen(false)
                         openDepositDrawer()
                       }}
                     >
-                      <IconCreditCard className="w-5 h-5 mr-3 text-gray-700" />
-                      <span className="flex-1 text-left text-gray-900">Deposit</span>
-                    </Button>
-                    
-                    <Button 
-                      variant="ghost" 
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-10 px-3"
-                    >
-                      <IconArrowRight className="w-5 h-5 mr-3 text-gray-700 rotate-180" />
-                      <span className="flex-1 text-left text-gray-900">Withdraw</span>
+                      <IconWallet className="w-4 h-4" />
+                      <span>Wallet</span>
                     </Button>
                   </div>
                   
-                  <Separator className="bg-gray-200 mb-6" />
+                  <Separator className="bg-white/10 mb-6" />
                   
                   {/* Navigation List */}
                   <div className="space-y-1 w-full mb-8">
                     <Button 
                       variant="ghost" 
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-12 px-3 min-w-0"
+                      className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 min-w-0 transition-colors duration-200"
                     onClick={() => {
-                      setAccountDrawerOpen(false)
-                      router.push('/account')
+                      setAccountDrawerView('profile')
                     }}
                     >
-                      <IconUser className="w-5 h-5 mr-3 text-gray-700" />
-                      <span className="flex-1 text-left text-gray-900">My Account</span>
+                      <IconUser className="w-5 h-5 mr-3 text-white/65 transition-colors duration-200 group-hover:text-white/90" />
+                      <span className="flex-1 text-left text-white">My Profile</span>
                 </Button>
 
                     <Button
                       variant="ghost"
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-12 px-3 min-w-0"
+                      className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 min-w-0 transition-colors duration-200"
                       onClick={() => {
                         setAccountDrawerView('notifications')
                       }}
                     >
-                      <IconBell className="w-5 h-5 mr-3 text-gray-700 flex-shrink-0" />
-                      <span className="flex-1 text-left text-gray-900">Notifications</span>
+                      <IconBell className="w-5 h-5 mr-3 text-white/65 flex-shrink-0 transition-colors duration-200 group-hover:text-white/90" />
+                      <span className="flex-1 text-left text-white">Messages</span>
                       {webInboxUnreadCount > 0 && (
-                        <span className="bg-red-500 text-white text-[10px] font-bold rounded-full min-w-[20px] h-5 px-1.5 flex items-center justify-center">
+                        <span className="bg-[var(--ds-primary,#ff6a1a)] text-white text-[10px] font-bold rounded-full min-w-[20px] h-5 px-1.5 flex items-center justify-center">
                           {webInboxUnreadCount}
                         </span>
                       )}
@@ -13532,79 +13849,767 @@ function NavTestPageContent() {
                     
                     <Button 
                       variant="ghost" 
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-12 px-3 min-w-0"
+                      className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 transition-colors duration-200"
                       onClick={() => {
-                        setAccountDrawerOpen(false)
-                        setMyBetsInitialFilter('pending')
-                        setShowMyBets(true); window.scrollTo(0, 0)
-                        // Ensure we're on sports page
-                        if (!showSports) {
-                          setShowSports(true)
-                          setShowVipRewards(false)
-                        }
+                        setAccountBonusTab('available')
+                        setAccountDrawerView('bonus')
                       }}
                     >
-                      <IconFileText className="w-5 h-5 mr-3 text-gray-700 flex-shrink-0" />
-                      <span className="flex-1 text-left text-gray-900">Pending Bets</span>
-                      <span className="text-sm text-gray-600 ml-auto flex items-center gap-1.5">
-                        {sampleBets.filter(b => !b.status && !b.isLive).length > 0 && (
-                          <span className="bg-amber-500 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">{sampleBets.filter(b => !b.status && !b.isLive).length}</span>
-                        )}
-                        ${sampleBets.filter(b => !b.status && !b.isLive).reduce((sum, b) => sum + b.amount, 0).toFixed(2)}
-                      </span>
+                      <IconGift className="w-5 h-5 mr-3 text-white/65 transition-colors duration-200 group-hover:text-white/90" />
+                      <span className="flex-1 text-left text-white">My Bonus</span>
                 </Button>
                     
                     <Button 
                       variant="ghost" 
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-12 px-3"
+                      className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 transition-colors duration-200"
+                      onClick={() => setAccountDrawerView('transactions')}
                     >
-                      <IconGift className="w-5 h-5 mr-3 text-gray-700" />
-                      <span className="flex-1 text-left text-gray-900">My Bonus</span>
+                      <IconCurrencyDollar className="w-5 h-5 mr-3 text-white/65 transition-colors duration-200 group-hover:text-white/90" />
+                      <span className="flex-1 text-left text-white">Transactions History</span>
                 </Button>
                     
                     <Button 
                       variant="ghost" 
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-12 px-3"
+                      className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 transition-colors duration-200"
                     >
-                      <IconCurrencyDollar className="w-5 h-5 mr-3 text-gray-700" />
-                      <span className="flex-1 text-left text-gray-900">Transactions History</span>
-                </Button>
-                    
-                    <Button 
-                      variant="ghost" 
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-12 px-3"
-                    >
-                      <IconTicket className="w-5 h-5 mr-3 text-gray-700" />
-                      <span className="flex-1 text-left text-gray-900">Bet History</span>
+                      <IconTicket className="w-5 h-5 mr-3 text-white/65 transition-colors duration-200 group-hover:text-white/90" />
+                      <span className="flex-1 text-left text-white">Bet History</span>
                     </Button>
                     
                     <Button 
                       variant="ghost" 
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-12 px-3"
+                      className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 transition-colors duration-200"
                     >
-                      <IconUserPlus className="w-5 h-5 mr-3 text-gray-700" />
-                      <span className="flex-1 text-left text-gray-900">Refer a Friend</span>
+                      <IconUserPlus className="w-5 h-5 mr-3 text-white/65 transition-colors duration-200 group-hover:text-white/90" />
+                      <span className="flex-1 text-left text-white">Refer a Friend</span>
                     </Button>
                     
                     <Button 
                       variant="ghost" 
-                      className="w-full justify-start text-gray-900 hover:bg-gray-100 hover:text-gray-900 h-12 px-3"
+                      className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 transition-colors duration-200"
                     >
-                      <IconCrown className="w-5 h-5 mr-3 text-gray-700" />
-                      <span className="flex-1 text-left text-gray-900">VIP Rewards</span>
-                </Button>
+                      <IconShield className="w-5 h-5 mr-3 text-white/65 transition-colors duration-200 group-hover:text-white/90" />
+                      <span className="flex-1 text-left text-white">Security</span>
+                    </Button>
+                    
+                    <Button 
+                      variant="ghost" 
+                      className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 transition-colors duration-200"
+                    >
+                      <IconArrowRight className="w-5 h-5 mr-3 text-white/65 transition-colors duration-200 group-hover:text-white/90" />
+                      <span className="flex-1 text-left text-white">Log out</span>
+                    </Button>
               </div>
-                  
-                  <Separator className={cn("bg-gray-200", isMobile ? "my-4" : "my-5")} />
-                  
-                  {/* Logout Button */}
-                  <Button 
-                    variant="ghost" 
-                    className="w-full justify-center text-gray-600 hover:bg-gray-100 hover:text-gray-600 h-10 px-2 min-w-0"
-                  >
-                    <span className="text-sm">Log out</span>
-                  </Button>
                 </>
+              ) : accountDrawerView === 'profile' ? (
+                <div className="space-y-4 pb-4" data-account-profile-form="true">
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="space-y-1.5">
+                      <Label className="text-white/90 text-sm">Username</Label>
+                      <div className="relative">
+                        <Input
+                          value={profileForm.username}
+                          readOnly
+                          className="pr-9 bg-white/[0.02] border-white/15 text-white/45 placeholder:text-white/25 focus-visible:ring-white/35 focus-visible:ring-offset-0 focus-visible:border-white/35"
+                        />
+                        <IconLock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/35 pointer-events-none" />
+                      </div>
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-white/90 text-sm">Email</Label>
+                      <div className="relative">
+                        <Input
+                          type="email"
+                          value={profileForm.email}
+                          readOnly
+                          className="pr-9 bg-white/[0.02] border-white/15 text-white/45 placeholder:text-white/25 focus-visible:ring-white/35 focus-visible:ring-offset-0 focus-visible:border-white/35"
+                        />
+                        <IconLock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/35 pointer-events-none" />
+                      </div>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      className="justify-start h-9 px-2 text-white/65 hover:text-white/80 hover:bg-white/5"
+                    >
+                      <IconLifebuoy className="w-4 h-4 mr-2" />
+                      To edit username/email please contact support
+                    </Button>
+                  </div>
+
+                  <Separator className="bg-white/10" />
+
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="space-y-1.5">
+                      <Label className="text-white/90 text-sm">Full Name</Label>
+                      <Input
+                        value={profileForm.fullName}
+                        onChange={(e) => setProfileForm((prev) => ({ ...prev, fullName: e.target.value }))}
+                        className="h-12 bg-white/[0.03] border-white/20 text-white placeholder:text-white/35 focus-visible:ring-white/35 focus-visible:ring-offset-0 focus-visible:border-white/35"
+                        placeholder="Enter full name"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="space-y-1.5">
+                      <Label className="text-white/90 text-sm">Gender</Label>
+                      <div className="relative">
+                        <select
+                          value={profileForm.gender}
+                          onChange={(e) => setProfileForm((prev) => ({ ...prev, gender: e.target.value }))}
+                          className="h-10 w-full rounded-md border border-white/20 bg-white/[0.03] px-3 pr-10 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/35 focus:border-white/35 appearance-none"
+                        >
+                          <option value="" disabled className="bg-[#11151d] text-white/60">Gender</option>
+                          <option value="Male" className="bg-[#11151d] text-white">Male</option>
+                          <option value="Female" className="bg-[#11151d] text-white">Female</option>
+                          <option value="Other" className="bg-[#11151d] text-white">Other</option>
+                          <option value="Prefer not to say" className="bg-[#11151d] text-white">Prefer not to say</option>
+                        </select>
+                        <IconChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/70" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator className="bg-white/10" />
+
+                  <div className="space-y-1.5">
+                    <Label className="text-white/90 text-sm">Date of Birth</Label>
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="space-y-1.5">
+                        <div className="relative">
+                          <select
+                            value={profileForm.day}
+                            onChange={(e) => setProfileForm((prev) => ({ ...prev, day: e.target.value }))}
+                            className="h-10 w-full rounded-md border border-white/20 bg-white/[0.03] px-3 pr-10 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/35 focus:border-white/35 appearance-none"
+                          >
+                            <option value="" disabled className="bg-[#11151d] text-white/60">Day</option>
+                            {Array.from({ length: 31 }).map((_, i) => (
+                              <option key={`day-${i + 1}`} value={`${i + 1}`} className="bg-[#11151d] text-white">{i + 1}</option>
+                            ))}
+                          </select>
+                          <IconChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/70" />
+                        </div>
+                      </div>
+                      <div className="space-y-1.5">
+                        <div className="relative">
+                          <select
+                            value={profileForm.month}
+                            onChange={(e) => setProfileForm((prev) => ({ ...prev, month: e.target.value }))}
+                            className="h-10 w-full rounded-md border border-white/20 bg-white/[0.03] px-3 pr-10 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/35 focus:border-white/35 appearance-none"
+                          >
+                            <option value="" disabled className="bg-[#11151d] text-white/60">Month</option>
+                            {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map((month) => (
+                              <option key={month} value={month} className="bg-[#11151d] text-white">{month}</option>
+                            ))}
+                          </select>
+                          <IconChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/70" />
+                        </div>
+                      </div>
+                      <div className="space-y-1.5">
+                        <div className="relative">
+                          <select
+                            value={profileForm.year}
+                            onChange={(e) => setProfileForm((prev) => ({ ...prev, year: e.target.value }))}
+                            className="h-10 w-full rounded-md border border-white/20 bg-white/[0.03] px-3 pr-10 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/35 focus:border-white/35 appearance-none"
+                          >
+                            <option value="" disabled className="bg-[#11151d] text-white/60">Year</option>
+                            {Array.from({ length: 90 }).map((_, i) => {
+                              const y = `${new Date().getFullYear() - i}`
+                              return <option key={y} value={y} className="bg-[#11151d] text-white">{y}</option>
+                            })}
+                          </select>
+                          <IconChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/70" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator className="bg-white/10" />
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="space-y-1.5">
+                      <Label className="text-white/90 text-sm">Country</Label>
+                      <div className="relative">
+                        <select
+                          value={profileForm.country}
+                          onChange={(e) => setProfileForm((prev) => ({ ...prev, country: e.target.value }))}
+                          className="h-10 w-full rounded-md border border-white/20 bg-white/[0.03] px-3 pr-10 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/35 focus:border-white/35 appearance-none"
+                        >
+                          <option value="Cyprus" className="bg-[#11151d] text-white">Cyprus</option>
+                          <option value="United Kingdom" className="bg-[#11151d] text-white">United Kingdom</option>
+                          <option value="United States" className="bg-[#11151d] text-white">United States</option>
+                          <option value="Germany" className="bg-[#11151d] text-white">Germany</option>
+                        </select>
+                        <IconChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/70" />
+                      </div>
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-white/90 text-sm">City</Label>
+                      <Input
+                        value={profileForm.city}
+                        onChange={(e) => setProfileForm((prev) => ({ ...prev, city: e.target.value }))}
+                        className="bg-white/[0.03] border-white/20 text-white placeholder:text-white/35 focus-visible:ring-white/35 focus-visible:ring-offset-0 focus-visible:border-white/35"
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="space-y-1.5">
+                      <Label className="text-white/90 text-sm">Address</Label>
+                      <Input
+                        value={profileForm.address}
+                        onChange={(e) => setProfileForm((prev) => ({ ...prev, address: e.target.value }))}
+                        className="h-12 bg-white/[0.03] border-white/20 text-white placeholder:text-white/35 focus-visible:ring-white/35 focus-visible:ring-offset-0 focus-visible:border-white/35"
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="space-y-1.5">
+                      <Label className="text-white/90 text-sm">State Or Province</Label>
+                      <Input
+                        value={profileForm.stateOrProvince}
+                        onChange={(e) => setProfileForm((prev) => ({ ...prev, stateOrProvince: e.target.value }))}
+                        className="bg-white/[0.03] border-white/20 text-white placeholder:text-white/35 focus-visible:ring-white/35 focus-visible:ring-offset-0 focus-visible:border-white/35"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-white/90 text-sm">Postal code</Label>
+                      <Input
+                        value={profileForm.postalCode}
+                        onChange={(e) => setProfileForm((prev) => ({ ...prev, postalCode: e.target.value }))}
+                        className="bg-white/[0.03] border-white/20 text-white placeholder:text-white/35 focus-visible:ring-white/35 focus-visible:ring-offset-0 focus-visible:border-white/35"
+                      />
+                    </div>
+                  </div>
+
+                  <Separator className="bg-white/10" />
+
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="space-y-1.5">
+                      <Label className="text-white/90 text-sm">Mobile number</Label>
+                      <div className="flex items-center rounded-md border border-white/20 bg-white/[0.03]">
+                        <span className="px-3 text-sm text-white/70 border-r border-white/15">{countryDialCode}</span>
+                        <Input
+                          value={profileForm.phone}
+                          onChange={(e) => setProfileForm((prev) => ({ ...prev, phone: e.target.value }))}
+                          className="border-0 bg-transparent text-white placeholder:text-white/35 focus-visible:ring-white/35 focus-visible:ring-offset-0"
+                          placeholder="Phone number"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <Button
+                    className="w-full h-11 text-white font-semibold"
+                    disabled={isProfileSaving}
+                    onClick={() => {
+                      if (isProfileSaving) return
+                      setIsProfileSaving(true)
+                      window.setTimeout(() => {
+                        setIsProfileSaving(false)
+                      }, 1400)
+                    }}
+                    style={{
+                      backgroundColor: 'var(--ds-primary, #ff3b2f)',
+                      backgroundImage: 'var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%))'
+                    }}
+                  >
+                    {isProfileSaving ? (
+                      <span className="inline-flex items-center gap-2">
+                        <IconLoader2 className="h-4 w-4 animate-spin" />
+                        Saving details
+                      </span>
+                    ) : (
+                      'Save'
+                    )}
+                  </Button>
+                </div>
+              ) : accountDrawerView === 'bonus' ? (
+                <div className="space-y-4 pb-4">
+                  <div className="flex items-end gap-5 border-b border-white/10">
+                    <button
+                      type="button"
+                      onClick={() => setAccountBonusTab('available')}
+                      className={cn(
+                        "relative pb-2 text-xs font-medium transition-colors",
+                        accountBonusTab === 'available' ? "text-white" : "text-white/55 hover:text-white/80",
+                      )}
+                    >
+                      Available
+                      <span
+                        className={cn(
+                          "pointer-events-none absolute inset-x-0 -bottom-px h-[2px] rounded-full transition-opacity",
+                          accountBonusTab === 'available' ? "bg-[var(--ds-primary,#ee3536)] opacity-100" : "opacity-0",
+                        )}
+                      />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setAccountBonusTab('active')}
+                      className={cn(
+                        "relative pb-2 text-xs font-medium transition-colors",
+                        accountBonusTab === 'active' ? "text-white" : "text-white/55 hover:text-white/80",
+                      )}
+                    >
+                      Active
+                      <span
+                        className={cn(
+                          "pointer-events-none absolute inset-x-0 -bottom-px h-[2px] rounded-full transition-opacity",
+                          accountBonusTab === 'active' ? "bg-[var(--ds-primary,#ee3536)] opacity-100" : "opacity-0",
+                        )}
+                      />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setAccountBonusTab('history')}
+                      className={cn(
+                        "relative pb-2 text-xs font-medium transition-colors",
+                        accountBonusTab === 'history' ? "text-white" : "text-white/55 hover:text-white/80",
+                      )}
+                    >
+                      History
+                      <span
+                        className={cn(
+                          "pointer-events-none absolute inset-x-0 -bottom-px h-[2px] rounded-full transition-opacity",
+                          accountBonusTab === 'history' ? "bg-[var(--ds-primary,#ee3536)] opacity-100" : "opacity-0",
+                        )}
+                      />
+                    </button>
+                  </div>
+
+                  {accountBonusTab === 'available' ? (
+                    <div className="space-y-3">
+                      <div className="w-full rounded-small border border-white/[0.08] bg-white/[0.02] p-2.5">
+                        <div className="flex items-center justify-between text-[10px] text-white/55">
+                          <div className="inline-flex items-center gap-1.5 uppercase tracking-[0.16em]">
+                            <IconCrown className="h-3 w-3 text-[#c9b4ff]" />
+                            <span>Level 7</span>
+                          </div>
+                          <span>350 XP to next level</span>
+                        </div>
+                        <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-white/[0.08]">
+                          <div
+                            className="h-full rounded-full"
+                            style={{
+                              width: '84%',
+                              background: 'linear-gradient(90deg, #ff9254 0%, #ff6a3d 45%, #b86bff 100%)',
+                              boxShadow: '0 0 10px rgba(255, 126, 79, 0.30), 0 0 18px rgba(184, 107, 255, 0.15)',
+                            }}
+                          />
+                        </div>
+                        <div className="mt-2 border-t border-white/10 pt-2 text-xs text-white/70">
+                          Higher levels unlock better bonus offers, including birthday rewards.
+                        </div>
+                      </div>
+                      <div className="space-y-3">
+                        {accountBonusOffers.map((offer) => {
+                          const isLocked = offer.requiredLevel > accountCurrentLevel
+                          return (
+                            <Card
+                              key={offer.id}
+                              className={cn(
+                                "bg-white/5 border-white/10 overflow-hidden",
+                                isLocked && "opacity-80"
+                              )}
+                            >
+                              <div className="w-full h-28 bg-white/5 relative overflow-hidden">
+                                <div className="absolute inset-0 tile-shimmer" />
+                                <div className="absolute top-3 left-3 inline-flex items-center rounded-full border border-white/15 bg-black/35 px-2 py-1 text-[11px] text-white/85">
+                                  Requires Level {offer.requiredLevel}
+                                </div>
+                              </div>
+                              <CardContent className="p-4">
+                                <CardTitle className="text-lg font-semibold text-white mb-2">{offer.title}</CardTitle>
+                                <p className="text-sm text-white/70 mb-4 line-clamp-3">{offer.description}</p>
+                                <Button
+                                  variant="ghost"
+                                  disabled={isLocked}
+                                  className={cn(
+                                    "w-full font-semibold border",
+                                    isLocked
+                                      ? "border-white/12 bg-white/[0.04] text-white/45 cursor-not-allowed hover:bg-white/[0.04] hover:text-white/45"
+                                      : "text-[#121417] hover:text-[#121417] border-[#9a86d1]/75"
+                                  )}
+                                  style={
+                                    isLocked
+                                      ? undefined
+                                      : { backgroundColor: '#c9b4ff', boxShadow: '0 6px 18px rgba(122, 92, 196, 0.28)' }
+                                  }
+                                >
+                                  {isLocked ? `Unlock at Level ${offer.requiredLevel}` : 'More info'}
+                                </Button>
+                              </CardContent>
+                            </Card>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  ) : accountBonusTab === 'active' ? (
+                    accountActiveBonuses.length > 0 ? (
+                      <div className="space-y-3">
+                        {accountActiveBonuses.map((offer) => (
+                          <Card key={offer.id} className="bg-white/5 border-white/10 overflow-hidden">
+                            <div className="w-full h-24 bg-white/5 relative overflow-hidden">
+                              <div className="absolute inset-0 tile-shimmer" />
+                              <div className="absolute top-3 left-3 inline-flex items-center rounded-full border border-emerald-300/35 bg-emerald-500/15 px-2 py-1 text-[11px] text-emerald-200">
+                                Active
+                              </div>
+                            </div>
+                            <CardContent className="p-4">
+                              <CardTitle className="text-base font-semibold text-white mb-1">{offer.title}</CardTitle>
+                              <p className="text-sm text-white/70">{offer.description}</p>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="rounded-small border border-dashed border-white/20 bg-white/[0.02] px-4 py-8 text-center">
+                        <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/[0.03] text-xl">
+                          🔭
+                        </div>
+                        <p className="text-sm font-semibold text-white/90">No active bonus yet</p>
+                        <p className="mt-1 text-xs text-white/55">Check available bonuses to get started.</p>
+                        <Button
+                          variant="ghost"
+                          className="mt-3 h-9 rounded-small border border-[#9a86d1]/75 px-4 text-xs font-semibold text-[#121417] hover:text-[#121417]"
+                          style={{ backgroundColor: '#c9b4ff', boxShadow: '0 6px 18px rgba(122, 92, 196, 0.28)' }}
+                          onClick={() => setAccountBonusTab('available')}
+                        >
+                          Check Available
+                        </Button>
+                      </div>
+                    )
+                  ) : (
+                    <div className="rounded-small border border-white/10 bg-[var(--ds-sidebar-bg,#121417)]/92 backdrop-blur-sm overflow-visible">
+                      <div className="relative flex items-center justify-between border-b border-white/10 px-4 py-3">
+                        <p className="text-sm font-semibold text-white">Bonus History</p>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setAccountBonusFilterOpen((prev) => !prev)}
+                          className="h-8 w-8 rounded-full border border-white/12 bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:text-white focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none"
+                          aria-label="Filter bonus history"
+                        >
+                          <IconFilter className="h-4 w-4" />
+                        </Button>
+                        {accountBonusFilterOpen && (
+                          <div className="absolute right-4 top-[calc(100%-2px)] z-[10070] mt-2 w-52 rounded-md border border-white/12 bg-[#121417] p-3 shadow-[0_12px_34px_rgba(0,0,0,0.52)]">
+                            <div className="space-y-3">
+                              <div>
+                                <p className="text-white/70 text-[11px] font-medium uppercase tracking-wide mb-2">Sort</p>
+                                <div className="space-y-1">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setAccountBonusHistorySort('latest')
+                                      setAccountBonusFilterOpen(false)
+                                    }}
+                                    className={cn(
+                                      "w-full text-left px-2 py-1.5 rounded text-sm transition-colors",
+                                      accountBonusHistorySort === 'latest' ? "bg-white/[0.06] text-white" : "text-white/75 hover:bg-white/[0.03] hover:text-white",
+                                    )}
+                                  >
+                                    Latest
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setAccountBonusHistorySort('oldest')
+                                      setAccountBonusFilterOpen(false)
+                                    }}
+                                    className={cn(
+                                      "w-full text-left px-2 py-1.5 rounded text-sm transition-colors",
+                                      accountBonusHistorySort === 'oldest' ? "bg-white/[0.06] text-white" : "text-white/75 hover:bg-white/[0.03] hover:text-white",
+                                    )}
+                                  >
+                                    Oldest
+                                  </button>
+                                </div>
+                              </div>
+                              <Separator className="bg-white/10" />
+                              <div>
+                                <p className="text-white/70 text-[11px] font-medium uppercase tracking-wide mb-2">Status</p>
+                                <div className="space-y-1">
+                                  {(['ALL', 'ACTIVE', 'EXPIRED', 'CANCELLED', 'COMPLETE'] as const).map((status) => (
+                                    <button
+                                      key={status}
+                                      type="button"
+                                      onClick={() => {
+                                        setAccountBonusHistoryStatusFilter(status)
+                                        setAccountBonusFilterOpen(false)
+                                      }}
+                                      className={cn(
+                                        "w-full text-left px-2 py-1.5 rounded text-sm capitalize transition-colors",
+                                        accountBonusHistoryStatusFilter === status ? "bg-white/[0.06] text-white" : "text-white/75 hover:bg-white/[0.03] hover:text-white",
+                                      )}
+                                    >
+                                      {status === 'ALL' ? 'All statuses' : status.toLowerCase()}
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      {(accountBonusHistoryStatusFilter !== 'ALL' || accountBonusHistorySort !== 'latest') && (
+                        <div className="flex flex-wrap items-center gap-2 border-b border-white/10 px-4 py-2">
+                          {accountBonusHistoryStatusFilter !== 'ALL' && (
+                            <button
+                              type="button"
+                              onClick={() => setAccountBonusHistoryStatusFilter('ALL')}
+                              className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.04] px-2.5 py-1 text-[11px] text-white/85 hover:bg-white/[0.07]"
+                            >
+                              <span>Status: {accountBonusHistoryStatusFilter.toLowerCase()}</span>
+                              <IconX className="h-3 w-3 text-white/70" />
+                            </button>
+                          )}
+                          {accountBonusHistorySort !== 'latest' && (
+                            <button
+                              type="button"
+                              onClick={() => setAccountBonusHistorySort('latest')}
+                              className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.04] px-2.5 py-1 text-[11px] text-white/85 hover:bg-white/[0.07]"
+                            >
+                              <span>{accountBonusHistorySort === 'oldest' ? 'Oldest' : 'Latest'}</span>
+                              <IconX className="h-3 w-3 text-white/70" />
+                            </button>
+                          )}
+                        </div>
+                      )}
+                      <div className="space-y-2 p-2">
+                        {accountBonusHistoryFilteredRows.length === 0 ? (
+                          <div className="rounded-small border border-dashed border-white/20 bg-white/[0.02] px-4 py-6 text-center text-sm text-white/70">
+                            No bonus history for this filter.
+                          </div>
+                        ) : accountBonusHistoryFilteredRows.map((row) => (
+                          <div key={row.id} className="overflow-hidden rounded-small border border-white/10 bg-white/[0.02]">
+                            <button
+                              type="button"
+                              onClick={() => setAccountBonusExpandedId((prev) => (prev === row.id ? null : row.id))}
+                              className={cn(
+                                "w-full px-4 py-3 text-left transition-colors hover:bg-white/[0.015] focus-visible:outline-none focus-visible:ring-0",
+                                accountBonusExpandedId === row.id
+                                  ? "rounded-t-small rounded-b-none"
+                                  : "rounded-small",
+                              )}
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className="h-9 w-9 shrink-0 rounded-full border border-white/15 bg-black/25 flex items-center justify-center">
+                                  <IconGift className="h-4 w-4 text-white/75" />
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                  <p className="truncate text-[15px] font-semibold text-white">{row.code}</p>
+                                  <p className="text-sm text-white/70">{row.amount}</p>
+                                </div>
+                                <span
+                                  className={cn(
+                                    "inline-flex rounded px-2 py-1 text-[10px] font-semibold leading-none",
+                                    row.status === 'ACTIVE' && "bg-emerald-500/20 text-emerald-300",
+                                    row.status === 'EXPIRED' && "bg-orange-500/20 text-orange-300",
+                                    row.status === 'CANCELLED' && "bg-gray-500/25 text-gray-200",
+                                    row.status === 'COMPLETE' && "bg-blue-500/20 text-blue-300",
+                                  )}
+                                >
+                                  {row.status}
+                                </span>
+                                <IconChevronDown
+                                  className={cn(
+                                    "h-4 w-4 shrink-0 text-white/45 transition-transform",
+                                    accountBonusExpandedId === row.id && "rotate-180",
+                                  )}
+                                />
+                              </div>
+                            </button>
+
+                            <AnimatePresence initial={false}>
+                              {accountBonusExpandedId === row.id && (
+                                <motion.div
+                                  key={`${row.id}-details`}
+                                  initial={{ height: 0, opacity: 0 }}
+                                  animate={{ height: 'auto', opacity: 1 }}
+                                  exit={{ height: 0, opacity: 0 }}
+                                  transition={{ duration: 0.2, ease: 'easeOut' }}
+                                  className="overflow-hidden"
+                                >
+                                  <div className="grid grid-cols-2 gap-3 border-t border-white/10 bg-white/[0.03] px-4 pb-3 pt-2 text-xs">
+                                    <div>
+                                      <p className="text-white/45 uppercase tracking-wide text-[10px]">Rollover</p>
+                                      <p className="mt-1 text-white/80">{row.rollover}</p>
+                                    </div>
+                                    <div>
+                                      <p className="text-white/45 uppercase tracking-wide text-[10px]">Date</p>
+                                      <p className="mt-1 text-white/80">{row.date}</p>
+                                    </div>
+                                  </div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : accountDrawerView === 'transactions' ? (
+                <div className="space-y-4 pb-4">
+                  <div className="rounded-small border border-white/10 bg-[var(--ds-sidebar-bg,#121417)]/92 backdrop-blur-sm overflow-visible">
+                    <div className="relative flex items-center justify-between border-b border-white/10 px-4 py-3">
+                      <p className="text-sm font-semibold text-white">Transactions History</p>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setAccountTransactionFilterOpen((prev) => !prev)}
+                        className="h-8 w-8 rounded-full border border-white/12 bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:text-white focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none"
+                        aria-label="Filter transaction history"
+                      >
+                        <IconFilter className="h-4 w-4" />
+                      </Button>
+                      {accountTransactionFilterOpen && (
+                        <div className="absolute right-4 top-[calc(100%-2px)] z-[10070] mt-2 w-56 rounded-md border border-white/12 bg-[#121417] p-3 shadow-[0_12px_34px_rgba(0,0,0,0.52)]">
+                          <div className="space-y-3">
+                            <div>
+                              <p className="text-white/70 text-[11px] font-medium uppercase tracking-wide mb-2">Sort</p>
+                              <div className="space-y-1">
+                                <button type="button" onClick={() => { setAccountTransactionSort('latest'); setAccountTransactionFilterOpen(false) }} className={cn("w-full text-left px-2 py-1.5 rounded text-sm transition-colors", accountTransactionSort === 'latest' ? "bg-white/[0.06] text-white" : "text-white/75 hover:bg-white/[0.03] hover:text-white")}>Latest</button>
+                                <button type="button" onClick={() => { setAccountTransactionSort('oldest'); setAccountTransactionFilterOpen(false) }} className={cn("w-full text-left px-2 py-1.5 rounded text-sm transition-colors", accountTransactionSort === 'oldest' ? "bg-white/[0.06] text-white" : "text-white/75 hover:bg-white/[0.03] hover:text-white")}>Oldest</button>
+                              </div>
+                            </div>
+                            <Separator className="bg-white/10" />
+                            <div>
+                              <p className="text-white/70 text-[11px] font-medium uppercase tracking-wide mb-2">Type</p>
+                              <div className="space-y-1">
+                                {(['ALL', 'DEPOSIT', 'WITHDRAWAL', 'BONUS'] as const).map((type) => (
+                                  <button key={type} type="button" onClick={() => { setAccountTransactionTypeFilter(type); setAccountTransactionFilterOpen(false) }} className={cn("w-full text-left px-2 py-1.5 rounded text-sm capitalize transition-colors", accountTransactionTypeFilter === type ? "bg-white/[0.06] text-white" : "text-white/75 hover:bg-white/[0.03] hover:text-white")}>
+                                    {type === 'ALL' ? 'All types' : type.toLowerCase()}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                            <Separator className="bg-white/10" />
+                            <div>
+                              <p className="text-white/70 text-[11px] font-medium uppercase tracking-wide mb-2">Status</p>
+                              <div className="space-y-1">
+                                {(['ALL', 'COMPLETED', 'PENDING', 'CREDITED'] as const).map((status) => (
+                                  <button key={status} type="button" onClick={() => { setAccountTransactionStatusFilter(status); setAccountTransactionFilterOpen(false) }} className={cn("w-full text-left px-2 py-1.5 rounded text-sm capitalize transition-colors", accountTransactionStatusFilter === status ? "bg-white/[0.06] text-white" : "text-white/75 hover:bg-white/[0.03] hover:text-white")}>
+                                    {status === 'ALL' ? 'All statuses' : status.toLowerCase()}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <div className="space-y-2 p-2">
+                      {accountTransactionFilteredRows.length === 0 ? (
+                        <div className="rounded-small border border-dashed border-white/20 bg-white/[0.02] px-4 py-6 text-center text-sm text-white/70">
+                          No transactions for this filter.
+                        </div>
+                      ) : accountTransactionFilteredRows.map((row) => (
+                        <div key={row.id} className="overflow-hidden rounded-small border border-white/10 bg-white/[0.02]">
+                          <button
+                            type="button"
+                            onClick={() => setAccountTransactionExpandedId((prev) => (prev === row.id ? null : row.id))}
+                            className={cn(
+                              "w-full px-4 py-3 text-left transition-colors hover:bg-white/[0.015] focus-visible:outline-none focus-visible:ring-0",
+                              accountTransactionExpandedId === row.id ? "rounded-t-small rounded-b-none" : "rounded-small",
+                            )}
+                          >
+                            <div className="flex items-center gap-3">
+                              <div
+                                className={cn(
+                                  "h-9 w-9 shrink-0 rounded-full border flex items-center justify-center",
+                                  row.status === 'PENDING' && "border-amber-400/35 bg-amber-500/10",
+                                  row.status !== 'PENDING' && row.type === 'WITHDRAWAL' && "border-rose-400/35 bg-rose-500/10",
+                                  row.status !== 'PENDING' && row.type === 'DEPOSIT' && "border-emerald-400/35 bg-emerald-500/10",
+                                  row.status !== 'PENDING' && row.type === 'BONUS' && "border-blue-400/35 bg-blue-500/10",
+                                )}
+                              >
+                                {row.method === 'System' ? (
+                                  <IconSettings className="h-4 w-4 text-blue-300" />
+                                ) : (
+                                  <IconWallet
+                                    className={cn(
+                                      "h-4 w-4",
+                                      row.status === 'PENDING' && "text-amber-300",
+                                      row.status !== 'PENDING' && row.type === 'WITHDRAWAL' && "text-rose-300",
+                                      row.status !== 'PENDING' && row.type === 'DEPOSIT' && "text-emerald-300",
+                                    )}
+                                  />
+                                )}
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <p className="truncate text-[15px] font-semibold text-white">{row.date}</p>
+                                <p className="text-sm text-white/70">{row.method}</p>
+                              </div>
+                              <div className="text-right">
+                                <p className={cn("text-sm font-semibold", row.amount.startsWith('+') ? "text-emerald-300" : "text-rose-300")}>{row.amount}</p>
+                                <p className="text-[11px] text-white/55">{row.type}</p>
+                              </div>
+                              <IconChevronDown className={cn("h-4 w-4 shrink-0 text-white/45 transition-transform", accountTransactionExpandedId === row.id && "rotate-180")} />
+                            </div>
+                          </button>
+                          <AnimatePresence initial={false}>
+                            {accountTransactionExpandedId === row.id && (
+                              <motion.div
+                                key={`${row.id}-txn-details`}
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.2, ease: 'easeOut' }}
+                                className="overflow-hidden"
+                              >
+                                <div className="grid grid-cols-2 gap-3 border-t border-white/10 bg-white/[0.03] px-4 pb-3 pt-2 text-xs">
+                                  <div>
+                                    <p className="text-white/45 uppercase tracking-wide text-[10px]">Method</p>
+                                    <p className="mt-1 text-white/80">{row.method}</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-white/45 uppercase tracking-wide text-[10px]">Reference</p>
+                                    <div className="mt-1 flex items-center gap-2">
+                                      <p className="text-white/80 font-mono">{row.reference}</p>
+                                      <button
+                                        type="button"
+                                        onClick={async () => {
+                                          try {
+                                            await navigator.clipboard.writeText(row.reference)
+                                            setAccountTransactionCopiedReferenceId(row.id)
+                                            window.setTimeout(() => setAccountTransactionCopiedReferenceId((prev) => (prev === row.id ? null : prev)), 1200)
+                                          } catch {
+                                            setAccountTransactionCopiedReferenceId(null)
+                                          }
+                                        }}
+                                        className={cn(
+                                          "inline-flex h-5 w-5 items-center justify-center rounded-sm border transition-colors",
+                                          accountTransactionCopiedReferenceId === row.id
+                                            ? "border-emerald-400/35 bg-emerald-500/12 text-emerald-300"
+                                            : "border-white/15 bg-white/[0.04] text-white/65 hover:bg-white/[0.08] hover:text-white/90",
+                                        )}
+                                        aria-label={`Copy transaction reference ${row.reference}`}
+                                      >
+                                        {accountTransactionCopiedReferenceId === row.id ? <IconCheck className="h-3 w-3" /> : <IconCopy className="h-3 w-3" />}
+                                      </button>
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <p className="text-white/45 uppercase tracking-wide text-[10px]">Status</p>
+                                    <span className={cn(
+                                      "mt-1 inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold",
+                                      row.status === 'COMPLETED' && "border-emerald-400/30 bg-emerald-500/10 text-emerald-300",
+                                      row.status === 'PENDING' && "border-amber-400/30 bg-amber-500/10 text-amber-300",
+                                      row.status === 'CREDITED' && "border-blue-400/30 bg-blue-500/10 text-blue-300",
+                                    )}>
+                                      {row.status}
+                                    </span>
+                                  </div>
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               ) : (
                 <>
                   <NotificationHub />
@@ -14643,18 +15648,10 @@ function ViewTab({
   )
 }
 
-function SportsRedirect() {
-  const router = useRouter()
-  useEffect(() => {
-    router.replace('/sports/football')
-  }, [router])
-  return <div className="w-full bg-[#1a1a1a] min-h-screen" />
-}
-
 export default function NavTestPage() {
   return (
-    <Suspense fallback={<div className="w-full bg-[#1a1a1a] min-h-screen" />}>
-      <SportsRedirect />
-      </Suspense>
+    <SidebarProvider defaultOpen>
+      <NavTestPageContent />
+    </SidebarProvider>
   )
 }
