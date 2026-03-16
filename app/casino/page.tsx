@@ -8295,7 +8295,7 @@ function NavTestPageContent() {
   const [showSports, setShowSports] = useState(false) // Always false for casino page
   const [showVipRewards, _setShowVipRewards] = useState(false)
   const [showPoker, _setShowPoker] = useState(false)
-  const lockedMainNavLabels = useMemo(() => new Set(['Home', 'Sports', 'Live Betting', 'In-Play']), [])
+  const lockedMainNavLabels = useMemo(() => new Set<string>(), [])
   // Wrapper setters that fire page_view events for session flow tracking
   const setShowVipRewards = useCallback((val: boolean) => {
     _setShowVipRewards(val)
