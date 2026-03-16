@@ -6815,14 +6815,11 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
               <div className="w-10 h-10 bg-white/20 rounded flex items-center justify-center">
                 {(() => {
                   const leagueName = activeSport === 'Football' ? 'NFL' : 'Premier League'
-                  const leagueData = leagues.find(l => l.name === leagueName)
-                  let iconPath: string | undefined
-                  if (leagueData && typeof leagueData.icon === 'string') {
-                    iconPath = leagueData.icon
-                  }
-                  return iconPath ? (
+                  const rawLeagueIcon = leagues.find((l) => l.name === leagueName)?.icon
+                  const iconSrc: string | undefined = typeof rawLeagueIcon === 'string' ? rawLeagueIcon : undefined
+                  return iconSrc ? (
                     <img 
-                      src={iconPath} 
+                      src={iconSrc} 
                       alt={leagueName}
                       width={24}
                       height={20}
