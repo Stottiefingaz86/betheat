@@ -36,6 +36,13 @@ const nextConfig = {
 
   // Remove X-Powered-By header
   poweredByHeader: false,
+
+  async redirects() {
+    return [
+      // Consolidate all sportsbook routes into a single lobby URL.
+      { source: '/sports/:path+', destination: '/sports', permanent: false },
+    ]
+  },
 }
 
 module.exports = nextConfig
