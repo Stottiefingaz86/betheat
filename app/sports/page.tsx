@@ -6816,8 +6816,10 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                 {(() => {
                   const leagueName = activeSport === 'Football' ? 'NFL' : 'Premier League'
                   const leagueData = leagues.find(l => l.name === leagueName)
-                  const leagueIcon = leagueData?.icon
-                  const iconPath = typeof leagueIcon === 'string' ? leagueIcon : null
+                  let iconPath: string | undefined
+                  if (leagueData && typeof leagueData.icon === 'string') {
+                    iconPath = leagueData.icon
+                  }
                   return iconPath ? (
                     <img 
                       src={iconPath} 
