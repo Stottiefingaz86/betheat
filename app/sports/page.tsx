@@ -6088,7 +6088,6 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                     onClick={(e) => {
                       e.preventDefault()
                       e.stopPropagation()
-                      setAccountBonusTab('available')
                       setAccountDrawerView('bonus')
                       openAccountDrawer()
                     }}
@@ -6429,7 +6428,6 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                   return
                                 }
                                 if (item.label === 'My Bonus') {
-                                  setAccountBonusTab('available')
                                   setAccountDrawerView('bonus')
                                   openAccountDrawer()
                                   if (isMobile) setOpenMobile(false)
