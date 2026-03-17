@@ -6096,9 +6096,9 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                     onClick={(e) => {
                       e.preventDefault()
                       e.stopPropagation()
-                      setAccountBonusTab('available')
-                      setAccountDrawerView('bonus')
-                      openAccountDrawer()
+                      if (typeof window !== 'undefined') {
+                        window.dispatchEvent(new CustomEvent('open-account-bonus'))
+                      }
                     }}
                     className={cn(
                       "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
@@ -10353,6 +10353,19 @@ function NavTestPageContent() {
     setDepositDrawerOpen(true)
     useChatStore.getState().setIsOpen(false)
   }, [])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    const handleOpenAccountBonus = () => {
+      setAccountBonusTab('available')
+      setAccountDrawerView('bonus')
+      openAccountDrawer()
+    }
+
+    window.addEventListener('open-account-bonus', handleOpenAccountBonus)
+    return () => window.removeEventListener('open-account-bonus', handleOpenAccountBonus)
+  }, [openAccountDrawer])
 
   // Panel exclusivity: when chat opens, close all drawers + collapse sidebar
   useEffect(() => {
