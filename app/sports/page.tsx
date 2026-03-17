@@ -283,21 +283,31 @@ const FOOTER_CRYPTO_LABELS: Record<string, string> = {
 
 // Available square tile images
 const squareTileImages = [
-  '/games/square/goldNuggetRush.png',
-  '/games/square/megacrush.png',
-  '/games/square/goldNuggetRush2.png',
-  '/games/square/mrMammoth.png',
-  '/games/square/cocktailWheel.png',
-  '/games/square/takeTheBank.png',
-  '/games/square/hookedOnFishing.png',
-  '/games/square/roulette.png',
-  '/games/square/blackjack.png',
-  '/games/square/baccarat.png',
-  '/games/square/game8.png',
-  '/games/square/game17.png',
-  '/games/square/game18.png',
-  '/games/square/game20.png',
-  '/games/square/game21.png',
+  '/games/31d384b25e3d6c8704f84b3db84e31bceacf2ff16279fbcc25ad9e1bf55a7564.avif',
+  '/games/eaf11ccc50dea10b36385a20d03bb066989b69b03eb0a2260fb9f94b58111908.avif',
+  '/games/85df80b16ad5fc92a2a7a7e9e12f78c75dd1a33eddff36daa8a02dbc7f2eab54.avif',
+  '/games/fad562df401ccfd1dde3707308efab027eea94a6cd11c35d64cc814efbb3a44f.avif',
+  '/games/6cc2e6228b274e48ff6045944b153810db7131ad61d90cabce5aa35176c639e9.avif',
+  '/games/ba877175859e53e10049fb0d90a236e52290b30a74449d386863873e068f05f6.avif',
+  '/games/d0da486c2ef84196c52198fce55b4566303ef3d73d94c675179a8f6c4c5a3781.avif',
+  '/games/41ef135e01539f2cad0971dcc7b49bbf741eccbba3cb25daaa139c8d49dc168d.avif',
+  '/games/282a2fae2d94b39108e30fc0c1a448fcc666f7c804347d51ed4568cd849121b4.avif',
+  '/games/c0be957b99d1a534b8fa221a225e87445766948f0b861b42700ad370fb84e22d.avif',
+  '/games/7cea92185c7ace705297172c7c2d61591a1d51c6ec0e67545493598989e44b22.avif',
+  '/games/d319fe86677108d19df21e0ca027be9c240c347bfd90a9038d16ab76fe9e1b56.avif',
+  '/games/be2e59b9310ae467a892068b7e4afc38458ec87b2cababad70243af2c17f8f9b.avif',
+  '/games/e57824a3bba6f67381074acbdc293efe50bf38966365549a92f454c3a3ffb5ff.avif',
+  '/games/80cef3c2101ccc6abeb74df85fe242c1ba7cb741f4d1c16c8791818721495943.avif',
+  '/games/f21318673c065243f6fcecd14babc84e0e2c3a682fc79d7f5be9334fe5834e4e.avif',
+  '/games/cb8c8e48781137b94c5dea7326d5c4d15b045ee1e8282b8ca674a0ac231914a8.avif',
+  '/games/14d5410c6cf4c303d291262a10e949dc14b0ac2eca2a7a730b0401919c01358e.avif',
+  '/games/c5996d604ffd3f6e1e34d94425948d29f78bbd0a96c9611a78b12de8b4ff7677.avif',
+  '/games/2cb39e9486a6cd37f49767537241fc8b9f5fd302f17a79c06f5220afcea27ea3.avif',
+  '/games/73754d4bf421b78fbd3895bbc7890d379797588cb699d6cbe47f3656aa93613b.avif',
+  '/games/ceb29aff91c7ba3033e44ee289d2eeb4e85088cdb56daac04d2e82a886542b05.avif',
+  '/games/84513d6373e86453b6a8c1a1764787f1a888de7bee155b861f90289513864938.avif',
+  '/games/7a77b3910795bdd5f00f045fc5bab2aca5787542c07d39def8cc8b343aaa2d71.avif',
+  '/games/9407302fecd33613bc716d3b0d4f1e724334321ec910404f6b417284db593d37.avif',
 ]
 
 // Originals tile images (tall rectangles)
@@ -4086,7 +4096,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
   const [topEventsCarouselApi, setTopEventsCarouselApi] = useState<CarouselApi>()
   const [topEventsCanScrollPrev, setTopEventsCanScrollPrev] = useState(false)
   const [topEventsCanScrollNext, setTopEventsCanScrollNext] = useState(false)
-  
+
   // Premier League table expand state
   const [premierLeagueTableExpanded, setPremierLeagueTableExpanded] = useState(false)
   const [premierLeagueActiveTab, setPremierLeagueActiveTab] = useState<'Table' | 'Fixtures' | 'Results' | 'Stats'>('Table')
@@ -4123,6 +4133,11 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
   const [sgpCarouselApi, setSgpCarouselApi] = useState<CarouselApi>()
   const [sgpCanScrollPrev, setSgpCanScrollPrev] = useState(false)
   const [sgpCanScrollNext, setSgpCanScrollNext] = useState(false)
+
+  // Champions League Bet Builder state
+  const [clBetBuilderSecondaryExpandedId, setClBetBuilderSecondaryExpandedId] = useState<string | null>(null)
+  const [clBetBuilderTab, setClBetBuilderTab] = useState<'Main' | 'Shots on Target' | 'Shots' | 'Fouls' | 'Tackles'>('Main')
+  const [clBetBuilderShowAll, setClBetBuilderShowAll] = useState(false)
   
   // Live scores state for animation - initialized after liveEvents is defined
   const [liveScores, setLiveScores] = useState<{ [key: number]: { team1: number, team2: number, animating?: { team: 1 | 2, from: number, to: number } } }>({})
@@ -4153,7 +4168,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
       setTopEventsCanScrollNext(topEventsCarouselApi.canScrollNext())
     })
   }, [topEventsCarouselApi])
-  
+
   // Update top bet boosts carousel scroll state
   useEffect(() => {
     if (!topBetBoostsCarouselApi) return
@@ -4888,20 +4903,30 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
   const straightBets = Object.values(betsByEvent).flat()
   const straightStake = straightBets.reduce((sum, bet) => sum + bet.stake, 0)
   
-  // Helper function to convert odds to decimal multiplier
+  // Helper function to convert American/Fractional/Decimal odds to decimal multiplier
   const oddsToDecimal = (oddsStr: string): number => {
-    const cleaned = oddsStr.replace('+', '').trim()
-    const oddsValue = parseFloat(cleaned)
-    
-    // If odds are >= 2.0, assume decimal format (e.g., 3.25, 2.10)
-    // If odds are < 2.0 or start with +, assume American format (e.g., +350, +150)
-    if (oddsStr.startsWith('+') || (oddsValue < 2.0 && oddsValue > 0)) {
-      // American odds: +350 means bet $100 to win $350
-      return oddsValue / 100 + 1
-    } else {
-      // Decimal odds: 3.25 means bet $1 to win $3.25 total
-      return oddsValue
+    const cleaned = oddsStr.trim()
+    if (!cleaned) return 1
+    if (cleaned.includes('/')) {
+      const [num, den] = cleaned.split('/')
+      const n = parseFloat(num)
+      const d = parseFloat(den)
+      if (Number.isFinite(n) && Number.isFinite(d) && d !== 0) return n / d + 1
     }
+    if (cleaned.startsWith('+') || cleaned.startsWith('-')) {
+      const american = parseFloat(cleaned)
+      if (Number.isFinite(american)) {
+        if (american > 0) return american / 100 + 1
+        if (american < 0) return 100 / Math.abs(american) + 1
+      }
+    }
+    const decimal = parseFloat(cleaned)
+    return Number.isFinite(decimal) && decimal > 0 ? decimal : 1
+  }
+
+  const formatDecimalOdds = (oddsStr: string): string => {
+    const decimal = oddsToDecimal(oddsStr)
+    return Number.isFinite(decimal) && decimal > 0 ? decimal.toFixed(2) : oddsStr
   }
   
   // Calculate parlay (only if multiple games)
@@ -5320,9 +5345,9 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
 
                     {/* Bet Info - Tighter spacing */}
                     <div className="flex-1 min-w-0 pr-1.5">
-                      {bet.marketTitle === 'Same Game Parlay' ? (
+                      {(bet.marketTitle === 'Same Game Parlay' || bet.marketTitle === 'Acca') ? (
                         <>
-                          <div className="text-[10px] font-semibold text-black/60 uppercase tracking-wide mb-0.5 leading-tight">SGP · {bet.selection.split(' + ').length} Legs</div>
+                          <div className="text-[10px] font-semibold text-black/60 uppercase tracking-wide mb-0.5 leading-tight">ACCA · {bet.selection.split(' + ').length} Legs</div>
                           <div className="text-[10px] text-black/40 mb-1.5 leading-tight">{bet.eventName}</div>
                           <div className="relative ml-[2px] mb-0.5">
                             <div className="absolute left-[2px] top-[4px] bottom-[4px] w-[1px] bg-black/15" />
@@ -6071,8 +6096,9 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                     onClick={(e) => {
                       e.preventDefault()
                       e.stopPropagation()
-                      setToastMessage('Bonus is available in My Account.')
-                      setShowToast(true)
+                      setAccountBonusTab('available')
+                      setAccountDrawerView('bonus')
+                      openAccountDrawer()
                     }}
                     className={cn(
                       "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
@@ -7137,11 +7163,43 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
             </AnimatePresence>
           </motion.div>
           )}
+
+          {/* Casino Banner Carousel */}
+          <div className="mb-8">
+            <div className="relative -mx-6" style={{ overflow: 'visible', position: 'relative', width: 'calc(100% + 3rem)', maxWidth: 'none', boxSizing: 'border-box', minWidth: 0 }}>
+              <Carousel className="w-full relative overflow-hidden" opts={{ dragFree: true, containScroll: 'trimSnaps', duration: 15 }}>
+                {!isMobile && (
+                  <>
+                    <CarouselPrevious className="!left-2 !-translate-x-0 h-8 w-8 rounded-full bg-[#1a1a1a]/90 backdrop-blur-sm border border-white/20 hover:bg-[#1a1a1a] hover:border-white/30 text-white z-20" />
+                    <CarouselNext className="!right-2 !-translate-x-0 h-8 w-8 rounded-full bg-[#1a1a1a]/90 backdrop-blur-sm border border-white/20 hover:bg-[#1a1a1a] hover:border-white/30 text-white z-20" />
+                  </>
+                )}
+                <CarouselContent className="ml-6 mr-0">
+                  {[
+                    { src: '/banners/Welcome%20Bonus%20Casinofinale_2cbbd48c-15e7-406d-a2d7-e9cd9b201699_20260121_0703.png', alt: 'Welcome Bonus' },
+                    { src: '/banners/AccaBoostfinale_b1661794-7726-4b87-852f-17eccfc9d7ce_20260121_0703.png', alt: 'Acca Boost' },
+                    { src: '/banners/cashbackfinale_07a0a8f0-480f-42e8-b2a3-322bd1b4156c_20260121_0703.png', alt: 'Weekly Cashback' },
+                    { src: '/banners/cryptofinale_7831bcf7-7a0c-493d-bb7e-7fea7c188d98_20260121_0703.png', alt: 'Crypto Promo' },
+                  ].map((banner, index) => (
+                    <CarouselItem key={index} className={index === 0 ? "pl-0 pr-0 basis-auto flex-shrink-0" : "pl-2 md:pl-4 basis-auto flex-shrink-0"}>
+                      <Card data-banner-card className="border-0 relative overflow-hidden flex-shrink-0 cursor-pointer hover:opacity-90 transition-opacity rounded-small w-auto h-auto">
+                        <img
+                          src={banner.src}
+                          alt={banner.alt}
+                          className={cn("block h-auto max-w-none", isMobile ? "w-[300px]" : "w-auto")}
+                        />
+                      </Card>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+              </Carousel>
+            </div>
+          </div>
           
           {/* Top Events Section */}
-          <div className="mb-8">
+          <div className="mb-8 pb-2">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-base font-semibold text-white pl-2">Top Events</h2>
+              <h2 className="text-base font-semibold text-white pl-2">Trending</h2>
               <div className="flex items-center gap-2">
               <Button 
                 variant="ghost" 
@@ -7524,17 +7582,17 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                               addBetToSlip(event.id, `${event.team1} v ${event.team2}`, 'Moneyline', event.team1Code, topEventDecimalOdds)
                             }}
                             className={cn(
-                              "bg-white/10 text-white rounded-small flex-1 h-[54px] flex flex-col items-center justify-center gap-1 text-center transition-colors cursor-pointer px-2 focus:outline-none focus-visible:outline-none focus-visible:ring-0",
+                              "bg-white/[0.04] text-white rounded-small flex-1 h-[54px] flex flex-col items-center justify-center gap-1 text-center transition-colors cursor-pointer px-2 focus:outline-none focus-visible:outline-none focus-visible:ring-0",
                               isBetSelected(event.id, 'Moneyline', event.team1Code) && "!bg-[#c9b4ff] !border-[#c9b4ff] text-[#121417]"
                             )}
                             onMouseEnter={(e) => {
                               if (!isBetSelected(event.id, 'Moneyline', event.team1Code)) {
-                                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.16)'
+                                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)'
                               }
                             }}
                             onMouseLeave={(e) => {
                               if (!isBetSelected(event.id, 'Moneyline', event.team1Code)) {
-                                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
+                                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.04)'
                               }
                             }}
                           >
@@ -7554,17 +7612,17 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                               addBetToSlip(event.id, `${event.team1} v ${event.team2}`, 'Moneyline', 'Tie', topEventDecimalOdds)
                             }}
                             className={cn(
-                              "bg-white/10 text-white rounded-small flex-1 h-[54px] flex flex-col items-center justify-center gap-1 text-center transition-colors cursor-pointer px-2 focus:outline-none focus-visible:outline-none focus-visible:ring-0",
+                              "bg-white/[0.04] text-white rounded-small flex-1 h-[54px] flex flex-col items-center justify-center gap-1 text-center transition-colors cursor-pointer px-2 focus:outline-none focus-visible:outline-none focus-visible:ring-0",
                               isBetSelected(event.id, 'Moneyline', 'Tie') && "!bg-[#c9b4ff] !border-[#c9b4ff] text-[#121417]"
                             )}
                             onMouseEnter={(e) => {
                               if (!isBetSelected(event.id, 'Moneyline', 'Tie')) {
-                                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.16)'
+                                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)'
                               }
                             }}
                             onMouseLeave={(e) => {
                               if (!isBetSelected(event.id, 'Moneyline', 'Tie')) {
-                                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
+                                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.04)'
                               }
                             }}
                           >
@@ -7584,17 +7642,17 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                               addBetToSlip(event.id, `${event.team1} v ${event.team2}`, 'Moneyline', event.team2Code, topEventDecimalOdds)
                             }}
                             className={cn(
-                              "bg-white/10 text-white rounded-small flex-1 h-[54px] flex flex-col items-center justify-center gap-1 text-center transition-colors cursor-pointer px-2 focus:outline-none focus-visible:outline-none focus-visible:ring-0",
+                              "bg-white/[0.04] text-white rounded-small flex-1 h-[54px] flex flex-col items-center justify-center gap-1 text-center transition-colors cursor-pointer px-2 focus:outline-none focus-visible:outline-none focus-visible:ring-0",
                               isBetSelected(event.id, 'Moneyline', event.team2Code) && "!bg-[#c9b4ff] !border-[#c9b4ff] text-[#121417]"
                             )}
                             onMouseEnter={(e) => {
                               if (!isBetSelected(event.id, 'Moneyline', event.team2Code)) {
-                                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.16)'
+                                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)'
                               }
                             }}
                             onMouseLeave={(e) => {
                               if (!isBetSelected(event.id, 'Moneyline', event.team2Code)) {
-                                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
+                                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.04)'
                               }
                             }}
                           >
@@ -7741,7 +7799,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                 e.stopPropagation()
                                 setTrackerEvent({ id: event.id, team1: event.team1, team2: event.team2, league: event.league, country: event.country, score: event.score, minute: event.isLive ? "45'" : undefined, isLive: event.isLive, statscoreEventId: 6188732, statscoreConfigId: '60dc694d4321eaff1879f0cf' })
                               }}
-                              className="h-6 w-6 rounded-small bg-white/[0.04] text-white/70 hover:text-white hover:bg-white/[0.08] transition-colors cursor-pointer flex items-center justify-center"
+                              className="h-6 w-6 rounded-small bg-transparent text-white/70 hover:text-white hover:bg-white/[0.08] transition-colors cursor-pointer flex items-center justify-center"
                             >
                               <IconVideo className="w-3 h-3" />
                             </button>
@@ -7752,7 +7810,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                 e.stopPropagation()
                                 setTrackerEvent({ id: event.id, team1: event.team1, team2: event.team2, league: event.league, country: event.country, score: event.score, minute: event.isLive ? "45'" : undefined, isLive: event.isLive, statscoreEventId: 6188732, statscoreConfigId: '60dc694d4321eaff1879f0cf' })
                               }}
-                              className="h-6 w-6 rounded-small bg-white/[0.04] text-white/70 hover:text-white hover:bg-white/[0.08] transition-colors cursor-pointer flex items-center justify-center"
+                              className="h-6 w-6 rounded-small bg-transparent text-white/70 hover:text-white hover:bg-white/[0.08] transition-colors cursor-pointer flex items-center justify-center"
                             >
                               <IconChartBar className="w-3 h-3" />
                             </button>
@@ -7831,20 +7889,20 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                       `${event.team1} v ${event.team2}`,
                                       moneylineMarket?.title || 'Moneyline',
                                       selection.option.label,
-                                      selection.option.odds
+                                      formatDecimalOdds(selection.option.odds)
                                     )
                                   }}
                                   className={cn(
                                     "rounded-small h-full flex items-center justify-center transition-colors cursor-pointer px-3",
                                     !selection.option && "opacity-45 cursor-not-allowed",
-                                    isSelected ? "bg-[#c9b4ff] text-[#121417]" : "bg-white/[0.04] text-white hover:bg-white/[0.08]"
+                                    isSelected ? "bg-[#c9b4ff] text-[#121417]" : "bg-white/[0.02] text-white hover:bg-white/[0.05]"
                                   )}
                                 >
                                   <div className="flex flex-col items-center justify-center gap-1.5 text-center">
                                     <div className={cn("text-[11px] leading-tight max-w-[130px] truncate text-center", isSelected ? "text-[#121417]/80" : "text-white/70")}>
                                       {selection.label}
                                     </div>
-                                    <div className="text-[28px] font-semibold leading-none tracking-tight">{selection.option?.odds ?? '--'}</div>
+                                    <div className="text-[28px] font-semibold leading-none tracking-tight">{selection.option?.odds ? formatDecimalOdds(selection.option.odds) : '--'}</div>
                                   </div>
                                 </button>
                               )
@@ -7877,20 +7935,20 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                   `${event.team1} v ${event.team2}`,
                                   moneylineMarket?.title || 'Moneyline',
                                   selection.option.label,
-                                  selection.option.odds
+                                  formatDecimalOdds(selection.option.odds)
                                 )
                               }}
                               className={cn(
                                 "rounded-small h-full flex items-center justify-center transition-colors cursor-pointer px-2",
                                 !selection.option && "opacity-45 cursor-not-allowed",
-                                isSelected ? "bg-[#c9b4ff] text-[#121417]" : "bg-white/[0.04] text-white hover:bg-white/[0.08]"
+                                isSelected ? "bg-[#c9b4ff] text-[#121417]" : "bg-white/[0.02] text-white hover:bg-white/[0.05]"
                               )}
                             >
                               <div className="flex flex-col items-center justify-center gap-1 text-center">
                                 <div className={cn("text-[10px] leading-none max-w-[96px] truncate", isSelected ? "text-[#121417]/80" : "text-white/70")}>
                                   {selection.label}
                                 </div>
-                                <div className="text-[20px] font-semibold leading-none tracking-tight">{selection.option?.odds ?? '--'}</div>
+                                <div className="text-[20px] font-semibold leading-none tracking-tight">{selection.option?.odds ? formatDecimalOdds(selection.option.odds) : '--'}</div>
                               </div>
                             </button>
                           )
@@ -7904,156 +7962,321 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
             </div>
           </div>
           
-          {/* Top Bet Boosts Section */}
+          {/* Racing Section */}
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-base font-semibold text-white pl-2">Top Bet Boosts</h2>
-              <div className="flex items-center gap-2">
-              <Button 
-                variant="ghost" 
-                  className="text-white/70 hover:text-white hover:bg-white/5 text-xs px-3 py-1.5 h-auto border border-white/20 rounded-small whitespace-nowrap transition-colors duration-300"
-                  onClick={() => {
-                    router.push('/sports/football')
-                  }}
-              >
-                View All
-              </Button>
-                {!isMobile && (
-                  <>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 rounded-small bg-[#1a1a1a]/90 backdrop-blur-sm border border-white/20 hover:bg-[#1a1a1a] hover:border-white/30 text-white disabled:opacity-50 disabled:cursor-not-allowed"
-                      onClick={() => {
-                        if (topBetBoostsCarouselApi) {
-                          const currentIndex = topBetBoostsCarouselApi.selectedScrollSnap()
-                          const targetIndex = Math.max(0, currentIndex - 2)
-                          topBetBoostsCarouselApi.scrollTo(targetIndex)
-                        }
-                      }}
-                      disabled={!topBetBoostsCarouselApi || !topBetBoostsCanScrollPrev}
-                    >
-                      <IconChevronLeft className="h-4 w-4" strokeWidth={2} />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 rounded-small bg-[#1a1a1a]/90 backdrop-blur-sm border border-white/20 hover:bg-[#1a1a1a] hover:border-white/30 text-white disabled:opacity-50 disabled:cursor-not-allowed"
-                      onClick={() => {
-                        if (topBetBoostsCarouselApi) {
-                          const currentIndex = topBetBoostsCarouselApi.selectedScrollSnap()
-                          const slideCount = topBetBoostsCarouselApi.scrollSnapList().length
-                          const targetIndex = Math.min(slideCount - 1, currentIndex + 2)
-                          topBetBoostsCarouselApi.scrollTo(targetIndex)
-                        }
-                      }}
-                      disabled={!topBetBoostsCarouselApi || !topBetBoostsCanScrollNext}
-                    >
-                      <IconChevronRight className="h-4 w-4" strokeWidth={2} />
-                    </Button>
-                  </>
-                )}
-              </div>
+              <h2 className="text-base font-semibold text-white pl-2">Racing</h2>
             </div>
             <div className="relative -mx-6" style={{ overflow: 'visible', position: 'relative', width: 'calc(100% + 3rem)', maxWidth: 'none', boxSizing: 'border-box', minWidth: 0 }}>
-              <Carousel setApi={setTopBetBoostsCarouselApi} className="w-full relative" style={{ overflow: 'visible', position: 'relative', width: '100%', maxWidth: '100%', minWidth: 0 }} opts={{ dragFree: true, containScroll: 'trimSnaps', duration: 15 }}>
-                <CarouselContent className="ml-6 mr-0">
-                  {/* Bet Boost Cards */}
-                  {([
-                    { id: 1, marketName: 'Haaland To Score From A Header Vs Wolves', isLive: true, liveTime: 'H2 70\'', wasOdds: '+350', boostedOdds: '+450' },
-                    { id: 2, marketName: 'Vinicius Jr To Score 2+ Goals Vs Sevilla', isLive: false, time: 'TODAY 10:30PM', wasOdds: '+280', boostedOdds: '+350' },
-                    { id: 3, marketName: 'Vlahovic To Score First Goal Vs AC Milan', isLive: false, time: 'TODAY 2:00PM', wasOdds: '+400', boostedOdds: '+500' },
-                    { id: 4, marketName: 'Salah To Score From Outside Box Vs Chelsea', isLive: true, liveTime: 'H1 32\'', wasOdds: '+450', boostedOdds: '+600' },
-                  ]).map((boost, index) => (
-                    <CarouselItem key={boost.id} className={index === 0 ? "pl-0 pr-0 basis-auto flex-shrink-0" : "pl-2 md:pl-4 basis-auto flex-shrink-0"}>
-                      <div className="w-[340px] bg-white/5 border border-white/10 rounded-small p-3 relative overflow-hidden flex-shrink-0" style={{ background: 'linear-gradient(to bottom, rgba(212, 175, 55, 0.12) 0%, rgba(255, 255, 255, 0.05) 100%)' }}>
-                        {/* Header: League info and Time/Live Status */}
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center gap-1.5">
-                            <Image 
-                              src={activeSport === 'Football' ? "/banners/sports_league/NFL.svg" : "/banners/sports_league/prem.svg"} 
-                              alt={activeSport === 'Football' ? "NFL" : "Premier League"}
-                              width={16}
-                              height={16}
-                              className="object-contain"
+              <div className="ml-6 mr-0 flex items-stretch gap-2 md:gap-3 overflow-x-auto pb-1 scrollbar-hide">
+                {[
+                  {
+                    id: 'dro-1',
+                    race: '1.18 Down Royal',
+                    time: '4h 55m',
+                    runners: [
+                      { name: 'Powerful Paddy', jockey: 'Mr P W Mullins', odds: '5/4', silk: '/racing/20260317dro131806.webp' },
+                      { name: 'Barley Lane', jockey: 'Kieren Buckley', odds: '3/1', silk: '/racing/20260317dro131813.webp' },
+                      { name: 'Combs', jockey: 'Jack Kennedy', odds: '5/1', silk: '/racing/20260317dro131816.webp' },
+                    ],
+                  },
+                  {
+                    id: 'wex-1',
+                    race: '1.37 Wexford',
+                    time: '5h 14m',
+                    runners: [
+                      { name: "Shady's Lady", jockey: 'Michael Kennedy (5)', odds: '6/5', silk: '/racing/20260317wex133701.webp' },
+                      { name: 'Brosna Queen', jockey: 'Brian Hayes', odds: '5/2', silk: '/racing/20260317wex133703.webp' },
+                      { name: 'Catchbiyr', jockey: 'Aidan Kelly (3)', odds: '7/2', silk: '/racing/20260317wex133705.webp' },
+                    ],
+                  },
+                  {
+                    id: 'exe-1',
+                    race: '1.45 Exeter',
+                    time: '5h 22m',
+                    runners: [
+                      { name: 'Dutch Corner', jockey: 'Harry Skelton', odds: '11/8', silk: '/racing/20260317exe134503.webp' },
+                      { name: 'Constellation Walk', jockey: 'Bryan Carver', odds: '11/4', silk: '/racing/20260317exe134505.webp' },
+                      { name: 'Karpen', jockey: 'Charlie Deutsch', odds: '4/1', silk: '/racing/20260317exe134509.webp' },
+                    ],
+                  },
+                ].map((meeting, meetingIndex) => (
+                  <div key={meeting.id} className="w-[320px] bg-white/[0.02] border border-white/[0.05] rounded-small p-2.5 flex-shrink-0">
+                    <div className="flex items-start justify-between mb-2">
+                      <div>
+                        <div className="text-[12px] leading-tight text-white font-semibold">{meeting.race}</div>
+                        <div className="text-[10px] text-white/65 mt-0.5">{meeting.time}</div>
+                      </div>
+                      <button
+                        type="button"
+                        className="h-5 w-6 rounded-small border border-white/10 bg-white/[0.04] text-white/45 hover:text-white/75 hover:bg-white/[0.08] transition-colors inline-flex items-center justify-center"
+                      >
+                        <IconPlayerPlay className="h-2.5 w-2.5" />
+                      </button>
+                    </div>
+                    <div className="space-y-1.5">
+                      {meeting.runners.map((runner, runnerIndex) => {
+                        const racingEventId = 970000 + (meetingIndex * 10) + runnerIndex
+                        const isSelected = bets.some((b) => b.eventId === racingEventId)
+                        return (
+                        <div key={runner.name} className="grid grid-cols-[1fr_auto] items-center gap-2 rounded-small border border-white/10 bg-white/[0.04] px-2 py-1.5">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <img
+                              src={runner.silk}
+                              alt={runner.name}
+                              width={22}
+                              height={22}
+                              className="h-[22px] w-[22px] rounded-small object-cover flex-shrink-0"
+                              decoding="sync"
                             />
-                            <span className="text-[10px] text-white">{activeSport === 'Football' ? 'NFL | USA, Football' : 'Premier League | England, Soccer'}</span>
-                  </div>
-                          {boost.isLive ? (
-                            <div className="flex items-center gap-1.5">
-                              <div className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-pulse"></div>
-                              <span className="text-[10px] text-orange-500">{boost.time}</span>
-                            </div>
-                          ) : (
-                          <span className="text-[10px] text-white">{boost.time}</span>
-                          )}
-                  </div>
-                        
-                        {/* Market Name with Odds on the Right */}
-                        <div className="flex items-center justify-between gap-4 mb-2">
-                          <div className="text-sm font-semibold text-white/90 leading-tight flex-1" style={{ lineHeight: '1.3', maxWidth: '200px' }}>
-                          {boost.marketName}
-                        </div>
-                          {/* Odds Side by Side */}
-                          <div className="flex items-center gap-2 flex-shrink-0">
-                            {/* Was Odds */}
-                            <div>
-                              <div className="text-[10px] text-white/50 mb-1 text-center">Was</div>
-                    <button 
-                                disabled
-                                className="bg-white/10 text-white/50 rounded-small h-[38px] flex items-center justify-center px-3 border border-white/20 cursor-not-allowed opacity-60"
-                              >
-                                <span className="text-[10px] text-white/50 leading-none line-through">{boost.wasOdds}</span>
-                    </button>
-                            </div>
-                            {/* Boosted Odds */}
-                            <div>
-                              <div className="text-[10px] text-white/50 mb-1 text-center">Boosted</div>
-                    <button 
-                      onClick={(e) => {
-                        e.preventDefault()
-                        e.stopPropagation()
-                        addBetToSlip(boost.id + 90000, boost.marketName, 'Bet Boost', boost.marketName, boost.boostedOdds)
-                      }}
-                                className={cn(
-                                  "rounded-small h-[38px] flex items-center justify-center px-3 border transition-colors cursor-pointer",
-                                  bets.some(b => b.eventId === boost.id + 90000) 
-                                    ? "bg-[#c9b4ff] border-[#c9b4ff] text-[#121417]" 
-                                    : "bg-white/10 border-white/20 text-white"
-                                )}
-                      onMouseEnter={(e) => {
-                        if (!bets.some(b => b.eventId === boost.id + 90000)) e.currentTarget.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--ds-primary').trim() || '#ee3536'
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!bets.some(b => b.eventId === boost.id + 90000)) e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
-                      }}
-                    >
-                                <span className="text-[10px] font-bold text-white leading-none">{boost.boostedOdds}</span>
-                    </button>
+                            <div className="min-w-0">
+                              <div className="text-[12px] text-white font-semibold truncate leading-tight">{runner.name}</div>
+                              <div className="text-[10px] text-white/55 truncate leading-tight">{runner.jockey}</div>
                             </div>
                           </div>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              e.stopPropagation()
+                              addBetToSlip(
+                                racingEventId,
+                                meeting.race,
+                                'Racing Winner',
+                                runner.name,
+                                runner.odds
+                              )
+                            }}
+                            className={cn(
+                              "h-8 min-w-[58px] px-2 rounded-small border font-bold text-[12px] leading-none transition-colors",
+                              isSelected
+                                ? "bg-[#c9b4ff] border-[#c9b4ff] text-[#121417]"
+                                : "bg-white/[0.05] border-white/10 text-white hover:bg-white/[0.1]"
+                            )}
+                          >
+                            {runner.odds}
+                          </button>
+                        </div>
+                      )})}
+                    </div>
                   </div>
-                        
-                        {/* Information Disclaimer */}
-                        <div className="flex items-start gap-1.5">
-                          <IconInfoCircle className="w-3.5 h-3.5 text-white/50 flex-shrink-0 mt-0.5" />
-                          <span className="text-[10px] text-white/50 leading-tight">
-                            Player Must Play. If No TD's Are Scored Wager Will Be Graded As A Loss
-                          </span>
-                </div>
-                      </div>
-                    </CarouselItem>
-              ))}
-                </CarouselContent>
-              </Carousel>
+                ))}
+              </div>
             </div>
           </div>
-          
 
-          {/* Same Game Parlays Section */}
+          {/* Champions League Bet Builder */}
+          <div className="mb-8">
+            {(() => {
+              const clFixtures = [
+                {
+                  id: 'mci-rma',
+                  home: 'Man City',
+                  away: 'Real Madrid',
+                  competition: 'UEFA Champions League Tue 20:00',
+                  homeKit: '/racing/betbuilder/Man City Home 25_26 Front.svg',
+                  awayKit: '/racing/betbuilder/CL_Real_Madrid_Away_Front_25_26.svg',
+                  players: [
+                    { name: 'Erling Haaland', shirt: '9', form: [0, 1, 0, 1, 0], toScore: '4/9', scoreOrAssist: '3/10', toBeBooked: '5/1' },
+                    { name: 'Rayan Cherki', shirt: '10', form: [0, 0, 1, 1, 0], toScore: '6/4', scoreOrAssist: '1/2', toBeBooked: '9/2' },
+                    { name: 'Phil Foden', shirt: '47', form: [2, 0, 0, 0, 0], toScore: '7/4', scoreOrAssist: '20/21', toBeBooked: '13/2' },
+                    { name: 'Gonzalo Garcia', shirt: '16', form: [0, 0, 0, 0, 0], toScore: '13/5', scoreOrAssist: '15/8', toBeBooked: '5/1' },
+                    { name: 'Tijani Reijnders', shirt: '14', form: [0, 0, 0, 0, 0], toScore: '3/1', scoreOrAssist: '7/5', toBeBooked: '7/2' },
+                    { name: 'Vinicius Jr.', shirt: '7', form: [1, 0, 1, 1, 0], toScore: '3/1', scoreOrAssist: '8/5', toBeBooked: '12/5' },
+                    { name: 'Rodrygo', shirt: '11', form: [1, 1, 0, 0, 1], toScore: '7/2', scoreOrAssist: '15/8', toBeBooked: '11/2' },
+                    { name: 'Jude Bellingham', shirt: '5', form: [0, 1, 0, 1, 1], toScore: '4/1', scoreOrAssist: '9/5', toBeBooked: '9/2' },
+                  ],
+                },
+                { id: 'che-psg', home: 'Chelsea', away: 'PSG', competition: 'UEFA Champions League Wed 20:00', homeKit: '/racing/betbuilder/Chelsea_Home_Front_2526.svg', awayKit: '/racing/betbuilder/CL_PSG_Away_Front_25_26.svg', players: [] },
+                { id: 'ars-b04', home: 'Arsenal', away: 'Bayer Leverkusen', competition: 'UEFA Champions League Wed 20:00', homeKit: '/racing/betbuilder/Arsenal_HomeFront_25_26.svg', awayKit: '/racing/betbuilder/BAYERLEVERKUSSEN_HOME_FRONT_2526.svg', players: [] },
+                { id: 'spo-bod', home: 'Sporting', away: 'Bodo/Glimt', competition: 'UEFA Champions League Wed 17:45', homeKit: '/racing/betbuilder/SPORTINGCP_HOME_FRONT_2526.svg', awayKit: '/racing/betbuilder/Bodo_Glimt_Home_Front_25_26.svg', players: [] },
+                { id: 'bar-new', home: 'Barcelona', away: 'Newcastle', competition: 'UEFA Champions League Wed 20:00', homeKit: '/racing/betbuilder/BARCELONA_HOME_FRONT_2526.svg', awayKit: '/racing/betbuilder/Newcastle United_25_26_New Kit_Front (3).svg', players: [] },
+              ] as const
+
+              const expandedFixture = clFixtures[0]
+              const secondaryExpandedFixture = clFixtures.find((f) => f.id === clBetBuilderSecondaryExpandedId) ?? null
+              const maxRows = clBetBuilderShowAll ? expandedFixture.players.length : 6
+              const visibleRows = expandedFixture.players.slice(0, maxRows)
+
+              return (
+                <div className="space-y-2">
+                  <div className="flex items-center pl-2 pb-2">
+                    <img
+                      src="/racing/betbuilder/BetBuilderPlus-1.svg"
+                      alt="Bet Builder"
+                      width={82}
+                      height={14}
+                      className="h-[14px] w-auto object-contain"
+                      decoding="sync"
+                      style={{ filter: 'hue-rotate(-138deg) saturate(260%) brightness(110%)' }}
+                    />
+                  </div>
+                  <div className="bg-white/[0.02] border border-white/[0.06] rounded-small overflow-hidden">
+                    <div className="px-3 py-3 border-b border-white/10">
+                      <div className="mx-auto grid w-full max-w-[560px] grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 text-sm font-semibold text-white">
+                        <span className="justify-self-end text-right truncate">{expandedFixture.home}</span>
+                        <span className="inline-flex items-center gap-2">
+                          <img src={expandedFixture.homeKit} alt={expandedFixture.home} className="h-5 w-5 object-contain" />
+                          <span className="text-white/40">v</span>
+                          <img src={expandedFixture.awayKit} alt={expandedFixture.away} className="h-5 w-5 object-contain" />
+                        </span>
+                        <span className="justify-self-start truncate">{expandedFixture.away}</span>
+                      </div>
+                      <p className="text-center text-xs text-white/55 mt-1">{expandedFixture.competition}</p>
+                    </div>
+
+                    <div className="px-2 py-2 border-b border-white/10">
+                      <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide">
+                        {(['Main', 'Shots on Target', 'Shots', 'Fouls', 'Tackles'] as const).map((tab) => (
+                          <button
+                            key={tab}
+                            type="button"
+                            onClick={() => setClBetBuilderTab(tab)}
+                            className={cn(
+                              "h-8 px-3 rounded-small text-xs whitespace-nowrap border transition-colors",
+                              clBetBuilderTab === tab
+                                ? "bg-white/10 text-white border-white/20"
+                                : "bg-transparent text-white/65 border-transparent hover:text-white hover:bg-white/[0.04]"
+                            )}
+                          >
+                            {tab}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-[minmax(260px,1.5fr)_minmax(110px,1fr)_minmax(130px,1fr)_minmax(110px,1fr)] gap-0 border-b border-white/10 bg-white/[0.02]">
+                      <div className="px-3 py-2 text-xs font-semibold text-white/80">Player / Last 5</div>
+                      <div className="px-3 py-2 text-xs font-semibold text-white/80 text-center">To Score</div>
+                      <div className="px-3 py-2 text-xs font-semibold text-white/80 text-center">Score or Assist</div>
+                      <div className="px-3 py-2 text-xs font-semibold text-white/80 text-center">To be Booked</div>
+                    </div>
+
+                    <div>
+                      {visibleRows.map((player, rowIndex) => {
+                        const fixtureIndex = clFixtures.findIndex((f) => f.id === expandedFixture.id)
+                        const oddsMap = [
+                          { key: 'To Score', odds: formatDecimalOdds(player.toScore) },
+                          { key: 'Score or Assist', odds: formatDecimalOdds(player.scoreOrAssist) },
+                          { key: 'To be Booked', odds: formatDecimalOdds(player.toBeBooked) },
+                        ] as const
+
+                        return (
+                          <div key={player.name} className="grid grid-cols-[minmax(260px,1.5fr)_minmax(110px,1fr)_minmax(130px,1fr)_minmax(110px,1fr)] gap-0 border-b border-white/[0.06] last:border-b-0">
+                            <div className="px-3 py-2.5 flex items-center gap-2.5 min-w-0">
+                              <div className="h-6 w-6 rounded-small bg-[#8fc7ea] text-[#0f1728] text-[10px] font-bold flex items-center justify-center flex-shrink-0">
+                                {player.shirt}
+                              </div>
+                              <div className="min-w-0">
+                                <div className="text-[13px] font-semibold text-white truncate leading-tight">{player.name}</div>
+                                <div className="mt-1 flex items-center gap-1">
+                                  {player.form.map((v, i) => (
+                                    <span key={`${player.name}-form-${i}`} className="h-4 min-w-[14px] px-1 rounded-[3px] bg-white/[0.06] text-[10px] text-white/65 inline-flex items-center justify-center leading-none">
+                                      {v}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                            {oddsMap.map((item, colIndex) => {
+                              const selectionId = 990000 + (fixtureIndex * 1000) + (rowIndex * 10) + colIndex
+                              const isSelected = bets.some((b) => b.eventId === selectionId)
+                              return (
+                                <div key={`${player.name}-${item.key}`} className="px-2 py-1.5 flex items-center justify-center">
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      e.stopPropagation()
+                                      addBetToSlip(
+                                        selectionId,
+                                        `${expandedFixture.home} v ${expandedFixture.away}`,
+                                        `CL Bet Builder - ${item.key}`,
+                                        player.name,
+                                        item.odds
+                                      )
+                                    }}
+                                    className={cn(
+                                      "h-9 min-w-[72px] rounded-small border px-3 text-[12px] font-bold transition-colors",
+                                      isSelected
+                                        ? "bg-[#c9b4ff] border-[#c9b4ff] text-[#121417]"
+                                        : "bg-white/[0.03] border-white/10 text-white hover:bg-white/[0.06]"
+                                    )}
+                                  >
+                                    {item.odds}
+                                  </button>
+                                </div>
+                              )
+                            })}
+                          </div>
+                        )
+                      })}
+                    </div>
+
+                    {expandedFixture.players.length > 6 && (
+                      <div className="px-3 py-2 border-t border-white/[0.06]">
+                        <button
+                          type="button"
+                          onClick={() => setClBetBuilderShowAll((prev) => !prev)}
+                          className="w-full h-9 rounded-small bg-white/[0.03] border border-white/10 text-white/80 hover:text-white hover:bg-white/[0.06] text-sm font-semibold inline-flex items-center justify-center gap-1.5"
+                        >
+                          <span>{clBetBuilderShowAll ? 'Show less' : 'Show more'}</span>
+                          <IconChevronDown className={cn("h-4 w-4 transition-transform", clBetBuilderShowAll && "rotate-180")} />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  {clFixtures.slice(1).map((fixture) => (
+                    <div key={fixture.id} className="space-y-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setClBetBuilderSecondaryExpandedId((prev) => (prev === fixture.id ? null : fixture.id))
+                          setClBetBuilderShowAll(false)
+                        }}
+                      className="w-full text-center px-3 py-3 bg-white/[0.02] border border-white/[0.06] rounded-small hover:bg-white/[0.04] transition-colors"
+                      >
+                        <div className="mx-auto grid w-full max-w-[560px] grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 text-sm font-semibold text-white">
+                          <span className="justify-self-end text-right truncate">{fixture.home}</span>
+                          <span className="inline-flex items-center gap-2">
+                            <img src={fixture.homeKit} alt={fixture.home} className="h-5 w-5 object-contain" />
+                            <span className="text-white/40">v</span>
+                            <img src={fixture.awayKit} alt={fixture.away} className="h-5 w-5 object-contain" />
+                          </span>
+                          <span className="justify-self-start truncate">{fixture.away}</span>
+                        </div>
+                      </button>
+                      {secondaryExpandedFixture?.id === fixture.id && (
+                        <div className="bg-white/[0.02] border border-white/[0.06] rounded-small overflow-hidden">
+                          <div className="px-3 py-3 border-b border-white/10">
+                            <div className="mx-auto grid w-full max-w-[560px] grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 text-sm font-semibold text-white">
+                              <span className="justify-self-end text-right truncate">{fixture.home}</span>
+                              <span className="inline-flex items-center gap-2">
+                                <img src={fixture.homeKit} alt={fixture.home} className="h-5 w-5 object-contain" />
+                                <span className="text-white/40">v</span>
+                                <img src={fixture.awayKit} alt={fixture.away} className="h-5 w-5 object-contain" />
+                              </span>
+                              <span className="justify-self-start truncate">{fixture.away}</span>
+                            </div>
+                            <p className="text-center text-xs text-white/55 mt-1">{fixture.competition}</p>
+                          </div>
+                          <div className="px-3 py-3 text-center text-xs text-white/60">
+                            Player markets coming soon for this fixture.
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )
+            })()}
+          </div>
+
+          {/* Accas Section */}
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-base font-semibold text-white pl-2">Same Game Parlays</h2>
+              <h2 className="text-base font-semibold text-white pl-2">Accas</h2>
               <div className="flex items-center gap-2">
               <Button 
                 variant="ghost" 
@@ -8103,25 +8326,40 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                 <CarouselContent className="ml-6 mr-0">
                   {/* SGP Cards */}
                   {([
-                    { id: 1, match: 'Arsenal vs Chelsea', league: 'Premier League', leagueIcon: '/banners/sports_league/prem.svg', country: 'England', time: 'TODAY 3:00PM', legs: ['Arsenal To Win', 'Over 2.5 Goals', 'Both Teams To Score'], combinedOdds: '+850' },
-                    { id: 2, match: 'Real Madrid vs Barcelona', league: 'La Liga', leagueIcon: '/banners/sports_league/laliga.svg', country: 'Spain', time: 'TODAY 8:00PM', legs: ['Real Madrid To Win', 'Vinicius Jr To Score', 'Over 3.5 Goals'], combinedOdds: '+1200' },
-                    { id: 3, match: 'Juventus vs AC Milan', league: 'Serie A', leagueIcon: '/team/Italy - Serie A/serie A.svg', country: 'Italy', time: 'TOMORROW 2:45PM', legs: ['Juventus To Win', 'Under 2.5 Goals', 'Vlahovic To Score First'], combinedOdds: '+950' },
-                    { id: 4, match: 'Liverpool vs Man City', league: 'Premier League', leagueIcon: '/banners/sports_league/prem.svg', country: 'England', time: 'SAT 5:30PM', legs: ['Draw', 'Over 2.5 Goals', 'Salah To Score Anytime'], combinedOdds: '+1400' },
-                    { id: 5, match: 'PSG vs Marseille', league: 'Ligue 1', leagueIcon: '/banners/sports_league/prem.svg', country: 'France', time: 'SUN 3:00PM', legs: ['PSG To Win', 'Mbappe 2+ Goals', 'Over 3.5 Goals'], combinedOdds: '+1100' }
+                    { id: 1, match: 'Arsenal vs Chelsea', league: 'Premier League', country: 'England', time: 'TODAY 3:00PM', legs: ['Arsenal To Win', 'Over 2.5 Goals', 'Both Teams To Score'], combinedOdds: '+850' },
+                    { id: 2, match: 'Real Madrid vs Barcelona', league: 'La Liga', country: 'Spain', time: 'TODAY 8:00PM', legs: ['Real Madrid To Win', 'Vinicius Jr To Score', 'Over 3.5 Goals'], combinedOdds: '+1200' },
+                    { id: 3, match: 'Juventus vs AC Milan', league: 'Serie A', country: 'Italy', time: 'TOMORROW 2:45PM', legs: ['Juventus To Win', 'Under 2.5 Goals', 'Vlahovic To Score First'], combinedOdds: '+950' },
+                    { id: 4, match: 'Liverpool vs Man City', league: 'Premier League', country: 'England', time: 'SAT 5:30PM', legs: ['Draw', 'Over 2.5 Goals', 'Salah To Score Anytime'], combinedOdds: '+1400' },
+                    { id: 5, match: 'PSG vs Marseille', league: 'Ligue 1', country: 'France', time: 'SUN 3:00PM', legs: ['PSG To Win', 'Mbappe 2+ Goals', 'Over 3.5 Goals'], combinedOdds: '+1100' }
                   ]).map((parlay, index) => (
                     <CarouselItem key={parlay.id} className={index === 0 ? "pl-0 pr-0 basis-auto flex-shrink-0" : "pl-2 md:pl-4 basis-auto flex-shrink-0"}>
-                    <div className="w-[340px] bg-white/5 border border-white/10 rounded-small p-3 relative overflow-hidden flex-shrink-0" style={{ background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(30, 41, 59, 0.3) 50%, rgba(255, 255, 255, 0.03) 100%)' }}>
+                    <div className="w-[340px] bg-white/5 border border-[#d7b7ff]/28 rounded-small p-3 relative overflow-hidden flex-shrink-0" style={{ background: 'linear-gradient(135deg, rgba(171, 129, 255, 0.18) 0%, rgba(202, 125, 255, 0.14) 56%, rgba(255, 125, 195, 0.12) 100%)' }}>
                       {/* Header: League info and Time */}
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-1.5">
+                          {(() => {
+                            const sgpLeagueLogoMap: Record<string, string> = {
+                              'Premier League': '/sports%20league/prem.svg',
+                              'La Liga': '/sports%20league/champions.svg',
+                              'Serie A': '/team/Italy%20-%20Serie%20A/serie%20A.svg',
+                              'Ligue 1': '/sports%20league/prem.svg',
+                              'NFL': '/sports%20league/NFL.svg',
+                            }
+                            const leagueLogo = sgpLeagueLogoMap[parlay.league] || '/sports%20league/prem.svg'
+                            return (
                           <img 
-                            src={parlay.leagueIcon} 
+                            src={leagueLogo} 
                             alt={parlay.league}
                             width={16}
                             height={16}
                             className="object-contain"
                             decoding="sync"
+                                onError={(e) => {
+                                  e.currentTarget.style.display = 'none'
+                                }}
                           />
+                            )
+                          })()}
                           <span className="text-[10px] text-white">{parlay.league} | {parlay.country}, Soccer</span>
                         </div>
                         <span className="text-[10px] text-white/70">{parlay.time}</span>
@@ -8135,11 +8373,11 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                       {/* Parlay Legs with connecting line */}
                       <div className="relative mb-3 ml-[3px]">
                         {/* Vertical connecting line */}
-                        <div className="absolute left-[2.5px] top-[5px] bottom-[5px] w-[1px] bg-white/20" />
+                        <div className="absolute left-[2.5px] top-[5px] bottom-[5px] w-[1px] bg-[#c9b4ff]/35" />
                         <div className="space-y-2">
                           {parlay.legs.map((leg: string, legIndex: number) => (
                             <div key={legIndex} className="flex items-center gap-2.5 relative">
-                              <div className="w-[6px] h-[6px] rounded-full bg-emerald-400 flex-shrink-0 relative z-10 ring-2 ring-emerald-400/20" />
+                              <div className="w-[6px] h-[6px] rounded-full bg-[#c9b4ff] flex-shrink-0 relative z-10 ring-2 ring-[#c9b4ff]/30" />
                               <span className="text-[11px] text-white/80">{leg}</span>
                             </div>
                           ))}
@@ -8148,21 +8386,24 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
 
                       {/* Combined Odds Button */}
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] text-white/50">{parlay.legs.length}-Leg Parlay</span>
+                        <span className="text-[10px] text-white/50">{parlay.legs.length}-Leg Acca</span>
                         <button 
                           onClick={(e) => {
                             e.preventDefault()
                             e.stopPropagation()
-                            addBetToSlip(parlay.id + 80000, parlay.match, 'Same Game Parlay', parlay.legs.join(' + '), parlay.combinedOdds)
+                            addBetToSlip(parlay.id + 80000, parlay.match, 'Acca', parlay.legs.join(' + '), formatDecimalOdds(parlay.combinedOdds))
                           }}
                           className={cn(
-                            "rounded-small h-[34px] flex items-center justify-center px-4 transition-colors cursor-pointer border",
+                            "rounded-small h-[54px] min-w-[116px] flex items-center justify-center px-4 transition-colors cursor-pointer border",
                             bets.some(b => b.eventId === parlay.id + 80000) 
                               ? "bg-[#c9b4ff] border-[#c9b4ff] text-[#121417]" 
-                              : "bg-white/10 hover:bg-white/20 border-transparent text-white"
+                              : "bg-white/10 hover:bg-white/20 border-white/20 text-white"
                           )}
                         >
-                          <span className="text-xs font-bold text-white leading-none">{parlay.combinedOdds}</span>
+                          <span className={cn(
+                            "text-xl font-bold leading-none",
+                            bets.some(b => b.eventId === parlay.id + 80000) ? "text-[#121417]" : "text-white"
+                          )}>{formatDecimalOdds(parlay.combinedOdds)}</span>
                         </button>
                       </div>
                     </div>
@@ -8212,6 +8453,8 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
               {filteredUpcomingEvents.map((event) => {
                 // Parse time to get minutes
                 const parseTimeToMinutes = (timeStr: string): string => {
+                  // Avoid SSR/CSR hydration mismatch from time-dependent rendering.
+                  if (typeof window === 'undefined') return timeStr
                   // If time is like "Today 15:00", extract and calculate minutes until that time
                   // For now, just return a simple format like "12min"
                   if (timeStr.includes('Today')) {
@@ -8324,20 +8567,20 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                       `${event.team1} v ${event.team2}`,
                                       moneylineMarket?.title || 'Moneyline',
                                       selection.option.label,
-                                      selection.option.odds
+                                      formatDecimalOdds(selection.option.odds)
                                     )
                                   }}
                                   className={cn(
                                     "rounded-small h-full flex items-center justify-center transition-colors cursor-pointer px-3",
                                     !selection.option && "opacity-45 cursor-not-allowed",
-                                    isSelected ? "bg-[#c9b4ff] text-[#121417]" : "bg-white/[0.04] text-white hover:bg-white/[0.08]"
+                                    isSelected ? "bg-[#c9b4ff] text-[#121417]" : "bg-white/[0.02] text-white hover:bg-white/[0.05]"
                                   )}
                                 >
                                   <div className="flex flex-col items-center justify-center gap-1.5 text-center">
                                     <div className={cn("text-[11px] leading-tight max-w-[130px] truncate text-center", isSelected ? "text-[#121417]/80" : "text-white/70")}>
                                       {selection.label}
                                     </div>
-                                    <div className="text-[28px] font-semibold leading-none tracking-tight">{selection.option?.odds ?? '--'}</div>
+                                    <div className="text-[28px] font-semibold leading-none tracking-tight">{selection.option?.odds ? formatDecimalOdds(selection.option.odds) : '--'}</div>
                                   </div>
                                 </button>
                               )
@@ -8368,20 +8611,20 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                     `${event.team1} v ${event.team2}`,
                                     moneylineMarket?.title || 'Moneyline',
                                     selection.option.label,
-                                    selection.option.odds
+                                    formatDecimalOdds(selection.option.odds)
                                   )
                                 }}
                                 className={cn(
                                   "rounded-small h-full flex items-center justify-center transition-colors cursor-pointer px-2",
                                   !selection.option && "opacity-45 cursor-not-allowed",
-                                  isSelected ? "bg-[#c9b4ff] text-[#121417]" : "bg-white/[0.04] text-white hover:bg-white/[0.08]"
+                                  isSelected ? "bg-[#c9b4ff] text-[#121417]" : "bg-white/[0.02] text-white hover:bg-white/[0.05]"
                                 )}
                               >
                                 <div className="flex flex-col items-center justify-center gap-1 text-center">
                                   <div className={cn("text-[10px] leading-none max-w-[96px] truncate", isSelected ? "text-[#121417]/80" : "text-white/70")}>
                                     {selection.label}
                                   </div>
-                                  <div className="text-[20px] font-semibold leading-none tracking-tight">{selection.option?.odds ?? '--'}</div>
+                                  <div className="text-[20px] font-semibold leading-none tracking-tight">{selection.option?.odds ? formatDecimalOdds(selection.option.odds) : '--'}</div>
                                 </div>
                               </button>
                             )
@@ -8395,6 +8638,160 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
             </div>
           </div>
           
+          {/* Charged Up Section */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-base font-semibold text-white pl-2 inline-flex items-center gap-2">
+                <span className="inline-flex h-5 w-5 items-center justify-center text-orange-300 drop-shadow-[0_0_8px_rgba(255,136,0,0.35)]">
+                  <IconBolt className="h-3.5 w-3.5 drop-shadow-[0_0_6px_rgba(255,153,51,0.6)]" />
+                </span>
+                <span className="bg-gradient-to-r from-orange-300 via-orange-200 to-red-300 bg-clip-text text-transparent drop-shadow-[0_0_10px_rgba(255,128,0,0.28)]">
+                  Charged Up
+                </span>
+              </h2>
+              <div className="flex items-center gap-2">
+              <Button 
+                variant="ghost" 
+                  className="text-white/70 hover:text-white hover:bg-white/5 text-xs px-3 py-1.5 h-auto border border-white/20 rounded-small whitespace-nowrap transition-colors duration-300"
+                  onClick={() => {
+                    router.push('/sports/football')
+                  }}
+              >
+                View All
+              </Button>
+                {!isMobile && (
+                  <>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 rounded-small bg-[#1a1a1a]/90 backdrop-blur-sm border border-white/20 hover:bg-[#1a1a1a] hover:border-white/30 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                      onClick={() => {
+                        if (topBetBoostsCarouselApi) {
+                          const currentIndex = topBetBoostsCarouselApi.selectedScrollSnap()
+                          const targetIndex = Math.max(0, currentIndex - 2)
+                          topBetBoostsCarouselApi.scrollTo(targetIndex)
+                        }
+                      }}
+                      disabled={!topBetBoostsCarouselApi || !topBetBoostsCanScrollPrev}
+                    >
+                      <IconChevronLeft className="h-4 w-4" strokeWidth={2} />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 rounded-small bg-[#1a1a1a]/90 backdrop-blur-sm border border-white/20 hover:bg-[#1a1a1a] hover:border-white/30 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                      onClick={() => {
+                        if (topBetBoostsCarouselApi) {
+                          const currentIndex = topBetBoostsCarouselApi.selectedScrollSnap()
+                          const slideCount = topBetBoostsCarouselApi.scrollSnapList().length
+                          const targetIndex = Math.min(slideCount - 1, currentIndex + 2)
+                          topBetBoostsCarouselApi.scrollTo(targetIndex)
+                        }
+                      }}
+                      disabled={!topBetBoostsCarouselApi || !topBetBoostsCanScrollNext}
+                    >
+                      <IconChevronRight className="h-4 w-4" strokeWidth={2} />
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
+            <div className="relative -mx-6" style={{ overflow: 'visible', position: 'relative', width: 'calc(100% + 3rem)', maxWidth: 'none', boxSizing: 'border-box', minWidth: 0 }}>
+              <Carousel setApi={setTopBetBoostsCarouselApi} className="w-full relative" style={{ overflow: 'visible', position: 'relative', width: '100%', maxWidth: '100%', minWidth: 0 }} opts={{ dragFree: true, containScroll: 'trimSnaps', duration: 15 }}>
+                <CarouselContent className="ml-6 mr-0">
+                  {/* Bet Boost Cards */}
+                  {([
+                    { id: 1, marketName: 'Haaland To Score From A Header Vs Wolves', isLive: true, liveTime: 'H2 70\'', wasOdds: '+350', boostedOdds: '+450' },
+                    { id: 2, marketName: 'Vinicius Jr To Score 2+ Goals Vs Sevilla', isLive: false, time: 'TODAY 10:30PM', wasOdds: '+280', boostedOdds: '+350' },
+                    { id: 3, marketName: 'Vlahovic To Score First Goal Vs AC Milan', isLive: false, time: 'TODAY 2:00PM', wasOdds: '+400', boostedOdds: '+500' },
+                    { id: 4, marketName: 'Salah To Score From Outside Box Vs Chelsea', isLive: true, liveTime: 'H1 32\'', wasOdds: '+450', boostedOdds: '+600' },
+                  ]).map((boost, index) => (
+                    <CarouselItem key={boost.id} className={index === 0 ? "pl-0 basis-auto flex-shrink-0" : "pl-3 md:pl-5 basis-auto flex-shrink-0"}>
+                      <div className="w-[340px] min-h-[146px] bg-white/[0.02] border border-white/[0.05] rounded-small p-3.5 relative overflow-hidden flex-shrink-0">
+                        {/* Header: League info and Time/Live Status */}
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-1.5">
+                            <img
+                              src={activeSport === 'Football' ? '/sports%20league/NFL.svg' : '/sports%20league/prem.svg'}
+                              alt={activeSport === 'Football' ? 'NFL' : 'Premier League'}
+                              width={16}
+                              height={16}
+                              className="object-contain"
+                              decoding="sync"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none'
+                              }}
+                            />
+                            <span className="text-[10px] text-white">{activeSport === 'Football' ? 'NFL | USA, Football' : 'Premier League | England, Soccer'}</span>
+                  </div>
+                          {boost.isLive ? (
+                            <div className="flex items-center gap-1.5">
+                              <div className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-pulse"></div>
+                              <span className="text-[10px] text-orange-500">{boost.liveTime}</span>
+                            </div>
+                          ) : (
+                          <span className="text-[10px] text-white">{boost.time}</span>
+                          )}
+                  </div>
+                        
+                        {/* Market Name with Odds on the Right */}
+                        <div className="flex items-center justify-between gap-4 mb-2">
+                          <div className="text-sm font-semibold text-white/90 leading-tight flex-1" style={{ lineHeight: '1.3', maxWidth: '200px' }}>
+                          {boost.marketName}
+                        </div>
+                          {/* Odds Side by Side */}
+                          <div className="flex items-center gap-2 flex-shrink-0">
+                            {/* Was Odds */}
+                            <div>
+                              <div className="text-[10px] text-white/50 mb-1 text-center">Was</div>
+                    <button 
+                                disabled
+                                className="bg-white/[0.04] text-white/50 rounded-small h-[54px] min-w-[84px] flex items-center justify-center px-4 border border-white/10 cursor-not-allowed opacity-60"
+                              >
+                                <span className="text-xs text-white/50 leading-none line-through">{formatDecimalOdds(boost.wasOdds)}</span>
+                    </button>
+                            </div>
+                            {/* Boosted Odds */}
+                            <div>
+                              <div className="text-[10px] text-white/50 mb-1 text-center">Charged</div>
+                    <button 
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        addBetToSlip(boost.id + 90000, boost.marketName, 'Bet Boost', boost.marketName, formatDecimalOdds(boost.boostedOdds))
+                      }}
+                                className={cn(
+                                  "rounded-small h-[54px] min-w-[84px] flex items-center justify-center px-4 border transition-colors cursor-pointer",
+                                  bets.some(b => b.eventId === boost.id + 90000) 
+                                    ? "border-transparent text-white" 
+                                    : "bg-white/[0.04] border-white/10 text-white hover:bg-white/[0.08]"
+                                )}
+                      style={bets.some(b => b.eventId === boost.id + 90000)
+                        ? {
+                            border: '2px solid transparent',
+                            background:
+                              'linear-gradient(135deg, #ffb347 0%, #ff7a1a 45%, #ff4d1f 100%) padding-box, linear-gradient(135deg, #ffc46a 0%, #ff8a2a 45%, #ff5d2f 100%) border-box',
+                            boxShadow: '0 0 16px rgba(255, 110, 35, 0.32)',
+                          }
+                        : undefined}
+                    >
+                                <span className={cn(
+                                  "text-xs font-bold leading-none",
+                                  "text-white"
+                                )}>{formatDecimalOdds(boost.boostedOdds)}</span>
+                    </button>
+                            </div>
+                          </div>
+                  </div>
+                        
+                      </div>
+                    </CarouselItem>
+              ))}
+                </CarouselContent>
+              </Carousel>
+            </div>
+          </div>
+
           {/* Slots Carousel Section */}
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
@@ -8455,7 +8852,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                       <CarouselItem key={index} className={index === 0 ? "pl-0 pr-0 basis-auto flex-shrink-0" : "pl-2 md:pl-4 basis-auto flex-shrink-0"}>
                         <div 
                           data-content-item 
-                          className="w-[160px] h-[160px] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
+                          className="w-[132px] aspect-[4/5] rounded-small bg-white/5 hover:bg-white/10 cursor-pointer transition-all duration-300 relative overflow-hidden group flex-shrink-0"
                         >
                           {imageSrc && (
                             <Image
@@ -8463,7 +8860,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                               alt={`Game ${index + 1}`}
                               fill
                               className="object-cover group-hover:scale-105 transition-transform duration-300"
-                              sizes="160px"
+                              sizes="132px"
                             />
                           )}
                           <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 tile-shimmer" />
@@ -8475,7 +8872,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                   {/* Placeholder Slots tiles to fill gaps on large screens */}
                   {Array.from({ length: 20 }).map((_, index) => (
                     <CarouselItem key={`slots-placeholder-${index}`} className="pl-2 md:pl-4 basis-auto flex-shrink-0">
-                      <div className="w-[160px] h-[160px] rounded-small flex-shrink-0">
+                      <div className="w-[132px] aspect-[4/5] rounded-small flex-shrink-0">
                         <Skeleton className="w-full h-full rounded-small bg-white/10 dark:bg-white/10" />
                       </div>
                     </CarouselItem>

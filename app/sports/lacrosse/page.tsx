@@ -10,6 +10,7 @@ import React from 'react'
 import { createPortal } from 'react-dom'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { usePathname, useRouter } from 'next/navigation'
+import { BrandLoaderScreen } from '@/components/ui/brand-loader-screen'
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -9539,6 +9540,7 @@ function NavTestPageContent() {
   const router = useRouter()
   const [loadingNav, setLoadingNav] = useState<string | null>(null)
   const [mounted, setMounted] = useState(false)
+  const [bootReady, setBootReady] = useState(false)
   const [activeFilter, setActiveFilter] = useState('For You')
   const [activeSubNav, setActiveSubNav] = useState('For You')
   const [gameSortFilter, setGameSortFilter] = useState<string>('popular')
@@ -9986,13 +9988,15 @@ function NavTestPageContent() {
     }))
   }, [])
 
+  useEffect(() => {
+    if (!mounted) return
+    const timer = window.setTimeout(() => setBootReady(true), 1200)
+    return () => window.clearTimeout(timer)
+  }, [mounted])
+
   // Don't render until mounted to prevent hydration issues
-  if (!mounted) {
-    return (
-      <div className="w-full bg-[#1a1a1a] text-white font-figtree overflow-x-hidden min-h-screen flex items-center justify-center">
-        <div className="text-white/70">Loading...</div>
-      </div>
-    )
+  if (!mounted || !bootReady) {
+    return <BrandLoaderScreen />
   }
 
   const sidebarMenuItems = [

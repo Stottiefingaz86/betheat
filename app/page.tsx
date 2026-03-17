@@ -1256,20 +1256,6 @@ function VipDrawerContent({
         {vipActiveTab === 'Profit Boost' && (
           <div className="space-y-3">
             <div className="rounded-xl border border-white/10 bg-[#232323] overflow-hidden">
-              <div className="relative h-28 w-full border-b border-white/10">
-                <Image
-                  src="/banners/sports_league/premier_banner_bg.png"
-                  alt="Premier League"
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-transparent" />
-                <div className="absolute left-3 bottom-2.5">
-                  <div className="text-[10px] uppercase tracking-[0.12em] text-white/70 font-semibold">Profit Boost Offer</div>
-                  <div className="text-base font-bold text-white">Premier League</div>
-                </div>
-              </div>
-
               <div className="p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-start gap-3 min-w-0">
@@ -1338,6 +1324,7 @@ function VipDrawerContent({
 
 function HomePageContent() {
   const isMobile = useIsMobile()
+  const HEADER_COMPACT_BREAKPOINT = 1180
   const router = useRouter()
   const [mounted, setMounted] = useState(false)
   const { trackNav, trackClick, trackAction, trackSidebar } = useTracking('home')
@@ -1371,6 +1358,7 @@ function HomePageContent() {
   const [registerFormTouched, setRegisterFormTouched] = useState(false)
   const [registerPasswordVisible, setRegisterPasswordVisible] = useState(false)
   const [loginPopupTouched, setLoginPopupTouched] = useState(false)
+  const [isTabletHeader, setIsTabletHeader] = useState(false)
   const [headerLanguage, setHeaderLanguage] = useState<'EN' | 'ES' | 'DE' | 'FR' | 'PT'>('EN')
   const [vipDrawerOpen, setVipDrawerOpen] = useState(false)
   const [accountDrawerOpen, setAccountDrawerOpen] = useState(false)
@@ -1387,6 +1375,17 @@ function HomePageContent() {
   const [createAccountAlias, setCreateAccountAlias] = useState('')
   const [createAccountTouched, setCreateAccountTouched] = useState(false)
   const [createAccountPasswordVisible, setCreateAccountPasswordVisible] = useState(false)
+  const isCompactHeader = isMobile || isTabletHeader
+
+  useEffect(() => {
+    const syncTabletHeader = () => {
+      setIsTabletHeader(window.innerWidth < HEADER_COMPACT_BREAKPOINT)
+    }
+
+    syncTabletHeader()
+    window.addEventListener('resize', syncTabletHeader)
+    return () => window.removeEventListener('resize', syncTabletHeader)
+  }, [HEADER_COMPACT_BREAKPOINT])
   const [loginForm, setLoginForm] = useState({ identifier: '', password: '', keepLoggedIn: false })
   const [loginPasswordVisible, setLoginPasswordVisible] = useState(false)
   const [createAccountDob, setCreateAccountDob] = useState({ day: '', month: '', year: '' })
@@ -1926,11 +1925,7 @@ function HomePageContent() {
   }, [globalBets])
 
   if (!mounted) {
-  return (
-      <div className="w-full bg-[#1a1a1a] text-white font-figtree overflow-x-hidden min-h-screen flex items-center justify-center">
-        <div className="text-white/70">Loading...</div>
-    </div>
-    )
+    return null
   }
 
   // Brand configuration
@@ -1981,7 +1976,7 @@ function HomePageContent() {
               { label: 'Home', onClick: () => { setQuickLinksOpen(false); } },
               { label: 'Casino', onClick: () => { trackNav('casino', 'Casino'); router.push('/casino'); setQuickLinksOpen(false); } },
               { label: 'Live Casino', onClick: () => { trackNav('casino', 'Live Casino'); router.push('/casino?tab=live'); setQuickLinksOpen(false); } },
-              { label: 'Sports', locked: true, onClick: () => {} },
+              { label: 'Sports', onClick: () => { trackNav('sports', 'Sports'); router.push('/sports'); setQuickLinksOpen(false); } },
               { label: 'In-Play', locked: true, onClick: () => {} },
               { label: 'Promotions', onClick: () => { trackNav('promotions', 'Promotions'); router.push('/casino?vip=true'); setQuickLinksOpen(false); } },
             ].map((item) => (
@@ -2064,18 +2059,15 @@ function HomePageContent() {
           </div>
           
           {/* Navigation Menu - Desktop only */}
-          {!isMobile && (
+          {!isCompactHeader && (
             <nav className="flex-1 flex items-center z-[110] ml-2" style={{ pointerEvents: 'auto' }}>
               <SidebarMenu className="flex flex-row items-center gap-2">
                 <SidebarMenuItem>
                   <SidebarMenuButton
-                    className="h-10 min-w-[80px] px-4 py-2 rounded-small text-sm font-medium justify-center transition-colors text-white/35 cursor-not-allowed"
-                    onClick={() => {}}
+                    className="h-10 min-w-[80px] px-4 py-2 rounded-small text-sm font-medium justify-center hover:bg-white/5 hover:text-white transition-colors text-white/70 cursor-pointer"
+                    onClick={() => { trackNav('sports', 'Sports'); router.push('/sports') }}
                   >
-                    <span className="inline-flex items-center gap-1.5">
-                      <IconLock className="w-3.5 h-3.5" />
-                      Sports
-                    </span>
+                    Sports
                   </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
@@ -2118,7 +2110,7 @@ function HomePageContent() {
           )}
         </div>
         
-        <div className={cn("flex items-center", isMobile ? "gap-2" : "gap-3")} style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative' }}>
+        <div className={cn("flex items-center", isCompactHeader ? "gap-2" : "gap-3")} style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative' }}>
           {/* Balance and Avatar Button */}
           <Button
             variant="ghost"
@@ -2129,10 +2121,10 @@ function HomePageContent() {
             }}
             className={cn(
               "grid items-center rounded-small transition-colors group relative",
-              "border border-white/10 bg-transparent hover:bg-transparent",
+              "bg-white/[0.02] border border-white/[0.08] hover:border-white/[0.12] hover:bg-white/[0.03]",
               "active:bg-transparent",
               accountDrawerOpen && "text-white",
-              isMobile
+              isCompactHeader
                 ? "grid-cols-[20px_minmax(0,1fr)] gap-1.5 px-2 py-1.5 h-9"
                 : "grid-cols-[24px_minmax(0,1fr)] gap-2 px-2.5 py-1.5 h-10"
             )}
@@ -2141,24 +2133,24 @@ function HomePageContent() {
             <div className="relative shrink-0">
               <Avatar className={cn(
                 "border border-white/20 group-hover:border-white/40 transition-colors",
-                isMobile ? "h-5 w-5" : "h-6 w-6"
+                isCompactHeader ? "h-5 w-5" : "h-6 w-6"
               )}>
-                <AvatarFallback className="bg-transparent text-white flex items-center justify-center font-semibold tracking-tight" style={{ fontSize: isMobile ? '9px' : '10px' }}>
-                  <IconUser className={cn(isMobile ? "h-2.5 w-2.5" : "h-3 w-3")} />
+                <AvatarFallback className="bg-transparent text-white flex items-center justify-center font-semibold tracking-tight" style={{ fontSize: isCompactHeader ? '9px' : '10px' }}>
+                  <IconUser className={cn(isCompactHeader ? "h-2.5 w-2.5" : "h-3 w-3")} />
                 </AvatarFallback>
               </Avatar>
               <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-[var(--ds-primary,#ff6a1a)]" />
             </div>
             <div className={cn(
               "font-bold text-white tabular-nums transition-all duration-300 flex items-center justify-center text-center whitespace-nowrap min-w-0",
-              isMobile ? "text-[10px] pl-0.5" : "text-xs pl-1.5"
+              isCompactHeader ? "text-[10px] pl-0.5" : "text-xs pl-1.5"
             )}>
               <span>€</span>
               <NumberFlow value={displayBalance} format={{ notation: 'standard', minimumFractionDigits: 2, maximumFractionDigits: 2 }} />
             </div>
           </Button>
 
-          {isMobile && (
+          {isCompactHeader && (
             <Button
               variant="ghost"
               size="icon"
@@ -2167,14 +2159,14 @@ function HomePageContent() {
                 e.stopPropagation()
                 router.push('/casino?openSearch=1&from=%2F')
               }}
-              className="h-9 w-9 rounded-[0.56rem] border border-white/10 bg-[#141920]/90 text-white/75 hover:bg-[#1a202b]/95"
+              className="h-9 w-9 rounded-[0.56rem] border border-white/[0.08] bg-white/[0.02] text-white/75 hover:border-white/[0.12] hover:bg-white/[0.03]"
               style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer' }}
             >
               <IconSearch className="h-4 w-4" />
             </Button>
           )}
 
-          {!isMobile && (
+          {!isCompactHeader && (
             <Button
               variant="ghost"
               onClick={(e) => {
@@ -2203,18 +2195,18 @@ function HomePageContent() {
             </Button>
           )}
 
-          {!isMobile && (
+          {!isCompactHeader && (
             <ChatNavToggle
               placeholder="Search games, teams, promotions..."
             />
           )}
 
-          {!isMobile && (
+          {!isCompactHeader && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="h-9 rounded-[0.56rem] border border-white/10 bg-[#121416] px-2.5 text-white/75 hover:bg-[#171b22] inline-flex items-center gap-1.5"
+                  className="h-9 rounded-[0.56rem] border border-white/[0.08] bg-white/[0.02] px-2.5 text-white/75 hover:border-white/[0.12] hover:bg-white/[0.03] inline-flex items-center gap-1.5"
                   style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer' }}
                 >
                   <IconWorldNav className="h-4 w-4" />
@@ -2529,8 +2521,11 @@ function HomePageContent() {
               {homepageLeagueTiles.map((league) => (
                 <button
                   key={league.label}
-                  disabled
-                  className="w-[84px] h-[76px] rounded-small border border-white/10 bg-white/[0.03] transition-colors p-1.5 flex flex-col items-center justify-center gap-1.5 flex-shrink-0 cursor-not-allowed opacity-65"
+                  onClick={() => {
+                    trackNav('sports', `Sportsbook ${league.label}`)
+                    router.push('/sports')
+                  }}
+                  className="w-[84px] h-[76px] rounded-small border border-white/10 bg-white/[0.03] transition-colors p-1.5 flex flex-col items-center justify-center gap-1.5 flex-shrink-0 cursor-pointer hover:bg-white/[0.06] active:bg-white/[0.08]"
                 >
                   <Image
                     src={league.icon}

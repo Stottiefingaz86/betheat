@@ -12,6 +12,7 @@ import { useIsMobile } from '@/hooks/use-mobile'
 import { useTracking } from '@/hooks/use-tracking'
 import { useTrackingStore } from '@/lib/store/trackingStore'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { BrandLoaderScreen } from '@/components/ui/brand-loader-screen'
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -7024,10 +7025,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                             <span className="text-[10px] text-white">{event.league} | {event.country}</span>
                           </div>
                           <div className="flex items-center gap-1.5">
-                            <div className="flex items-center gap-0.5 rounded px-1 py-0.5 whitespace-nowrap" style={{ backgroundColor: isEsportsMode ? 'rgba(168, 85, 247, 0.2)' : 'rgba(238, 53, 54, 0.2)', border: `1px solid ${isEsportsMode ? 'rgba(236, 72, 153, 0.55)' : 'rgba(238, 53, 54, 0.5)'}` }}>
-                              <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: isEsportsMode ? esportsPink : '#ee3536' }}></div>
-                              <span className="text-[9px] font-semibold" style={{ color: isEsportsMode ? esportsPink : '#ee3536' }}>LIVE</span>
-                            </div>
+                            <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: isEsportsMode ? esportsPink : '#ee3536' }}></div>
                             <span className="text-[10px]" style={{ color: isEsportsMode ? esportsPink : '#ee3536' }}>{event.time}</span>
                           </div>
                         </div>
@@ -7207,7 +7205,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                               addBetToSlip(event.id, `${event.team1} v ${event.team2}`, 'Moneyline', event.team1Code, '+350')
                             }}
                             className={cn(
-                              "bg-white/10 text-white rounded-small flex-1 h-[38px] flex flex-col items-center justify-center transition-colors cursor-pointer px-2",
+                              "bg-white/10 text-white rounded-small flex-1 h-[54px] flex flex-col items-center justify-center gap-1 text-center transition-colors cursor-pointer px-2",
                               isBetSelected(event.id, 'Moneyline', event.team1Code) && "bg-red-500"
                             )}
                             onMouseEnter={(e) => {
@@ -7221,7 +7219,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                               }
                             }}
                           >
-                            <div className="text-[10px] text-white/70 leading-none mb-0.5">{event.team1Code}</div>
+                            <div className="w-full text-[11px] font-medium text-white/70 leading-tight truncate">{event.team1}</div>
                             <div className="text-xs font-bold leading-none">+350</div>
                           </button>
                           <button 
@@ -7236,7 +7234,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                               addBetToSlip(event.id, `${event.team1} v ${event.team2}`, 'Moneyline', 'Tie', '+350')
                             }}
                             className={cn(
-                              "bg-white/10 text-white rounded-small flex-1 h-[38px] flex flex-col items-center justify-center transition-colors cursor-pointer px-2",
+                              "bg-white/10 text-white rounded-small flex-1 h-[54px] flex flex-col items-center justify-center gap-1 text-center transition-colors cursor-pointer px-2",
                               isBetSelected(event.id, 'Moneyline', 'Tie') && "bg-red-500"
                             )}
                             onMouseEnter={(e) => {
@@ -7250,7 +7248,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                               }
                             }}
                           >
-                            <div className="text-[10px] text-white/70 leading-none mb-0.5">Tie</div>
+                            <div className="w-full text-[11px] font-medium text-white/70 leading-tight truncate">Draw</div>
                             <div className="text-xs font-bold leading-none">+350</div>
                           </button>
                           <button 
@@ -7265,7 +7263,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                               addBetToSlip(event.id, `${event.team1} v ${event.team2}`, 'Moneyline', event.team2Code, '+350')
                             }}
                             className={cn(
-                              "bg-white/10 text-white rounded-small flex-1 h-[38px] flex flex-col items-center justify-center transition-colors cursor-pointer px-2",
+                              "bg-white/10 text-white rounded-small flex-1 h-[54px] flex flex-col items-center justify-center gap-1 text-center transition-colors cursor-pointer px-2",
                               isBetSelected(event.id, 'Moneyline', event.team2Code) && "bg-red-500"
                             )}
                             onMouseEnter={(e) => {
@@ -7279,7 +7277,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                               }
                             }}
                           >
-                            <div className="text-[10px] text-white/70 leading-none mb-0.5">{event.team2Code}</div>
+                            <div className="w-full text-[11px] font-medium text-white/70 leading-tight truncate">{event.team2}</div>
                             <div className="text-xs font-bold leading-none">+350</div>
                           </button>
                         </div>
@@ -7868,7 +7866,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                             }
                                           }}
                                           className={cn(
-                                            "text-white rounded-small w-[68px] h-[38px] flex flex-col items-center justify-center transition-colors cursor-pointer px-2 flex-shrink-0",
+                                            "text-white rounded-small w-[68px] h-[46px] flex flex-col items-center justify-center gap-1 text-center transition-colors cursor-pointer px-2 flex-shrink-0",
                                             isSelected 
                                               ? "bg-red-500 hover:bg-red-600" 
                                               : "bg-white/10 hover:bg-white/20"
@@ -7884,7 +7882,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                             }
                                           }}
                                         >
-                                          <div className="text-[10px] text-white/70 leading-none mb-0.5 truncate w-full text-center">{option.label}</div>
+                                          <div className="text-[11px] text-white/70 leading-tight truncate w-full text-center">{option.label}</div>
                                           <div className="text-xs font-bold leading-none">{option.odds}</div>
                                         </button>
                                       )
@@ -7909,7 +7907,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                           addBetToSlip(event.id, eventName, market.title, option.label, option.odds)
                                         }}
                                         className={cn(
-                                          "text-white rounded-small w-[68px] h-[38px] flex flex-col items-center justify-center transition-colors cursor-pointer px-2 flex-shrink-0",
+                                          "text-white rounded-small w-[68px] h-[46px] flex flex-col items-center justify-center gap-1 text-center transition-colors cursor-pointer px-2 flex-shrink-0",
                                           isSelected 
                                             ? "bg-red-500 hover:bg-red-600" 
                                             : "bg-white/10 hover:bg-white/20"
@@ -7925,7 +7923,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                           }
                                         }}
                                       >
-                                        <div className="text-[10px] text-white/70 leading-none mb-0.5 truncate w-full text-center">{option.label}</div>
+                                        <div className="text-[11px] text-white/70 leading-tight truncate w-full text-center">{option.label}</div>
                                         <div className="text-xs font-bold leading-none">{option.odds}</div>
                                       </button>
                                     )
@@ -7935,7 +7933,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                               </div>
                               {/* Vertical Divider */}
                               {marketIndex < event.markets.length - 1 && (
-                                <div className="w-px h-[38px] bg-white/10 mx-2 flex-shrink-0" />
+                                <div className="w-px h-[46px] bg-white/10 mx-2 flex-shrink-0" />
                               )}
                             </React.Fragment>
                           ))}
@@ -8026,34 +8024,33 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                       {/* Status/Time Badge - Smaller */}
                       {event.isLive && (
                         <div className="flex flex-col items-start justify-center gap-0.5 flex-shrink-0 w-[50px]">
-                          <div className="flex items-center gap-0.5 bg-[#ee3536]/20 border border-[#ee3536]/50 rounded px-1 py-0.5 whitespace-nowrap">
+                          <div className="flex items-center">
                             <div className="w-1 h-1 bg-[#ee3536] rounded-full animate-pulse"></div>
-                            <span className="text-[8px] font-semibold text-[#ee3536]">LIVE</span>
                           </div>
                           <div className="flex items-center gap-0.5">
-                            <span className="text-[8px] font-bold text-white/70">1h</span>
+                            <span className="text-[8px] font-bold text-white/70">1H</span>
                           <MatchTimer />
                           </div>
                         </div>
                       )}
                       
                       {/* Teams - Fixed width for alignment with logos */}
-                      <div className={cn("flex flex-col gap-1 min-w-0 justify-center", isMobile ? "flex-1" : "w-[200px] flex-shrink-0")}>
-                        <div className="flex items-center gap-1.5">
+                      <div className={cn("flex flex-col gap-1 min-w-0 justify-center items-center text-center", isMobile ? "flex-1" : "w-[200px] flex-shrink-0")}>
+                        <div className="flex items-center justify-center gap-1.5 w-full">
                           {(event as any).team1Logo ? (
                             <img src={(event as any).team1Logo} alt={event.team1} width={12} height={12} className="w-3 h-3 object-contain rounded-full" decoding="sync" />
                           ) : (
                             <TeamLogoComponent teamName={event.team1} size={12} />
                           )}
-                          <div className="text-[11px] font-semibold text-white truncate leading-tight">{event.team1}</div>
+                          <div className="text-[11px] font-semibold text-white truncate leading-tight text-center">{event.team1}</div>
                         </div>
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center justify-center gap-1.5 w-full">
                           {(event as any).team2Logo ? (
                             <img src={(event as any).team2Logo} alt={event.team2} width={12} height={12} className="w-3 h-3 object-contain rounded-full" decoding="sync" />
                           ) : (
                             <TeamLogoComponent teamName={event.team2} size={12} />
                           )}
-                          <div className="text-[11px] font-semibold text-white truncate leading-tight">{event.team2}</div>
+                          <div className="text-[11px] font-semibold text-white truncate leading-tight text-center">{event.team2}</div>
                         </div>
                       </div>
                       
@@ -8209,10 +8206,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                   </div>
                           {boost.isLive ? (
                             <div className="flex items-center gap-1.5">
-                              <div className="flex items-center gap-0.5 rounded px-1 py-0.5 whitespace-nowrap" style={{ backgroundColor: isEsportsMode ? 'rgba(168, 85, 247, 0.2)' : 'rgba(238, 53, 54, 0.2)', border: `1px solid ${isEsportsMode ? 'rgba(236, 72, 153, 0.55)' : 'rgba(238, 53, 54, 0.5)'}` }}>
-                                <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: isEsportsMode ? esportsPink : '#ee3536' }}></div>
-                                <span className="text-[9px] font-semibold" style={{ color: isEsportsMode ? esportsPink : '#ee3536' }}>LIVE</span>
-                              </div>
+                              <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: isEsportsMode ? esportsPink : '#ee3536' }}></div>
                               <span className="text-[10px]" style={{ color: isEsportsMode ? esportsPink : '#ee3536' }}>{boost.liveTime || boost.time}</span>
                             </div>
                           ) : (
@@ -8776,7 +8770,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                             }
                                           }}
                                           className={cn(
-                                            "text-white rounded-small w-[68px] h-[38px] flex flex-col items-center justify-center transition-colors cursor-pointer px-2 flex-shrink-0",
+                                            "text-white rounded-small w-[68px] h-[46px] flex flex-col items-center justify-center gap-1 text-center transition-colors cursor-pointer px-2 flex-shrink-0",
                                             isSelected 
                                               ? "bg-red-500 hover:bg-red-600" 
                                               : "bg-white/10 hover:bg-white/20"
@@ -8792,7 +8786,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                             }
                                           }}
                                         >
-                                          <div className="text-[10px] text-white/70 leading-none mb-0.5 truncate w-full text-center">{option.label}</div>
+                                          <div className="text-[11px] text-white/70 leading-tight truncate w-full text-center">{option.label}</div>
                                           <div className="text-xs font-bold leading-none">{option.odds}</div>
                                         </button>
                                       )
@@ -8817,7 +8811,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                           addBetToSlip(event.id, eventName, market.title, option.label, option.odds)
                                         }}
                                         className={cn(
-                                          "text-white rounded-small w-[68px] h-[38px] flex flex-col items-center justify-center transition-colors cursor-pointer px-2 flex-shrink-0",
+                                          "text-white rounded-small w-[68px] h-[46px] flex flex-col items-center justify-center gap-1 text-center transition-colors cursor-pointer px-2 flex-shrink-0",
                                           isSelected 
                                             ? "bg-red-500 hover:bg-red-600" 
                                             : "bg-white/10 hover:bg-white/20"
@@ -8833,7 +8827,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                           }
                         }}
                       >
-                                        <div className="text-[10px] text-white/70 leading-none mb-0.5 truncate w-full text-center">{option.label}</div>
+                                        <div className="text-[11px] text-white/70 leading-tight truncate w-full text-center">{option.label}</div>
                                         <div className="text-xs font-bold leading-none">{option.odds}</div>
                       </button>
                                     )
@@ -8843,7 +8837,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                               </div>
                               {/* Vertical Divider */}
                               {marketIndex < event.markets.length - 1 && (
-                                <div className="w-px h-[38px] bg-white/10 mx-2 flex-shrink-0" />
+                                <div className="w-px h-[46px] bg-white/10 mx-2 flex-shrink-0" />
                               )}
                             </React.Fragment>
                           ))}
@@ -8927,22 +8921,22 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                 </div>
                       
                       {/* Teams - Fixed width for alignment with logos */}
-                      <div className={cn("flex flex-col gap-1 min-w-0 justify-center", isMobile ? "flex-1" : "w-[200px] flex-shrink-0")}>
-                        <div className="flex items-center gap-1.5">
+                      <div className={cn("flex flex-col gap-1 min-w-0 justify-center items-center text-center", isMobile ? "flex-1" : "w-[200px] flex-shrink-0")}>
+                        <div className="flex items-center justify-center gap-1.5 w-full">
                           {(event as any).team1Logo ? (
                             <img src={(event as any).team1Logo} alt={event.team1} width={12} height={12} className="w-3 h-3 object-contain rounded-full" decoding="sync" />
                           ) : (
                             <TeamLogoComponent teamName={event.team1} size={12} />
                           )}
-                          <div className="text-[11px] font-semibold text-white truncate leading-tight">{event.team1}</div>
+                          <div className="text-[11px] font-semibold text-white truncate leading-tight text-center">{event.team1}</div>
                         </div>
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center justify-center gap-1.5 w-full">
                           {(event as any).team2Logo ? (
                             <img src={(event as any).team2Logo} alt={event.team2} width={12} height={12} className="w-3 h-3 object-contain rounded-full" decoding="sync" />
                           ) : (
                             <TeamLogoComponent teamName={event.team2} size={12} />
                           )}
-                          <div className="text-[11px] font-semibold text-white truncate leading-tight">{event.team2}</div>
+                          <div className="text-[11px] font-semibold text-white truncate leading-tight text-center">{event.team2}</div>
                         </div>
                       </div>
                       
@@ -10142,6 +10136,7 @@ function NavTestPageContent() {
   const { trackNav, trackClick, trackAction, trackSidebar, trackPageView } = useTracking('sports')
   const [loadingNav, setLoadingNav] = useState<string | null>(null)
   const [mounted, setMounted] = useState(false)
+  const [bootReady, setBootReady] = useState(false)
   const [activeFilter, setActiveFilter] = useState('For You')
   const [activeSubNav, setActiveSubNav] = useState('For You')
   const [gameSortFilter, setGameSortFilter] = useState<string>('popular')
@@ -10697,6 +10692,12 @@ function NavTestPageContent() {
   }, [])
 
   useEffect(() => {
+    if (!mounted) return
+    const timer = window.setTimeout(() => setBootReady(true), 1200)
+    return () => window.clearTimeout(timer)
+  }, [mounted])
+
+  useEffect(() => {
     if (!mounted || isMobile || !showSports || showVipRewards || showMyBets) return
     if (typeof window === 'undefined') return
 
@@ -10711,12 +10712,8 @@ function NavTestPageContent() {
   }, [mounted, isMobile, showSports, showVipRewards, showMyBets, SPORTS_FOOTBALL_FEATURE_TOUR_KEY])
 
   // Don't render until mounted to prevent hydration issues
-  if (!mounted) {
-    return (
-      <div className="w-full bg-[#1a1a1a] text-white font-figtree overflow-x-hidden min-h-screen flex items-center justify-center">
-        <div className="text-white/70">Loading...</div>
-      </div>
-    )
+  if (!mounted || !bootReady) {
+    return <BrandLoaderScreen />
   }
 
   const sidebarMenuItems = [
@@ -10886,28 +10883,29 @@ function NavTestPageContent() {
             {/* Navigation Menu - Desktop only */}
             {!isMobile && (
               <nav className="flex-1 flex items-center z-[110] -ml-1" style={{ pointerEvents: 'auto' }}>
+                {/* Sidebar collapse toggle — fixed left like casino */}
+                <div className="flex items-center gap-1.5 mr-1 flex-shrink-0">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => {
+                      if (sidebarState === 'collapsed') {
+                        useChatStore.getState().setIsOpen(false)
+                      }
+                      toggleSidebar()
+                    }}
+                    className="h-8 w-8 text-white/40 hover:text-white hover:bg-white/10"
+                  >
+                    <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none">
+                      <rect x="1" y="2.75" width="14" height="2" rx="1" fill="currentColor" />
+                      <rect x="1" y="7" width="10" height="2" rx="1" fill="currentColor" />
+                      <rect x="1" y="11.25" width="6" height="2" rx="1" fill="currentColor" />
+                    </svg>
+                  </Button>
+                  <div className="w-px h-5 bg-white/20" />
+                </div>
+
                 <SidebarMenu className="flex flex-row items-center gap-2">
-                  {/* Sidebar collapse toggle — always visible on desktop */}
-                  <div className="flex items-center gap-1.5 mr-1">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => {
-                        if (sidebarState === 'collapsed') {
-                          useChatStore.getState().setIsOpen(false)
-                        }
-                        toggleSidebar()
-                      }}
-                      className="h-8 w-8 text-white/40 hover:text-white hover:bg-white/10"
-                    >
-                      <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none">
-                        <rect x="1" y="2.75" width="14" height="2" rx="1" fill="currentColor" />
-                        <rect x="1" y="7" width="10" height="2" rx="1" fill="currentColor" />
-                        <rect x="1" y="11.25" width="6" height="2" rx="1" fill="currentColor" />
-                      </svg>
-                    </Button>
-                    <div className="w-px h-5 bg-white/20" />
-                  </div>
                   <SidebarMenuItem className="order-3">
                     <SidebarMenuButton
                       className={cn(
@@ -11543,8 +11541,8 @@ function NavTestPageContent() {
           <DrawerContent 
                 showOverlay={isMobile}
                 className={cn(
-                  "bg-white text-gray-900 flex flex-col relative",
-                  "w-full sm:max-w-md border-l border-gray-200 overflow-hidden",
+                  "w-full sm:max-w-md bg-[var(--ds-sidebar-bg,#121417)] text-white flex flex-col relative",
+                  "border-l border-white/10 overflow-hidden",
                   isMobile && "rounded-t-[10px]"
                 )}
                 style={isMobile ? {
@@ -11554,15 +11552,15 @@ function NavTestPageContent() {
                   bottom: 0,
                 } : { display: 'flex', flexDirection: 'column' as const, overflow: 'hidden' }}
               >
-                {isMobile && <DrawerHandle variant="dark" />}
+                {isMobile && <DrawerHandle />}
             
                 {!isMobile && (
               <DrawerHeader className="relative flex-shrink-0 px-4 pt-4 pb-2">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-base font-semibold text-gray-900">Quick Deposit</h2>
+                  <h2 className="text-base font-semibold text-white">Wallet</h2>
                   <DrawerClose asChild>
-                    <button className="h-8 w-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors flex-shrink-0">
-                      <IconX className="h-4 w-4 text-gray-600" />
+                    <button className="h-8 w-8 rounded-full bg-white/10 hover:bg-white/15 flex items-center justify-center transition-colors flex-shrink-0">
+                      <IconX className="h-4 w-4 text-white/75" />
                     </button>
                   </DrawerClose>
               </div>
@@ -11571,12 +11569,12 @@ function NavTestPageContent() {
             <div className={cn("w-full overflow-y-auto flex-1 min-h-0", isMobile ? "px-4 pt-4 pb-6" : "px-4 pt-4 pb-4")} style={{ WebkitOverflowScrolling: 'touch', overflowY: 'auto', flex: '1 1 auto', minHeight: 0, paddingBottom: isMobile ? 'env(safe-area-inset-bottom, 20px)' : undefined }}>
               {!showDepositConfirmation ? (
               <>
-              <Card className="bg-white border border-gray-200 shadow-sm">
+              <Card className="bg-white/[0.03] border border-white/10 shadow-none">
                 <CardContent className={cn(isMobile ? "p-4" : "p-5")}>
                   {/* Saved Methods Dropdown */}
                   <div className={cn(isMobile ? "mb-4" : "mb-5")}>
                     <div className={cn("flex items-center justify-between", isMobile ? "mb-3" : "mb-3")}>
-                      <label className="block text-sm font-semibold text-gray-900">
+                      <label className="block text-sm font-semibold text-white">
                         Saved Methods
                       </label>
                       <button
@@ -11584,7 +11582,7 @@ function NavTestPageContent() {
                           console.log("Add new deposit method clicked");
                           // Handle adding new deposit method
                         }}
-                        className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                        className="text-sm font-medium text-white/70 hover:text-white transition-colors"
                       >
                         + Add Method
                       </button>
@@ -11594,7 +11592,7 @@ function NavTestPageContent() {
                         <select
                           value={selectedPaymentMethod}
                           onChange={(e) => setSelectedPaymentMethod(e.target.value)}
-                          className="w-full px-4 py-3.5 bg-white border-2 border-gray-200 rounded-lg text-gray-900 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400 appearance-none cursor-pointer hover:border-gray-300 transition-all shadow-sm pr-12"
+                          className="w-full px-4 py-3.5 bg-white/[0.04] border border-white/10 rounded-lg text-white text-sm font-medium focus:outline-none focus:ring-1 focus:ring-white/20 focus:border-white/20 appearance-none cursor-pointer hover:border-white/15 transition-all shadow-none pr-12"
                         >
                           <option value="bitcoin">Bitcoin</option>
                           <option value="card1">Mastercard **** 0740</option>
@@ -11602,13 +11600,13 @@ function NavTestPageContent() {
                           <option value="card3">American Express **** 1234</option>
                         </select>
                         <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                          <IconChevronDown className="h-4 w-4 text-gray-600" />
+                          <IconChevronDown className="h-4 w-4 text-white/70" />
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <Separator className={cn("bg-gray-200", isMobile ? "my-4" : "my-5")} />
+                  <Separator className={cn("bg-white/10", isMobile ? "my-4" : "my-5")} />
 
                   {/* Deposit Amount */}
                   <div>
@@ -11634,7 +11632,7 @@ function NavTestPageContent() {
                         <div className="flex items-center justify-end mt-3">
                           <button
                             onClick={() => setUseManualAmount(true)}
-                            className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                            className="text-sm font-medium text-white/70 hover:text-white transition-colors"
                           >
                             + Add Manual Amount
                           </button>
@@ -11643,7 +11641,7 @@ function NavTestPageContent() {
                     ) : (
                       <div className={cn("space-y-3", isMobile && "space-y-2")}>
                         <div>
-                          <label className={cn("block font-semibold text-gray-900 mb-2", isMobile ? "text-xs" : "text-sm")}>
+                          <label className={cn("block font-semibold text-white mb-2", isMobile ? "text-xs" : "text-sm")}>
                             Deposit Amount
                           </label>
                           <Input
@@ -11673,19 +11671,19 @@ function NavTestPageContent() {
                               }
                             }}
                             className={cn(
-                              "w-full bg-white border-2 border-gray-200 rounded-lg text-gray-900 font-medium focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400 hover:border-gray-300 transition-all",
+                              "w-full bg-white/[0.04] border border-white/10 rounded-lg text-white font-medium focus:outline-none focus:ring-1 focus:ring-white/20 focus:border-white/20 hover:border-white/15 transition-all",
                               isMobile ? "px-3 py-2.5 text-sm" : "px-4 py-3 text-base"
                             )}
                             placeholder="Enter amount (25 - 10,000)"
                           />
-                          <p className={cn("text-gray-500 mt-1.5", isMobile ? "text-[10px]" : "text-xs")}>
+                          <p className={cn("text-white/55 mt-1.5", isMobile ? "text-[10px]" : "text-xs")}>
                             Min. {currentBrand.symbol}25 / Max. {currentBrand.symbol}10,000
                           </p>
                         </div>
                         <div className="flex items-center justify-end">
                           <button
                             onClick={() => setUseManualAmount(false)}
-                            className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                            className="text-sm font-medium text-white/70 hover:text-white transition-colors"
                           >
                             Use Slider
                           </button>
@@ -11694,22 +11692,22 @@ function NavTestPageContent() {
                     )}
                   </div>
 
-                  <Separator className={cn("bg-gray-200", isMobile ? "my-6" : "my-8")} />
+                  <Separator className={cn("bg-white/10", isMobile ? "my-6" : "my-8")} />
 
                   {/* Deposit Summary */}
                   <div>
-                    <div className={cn("bg-gray-50 rounded-lg", isMobile ? "space-y-2 p-3" : "space-y-2 p-4")}>
+                    <div className={cn("bg-white/[0.04] rounded-lg", isMobile ? "space-y-2 p-3" : "space-y-2 p-4")}>
                       <div className={cn("flex justify-between", isMobile ? "text-xs" : "text-sm")}>
-                        <span className="text-gray-600">Deposit Amount:</span>
-                        <span className="text-gray-900 font-medium">{currentBrand.symbol}{depositAmount.toFixed(2)}</span>
+                        <span className="text-white/70">Deposit Amount:</span>
+                        <span className="text-white font-medium">{currentBrand.symbol}{depositAmount.toFixed(2)}</span>
                       </div>
                       <div className={cn("flex justify-between", isMobile ? "text-xs" : "text-sm")}>
-                        <span className="text-gray-600">Fee (9.75%):</span>
-                        <span className="text-gray-900 font-medium">{currentBrand.symbol}{(depositAmount * 0.0975).toFixed(2)}</span>
+                        <span className="text-white/70">Fee (9.75%):</span>
+                        <span className="text-white font-medium">{currentBrand.symbol}{(depositAmount * 0.0975).toFixed(2)}</span>
                       </div>
-                      <div className={cn("flex justify-between pt-1.5 border-t border-gray-200", isMobile ? "text-sm" : "text-base")}>
-                        <span className="text-gray-900 font-semibold">Total Amount:</span>
-                        <span className="text-gray-900 font-bold">{currentBrand.symbol}{(depositAmount + depositAmount * 0.0975).toFixed(2)}</span>
+                      <div className={cn("flex justify-between pt-1.5 border-t border-white/10", isMobile ? "text-sm" : "text-base")}>
+                        <span className="text-white font-semibold">Total Amount:</span>
+                        <span className="text-white font-bold">{currentBrand.symbol}{(depositAmount + depositAmount * 0.0975).toFixed(2)}</span>
                       </div>
                     </div>
                     <Button
@@ -11749,7 +11747,7 @@ function NavTestPageContent() {
                         }, 1000)
                       }}
                       disabled={depositAmount < 25 || depositAmount > 10000 || isDepositLoading}
-                      className={cn("w-full bg-[#8BC34A] text-white hover:bg-[#7CB342] disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed rounded-md font-semibold transition-colors cursor-pointer", isMobile ? "h-11 mt-4 text-sm" : "h-12 mt-4")}
+                      className={cn("w-full bg-[var(--ds-primary,#ee3536)] text-white hover:brightness-110 disabled:bg-white/20 disabled:text-white/45 disabled:cursor-not-allowed rounded-md font-semibold transition-colors cursor-pointer", isMobile ? "h-11 mt-4 text-sm" : "h-12 mt-4")}
                       style={{ pointerEvents: 'auto', zIndex: 10 }}
                     >
                       {isDepositLoading ? (

@@ -3317,7 +3317,7 @@ function VIPRewardsPage({ brandPrimary, setVipDrawerOpen, setVipActiveTab, setSh
                         <TooltipTrigger asChild>
                           <div className="group h-10 min-w-[48px] rounded-small border border-white/10 bg-white/[0.03] px-2 inline-flex items-center justify-center text-white/45 transition-all duration-200 hover:border-white/25 hover:bg-white/[0.08] hover:text-white hover:shadow-[0_0_8px_rgba(255,255,255,0.12)]">
                             <span className={`icon icon-${symbol} text-[20px] leading-[1] transition-all duration-200 group-hover:drop-shadow-[0_0_3px_rgba(255,255,255,0.35)]`} aria-label={coinLabel} />
-                          </div>
+              </div>
                         </TooltipTrigger>
                         <TooltipContent side="top" className="bg-[#2d2d2d] border-white/20 text-white">
                           <p>{coinLabel}</p>
@@ -3329,7 +3329,7 @@ function VIPRewardsPage({ brandPrimary, setVipDrawerOpen, setVipActiveTab, setSh
               </div>
             </div>
             <div className="space-y-2 text-xs text-white/60 pt-2 border-t border-white/5">
-              <Image
+                      <Image
                 src="/logos/BHGL_logo-1773311608241-DDbBBO6v.png"
                 alt="Betheat"
                 width={180}
@@ -5884,7 +5884,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                         <TooltipTrigger asChild>
                           <div className="group h-10 min-w-[48px] rounded-small border border-white/10 bg-white/[0.03] px-2 inline-flex items-center justify-center text-white/45 transition-all duration-200 hover:border-white/25 hover:bg-white/[0.08] hover:text-white hover:shadow-[0_0_8px_rgba(255,255,255,0.12)]">
                             <span className={`icon icon-${symbol} text-[20px] leading-[1] transition-all duration-200 group-hover:drop-shadow-[0_0_3px_rgba(255,255,255,0.35)]`} aria-label={coinLabel} />
-                          </div>
+              </div>
                         </TooltipTrigger>
                         <TooltipContent side="top" className="bg-[#2d2d2d] border-white/20 text-white">
                           <p>{coinLabel}</p>
@@ -5892,11 +5892,11 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                       </Tooltip>
                     )
                   })}
-                </div>
-              </div>
             </div>
+          </div>
+        </div>
             <div className="space-y-2 text-xs text-white/60 pt-2 border-t border-white/5">
-              <Image
+                      <Image
                 src="/logos/BHGL_logo-1773311608241-DDbBBO6v.png"
                 alt="Betheat"
                 width={180}
@@ -7821,7 +7821,7 @@ function PokerLandingPage({ brandPrimary, quickLinksOpen, onNavigate }: { brandP
                           <TooltipTrigger asChild>
                             <div className="group h-10 min-w-[48px] rounded-small border border-white/10 bg-white/[0.03] px-2 inline-flex items-center justify-center text-white/45 transition-all duration-200 hover:border-white/25 hover:bg-white/[0.08] hover:text-white hover:shadow-[0_0_8px_rgba(255,255,255,0.12)]">
                               <span className={`icon icon-${symbol} text-[20px] leading-[1] transition-all duration-200 group-hover:drop-shadow-[0_0_3px_rgba(255,255,255,0.35)]`} aria-label={coinLabel} />
-                            </div>
+                </div>
                           </TooltipTrigger>
                           <TooltipContent side="top" className="bg-[#2d2d2d] border-white/20 text-white">
                             <p>{coinLabel}</p>
@@ -7862,7 +7862,9 @@ function PokerLandingPage({ brandPrimary, quickLinksOpen, onNavigate }: { brandP
 function NavTestPageContent() {
   const CASINO_FEATURE_TOUR_KEY = 'bol-casino-feature-tour-v1'
   const isMobile = useIsMobile()
+  const HEADER_COMPACT_BREAKPOINT = 1180
   const router = useRouter()
+  const pathname = usePathname()
   const searchParams = useSearchParams()
   const [mounted, setMounted] = useState(false)
   const { trackNav, trackClick, trackAction, trackSidebar, trackPageView } = useTracking('casino')
@@ -7883,6 +7885,7 @@ function NavTestPageContent() {
   const [gameSortFilter, setGameSortFilter] = useState<string>('popular')
   const [activeIconTab, setActiveIconTab] = useState('search')
   const [quickLinksOpen, setQuickLinksOpen] = useState(false)
+  const [isTabletHeader, setIsTabletHeader] = useState(false)
   const [loadingQuickLink, setLoadingQuickLink] = useState<string | null>(null)
   const lastScrollYRef = useRef(0)
   const [depositDrawerOpen, setDepositDrawerOpen] = useState(false)
@@ -7910,6 +7913,7 @@ function NavTestPageContent() {
     txHash: string
   }>(null)
   const [walletReceiptStep, setWalletReceiptStep] = useState(0)
+  const isCompactHeader = isMobile || isTabletHeader
   const [showDepositConfirmation, setShowDepositConfirmation] = useState(false)
   const [depositStep, setDepositStep] = useState<'started' | 'processing' | 'almost' | 'complete'>('started')
   const [transactionId, setTransactionId] = useState<string>('')
@@ -7927,6 +7931,17 @@ function NavTestPageContent() {
     almost: false,
     complete: false
   })
+
+  useEffect(() => {
+    const syncTabletHeader = () => {
+      setIsTabletHeader(window.innerWidth < HEADER_COMPACT_BREAKPOINT)
+    }
+
+    syncTabletHeader()
+    window.addEventListener('resize', syncTabletHeader)
+    return () => window.removeEventListener('resize', syncTabletHeader)
+  }, [HEADER_COMPACT_BREAKPOINT])
+
   const walletCurrencies = [
     { id: 'usdt', code: 'USDT', name: 'USD Tether', iconSymbol: 'usdt', iconBg: 'bg-[#14b8a6]', eurRate: 0.92, decimals: 2, availableBalance: '0.00' },
     { id: 'btc', code: 'BTC', name: 'Bitcoin', iconSymbol: 'btc', iconBg: 'bg-[#f59e0b]', eurRate: 79400, decimals: 8, availableBalance: '0.00000620' },
@@ -8697,6 +8712,19 @@ function NavTestPageContent() {
   const [mobileLanguageAccordionOpen, setMobileLanguageAccordionOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchReturnPath, setSearchReturnPath] = useState<string | null>(null)
+  const [searchFiltersOpen, setSearchFiltersOpen] = useState(false)
+  type SearchFilterGroupKey = 'vendors' | 'bonusTypes' | 'rtpBands' | 'gameTypes' | 'bonusBuy' | 'reelTypes' | 'featuresList' | 'themes' | 'paylines'
+  const [searchFilters, setSearchFilters] = useState<Record<SearchFilterGroupKey, string[]>>({
+    vendors: [],
+    bonusTypes: [],
+    rtpBands: [],
+    gameTypes: [],
+    bonusBuy: [],
+    reelTypes: [],
+    featuresList: [],
+    themes: [],
+    paylines: [],
+  })
   const viewMode: 'list' = 'list'
   const [searchScope, setSearchScope] = useState<'all' | 'casino' | 'sports'>('all')
   const searchScopeOptions: Array<'all' | 'casino' | 'sports'> = ['all', 'casino', 'sports']
@@ -8710,24 +8738,29 @@ function NavTestPageContent() {
     const next = searchScopeOptions[(index + 1) % searchScopeOptions.length]
     setSearchScope(next)
   }, [searchScope])
+  const openSearchWithFiltersFromSubNav = useCallback(() => {
+    const originQuery = searchParams?.toString()
+    const origin = `${pathname || '/casino'}${originQuery ? `?${originQuery}` : ''}`
+    router.push(`/casino?openSearch=1&openFilters=1&from=${encodeURIComponent(origin)}`)
+  }, [pathname, router, searchParams])
   const [favoritedGames, setFavoritedGames] = useState<Set<number>>(new Set())
   const [selectedGame, setSelectedGame] = useState<{ title: string; image: string; provider?: string; features?: string[] } | null>(null)
   const searchCatalog = useMemo(() => {
     const casinoCatalog = [
-      { title: 'Gold Nugget Rush', subtitle: 'Slots', provider: 'Dragon Gaming', features: ['Exploding Wilds Every 10 Spins!', 'Free Spins with Up to 10 Wilds on Every Spin!'] },
-      { title: 'Original Plinko', subtitle: 'Crash', provider: 'BETONLINE', features: ['Classic Plinko Action', 'Multiple Betting Ranges'] },
-      { title: 'Cloud Princess', subtitle: 'Live Casino', provider: 'Dragon Gaming', features: ['Live Casino Experience', 'Real-Time Gameplay'] },
-      { title: 'Merge Up', subtitle: 'Instant Wins', provider: 'Dragon Gaming', features: ['Quick rounds', 'Bonus multipliers'] },
-      { title: 'Roulette Live', subtitle: 'Table Games', provider: 'Evolution', features: ['Live dealers', 'HD stream'] },
-      { title: 'Chaos Crew 2', subtitle: 'Slots', provider: 'Hacksaw Gaming', features: ['Bonus buy', 'High volatility'] },
+      { title: 'Gold Nugget Rush', subtitle: 'Slots', provider: 'Dragon Gaming', features: ['Exploding Wilds Every 10 Spins!', 'Free Spins with Up to 10 Wilds on Every Spin!'], bonusType: 'Free Spins', rtpBand: 'Medium Volatility', gameType: 'Slots', bonusBuy: 'No', reelType: '5 Reels', filterFeatures: ['Free spins', 'Expanding wilds', 'Multipliers'], theme: 'Adventure', paylines: '243 to 4096' },
+      { title: 'Original Plinko', subtitle: 'Crash', provider: 'BETONLINE', features: ['Classic Plinko Action', 'Multiple Betting Ranges'], bonusType: 'Multiplier', rtpBand: 'High Volatility', gameType: 'Crash', bonusBuy: 'No', reelType: 'N/A', filterFeatures: ['Instant win', 'Multipliers'], theme: 'Other', paylines: 'Other' },
+      { title: 'Cloud Princess', subtitle: 'Live Casino', provider: 'Dragon Gaming', features: ['Live Casino Experience', 'Real-Time Gameplay'], bonusType: 'Live Bonus', rtpBand: 'Low Volatility', gameType: 'Live Casino', bonusBuy: 'No', reelType: 'N/A', filterFeatures: ['Dedicated dealers', 'Side bets'], theme: 'Princess', paylines: 'Other' },
+      { title: 'Merge Up', subtitle: 'Instant Wins', provider: 'Dragon Gaming', features: ['Quick rounds', 'Bonus multipliers'], bonusType: 'Multiplier', rtpBand: 'Medium Volatility', gameType: 'Instant Wins', bonusBuy: 'No', reelType: 'N/A', filterFeatures: ['Instant win', 'Multipliers'], theme: 'Candy', paylines: 'Cluster pays' },
+      { title: 'Roulette Live', subtitle: 'Table Games', provider: 'Evolution', features: ['Live dealers', 'HD stream'], bonusType: 'Cashback', rtpBand: 'Low Volatility', gameType: 'Table Games', bonusBuy: 'No', reelType: 'N/A', filterFeatures: ['Dedicated dealers', 'Neighbour bets', 'Side bets'], theme: 'Classic slots', paylines: 'Less than 5' },
+      { title: 'Chaos Crew 2', subtitle: 'Slots', provider: 'Hacksaw Gaming', features: ['Bonus buy', 'High volatility'], bonusType: 'Bonus Buy', rtpBand: 'High Volatility', gameType: 'Slots', bonusBuy: 'Yes', reelType: '6 Reels', filterFeatures: ['Feature buy', 'Bonus Wheel', 'Random wilds'], theme: 'Cartoon', paylines: 'Megaways' },
     ]
     const sportsCatalog = [
-      { title: 'Arsenal vs Chelsea', subtitle: 'Premier League', provider: 'Sportsbook', teamAName: 'Arsenal', teamBName: 'Chelsea', teamAIcon: '/sports_icons/soccer.svg', teamBIcon: '/sports_icons/soccer.svg', leagueLogo: '/sports league/prem.svg', date: 'Sat 15 Mar', time: '19:45', features: ['Match odds', 'Live betting markets'] },
-      { title: 'Lakers vs Celtics', subtitle: 'NBA', provider: 'Sportsbook', teamAName: 'Lakers', teamBName: 'Celtics', teamAIcon: '/sports_icons/Basketball.svg', teamBIcon: '/sports_icons/Basketball.svg', leagueLogo: '/sports league/nba.svg', date: 'Sun 16 Mar', time: '01:30', features: ['Player props', 'Spread markets'] },
-      { title: 'Chiefs vs Bills', subtitle: 'NFL', provider: 'Sportsbook', teamAName: 'Chiefs', teamBName: 'Bills', teamAIcon: '/sports_icons/football.svg', teamBIcon: '/sports_icons/football.svg', leagueLogo: '/sports league/NFL.svg', date: 'Sun 16 Mar', time: '21:25', features: ['Pre-game lines', 'Live drive betting'] },
-      { title: 'Alcaraz vs Sinner', subtitle: 'ATP', provider: 'Sportsbook', teamAName: 'Alcaraz', teamBName: 'Sinner', teamAIcon: '/sports_icons/tennis.svg', teamBIcon: '/sports_icons/tennis.svg', leagueLogo: '/sports league/ATP.svg', date: 'Mon 17 Mar', time: '14:00', features: ['Set betting', 'Total games markets'] },
-      { title: 'UFC Main Event', subtitle: 'MMA', provider: 'Sportsbook', teamAName: 'Fighter A', teamBName: 'Fighter B', teamAIcon: '/sports_icons/mma.svg', teamBIcon: '/sports_icons/mma.svg', leagueLogo: '/sports league/UFC.svg', date: 'Sat 22 Mar', time: '23:00', features: ['Method of victory', 'Round props'] },
-      { title: 'Real Madrid vs Barca', subtitle: 'La Liga', provider: 'Sportsbook', teamAName: 'Real Madrid', teamBName: 'Barca', teamAIcon: '/sports_icons/soccer.svg', teamBIcon: '/sports_icons/soccer.svg', leagueLogo: '/sports league/copa.svg', date: 'Sun 23 Mar', time: '20:00', features: ['BTTS', 'Corners and cards'] },
+      { title: 'Arsenal vs Chelsea', subtitle: 'Premier League', provider: 'Sportsbook', teamAName: 'Arsenal', teamBName: 'Chelsea', teamAIcon: '/sports_icons/soccer.svg', teamBIcon: '/sports_icons/soccer.svg', leagueLogo: '/sports league/prem.svg', date: 'Sat 15 Mar', time: '19:45', features: ['Match odds', 'Live betting markets'], bonusType: 'None', rtpBand: 'N/A', gameType: 'Sports', bonusBuy: 'No', reelType: 'N/A', filterFeatures: [], theme: 'N/A', paylines: 'N/A' },
+      { title: 'Lakers vs Celtics', subtitle: 'NBA', provider: 'Sportsbook', teamAName: 'Lakers', teamBName: 'Celtics', teamAIcon: '/sports_icons/Basketball.svg', teamBIcon: '/sports_icons/Basketball.svg', leagueLogo: '/sports league/nba.svg', date: 'Sun 16 Mar', time: '01:30', features: ['Player props', 'Spread markets'], bonusType: 'None', rtpBand: 'N/A', gameType: 'Sports', bonusBuy: 'No', reelType: 'N/A', filterFeatures: [], theme: 'N/A', paylines: 'N/A' },
+      { title: 'Chiefs vs Bills', subtitle: 'NFL', provider: 'Sportsbook', teamAName: 'Chiefs', teamBName: 'Bills', teamAIcon: '/sports_icons/football.svg', teamBIcon: '/sports_icons/football.svg', leagueLogo: '/sports league/NFL.svg', date: 'Sun 16 Mar', time: '21:25', features: ['Pre-game lines', 'Live drive betting'], bonusType: 'None', rtpBand: 'N/A', gameType: 'Sports', bonusBuy: 'No', reelType: 'N/A', filterFeatures: [], theme: 'N/A', paylines: 'N/A' },
+      { title: 'Alcaraz vs Sinner', subtitle: 'ATP', provider: 'Sportsbook', teamAName: 'Alcaraz', teamBName: 'Sinner', teamAIcon: '/sports_icons/tennis.svg', teamBIcon: '/sports_icons/tennis.svg', leagueLogo: '/sports league/ATP.svg', date: 'Mon 17 Mar', time: '14:00', features: ['Set betting', 'Total games markets'], bonusType: 'None', rtpBand: 'N/A', gameType: 'Sports', bonusBuy: 'No', reelType: 'N/A', filterFeatures: [], theme: 'N/A', paylines: 'N/A' },
+      { title: 'UFC Main Event', subtitle: 'MMA', provider: 'Sportsbook', teamAName: 'Fighter A', teamBName: 'Fighter B', teamAIcon: '/sports_icons/mma.svg', teamBIcon: '/sports_icons/mma.svg', leagueLogo: '/sports league/UFC.svg', date: 'Sat 22 Mar', time: '23:00', features: ['Method of victory', 'Round props'], bonusType: 'None', rtpBand: 'N/A', gameType: 'Sports', bonusBuy: 'No', reelType: 'N/A', filterFeatures: [], theme: 'N/A', paylines: 'N/A' },
+      { title: 'Real Madrid vs Barca', subtitle: 'La Liga', provider: 'Sportsbook', teamAName: 'Real Madrid', teamBName: 'Barca', teamAIcon: '/sports_icons/soccer.svg', teamBIcon: '/sports_icons/soccer.svg', leagueLogo: '/sports league/copa.svg', date: 'Sun 23 Mar', time: '20:00', features: ['BTTS', 'Corners and cards'], bonusType: 'None', rtpBand: 'N/A', gameType: 'Sports', bonusBuy: 'No', reelType: 'N/A', filterFeatures: [], theme: 'N/A', paylines: 'N/A' },
     ]
     const base = [
       ...casinoCatalog.map((item, index) => ({
@@ -8745,24 +8778,88 @@ function NavTestPageContent() {
     ]
     return base
   }, [])
+  const searchFilterOptions = useMemo(() => {
+    const casinoItems = searchCatalog.filter((item) => item.scope === 'casino')
+    const uniq = (values: string[]) => Array.from(new Set(values))
+    return {
+      vendors: uniq(casinoItems.map((item) => item.provider)).sort((a, b) => a.localeCompare(b)),
+      bonusTypes: uniq(casinoItems.map((item) => item.bonusType)).sort((a, b) => a.localeCompare(b)),
+      rtpBands: uniq(casinoItems.map((item) => item.rtpBand)),
+      gameTypes: uniq(casinoItems.map((item) => item.gameType)).sort((a, b) => a.localeCompare(b)),
+      bonusBuy: ['Yes', 'No'],
+      reelTypes: uniq(casinoItems.map((item) => item.reelType)),
+      featuresList: [
+        '2+3 Side bet', 'Bonus Wheel', 'Cascading reels', 'Collection', 'Colossal symbols', 'Complete_bets', 'Dedicated dealers',
+        'Expanding wilds', 'Favourite bets', 'Feature buy', 'Finale bets', 'Free spins', 'Grid slots', 'Hold & Win', 'In-game jackpot',
+        'Instant win', 'Multipliers', 'Neighbour bets', 'Pay Both Ways', 'Perfect pairs', 'Progressive jackpot', 'Random wilds',
+        'Respins', 'Scatter symbols', 'Side bets', 'Stacked symbols', 'Sticky wilds'
+      ],
+      themes: [
+        'Action', 'Adventure', 'Ancient Civilisations', 'Ancient Egypt', 'Animals', 'Asian', 'Candy', 'Card games', 'Cartoon',
+        'Christmas', 'Classic slots', 'Dice', 'Easter', 'Greek Mythology', 'Halloween', 'Horror', 'Irish', 'Joker', 'Jungle',
+        'Mexican', 'Music', 'Other', 'Pirates', 'Princess', 'Roman', 'Romance', 'Space'
+      ],
+      paylines: [
+        'Less than 5', '5 to 15', '16 to 242', '243 to 4096', '4096 to 100k', 'More than 100k',
+        'Megaways', 'Cluster pays', 'Match x', 'Infinity reels', 'Other'
+      ],
+    } as Record<SearchFilterGroupKey, string[]>
+  }, [searchCatalog])
+  const toggleSearchFilter = useCallback((group: SearchFilterGroupKey, value: string) => {
+    setSearchFilters((prev) => ({
+      ...prev,
+      [group]: prev[group].includes(value)
+        ? prev[group].filter((entry) => entry !== value)
+        : [...prev[group], value],
+    }))
+  }, [])
+  const clearSearchFilters = useCallback(() => {
+    setSearchFilters({
+      vendors: [],
+      bonusTypes: [],
+      rtpBands: [],
+      gameTypes: [],
+      bonusBuy: [],
+      reelTypes: [],
+      featuresList: [],
+      themes: [],
+      paylines: [],
+    })
+  }, [])
+  const hasActiveSearchFilters = useMemo(() => {
+    return Object.values(searchFilters).some((values) => values.length > 0)
+  }, [searchFilters])
   const searchResults = useMemo(() => {
     const query = searchQuery.trim().toLowerCase()
     return searchCatalog.filter((item) => {
       const matchesScope = searchScope === 'all' || item.scope === searchScope
       if (!matchesScope) return false
+      const matchesVendor = searchFilters.vendors.length === 0 || searchFilters.vendors.includes(item.provider)
+      const matchesBonusType = searchFilters.bonusTypes.length === 0 || searchFilters.bonusTypes.includes(item.bonusType)
+      const matchesRtpBand = searchFilters.rtpBands.length === 0 || searchFilters.rtpBands.includes(item.rtpBand)
+      const matchesGameType = searchFilters.gameTypes.length === 0 || searchFilters.gameTypes.includes(item.gameType)
+      const matchesBonusBuy = searchFilters.bonusBuy.length === 0 || searchFilters.bonusBuy.includes(item.bonusBuy)
+      const matchesReelType = searchFilters.reelTypes.length === 0 || searchFilters.reelTypes.includes(item.reelType)
+      const matchesFeature = searchFilters.featuresList.length === 0 || searchFilters.featuresList.some((feature) => item.filterFeatures.includes(feature))
+      const matchesTheme = searchFilters.themes.length === 0 || searchFilters.themes.includes(item.theme)
+      const matchesPaylines = searchFilters.paylines.length === 0 || searchFilters.paylines.includes(item.paylines)
+      if (!matchesVendor || !matchesBonusType || !matchesRtpBand || !matchesGameType || !matchesBonusBuy || !matchesReelType || !matchesFeature || !matchesTheme || !matchesPaylines) return false
       if (!query) return true
-      return `${item.title} ${item.subtitle} ${item.provider}`.toLowerCase().includes(query)
+      return `${item.title} ${item.subtitle} ${item.provider} ${item.gameType} ${item.theme}`.toLowerCase().includes(query)
     })
-  }, [searchCatalog, searchQuery, searchScope])
+  }, [searchCatalog, searchQuery, searchScope, searchFilters])
   const displayedSearchResults = useMemo(() => {
     if (searchResults.length > 0) return searchResults
+    if (hasActiveSearchFilters) return []
     const fallback = searchCatalog.filter((item) => searchScope === 'all' || item.scope === searchScope)
     return fallback.slice(0, 6)
-  }, [searchCatalog, searchResults, searchScope])
+  }, [hasActiveSearchFilters, searchCatalog, searchResults, searchScope])
   const closeSearchOverlay = useCallback(() => {
     const returnPath = searchReturnPath
     setSearchOverlayOpen(false)
     setSearchQuery('')
+    setSearchFiltersOpen(false)
+    clearSearchFilters()
     setSearchReturnPath(null)
     setActiveSubNav('Lobby')
     setShowAllGames(false)
@@ -8782,7 +8879,7 @@ function NavTestPageContent() {
     if (returnPath && returnPath.startsWith('/') && !returnPath.startsWith('/casino')) {
       router.push(returnPath)
     }
-  }, [router, searchReturnPath])
+  }, [clearSearchFilters, router, searchReturnPath])
   useEffect(() => {
     if (selectedGame) {
       trackPageView('game-launch', `Game: ${selectedGame.title}`)
@@ -9229,11 +9326,13 @@ function NavTestPageContent() {
 
     // Open blank search overlay from global nav triggers.
     const openSearchParam = searchParams.get('openSearch')
+    const openFiltersParam = searchParams.get('openFilters')
     const fromParam = searchParams.get('from')
     const sanitizedFrom = fromParam && fromParam.startsWith('/') && !fromParam.startsWith('//') ? fromParam : null
     if (openSearchParam === '1') {
       setSearchScope('all')
       setSearchReturnPath(sanitizedFrom)
+      setSearchFiltersOpen(openFiltersParam === '1')
       setSearchOverlayOpen(true)
       router.replace('/casino', { scroll: false })
     }
@@ -9244,6 +9343,7 @@ function NavTestPageContent() {
       setSearchQuery(globalSearchParam)
       setSearchScope('all')
       setSearchReturnPath(sanitizedFrom)
+      setSearchFiltersOpen(openFiltersParam === '1')
       setSearchOverlayOpen(true)
       router.replace('/casino', { scroll: false })
     }
@@ -9272,11 +9372,7 @@ function NavTestPageContent() {
 
   // Don't render until mounted to prevent hydration issues
   if (!mounted) {
-    return (
-      <div className="w-full bg-[#1a1a1a] text-white font-figtree overflow-x-hidden min-h-screen flex items-center justify-center">
-        <div className="text-white/70">Loading...</div>
-      </div>
-    )
+    return null
   }
 
   // Top featured casino items (square icon style like poker)
@@ -9365,7 +9461,7 @@ function NavTestPageContent() {
                   { label: 'Home', product: null, onClick: () => { trackNav('home', 'Home'); trackPageView('home', 'Home'); setShowSports(false); setShowVipRewards(false); setShowPoker(false); setQuickLinksOpen(false); } },
                   { label: 'Casino', product: 'casino' as const, onClick: () => { trackNav('casino', 'Casino'); trackPageView('casino', 'Casino'); setShowSports(false); setShowVipRewards(false); setShowPoker(false); setActiveSubNav('Lobby'); setQuickLinksOpen(false); } },
                   { label: 'Live Casino', product: 'liveCasino' as const, onClick: () => { trackNav('casino', 'Live Casino'); trackPageView('live-casino', 'Live Casino'); setShowSports(false); setShowVipRewards(false); setShowPoker(false); setActiveSubNav('Live Casino'); setQuickLinksOpen(false); } },
-                  { label: 'Sports', product: 'sports' as const, onClick: () => { trackNav('sports', 'Sports'); trackPageView('sports', 'Sports'); setShowSports(true); setShowVipRewards(false); setShowPoker(false); setShowAllGames(false); setSelectedCategory(''); setSelectedVendor(''); setQuickLinksOpen(false); window.scrollTo(0, 0); } },
+                  { label: 'Sports', product: 'sports' as const, onClick: () => { trackNav('sports', 'Sports'); trackPageView('sports', 'Sports'); setQuickLinksOpen(false); router.push('/sports'); } },
                   { label: 'Live Betting', product: 'liveBetting' as const, onClick: () => { trackNav('live-betting', 'Live Betting'); trackPageView('live-betting', 'Live Betting'); window.location.href = '/live-betting'; setQuickLinksOpen(false); } },
                   { label: 'Poker', product: 'poker' as const, onClick: () => { trackNav('poker', 'Poker'); setShowPoker(true); setShowSports(false); setShowVipRewards(false); setQuickLinksOpen(false); } },
                   { label: 'VIP Rewards', product: 'vipRewards' as const, onClick: () => { trackNav('vip-rewards', 'VIP Rewards'); setShowVipRewards(true); setShowSports(false); setShowPoker(false); setQuickLinksOpen(false); window.scrollTo(0, 0); } },
@@ -9480,7 +9576,7 @@ function NavTestPageContent() {
             )}
             
             {/* Navigation Menu - Desktop only */}
-            {!isMobile && (
+            {!isCompactHeader && (
               <nav className="flex-1 flex items-center z-[110] -ml-1" style={{ pointerEvents: 'auto' }}>
                 <SidebarMenu className="flex flex-row items-center gap-2">
                   {/* Sidebar collapse toggle — always visible on desktop */}
@@ -9514,13 +9610,9 @@ function NavTestPageContent() {
                         e.preventDefault()
                         e.stopPropagation()
                         if (lockedMainNavLabels.has('Sports')) return
-                        setShowSports(true)
-                        setShowVipRewards(false)
-                        setShowPoker(false)
-                        setShowAllGames(false)
-                        setSelectedCategory('')
-                        setSelectedVendor('')
-                        window.scrollTo(0, 0)
+                        trackNav('sports', 'Sports')
+                        trackPageView('sports', 'Sports')
+                        router.push('/sports')
                       }}
                       data-active={showSports}
                     >
@@ -9767,7 +9859,7 @@ function NavTestPageContent() {
           
           <div className={cn(
             "flex items-center",
-            isMobile ? "gap-2" : "gap-3"
+            isCompactHeader ? "gap-2" : "gap-3"
           )} style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative' }}>
             
             {/* Balance and Avatar Button */}
@@ -9784,7 +9876,7 @@ function NavTestPageContent() {
                 "bg-white/[0.02] border border-white/[0.08] hover:border-white/[0.12] hover:bg-white/[0.03]",
                 "active:bg-transparent",
                 accountDrawerOpen && "text-white",
-                isMobile
+                isCompactHeader
                   ? "grid-cols-[20px_minmax(0,1fr)] gap-1.5 px-2 py-1.5 h-9"
                   : "grid-cols-[24px_minmax(0,1fr)] gap-2 px-2.5 py-1.5 h-10"
               )}
@@ -9795,10 +9887,10 @@ function NavTestPageContent() {
               )}>
               <Avatar className={cn(
                 "border border-white/20 group-hover:border-white/40 transition-colors",
-                isMobile ? "h-5 w-5" : "h-6 w-6"
+                isCompactHeader ? "h-5 w-5" : "h-6 w-6"
               )}>
-                <AvatarFallback className="bg-transparent text-white flex items-center justify-center font-semibold tracking-tight" style={{ fontSize: isMobile ? '9px' : '10px' }}>
-                  <IconUser className={cn(isMobile ? "h-2.5 w-2.5" : "h-3 w-3")} />
+                <AvatarFallback className="bg-transparent text-white flex items-center justify-center font-semibold tracking-tight" style={{ fontSize: isCompactHeader ? '9px' : '10px' }}>
+                  <IconUser className={cn(isCompactHeader ? "h-2.5 w-2.5" : "h-3 w-3")} />
                 </AvatarFallback>
               </Avatar>
                 {/* Red dot indicator for notifications */}
@@ -9806,14 +9898,14 @@ function NavTestPageContent() {
               </div>
               <div className={cn(
                 "font-bold text-white tabular-nums transition-all duration-300 flex items-center justify-center text-center whitespace-nowrap min-w-0",
-                isMobile ? "text-[10px] pl-0.5" : "text-xs pl-1.5"
+                isCompactHeader ? "text-[10px] pl-0.5" : "text-xs pl-1.5"
               )}>
                 <span>€</span>
                 <NumberFlow value={displayBalance} format={{ notation: 'standard', minimumFractionDigits: 2, maximumFractionDigits: 2 }} />
               </div>
             </Button>
             
-            {isMobile && (
+            {isCompactHeader && (
               <Button
                 variant="ghost"
                 size="icon"
@@ -9822,7 +9914,7 @@ function NavTestPageContent() {
                   e.stopPropagation()
                   setSearchOverlayOpen(true)
                 }}
-                className="h-9 w-9 rounded-[0.56rem] border border-white/10 bg-[#141920]/90 text-white/75 hover:bg-[#1a202b]/95"
+                className="h-9 w-9 rounded-[0.56rem] border border-white/[0.08] bg-white/[0.02] text-white/75 hover:border-white/[0.12] hover:bg-white/[0.03]"
                 style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer' }}
               >
                 <IconSearch className="h-4 w-4" />
@@ -9830,7 +9922,7 @@ function NavTestPageContent() {
             )}
             
 {/* Deposit Button - Desktop only */}
-            {!isMobile && (
+            {!isCompactHeader && (
               <Button
                 variant="ghost"
                 onClick={(e) => {
@@ -9861,7 +9953,7 @@ function NavTestPageContent() {
             )}
 
             {/* Global Search (replaces chat button) - Desktop only */}
-            {!isMobile && (
+            {!isCompactHeader && (
               <ChatNavToggle
                 onSearch={(query) => {
                   setSearchQuery(query)
@@ -9871,14 +9963,14 @@ function NavTestPageContent() {
               />
             )}
 
-            {!isMobile && (
+            {!isCompactHeader && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="h-9 rounded-[0.56rem] border border-white/10 bg-[#121416] px-2.5 text-white/75 hover:bg-[#171b22] inline-flex items-center gap-1.5"
-                  style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer' }}
-                >
+                  className="h-9 rounded-[0.56rem] border border-white/[0.08] bg-white/[0.02] px-2.5 text-white/75 hover:border-white/[0.12] hover:bg-white/[0.03] inline-flex items-center gap-1.5"
+                style={{ pointerEvents: 'auto', zIndex: 101, position: 'relative', cursor: 'pointer' }}
+              >
                   <IconWorld className="h-4 w-4" />
                   <span className="text-[11px] font-medium text-white/70">{headerLanguage}</span>
               </Button>
@@ -11003,14 +11095,14 @@ function NavTestPageContent() {
                             const Icon = item.icon
                             if (item.id === 'Level') {
                               return (
-                                <SidebarMenuItem key={`promo-feature-${index}`}>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <SidebarMenuButton
-                                        onClick={(e: React.MouseEvent) => {
-                                          e.preventDefault()
-                                          e.stopPropagation()
-                                          if (isMobile) setOpenMobile(false)
+                              <SidebarMenuItem key={`promo-feature-${index}`}>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <SidebarMenuButton
+                                      onClick={(e: React.MouseEvent) => {
+                                        e.preventDefault()
+                                        e.stopPropagation()
+                                        if (isMobile) setOpenMobile(false)
                                           setAccountBonusTab('available')
                                           setAccountDrawerView('bonus')
                                           openAccountDrawer()
@@ -11272,76 +11364,76 @@ function NavTestPageContent() {
                         return (
                           <React.Fragment key={index}>
                             <SidebarMenuItem>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <SidebarMenuButton
-                                    isActive={isActive}
-                                    data-tour-target={item.label === 'Play Random'
-                                      ? 'casino-play-random'
-                                      : item.label === 'Continue Playing'
-                                        ? 'casino-last-played'
-                                        : undefined}
-                                    onClick={(e) => {
-                                      e.preventDefault()
-                                      e.stopPropagation()
-                                      if (isMobile) setOpenMobile(false)
-                                      setActiveIconTab('search')
-                                      if (item.label === 'My Favorites') {
-                                        setActiveSubNav('Lobby')
-                                        setSelectedCategory('Favorites')
-                                        setSelectedVendor('')
-                                        setShowAllGames(true)
-                                        setShowSports(false)
-                                      } else if (item.label === 'Play Random') {
-                                        // Launch a random game
-                                        const randomIndex = Math.floor(Math.random() * squareTileImages.length)
-                                        const gameNames = ['Gold Nugget Rush', 'Mega Fortune', 'Starburst', 'Book of Dead', 'Gonzo\'s Quest', 'Dead or Alive', 'Immortal Romance', 'Thunderstruck', 'Avalon', 'Blood Suckers']
-                                        setSelectedGame({
-                                          title: gameNames[randomIndex % gameNames.length],
-                                          image: squareTileImages[randomIndex],
-                                          provider: 'Evolution Gaming',
-                                          features: ['Random Pick!', 'Surprise Game Feature']
-                                        })
-                                      } else if (item.label === 'Continue Playing') {
-                                        // Open a wallpaper-style grid with recent games.
-                                        setActiveSubNav('Lobby')
-                                        setSelectedCategory('Continue Playing')
-                                        setSelectedVendor('')
-                                        setShowAllGames(true)
-                                        setShowSports(false)
-                                      }
-                                    }}
-                                    className={cn(
-                                      "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
-                                      "data-[active=true]:text-white data-[active=true]:font-medium",
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <SidebarMenuButton
+                                  isActive={isActive}
+                                  data-tour-target={item.label === 'Play Random'
+                                    ? 'casino-play-random'
+                                    : item.label === 'Continue Playing'
+                                      ? 'casino-last-played'
+                                      : undefined}
+                                  onClick={(e) => {
+                                    e.preventDefault()
+                                    e.stopPropagation()
+                                    if (isMobile) setOpenMobile(false)
+                                    setActiveIconTab('search')
+                                    if (item.label === 'My Favorites') {
+                                      setActiveSubNav('Lobby')
+                                      setSelectedCategory('Favorites')
+                                      setSelectedVendor('')
+                                      setShowAllGames(true)
+                                      setShowSports(false)
+                                    } else if (item.label === 'Play Random') {
+                                      // Launch a random game
+                                      const randomIndex = Math.floor(Math.random() * squareTileImages.length)
+                                      const gameNames = ['Gold Nugget Rush', 'Mega Fortune', 'Starburst', 'Book of Dead', 'Gonzo\'s Quest', 'Dead or Alive', 'Immortal Romance', 'Thunderstruck', 'Avalon', 'Blood Suckers']
+                                      setSelectedGame({
+                                        title: gameNames[randomIndex % gameNames.length],
+                                        image: squareTileImages[randomIndex],
+                                        provider: 'Evolution Gaming',
+                                        features: ['Random Pick!', 'Surprise Game Feature']
+                                      })
+                                    } else if (item.label === 'Continue Playing') {
+                                      // Open a wallpaper-style grid with recent games.
+                                      setActiveSubNav('Lobby')
+                                      setSelectedCategory('Continue Playing')
+                                      setSelectedVendor('')
+                                      setShowAllGames(true)
+                                      setShowSports(false)
+                                    }
+                                  }}
+                                  className={cn(
+                                    "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
+                                    "data-[active=true]:text-white data-[active=true]:font-medium",
                                       "data-[active=false]:text-white/70 hover:text-white hover:bg-white/5",
                                       "bg-white/[0.02] border border-white/[0.08] hover:border-white/[0.12]"
+                                  )}
+                                  style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)' } : undefined}
+                                >
+                                  <div
+                                    className={cn(
+                                      "w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0",
+                                      isActive ? "bg-white/10" : "bg-white/[0.045]"
                                     )}
-                                    style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)' } : undefined}
                                   >
-                                    <div
-                                      className={cn(
-                                        "w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0",
-                                        isActive ? "bg-white/10" : "bg-white/[0.045]"
-                                      )}
-                                    >
-                                        {Icon && <Icon strokeWidth={1.5} className="w-4 h-4" />}
-                                      </div>
-                                    {(sidebarState !== 'collapsed' || isMobile) && (
+                                      {Icon && <Icon strokeWidth={1.5} className="w-4 h-4" />}
+                                    </div>
+                                  {(sidebarState !== 'collapsed' || isMobile) && (
                                       <div className="flex flex-col leading-tight min-w-0">
                                         <span>{item.label}</span>
                                         <span className="text-[11px] text-white/40 font-normal mt-0.5">{item.subtitle}</span>
                                       </div>
-                                    )}
-                                  </SidebarMenuButton>
-                                </TooltipTrigger>
-                                {sidebarState === 'collapsed' && (
-                                  <TooltipContent side="right" className="bg-[#2d2d2d] border-white/10 text-white">
-                                    <p>{item.label}</p>
-                                  </TooltipContent>
-                                )}
-                              </Tooltip>
-                            </SidebarMenuItem>
+                                  )}
+                                </SidebarMenuButton>
+                              </TooltipTrigger>
+                              {sidebarState === 'collapsed' && (
+                                <TooltipContent side="right" className="bg-[#2d2d2d] border-white/10 text-white">
+                                  <p>{item.label}</p>
+                                </TooltipContent>
+                              )}
+                            </Tooltip>
+                          </SidebarMenuItem>
                             {item.label === 'Continue Playing' && (
                               <SidebarMenuItem>
                                 <SidebarMenuButton
@@ -11574,37 +11666,37 @@ function NavTestPageContent() {
                         return (
                           <React.Fragment key={index}>
                             <SidebarMenuItem>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <SidebarMenuButton
-                                    onClick={(e) => {
-                                      e.preventDefault()
-                                      e.stopPropagation()
-                                      if (isMobile) setOpenMobile(false)
-                                      if (item.label === 'Support') {
-                                        console.log('Support clicked')
-                                      } else if (item.label === 'My Bonus') {
-                                        setAccountBonusTab('available')
-                                        setAccountDrawerView('bonus')
-                                        openAccountDrawer()
-                                      }
-                                    }}
-                                    className={cn(
-                                      "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
-                                      "text-white/70 hover:text-white hover:bg-white/5"
-                                    )}
-                                  >
-                                    <Icon strokeWidth={1.5} className="w-5 h-5" />
-                                    <span>{item.label}</span>
-                                  </SidebarMenuButton>
-                                </TooltipTrigger>
-                                {sidebarState === 'collapsed' && (
-                                  <TooltipContent side="right" className="bg-[#2d2d2d] border-white/10 text-white">
-                                    <p>{item.label}</p>
-                                  </TooltipContent>
-                                )}
-                              </Tooltip>
-                            </SidebarMenuItem>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <SidebarMenuButton
+                                  onClick={(e) => {
+                                    e.preventDefault()
+                                    e.stopPropagation()
+                                    if (isMobile) setOpenMobile(false)
+                                    if (item.label === 'Support') {
+                                      console.log('Support clicked')
+                                    } else if (item.label === 'My Bonus') {
+                                      setAccountBonusTab('available')
+                                      setAccountDrawerView('bonus')
+                                      openAccountDrawer()
+                                    }
+                                  }}
+                                  className={cn(
+                                    "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
+                                    "text-white/70 hover:text-white hover:bg-white/5"
+                                  )}
+                                >
+                                  <Icon strokeWidth={1.5} className="w-5 h-5" />
+                                  <span>{item.label}</span>
+                                </SidebarMenuButton>
+                              </TooltipTrigger>
+                              {sidebarState === 'collapsed' && (
+                                <TooltipContent side="right" className="bg-[#2d2d2d] border-white/10 text-white">
+                                  <p>{item.label}</p>
+                                </TooltipContent>
+                              )}
+                            </Tooltip>
+                          </SidebarMenuItem>
                           </React.Fragment>
                         )
                       })}
@@ -11702,12 +11794,7 @@ function NavTestPageContent() {
                         <div className="bg-transparent p-0 h-auto gap-1 rounded-3xl border-0 flex items-center transition-colors duration-300">
                           <button
                             onClick={() => {
-                              const targetCategory = activeSubNav === 'Lobby' ? 'New Games' : activeSubNav
-                              setActiveIconTab('filter')
-                              setShowAllGames(true)
-                              setSelectedVendor('')
-                              setSelectedCategory(targetCategory)
-                              setActiveSubNav(targetCategory)
+                              openSearchWithFiltersFromSubNav()
                             }}
                             className={cn(
                               "bg-transparent rounded-2xl p-1.5 h-9 w-9 flex items-center justify-center transition-all duration-300 ease-in-out",
@@ -11825,12 +11912,7 @@ function NavTestPageContent() {
                             onClick={(e) => {
                               e.preventDefault()
                               e.stopPropagation()
-                              const targetCategory = activeSubNav === 'Lobby' ? 'New Games' : activeSubNav
-                              setActiveIconTab('filter')
-                              setShowAllGames(true)
-                              setSelectedVendor('')
-                              setSelectedCategory(targetCategory)
-                              setActiveSubNav(targetCategory)
+                              openSearchWithFiltersFromSubNav()
                             }}
                             className={cn(
                               "relative z-10 rounded-2xl p-1.5 h-9 w-9 flex items-center justify-center transition-colors duration-300 flex-shrink-0 scroll-snap-start",
@@ -14497,12 +14579,12 @@ function NavTestPageContent() {
                           <ul className="space-y-1.5 pb-2 text-xs text-white/70">
                             <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
                             <li><a href="#" className="hover:text-white transition-colors">Fairness</a></li>
-                            <li><a href="#" className="hover:text-white transition-colors">Responsible Gaming</a></li>
+                        <li><a href="#" className="hover:text-white transition-colors">Responsible Gaming</a></li>
                             <li><a href="#" className="hover:text-white transition-colors">Gaming Help</a></li>
                             <li><a href="#" className="hover:text-white transition-colors">Live Support</a></li>
                             <li><a href="#" className="hover:text-white transition-colors">Self Exclusion</a></li>
                             <li><a href="#" className="hover:text-white transition-colors">Law Enforcement Request</a></li>
-                          </ul>
+                      </ul>
                         </AccordionContent>
                       </AccordionItem>
                       <AccordionItem value="about" className="border-white/10">
@@ -14543,7 +14625,7 @@ function NavTestPageContent() {
                         </AccordionContent>
                       </AccordionItem>
                     </Accordion>
-                  </div>
+                    </div>
                   <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-6 gap-6 mb-6">
                     <div>
                       <h3 className="font-semibold mb-3 text-sm">Casino</h3>
@@ -14628,7 +14710,7 @@ function NavTestPageContent() {
                               <TooltipTrigger asChild>
                                 <div className="group h-10 min-w-[48px] rounded-small border border-white/10 bg-white/[0.03] px-2 inline-flex items-center justify-center text-white/45 transition-all duration-200 hover:border-white/25 hover:bg-white/[0.08] hover:text-white hover:shadow-[0_0_8px_rgba(255,255,255,0.12)]">
                                   <span className={`icon icon-${symbol} text-[20px] leading-[1] transition-all duration-200 group-hover:drop-shadow-[0_0_3px_rgba(255,255,255,0.35)]`} aria-label={coinLabel} />
-                                </div>
+                    </div>
                               </TooltipTrigger>
                               <TooltipContent side="top" className="bg-[#2d2d2d] border-white/20 text-white">
                                 <p>{coinLabel}</p>
@@ -14636,11 +14718,11 @@ function NavTestPageContent() {
                             </Tooltip>
                           )
                         })}
-                      </div>
+                          </div>
                     </div>
                   </div>
                   <div className="space-y-2 text-xs text-white/60 pt-2 border-t border-white/5">
-                    <Image
+                            <Image
                       src="/logos/BHGL_logo-1773311608241-DDbBBO6v.png"
                       alt="Betheat"
                       width={180}
@@ -15291,12 +15373,12 @@ function NavTestPageContent() {
                                 <div className="absolute top-3 left-3 inline-flex items-center rounded-full border border-white/15 bg-black/35 px-2 py-1 text-[11px] text-white/85">
                                   Requires Level {offer.requiredLevel}
                                 </div>
-                              </div>
-                              <CardContent className="p-4">
+                      </div>
+                      <CardContent className="p-4">
                                 <CardTitle className="text-lg font-semibold text-white mb-2">{offer.title}</CardTitle>
                                 <p className="text-sm text-white/70 mb-4 line-clamp-3">{offer.description}</p>
-                                <Button
-                                  variant="ghost"
+                  <Button 
+                    variant="ghost" 
                                   disabled={isLocked}
                                   className={cn(
                                     "w-full font-semibold border",
@@ -15311,9 +15393,9 @@ function NavTestPageContent() {
                                   }
                                 >
                                   {isLocked ? `Unlock at Level ${offer.requiredLevel}` : 'More info'}
-                                </Button>
-                              </CardContent>
-                            </Card>
+                  </Button>
+                      </CardContent>
+                    </Card>
                           )
                         })}
                       </div>
@@ -15337,21 +15419,21 @@ function NavTestPageContent() {
                         ))}
                       </div>
                     ) : (
-                      <div className="rounded-small border border-dashed border-white/20 bg-white/[0.02] px-4 py-8 text-center">
-                        <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/[0.03] text-xl">
-                          🔭
-                        </div>
-                        <p className="text-sm font-semibold text-white/90">No active bonus yet</p>
-                        <p className="mt-1 text-xs text-white/55">Check available bonuses to get started.</p>
-                        <Button
-                          variant="ghost"
-                          className="mt-3 h-9 rounded-small border border-[#9a86d1]/75 px-4 text-xs font-semibold text-[#121417] hover:text-[#121417]"
-                          style={{ backgroundColor: '#c9b4ff', boxShadow: '0 6px 18px rgba(122, 92, 196, 0.28)' }}
-                          onClick={() => setAccountBonusTab('available')}
-                        >
-                          Check Available
-                        </Button>
+                    <div className="rounded-small border border-dashed border-white/20 bg-white/[0.02] px-4 py-8 text-center">
+                      <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/[0.03] text-xl">
+                        🔭
                       </div>
+                      <p className="text-sm font-semibold text-white/90">No active bonus yet</p>
+                      <p className="mt-1 text-xs text-white/55">Check available bonuses to get started.</p>
+                      <Button
+                        variant="ghost"
+                        className="mt-3 h-9 rounded-small border border-[#9a86d1]/75 px-4 text-xs font-semibold text-[#121417] hover:text-[#121417]"
+                        style={{ backgroundColor: '#c9b4ff', boxShadow: '0 6px 18px rgba(122, 92, 196, 0.28)' }}
+                        onClick={() => setAccountBonusTab('available')}
+                      >
+                        Check Available
+                      </Button>
+                    </div>
                     )
                   ) : (
                     <div className="rounded-small border border-white/10 bg-[var(--ds-sidebar-bg,#121417)]/92 backdrop-blur-sm overflow-visible">
@@ -15604,14 +15686,14 @@ function NavTestPageContent() {
                                     className="h-4 w-4 text-blue-300"
                                   />
                                 ) : (
-                                  <IconWallet
-                                    className={cn(
-                                      "h-4 w-4",
-                                      row.status === 'PENDING' && "text-amber-300",
-                                      row.status !== 'PENDING' && row.type === 'WITHDRAWAL' && "text-rose-300",
-                                      row.status !== 'PENDING' && row.type === 'DEPOSIT' && "text-emerald-300",
-                                    )}
-                                  />
+                                <IconWallet
+                                  className={cn(
+                                    "h-4 w-4",
+                                    row.status === 'PENDING' && "text-amber-300",
+                                    row.status !== 'PENDING' && row.type === 'WITHDRAWAL' && "text-rose-300",
+                                    row.status !== 'PENDING' && row.type === 'DEPOSIT' && "text-emerald-300",
+                                  )}
+                                />
                                 )}
                               </div>
                               <div className="min-w-0 flex-1">
@@ -15777,7 +15859,7 @@ function NavTestPageContent() {
                 onClick={(e) => e.stopPropagation()}
               >
                 {/* Search Header */}
-                <div className="sticky top-0 bg-[var(--ds-sidebar-bg,#121417)] z-10 px-4 pt-2 pb-3.5">
+                <div className="sticky top-0 bg-[var(--ds-sidebar-bg,#121417)] z-10 px-4 pt-2 pb-2">
                   <div className="max-w-7xl mx-auto">
                     <div className="relative flex items-center justify-end gap-3 mb-2">
                       <button
@@ -15802,36 +15884,126 @@ function NavTestPageContent() {
                             placeholder="Search games, teams, promos..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-9 pr-32 py-2.5 bg-[var(--ds-sidebar-bg,#141920)] border border-white/[0.06] rounded-small text-sm text-white placeholder:text-white/45 focus:outline-none focus:border-white/14 focus:ring-0 focus-visible:ring-0"
+                            className="w-full pl-9 pr-[148px] py-2.5 bg-[var(--ds-sidebar-bg,#141920)] border border-white/[0.06] rounded-small text-sm text-white placeholder:text-white/45 focus:outline-none focus:border-white/14 focus:ring-0 focus-visible:ring-0"
                             autoFocus
                           />
                           <div className="absolute right-2 top-1/2 -translate-y-1/2">
+                            <div className="flex items-center gap-1.5">
                             <button
-                              type="button"
-                              onClick={cycleSearchScope}
-                              className="inline-flex h-7 min-w-[92px] items-center justify-between gap-2 rounded-[9px] bg-white/[0.03] px-2.5 text-xs text-white/90 transition-colors hover:bg-white/[0.06] focus:outline-none focus:ring-0 focus-visible:ring-0"
-                              aria-label="Cycle search scope"
-                            >
-                              <AnimatePresence mode="wait" initial={false}>
-                                <motion.span
-                                  key={searchScope}
-                                  initial={{ opacity: 0, x: 8 }}
-                                  animate={{ opacity: 1, x: 0 }}
-                                  exit={{ opacity: 0, x: -8 }}
-                                  transition={{ duration: 0.15 }}
-                                  className="font-medium"
-                                >
-                                  {searchScopeLabels[searchScope]}
-                                </motion.span>
-                              </AnimatePresence>
-                              <IconChevronRight className="h-3.5 w-3.5 text-white/75" />
+                                type="button"
+                                onClick={cycleSearchScope}
+                                className="inline-flex h-7 min-w-[84px] items-center justify-between gap-2 rounded-[9px] bg-white/[0.03] px-2.5 text-xs text-white/90 transition-colors hover:bg-white/[0.06] focus:outline-none focus:ring-0 focus-visible:ring-0"
+                                aria-label="Cycle search scope"
+                              >
+                                <AnimatePresence mode="wait" initial={false}>
+                                  <motion.span
+                                    key={searchScope}
+                                    initial={{ opacity: 0, x: 8 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: -8 }}
+                                    transition={{ duration: 0.15 }}
+                                    className="font-medium"
+                                  >
+                                    {searchScopeLabels[searchScope]}
+                                  </motion.span>
+                                </AnimatePresence>
+                                <IconChevronRight className="h-3.5 w-3.5 text-white/75" />
                             </button>
-                          </div>
+                              <button
+                                type="button"
+                                onClick={() => setSearchFiltersOpen((prev) => !prev)}
+                                className={cn(
+                                  "inline-flex h-7 w-7 items-center justify-center rounded-[9px] border border-white/[0.08] transition-colors focus:outline-none focus:ring-0 focus-visible:ring-0",
+                                  searchFiltersOpen || hasActiveSearchFilters
+                                    ? "bg-white/[0.1] text-white border-white/[0.18]"
+                                    : "bg-white/[0.03] text-white/80 hover:bg-white/[0.06]"
+                                )}
+                                aria-label="Toggle filters"
+                              >
+                                <IconFilter className="h-3.5 w-3.5" />
+                              </button>
+                        </div>
+                      </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
+                <AnimatePresence initial={false}>
+                  {searchFiltersOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.2 }}
+                      className="px-4 pt-2"
+                    >
+                      <div className="max-w-7xl mx-auto max-h-[38vh] overflow-y-auto rounded-small border border-white/[0.08] bg-white/[0.02] p-2.5">
+                        <div className="mb-2 flex items-center justify-between">
+                          <h4 className="text-xs font-semibold uppercase tracking-wide text-white/70">Filter Settings</h4>
+                        <button 
+                            type="button"
+                            onClick={clearSearchFilters}
+                            disabled={!hasActiveSearchFilters}
+                            className="text-[11px] text-white/60 hover:text-white disabled:opacity-35 disabled:cursor-not-allowed transition-colors"
+                          >
+                            Clear all
+                        </button>
+                      </div>
+                        <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+                          {[
+                            { key: 'vendors', label: 'Vendors' },
+                            { key: 'bonusTypes', label: 'Bonus Types' },
+                            { key: 'featuresList', label: 'Features List' },
+                            { key: 'themes', label: 'Themes' },
+                            { key: 'paylines', label: 'Paylines' },
+                            { key: 'rtpBands', label: 'RTP / Volatility' },
+                            { key: 'gameTypes', label: 'Game Types' },
+                            { key: 'bonusBuy', label: 'Bonus Buy' },
+                            { key: 'reelTypes', label: 'Reel Type' },
+                          ].map((group) => {
+                            const typedKey = group.key as SearchFilterGroupKey
+                            const selectedCount = searchFilters[typedKey].length
+                            return (
+                              <div key={group.key} className="rounded-small border border-white/[0.06] bg-black/10 p-2">
+                                <div className="mb-1.5 flex items-center justify-between">
+                                  <p className="text-[11px] font-medium uppercase tracking-wide text-white/60">{group.label}</p>
+                                  {selectedCount > 0 && (
+                                    <span className="rounded-full bg-[var(--ds-primary,#ee3536)] px-2 py-0.5 text-[10px] font-semibold text-white">
+                                      {selectedCount}
+                                    </span>
+                                  )}
+                    </div>
+                                <div className="max-h-[96px] overflow-y-auto">
+                                  <div className="flex flex-wrap gap-1.5">
+                                    {searchFilterOptions[typedKey].map((option) => {
+                                      const active = searchFilters[typedKey].includes(option)
+                                      return (
+                                        <button
+                                          key={`${group.key}-${option}`}
+                                          type="button"
+                                          onClick={() => toggleSearchFilter(typedKey, option)}
+                                          className={cn(
+                                            "rounded-[8px] border px-2.5 py-1 text-xs transition-colors",
+                                            active
+                                              ? "border-[var(--ds-primary,#ee3536)] bg-[var(--ds-primary,#ee3536)] text-white"
+                                              : "border-white/[0.08] bg-white/[0.03] text-white/75 hover:bg-white/[0.06]"
+                                          )}
+                                        >
+                                          {option}
+                                        </button>
+                                      )
+                                    })}
+                      </div>
+                    </div>
+                  </div>
+                            )
+                          })}
+                </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
                 {/* Search Results */}
                 <div className="max-w-7xl mx-auto px-4 py-4">
@@ -15854,7 +16026,9 @@ function NavTestPageContent() {
                     >
                       {searchResults.length === 0 && (
                         <div className="rounded-small border border-white/[0.06] bg-white/[0.02] px-3 py-3 text-sm text-white/65">
-                          No direct matches. Showing suggested results.
+                          {hasActiveSearchFilters
+                            ? 'No matches for selected filters. Try removing some filters.'
+                            : 'No direct matches. Showing suggested results.'}
                         </div>
                       )}
                       {displayedSearchResults.map((item, index) => {
@@ -15862,7 +16036,7 @@ function NavTestPageContent() {
                         const isGoldNugget = item.title === 'Gold Nugget Rush'
                         const isPlinko = item.title === 'Original Plinko'
                         const isSubtitle = item.title === 'Subtitle Title'
-
+                        
                         return (
                           <motion.div
                             key={item.id}
@@ -15874,9 +16048,9 @@ function NavTestPageContent() {
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ 
                               opacity: 1, 
-                              rotate: 0,
-                              x: 0,
-                              y: 0,
+                                rotate: 0,
+                                x: 0,
+                                y: 0,
                             }}
                             transition={{ 
                               type: "spring",
@@ -15895,25 +16069,25 @@ function NavTestPageContent() {
                             }}
                           >
                             {item.scope !== 'sports' && (
-                              <motion.div
-                                layout
-                                transition={{
-                                  type: "spring",
-                                  stiffness: 350,
-                                  damping: 30,
-                                  mass: 1
-                                }}
+                            <motion.div
+                              layout
+                              transition={{
+                                type: "spring",
+                                stiffness: 350,
+                                damping: 30,
+                                mass: 1
+                              }}
                                 className="relative overflow-hidden shrink-0 bg-white/[0.04] border border-white/[0.07] rounded-small w-16 h-16"
-                              >
-                                {imageSrc && (
-                                  <Image
-                                    src={imageSrc}
-                                    alt={`Game ${index + 1}`}
-                                    fill
+                            >
+                              {imageSrc && (
+                                <Image
+                                  src={imageSrc}
+                                  alt={`Game ${index + 1}`}
+                                  fill
                                     className="transition-transform duration-300 rounded-small object-cover group-hover:scale-105"
                                     sizes="64px"
-                                  />
-                                )}
+                                />
+                              )}
                               
                               {/* Top Left Tags */}
                               {viewMode !== 'list' && (
@@ -15973,7 +16147,7 @@ function NavTestPageContent() {
                                 </div>
                               )}
                               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 tile-shimmer" />
-                              </motion.div>
+                            </motion.div>
                             )}
 
                             {/* List View Info */}
@@ -16003,9 +16177,9 @@ function NavTestPageContent() {
                                             <Image src={item.teamBIcon} alt={`${item.teamBName ?? 'Team B'} icon`} width={16} height={16} className="h-4 w-4 object-contain opacity-95" />
                                           )}
                                         </div>
-                                        <h3 className="font-medium text-[15px] text-white leading-tight truncate">
+                                    <h3 className="font-medium text-[15px] text-white leading-tight truncate">
                                           {(item.teamAName && item.teamBName) ? `${item.teamAName} vs ${item.teamBName}` : item.title}
-                                        </h3>
+                                    </h3>
                                       </div>
                                     ) : (
                                       <h3 className="font-medium text-[15px] text-white leading-tight truncate">

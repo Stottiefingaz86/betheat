@@ -1094,6 +1094,28 @@ body {
   border-radius: var(--ui-button-radius) !important;
 }
 
+/* Sports sub-nav icon chips: transparent by default, tile on hover/selected */
+[data-sub-nav] button[data-subnav-plain="true"] {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+}
+[data-sub-nav] button[data-subnav-plain="true"]:hover,
+[data-sub-nav] button[data-subnav-plain="true"]:focus,
+[data-sub-nav] button[data-subnav-plain="true"]:active {
+  background: rgba(255, 255, 255, 0.06) !important;
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  background-image: none !important;
+}
+[data-sub-nav] button[data-subnav-plain="true"][data-active="true"],
+[data-sub-nav] button[data-subnav-plain="true"][data-state="active"] {
+  background: rgba(255, 255, 255, 0.1) !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  background-image: none !important;
+}
+
 /* Main nav active state: no filled chip, underline only */
 [data-nav-header] button[data-active="true"],
 [data-nav-header] [role="button"][data-active="true"] {
@@ -2079,4 +2101,24 @@ button[class*="h-8 w-8 rounded-small bg-[#1a1a1a]/90"][class*="disabled:cursor-n
   transition: background-color 9999s ease-out 0s;
   border-color: rgba(255, 255, 255, 0.2) !important;
   caret-color: #ffffff !important;
+}
+
+/* FINAL OVERRIDE: sub-nav plain chips only show tile on hover/selected */
+[data-sub-nav] > div button[data-subnav-plain="true"] {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+[data-sub-nav] > div button[data-subnav-plain="true"]:hover,
+[data-sub-nav] > div button[data-subnav-plain="true"]:active,
+[data-sub-nav] > div button[data-subnav-plain="true"]:focus {
+  background: rgba(255, 255, 255, 0.06) !important;
+  background-color: rgba(255, 255, 255, 0.06) !important;
+}
+[data-sub-nav] > div button[data-subnav-plain="true"][data-active="true"],
+[data-sub-nav] > div button[data-subnav-plain="true"][data-state="active"] {
+  background: rgba(255, 255, 255, 0.1) !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
 }
