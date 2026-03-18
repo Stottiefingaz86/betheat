@@ -8212,6 +8212,11 @@ function NavTestPageContent() {
       return accountBetHistorySort === 'latest' ? bTime - aTime : aTime - bTime
     })
   }, [accountBetHistoryRows, accountBetHistorySort, accountBetHistoryStatusFilter, accountBetHistoryTypeFilter])
+  useEffect(() => {
+    if (accountDrawerView !== 'betHistory') {
+      setAccountBetHistoryExpandedId(null)
+    }
+  }, [accountDrawerView])
   const [profileForm, setProfileForm] = useState({
     username: '5Aces',
     email: 'christopher.hunt86@gmail.com',
@@ -16269,83 +16274,85 @@ function NavTestPageContent() {
                         <div className="rounded-small border border-dashed border-white/20 bg-white/[0.02] px-4 py-6 text-center text-sm text-white/70">
                           No bets for this filter.
                         </div>
-                      ) : accountBetHistoryFilteredRows.map((row) => (
-                        <div key={row.id} className="overflow-hidden rounded-small border border-white/10 bg-white/[0.02]">
-                          <button
-                            type="button"
-                            onClick={() => setAccountBetHistoryExpandedId((prev) => (prev === row.id ? null : row.id))}
+                      ) : accountBetHistoryFilteredRows.map((row) => {
+                        const displaySelection = row.selection?.trim() || (row.type === 'PARLAY' ? 'Parlay Bet' : 'Selection')
+                        const displayFixture = row.fixture?.trim() || 'Multi-leg bet'
+                        const displayAmount = row.amount?.trim() || '$0.00'
+                        const displayOdds = row.odds?.trim() || '--'
+                        const displayDate = row.date?.trim() || 'Unknown date'
+                        const displayMarket = row.market?.trim() || 'N/A'
+                        const displayRisk = Number.isFinite(row.riskValue) ? row.riskValue : 0
+                        const displayPotential = Number.isFinite(row.potentialReturnsValue) ? row.potentialReturnsValue : 0
+                        const isExpanded = accountBetHistoryExpandedId === row.id
+
+                        return (
+                          <div
+                            key={row.id}
                             className={cn(
-                              "w-full px-4 py-3 text-left transition-colors hover:bg-white/[0.015] focus-visible:outline-none focus-visible:ring-0",
-                              accountBetHistoryExpandedId === row.id ? "rounded-t-small rounded-b-none" : "rounded-small",
+                              "overflow-hidden rounded-small border border-white/10 bg-white/[0.02] transition-[max-height] duration-200 ease-out",
+                              isExpanded ? "max-h-[188px]" : "max-h-[86px]",
                             )}
                           >
-                            <div className="flex items-center gap-3">
-                              <img
-                                src={row.leagueIcon}
-                                alt={row.league}
-                                width={20}
-                                height={20}
-                                className="h-5 w-5 shrink-0 object-contain"
-                                onError={(e) => {
-                                  e.currentTarget.src = '/sports_icons/football.svg'
-                                }}
-                              />
-                              <div className="min-w-0 flex-1">
-                                <p className="truncate text-[15px] font-semibold text-white">{row.selection}</p>
-                                <div className="flex items-center gap-2">
-                                  <p className="truncate text-sm text-white/70">{row.fixture}</p>
-                                  <span
-                                    className={cn(
-                                      "h-1.5 w-1.5 rounded-full shrink-0",
-                                      row.status === 'IN_PLAY' && "bg-amber-400",
-                                      row.status === 'PENDING' && "bg-blue-400",
-                                      row.status === 'WON' && "bg-emerald-400",
-                                      row.status === 'LOST' && "bg-rose-400",
-                                      row.status === 'CASHED_OUT' && "bg-purple-400",
-                                    )}
-                                  />
+                            <button
+                              type="button"
+                              onClick={() => setAccountBetHistoryExpandedId((prev) => (prev === row.id ? null : row.id))}
+                              className="w-full px-4 py-3 text-left transition-colors hover:bg-white/[0.015] focus-visible:outline-none focus-visible:ring-0"
+                            >
+                              <div className="flex items-center gap-3">
+                                <img
+                                  src={row.leagueIcon}
+                                  alt={row.league}
+                                  width={20}
+                                  height={20}
+                                  className="h-5 w-5 shrink-0 object-contain"
+                                  onError={(e) => {
+                                    e.currentTarget.src = '/sports_icons/football.svg'
+                                  }}
+                                />
+                                <div className="min-w-0 flex-1">
+                                  <p className="truncate text-[15px] font-semibold text-white">{displaySelection}</p>
+                                  <div className="flex items-center gap-2">
+                                    <p className="truncate text-sm text-white/70">{displayFixture}</p>
+                                    <span
+                                      className={cn(
+                                        "h-1.5 w-1.5 rounded-full shrink-0",
+                                        row.status === 'IN_PLAY' && "bg-amber-400",
+                                        row.status === 'PENDING' && "bg-blue-400",
+                                        row.status === 'WON' && "bg-emerald-400",
+                                        row.status === 'LOST' && "bg-rose-400",
+                                        row.status === 'CASHED_OUT' && "bg-purple-400",
+                                      )}
+                                    />
+                                  </div>
                                 </div>
+                                <div className="text-right">
+                                  <p className="text-sm font-semibold text-white">{displayAmount}</p>
+                                  <p className="text-[11px] text-white/55">{displayOdds}</p>
+                                </div>
+                                <IconChevronDown className={cn("h-4 w-4 shrink-0 text-white/45 transition-transform", isExpanded && "rotate-180")} />
                               </div>
-                              <div className="text-right">
-                                <p className="text-sm font-semibold text-white">{row.amount}</p>
-                                <p className="text-[11px] text-white/55">{row.odds}</p>
-                              </div>
-                              <IconChevronDown className={cn("h-4 w-4 shrink-0 text-white/45 transition-transform", accountBetHistoryExpandedId === row.id && "rotate-180")} />
-                            </div>
-                          </button>
-                          <AnimatePresence initial={false}>
-                            {accountBetHistoryExpandedId === row.id && (
-                              <motion.div
-                                key={`${row.id}-bet-details`}
-                                initial={{ height: 0, opacity: 0 }}
-                                animate={{ height: 'auto', opacity: 1 }}
-                                exit={{ height: 0, opacity: 0 }}
-                                transition={{ duration: 0.2, ease: 'easeOut' }}
-                                className="overflow-hidden"
-                              >
-                                <div className="grid grid-cols-2 gap-3 border-t border-white/10 bg-white/[0.03] px-4 pb-3 pt-2 text-xs">
+                            </button>
+                            {isExpanded ? (
+                              <div className="border-t border-white/10 bg-white/[0.03] px-4 pb-3 pt-2">
+                                <div className="grid grid-cols-2 gap-3 text-xs">
                                   <div>
                                     <p className="text-white/45 uppercase tracking-wide text-[10px]">Date</p>
-                                    <p className="mt-1 text-white/80">{row.date}</p>
+                                    <p className="mt-1 text-white/80">{displayDate}</p>
                                   </div>
                                   <div>
                                     <p className="text-white/45 uppercase tracking-wide text-[10px]">Market</p>
-                                    <p className="mt-1 text-white/80">{row.market}</p>
-                                  </div>
-                                  <div>
-                                    <p className="text-white/45 uppercase tracking-wide text-[10px]">Risk</p>
-                                    <p className="mt-1 text-white/80">${row.riskValue.toFixed(2)}</p>
-                                  </div>
-                                  <div>
-                                    <p className="text-white/45 uppercase tracking-wide text-[10px]">Potential Return</p>
-                                    <p className="mt-1 text-white/80">${row.potentialReturnsValue.toFixed(2)}</p>
+                                    <p className="mt-1 text-white/80">{displayMarket}</p>
                                   </div>
                                 </div>
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
-                        </div>
-                      ))}
+                                <div className="mt-2 flex items-center justify-between text-[11px] text-white/55">
+                                  <p>Risk: ${displayRisk.toFixed(2)}</p>
+                                  <p>Potential Return: ${displayPotential.toFixed(2)}</p>
+                                </div>
+                              </div>
+                            ) : null}
+                          </div>
+                        )
+                      })}
                     </div>
                   </div>
                 </div>

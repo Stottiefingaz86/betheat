@@ -38,19 +38,23 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const showEditorRuntimeTools = process.env.NODE_ENV !== 'production'
+
   return (
     <html lang="en" className={figtree.variable} suppressHydrationWarning>
       <body style={{ fontFamily: 'var(--font-figtree), sans-serif' }}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} storageKey="theme">
           <BrandSanitizer />
-          <Suspense fallback={null}>
-            <BuilderPreviewBridge />
-          </Suspense>
+          {showEditorRuntimeTools ? (
+            <Suspense fallback={null}>
+              <BuilderPreviewBridge />
+            </Suspense>
+          ) : null}
           <EsportsLinkFix />
           <PreventOverscroll />
           {children}
-          <DesignCustomizer />
-          <FloatingSiteButtons />
+          {showEditorRuntimeTools ? <DesignCustomizer /> : null}
+          {showEditorRuntimeTools ? <FloatingSiteButtons /> : null}
           <GlobalBetslip />
         </ThemeProvider>
       </body>
