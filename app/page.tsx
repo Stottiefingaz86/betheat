@@ -2324,7 +2324,7 @@ function HomePageContent() {
                         <img
                           src={banner.src}
                           alt={banner.alt}
-                          className={cn("block h-auto max-w-none", isMobile ? "w-[300px]" : "w-auto")}
+                          className={cn("block h-auto max-w-none", isMobile ? "w-[240px]" : "w-[300px]")}
                         />
                       </Card>
                     </CarouselItem>

@@ -12112,7 +12112,7 @@ function NavTestPageContent() {
                           <img
                             src="/banners/Welcome%20Bonus%20Casinofinale_2cbbd48c-15e7-406d-a2d7-e9cd9b201699_20260121_0703.png"
                             alt="Welcome Bonus Casino banner"
-                            className={cn("block h-auto max-w-none", isMobile ? "w-[300px]" : "w-auto")}
+                            className={cn("block h-auto max-w-none", isMobile ? "w-[240px]" : "w-[300px]")}
                           />
                         </Card>
                       </CarouselItem>
@@ -12123,7 +12123,7 @@ function NavTestPageContent() {
                           <img
                             src="/banners/AccaBoostfinale_b1661794-7726-4b87-852f-17eccfc9d7ce_20260121_0703.png"
                             alt="Acca Boost banner"
-                            className={cn("block h-auto max-w-none", isMobile ? "w-[300px]" : "w-auto")}
+                            className={cn("block h-auto max-w-none", isMobile ? "w-[240px]" : "w-[300px]")}
                           />
                         </Card>
                       </CarouselItem>
@@ -12134,7 +12134,7 @@ function NavTestPageContent() {
                           <img
                             src="/banners/cashbackfinale_07a0a8f0-480f-42e8-b2a3-322bd1b4156c_20260121_0703.png"
                             alt="Cashback banner"
-                            className={cn("block h-auto max-w-none", isMobile ? "w-[300px]" : "w-auto")}
+                            className={cn("block h-auto max-w-none", isMobile ? "w-[240px]" : "w-[300px]")}
                           />
                         </Card>
                       </CarouselItem>
@@ -12145,7 +12145,7 @@ function NavTestPageContent() {
                           <img
                             src="/banners/cryptofinale_7831bcf7-7a0c-493d-bb7e-7fea7c188d98_20260121_0703.png"
                             alt="Crypto banner"
-                            className={cn("block h-auto max-w-none", isMobile ? "w-[300px]" : "w-auto")}
+                            className={cn("block h-auto max-w-none", isMobile ? "w-[240px]" : "w-[300px]")}
                           />
                           </Card>
                         </CarouselItem>
@@ -12156,7 +12156,7 @@ function NavTestPageContent() {
                           <img
                             src="/banners/Welcome%20Bonus%20Casinofinale_2cbbd48c-15e7-406d-a2d7-e9cd9b201699_20260121_0703.png"
                             alt="Welcome Bonus Casino banner"
-                            className={cn("block h-auto max-w-none", isMobile ? "w-[300px]" : "w-auto")}
+                            className={cn("block h-auto max-w-none", isMobile ? "w-[240px]" : "w-[300px]")}
                           />
                         </Card>
                       </CarouselItem>

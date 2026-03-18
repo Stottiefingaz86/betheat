@@ -281,6 +281,23 @@ const FOOTER_CRYPTO_LABELS: Record<string, string> = {
   xtz: 'Tezos',
 }
 
+const sportsbookLeagueTiles = [
+  { label: 'NFL', icon: '/sports%20league/NFL.svg' },
+  { label: 'NBA', icon: '/sports%20league/nba.svg' },
+  { label: 'Premier League', icon: '/sports%20league/prem.svg' },
+  { label: 'Champions', icon: '/sports%20league/champions.svg' },
+  { label: 'F1', icon: '/sports%20league/f1.svg' },
+  { label: 'MLB', icon: '/sports%20league/MLB.svg' },
+  { label: 'NHL', icon: '/sports%20league/NHL.svg' },
+  { label: 'MLS', icon: '/sports%20league/mls.svg' },
+  { label: 'Copa', icon: '/sports%20league/copa.svg' },
+  { label: 'UFC', icon: '/sports%20league/UFC.svg' },
+  { label: 'Boxing WBA', icon: '/sports%20league/Boxing%20WBA.svg' },
+  { label: 'Golf PGA', icon: '/sports%20league/Golf%20pga.svg' },
+  { label: 'ATP', icon: '/sports%20league/ATP.svg' },
+  { label: 'Roland Garros', icon: '/sports%20league/roland%20garros%20tennis.svg' },
+] as const
+
 // Available square tile images
 const squareTileImages = [
   '/games/31d384b25e3d6c8704f84b3db84e31bceacf2ff16279fbcc25ad9e1bf55a7564.avif',
@@ -7176,17 +7193,18 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                 )}
                 <CarouselContent className="ml-6 mr-0">
                   {[
-                    { src: '/banners/Welcome%20Bonus%20Casinofinale_2cbbd48c-15e7-406d-a2d7-e9cd9b201699_20260121_0703.png', alt: 'Welcome Bonus' },
-                    { src: '/banners/AccaBoostfinale_b1661794-7726-4b87-852f-17eccfc9d7ce_20260121_0703.png', alt: 'Acca Boost' },
-                    { src: '/banners/cashbackfinale_07a0a8f0-480f-42e8-b2a3-322bd1b4156c_20260121_0703.png', alt: 'Weekly Cashback' },
-                    { src: '/banners/cryptofinale_7831bcf7-7a0c-493d-bb7e-7fea7c188d98_20260121_0703.png', alt: 'Crypto Promo' },
+                    { src: '/racing/betbuilder/sportsbanner.png', alt: 'Sports Banner 1' },
+                    { src: '/racing/betbuilder/sportsbanner2.png', alt: 'Sports Banner 2' },
+                    { src: '/racing/betbuilder/sportsbanner3.png', alt: 'Sports Banner 3' },
+                    { src: '/racing/betbuilder/sportsbook4.png', alt: 'Sports Banner 4' },
+                    { src: '/racing/betbuilder/sportsbook5.png', alt: 'Sports Banner 5' },
                   ].map((banner, index) => (
                     <CarouselItem key={index} className={index === 0 ? "pl-0 pr-0 basis-auto flex-shrink-0" : "pl-2 md:pl-4 basis-auto flex-shrink-0"}>
                       <Card data-banner-card className="border-0 relative overflow-hidden flex-shrink-0 cursor-pointer hover:opacity-90 transition-opacity rounded-small w-auto h-auto">
                         <img
                           src={banner.src}
                           alt={banner.alt}
-                          className={cn("block h-auto max-w-none", isMobile ? "w-[300px]" : "w-auto")}
+                          className={cn("block h-auto max-w-none", isMobile ? "w-[240px]" : "w-[300px]")}
                         />
                       </Card>
                     </CarouselItem>
@@ -7670,6 +7688,56 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
               </Carousel>
             </div>
             
+          </div>
+
+          {/* Sports League Carousel */}
+          <div className="mb-8">
+            <div className="relative -mx-6" style={{ overflow: 'visible', position: 'relative', width: 'calc(100% + 3rem)', maxWidth: 'none', boxSizing: 'border-box', minWidth: 0 }}>
+              <div className="overflow-x-auto scrollbar-hide pb-1 pl-6" style={{ WebkitOverflowScrolling: 'touch' }}>
+                <div className="inline-flex gap-2 w-max pr-6">
+                  {sportsbookLeagueTiles.map((league) => (
+                    <button
+                      key={league.label}
+                      onClick={() => {
+                        const sportByLeague: Record<string, string> = {
+                          NFL: 'Football',
+                          NBA: 'Basketball',
+                          'Premier League': 'Soccer',
+                          Champions: 'Soccer',
+                          F1: 'Pool',
+                          MLB: 'Baseball',
+                          NHL: 'Hockey',
+                          MLS: 'Soccer',
+                          Copa: 'Soccer',
+                          UFC: 'MMA',
+                          'Boxing WBA': 'MMA',
+                          'Golf PGA': 'Pool',
+                          ATP: 'Tennis',
+                          'Roland Garros': 'Tennis',
+                        }
+                        setActiveSport(sportByLeague[league.label] ?? '')
+                      }}
+                      className="w-[84px] h-[76px] rounded-small border border-white/10 bg-white/[0.03] transition-colors p-1.5 flex flex-col items-center justify-center gap-1.5 flex-shrink-0 cursor-pointer hover:bg-white/[0.06] active:bg-white/[0.08]"
+                    >
+                      <Image
+                        src={league.icon}
+                        alt={league.label}
+                        width={30}
+                        height={30}
+                        className={cn(
+                          "w-[30px] h-[30px] object-contain opacity-95",
+                          league.label === 'Champions' && "brightness-0 invert"
+                        )}
+                        unoptimized
+                      />
+                      <span className="text-[10px] leading-tight text-white/90 text-center">
+                        {league.label}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
           
           {/* Live Events Section - Exactly matching Figma layout */}
