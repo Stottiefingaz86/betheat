@@ -6,6 +6,8 @@ import BrandSanitizer from '@/components/brand-sanitizer'
 import { PreventOverscroll } from '@/components/prevent-overscroll'
 import EsportsLinkFix from '@/components/navigation/esports-link-fix'
 import FloatingSiteButtons from '@/components/floating-site-buttons'
+import { DesignCustomizer } from '@/components/design-customizer'
+import { BuilderPreviewBridge } from '@/components/builder-preview-bridge'
 import './globals.css'
 
 const figtree = Figtree({
@@ -40,9 +42,11 @@ export default function RootLayout({
       <body style={{ fontFamily: 'var(--font-figtree), sans-serif' }}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} storageKey="theme">
           <BrandSanitizer />
+          <BuilderPreviewBridge />
           <EsportsLinkFix />
           <PreventOverscroll />
           {children}
+          <DesignCustomizer />
           <FloatingSiteButtons />
           <GlobalBetslip />
         </ThemeProvider>

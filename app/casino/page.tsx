@@ -13,7 +13,7 @@ import React from 'react'
 import { createPortal } from 'react-dom'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { useTracking } from '@/hooks/use-tracking'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -7865,11 +7865,15 @@ function NavTestPageContent() {
   const HEADER_COMPACT_BREAKPOINT = 1180
   const router = useRouter()
   const pathname = usePathname()
-  const searchParams = useSearchParams()
   const [mounted, setMounted] = useState(false)
   const { trackNav, trackClick, trackAction, trackSidebar, trackPageView } = useTracking('casino')
   const [activeFilter, setActiveFilter] = useState('Lobby')
   const [activeSubNav, _setActiveSubNav] = useState('Lobby')
+  const [runtimeSubNavConfig, setRuntimeSubNavConfig] = useState<{
+    template?: string
+    sticky?: boolean
+    items?: Array<{ label?: string }>
+  } | null>(null)
   const [subNavRollKey, setSubNavRollKey] = useState(0)
   // Wrapper: fire page_view for sub-nav so journey map shows Casino → Slots → Live etc.
   const setActiveSubNav = useCallback((val: string) => {
@@ -8040,7 +8044,20 @@ function NavTestPageContent() {
   
   const [accountDrawerOpen, setAccountDrawerOpen] = useState(false)
   const [vipDrawerOpen, setVipDrawerOpen] = useState(false)
-  const [accountDrawerView, setAccountDrawerView] = useState<'account' | 'profile' | 'notifications' | 'bonus' | 'transactions'>('account')
+  const [accountDrawerView, setAccountDrawerView] = useState<
+    | 'account'
+    | 'profile'
+    | 'notifications'
+    | 'bonus'
+    | 'transactions'
+    | 'betHistory'
+    | 'security'
+    | 'securityRecommendations'
+    | 'trustedDevices'
+    | 'securityQuestion'
+    | 'changePassword'
+    | 'twoFactorAuth'
+  >('account')
   const [accountIdCopied, setAccountIdCopied] = useState(false)
   const webInboxUnreadCount = 2
   const [accountBonusTab, setAccountBonusTab] = useState<'available' | 'active' | 'history'>('available')
@@ -8127,6 +8144,23 @@ function NavTestPageContent() {
   const [accountTransactionStatusFilter, setAccountTransactionStatusFilter] = useState<'ALL' | 'COMPLETED' | 'PENDING' | 'CREDITED'>('ALL')
   const [accountTransactionSort, setAccountTransactionSort] = useState<'latest' | 'oldest'>('latest')
   const [accountTransactionTypeFilter, setAccountTransactionTypeFilter] = useState<'ALL' | 'DEPOSIT' | 'WITHDRAWAL' | 'BONUS'>('ALL')
+  const [accountBetHistoryExpandedId, setAccountBetHistoryExpandedId] = useState<string | null>(null)
+  const [accountBetHistoryFilterOpen, setAccountBetHistoryFilterOpen] = useState(false)
+  const [accountBetHistorySort, setAccountBetHistorySort] = useState<'latest' | 'oldest'>('latest')
+  const [accountBetHistoryStatusFilter, setAccountBetHistoryStatusFilter] = useState<'ALL' | 'IN_PLAY' | 'PENDING' | 'WON' | 'LOST' | 'CASHED_OUT'>('ALL')
+  const [accountBetHistoryTypeFilter, setAccountBetHistoryTypeFilter] = useState<'ALL' | 'SINGLE' | 'PARLAY'>('ALL')
+  const securityRecommendationRows = [
+    { id: 'sr-1', text: 'Your personal information is incomplete. Please review and complete your details.', status: 'pending' as const },
+    { id: 'sr-2', text: 'Your current password is too weak. Set a stronger, more secure password.', status: 'pending' as const },
+    { id: 'sr-3', text: 'Enable 2-Factor Authentication to protect and keep your account more secure.', status: 'pending' as const },
+    { id: 'sr-4', text: 'Manage your trusted devices that have login status and review your device history.', status: 'done' as const },
+  ] as const
+  const trustedDeviceRows = [
+    { id: 'td-1', name: 'MacBook Pro', lastSeen: 'Current Device' },
+    { id: 'td-2', name: 'Aorus Pro PC', lastSeen: '10 days ago' },
+    { id: 'td-3', name: 'Galaxy A52', lastSeen: '5 hours ago' },
+    { id: 'td-4', name: 'iPhone', lastSeen: '30 min ago' },
+  ] as const
   const accountTransactionRows = [
     { id: 't1', date: '18/02/2026', type: 'DEPOSIT', method: 'Bitcoin', amount: '+$500.00', status: 'COMPLETED', reference: 'TXN-8847291' },
     { id: 't2', date: '15/02/2026', type: 'WITHDRAWAL', method: 'Bitcoin', amount: '-$200.00', status: 'COMPLETED', reference: 'TXN-8847290' },
@@ -8151,6 +8185,33 @@ function NavTestPageContent() {
       return accountTransactionSort === 'latest' ? bTime - aTime : aTime - bTime
     })
   }, [accountTransactionRows, accountTransactionSort, accountTransactionStatusFilter, accountTransactionTypeFilter])
+  const accountBetHistoryRows = [
+    { id: 'bh-1', date: '18/02/2026', selection: 'Chernomorets Odessa', fixture: 'Chernomorets Odessa vs LNZ Cherkasy', amount: '$10.00', odds: '+990', status: 'PENDING', type: 'SINGLE', market: 'Moneyline', league: 'Soccer', leagueIcon: '/sports_icons/soccer.svg', riskValue: 10, potentialReturnsValue: 99 },
+    { id: 'bh-2', date: '17/02/2026', selection: 'Tottenham', fixture: 'Tottenham vs Newcastle', amount: '$10.00', odds: '+120', status: 'WON', type: 'SINGLE', market: 'Moneyline', league: 'Premier League', leagueIcon: '/sports%20league/prem.svg', riskValue: 10, potentialReturnsValue: 22 },
+    { id: 'bh-3', date: '16/02/2026', selection: '2-Team Parlay', fixture: 'Multi-leg bet', amount: '$10.00', odds: '+352', status: 'IN_PLAY', type: 'PARLAY', market: 'Parlay', league: 'Tennis', leagueIcon: '/sports_icons/tennis.svg', riskValue: 10, potentialReturnsValue: 45.2 },
+    { id: 'bh-4', date: '15/02/2026', selection: 'LA Clippers +12.5', fixture: 'LA Clippers vs Boston Celtics', amount: '$10.00', odds: '+120', status: 'LOST', type: 'SINGLE', market: 'Spread', league: 'NBA', leagueIcon: '/sports%20league/NBA.svg', riskValue: 10, potentialReturnsValue: 22 },
+    { id: 'bh-5', date: '14/02/2026', selection: '3-Team Parlay', fixture: 'Multi-leg bet', amount: '$10.00', odds: '+4630', status: 'PENDING', type: 'PARLAY', market: 'Parlay', league: 'Tennis', leagueIcon: '/sports_icons/tennis.svg', riskValue: 10, potentialReturnsValue: 473 },
+    { id: 'bh-6', date: '13/02/2026', selection: 'Atletico Madrid', fixture: 'Atletico Madrid vs Leganes', amount: '$10.00', odds: '+120', status: 'IN_PLAY', type: 'SINGLE', market: 'Moneyline', league: 'La Liga', leagueIcon: '/sports%20league/copa.svg', riskValue: 10, potentialReturnsValue: 22 },
+    { id: 'bh-7', date: '12/02/2026', selection: 'Chelsea', fixture: 'Chelsea vs West Ham', amount: '$10.00', odds: '+120', status: 'IN_PLAY', type: 'SINGLE', market: 'Moneyline', league: 'Premier League', leagueIcon: '/sports%20league/prem.svg', riskValue: 10, potentialReturnsValue: 22 },
+    { id: 'bh-8', date: '11/02/2026', selection: 'Carlos Alcaraz', fixture: 'Carlos Alcaraz vs Novak Djokovic', amount: '$10.00', odds: '+120', status: 'IN_PLAY', type: 'SINGLE', market: 'Match Winner', league: 'ATP', leagueIcon: '/sports_icons/tennis.svg', riskValue: 10, potentialReturnsValue: 22 },
+    { id: 'bh-9', date: '10/02/2026', selection: 'Cadiz', fixture: 'Cadiz vs Sevilla', amount: '$10.00', odds: '+120', status: 'CASHED_OUT', type: 'SINGLE', market: 'Moneyline', league: 'La Liga', leagueIcon: '/sports%20league/copa.svg', riskValue: 10, potentialReturnsValue: 22 },
+  ] as const
+  const accountBetHistoryFilteredRows = useMemo(() => {
+    const parseDate = (value: string) => {
+      const [day, month, year] = value.split('/').map((part) => Number(part))
+      return new Date(year, month - 1, day).getTime()
+    }
+    const filtered = accountBetHistoryRows.filter((row) => {
+      const statusOk = accountBetHistoryStatusFilter === 'ALL' || row.status === accountBetHistoryStatusFilter
+      const typeOk = accountBetHistoryTypeFilter === 'ALL' || row.type === accountBetHistoryTypeFilter
+      return statusOk && typeOk
+    })
+    return [...filtered].sort((a, b) => {
+      const aTime = parseDate(a.date)
+      const bTime = parseDate(b.date)
+      return accountBetHistorySort === 'latest' ? bTime - aTime : aTime - bTime
+    })
+  }, [accountBetHistoryRows, accountBetHistorySort, accountBetHistoryStatusFilter, accountBetHistoryTypeFilter])
   const [profileForm, setProfileForm] = useState({
     username: '5Aces',
     email: 'christopher.hunt86@gmail.com',
@@ -8739,10 +8800,12 @@ function NavTestPageContent() {
     setSearchScope(next)
   }, [searchScope])
   const openSearchWithFiltersFromSubNav = useCallback(() => {
-    const originQuery = searchParams?.toString()
+    const originQuery = typeof window !== 'undefined'
+      ? new URLSearchParams(window.location.search).toString()
+      : ''
     const origin = `${pathname || '/casino'}${originQuery ? `?${originQuery}` : ''}`
     router.push(`/casino?openSearch=1&openFilters=1&from=${encodeURIComponent(origin)}`)
-  }, [pathname, router, searchParams])
+  }, [pathname, router])
   const [favoritedGames, setFavoritedGames] = useState<Set<number>>(new Set())
   const [selectedGame, setSelectedGame] = useState<{ title: string; image: string; provider?: string; features?: string[] } | null>(null)
   const searchCatalog = useMemo(() => {
@@ -9286,6 +9349,7 @@ function NavTestPageContent() {
 
   // Ensure component is mounted before showing animations
   useEffect(() => {
+    if (typeof window === 'undefined') return
     setMounted(true)
     setCurrentTime(new Date().toLocaleString('en-US', { 
       month: '2-digit', 
@@ -9296,15 +9360,16 @@ function NavTestPageContent() {
       second: '2-digit',
       hour12: true
     }))
+    const params = new URLSearchParams(window.location.search)
     
     // Check for VIP query parameter to deep link to VIP Rewards
-    const vipParam = searchParams.get('vip')
+    const vipParam = params.get('vip')
     if (vipParam === 'true') {
       setShowVipRewards(true)
     }
     
     // Check for poker query parameter to deep link to Poker
-    const pokerParam = searchParams.get('poker')
+    const pokerParam = params.get('poker')
     if (pokerParam === 'true') {
       setShowPoker(true)
       setShowSports(false)
@@ -9312,7 +9377,7 @@ function NavTestPageContent() {
     }
     
     // Check for tab query parameter to deep link to specific casino tab (e.g. Live Casino)
-    const tabParam = searchParams.get('tab')
+    const tabParam = params.get('tab')
     if (tabParam === 'live') {
       setActiveSubNav('Live Casino')
       setShowAllGames(false)
@@ -9325,9 +9390,9 @@ function NavTestPageContent() {
     }
 
     // Open blank search overlay from global nav triggers.
-    const openSearchParam = searchParams.get('openSearch')
-    const openFiltersParam = searchParams.get('openFilters')
-    const fromParam = searchParams.get('from')
+    const openSearchParam = params.get('openSearch')
+    const openFiltersParam = params.get('openFilters')
+    const fromParam = params.get('from')
     const sanitizedFrom = fromParam && fromParam.startsWith('/') && !fromParam.startsWith('//') ? fromParam : null
     if (openSearchParam === '1') {
       setSearchScope('all')
@@ -9338,7 +9403,7 @@ function NavTestPageContent() {
     }
 
     // Global nav search handoff from other pages.
-    const globalSearchParam = searchParams.get('globalSearch')
+    const globalSearchParam = params.get('globalSearch')
     if (globalSearchParam && globalSearchParam.trim().length > 0) {
       setSearchQuery(globalSearchParam)
       setSearchScope('all')
@@ -9347,14 +9412,26 @@ function NavTestPageContent() {
       setSearchOverlayOpen(true)
       router.replace('/casino', { scroll: false })
     }
-  }, [searchParams, router])
+
+    const rawSubNavConfig = params.get('subNavConfig')
+    if (!rawSubNavConfig) {
+      setRuntimeSubNavConfig(null)
+    } else {
+      try {
+        const parsed = JSON.parse(rawSubNavConfig) as { template?: string; sticky?: boolean; items?: Array<{ label?: string }> }
+        setRuntimeSubNavConfig(parsed && typeof parsed === 'object' ? parsed : null)
+      } catch {
+        setRuntimeSubNavConfig(null)
+      }
+    }
+  }, [router])
 
   useEffect(() => {
     if (!mounted || isMobile || showSports || showVipRewards || showPoker) return
     if (typeof window === 'undefined') return
 
     // Keep the tour opt-in only to avoid dimming the full page by default.
-    const tourParam = searchParams.get('tour')
+    const tourParam = new URLSearchParams(window.location.search).get('tour')
     if (tourParam !== '1') {
       setCasinoFeatureTourOpen(false)
       return
@@ -9368,12 +9445,7 @@ function NavTestPageContent() {
     }, 500)
 
     return () => window.clearTimeout(timeout)
-  }, [mounted, isMobile, showSports, showVipRewards, showPoker, searchParams, CASINO_FEATURE_TOUR_KEY])
-
-  // Don't render until mounted to prevent hydration issues
-  if (!mounted) {
-    return null
-  }
+  }, [mounted, isMobile, showSports, showVipRewards, showPoker, CASINO_FEATURE_TOUR_KEY])
 
   // Top featured casino items (square icon style like poker)
   const casinoTopItems = [
@@ -9401,6 +9473,19 @@ function NavTestPageContent() {
 
   const gameFilters = ['Lobby', 'Slots', 'New Games', 'Hot Games', 'Jackpots', 'Crash', 'Most Played', 'Blackjack', 'Live Casino', 'Megaways', 'Bonus Buys']
   const casinoSubNavItems = ['Lobby', 'Slots', 'New Games', 'Hot Games', 'Jackpots', 'Crash', 'Most Played', 'Blackjack', 'Live Casino', 'Megaways', 'Bonus Buys']
+  const effectiveSubNavItems = useMemo(() => {
+    const runtimeItems = (runtimeSubNavConfig?.items ?? [])
+      .map((item) => (item?.label || '').trim())
+      .filter((label) => label.length > 0)
+    return runtimeItems.length > 0 ? runtimeItems : casinoSubNavItems
+  }, [runtimeSubNavConfig, casinoSubNavItems])
+  const effectiveSubNavTemplate = runtimeSubNavConfig?.template || 'sub_tabs_v1'
+  const effectiveSubNavSticky = runtimeSubNavConfig?.sticky ?? true
+  useEffect(() => {
+    if (!effectiveSubNavItems.includes(activeSubNav)) {
+      setActiveSubNav(effectiveSubNavItems[0] || 'Lobby')
+    }
+  }, [activeSubNav, effectiveSubNavItems, setActiveSubNav])
   const casinoSubNavIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
     'Lobby': IconHome,
     'Slots': IconDeviceGamepad2,
@@ -9413,6 +9498,12 @@ function NavTestPageContent() {
     'Live Casino': IconBroadcast,
     'Megaways': IconArrowsSort,
     'Bonus Buys': IconGift,
+  }
+
+  // Don't render until mounted to prevent hydration issues
+  // Keep this after all hooks so hook order is consistent.
+  if (!mounted) {
+    return null
   }
 
   return (
@@ -9637,12 +9728,12 @@ function NavTestPageContent() {
                   <SidebarMenuItem className="order-4">
                     <SidebarMenuButton
                       className={cn(
-                        "h-10 min-w-[100px] px-4 py-2 rounded-small text-sm font-medium justify-center",
+                        "h-10 min-w-[100px] px-4 py-2 rounded-small text-sm font-medium justify-center relative overflow-visible data-[active=true]:bg-transparent [&>span]:!flex-initial",
                         "hover:bg-white/5 hover:text-white transition-colors",
-                        "data-[active=true]:bg-white/10 data-[active=true]:text-white",
-                        "text-white/70 active:bg-white/10",
+                        "text-white/70",
                         lockedMainNavLabels.has('Live Betting') ? "opacity-45 cursor-not-allowed hover:text-white/70 hover:bg-transparent" : "cursor-pointer"
                       )}
+                      data-active={pathname === '/live-betting'}
                       onClick={(e) => {
                         e.preventDefault()
                         e.stopPropagation()
@@ -9650,6 +9741,18 @@ function NavTestPageContent() {
                         window.location.href = '/live-betting'
                       }}
                     >
+                      {pathname === '/live-betting' && (
+                        <motion.div
+                          layoutId="casinoNavPill" layout="position"
+                          className="absolute bottom-0 left-3 right-3 h-[2px] rounded-full"
+                          style={{
+                            backgroundColor: 'var(--ds-primary, #ee3536)',
+                            backgroundImage: 'var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%))',
+                          }}
+                          initial={false}
+                          transition={{ type: "spring", stiffness: 400, damping: 40 }}
+                        />
+                      )}
                       <span className="inline-flex items-center gap-1.5">Live Betting{lockedMainNavLabels.has('Live Betting') && <IconLock className="w-3 h-3 text-white/45" />}</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -11728,14 +11831,18 @@ function NavTestPageContent() {
             {!showSports && !showVipRewards && !showPoker && (
             <motion.div 
               data-sub-nav
+              data-builder-subnav-sticky={effectiveSubNavSticky ? 'on' : 'off'}
+              data-builder-subnav-template={effectiveSubNavTemplate}
               className={cn(
-                "fixed z-[90] bg-white dark:bg-[#1a1a1a]/60 dark:backdrop-blur-xl border-b border-gray-200 dark:border-white/10 py-3 shadow-sm",
+                effectiveSubNavSticky
+                  ? "fixed z-[90] bg-white dark:bg-[#1a1a1a]/60 dark:backdrop-blur-xl border-b border-gray-200 dark:border-white/10 py-3 shadow-sm"
+                  : "relative z-[40] bg-white dark:bg-[#1a1a1a]/60 dark:backdrop-blur-xl border-b border-gray-200 dark:border-white/10 py-3 shadow-sm",
                 isMobile ? "left-0 right-0 overflow-hidden" : "px-6"
               )}
               initial={false}
-              animate={{
-                top: isMobile ? (quickLinksOpen ? 104 : 64) : 64
-              }}
+              animate={effectiveSubNavSticky
+                ? { top: isMobile ? (quickLinksOpen ? 104 : 64) : 64 }
+                : {}}
               transition={isMobile ? {
                 type: "tween",
                 ease: "linear",
@@ -11745,21 +11852,27 @@ function NavTestPageContent() {
                 ease: "easeOut",
                 duration: 0.2
               }}
-              style={isMobile ? { 
-                left: 0,
-                right: 0,
-                width: '100vw',
-                marginLeft: 0,
-                marginRight: 0,
-                paddingLeft: 0,
-                paddingRight: 0,
-                borderTop: 'none'
-              } : {
-                top: 64,
-                left: sidebarState === 'collapsed' ? '3rem' : '16rem',
-                right: isChatOpen ? '340px' : 0,
-                transition: 'right 0.3s cubic-bezier(0.4, 0, 0.2, 1), left 0.2s ease-out'
-              }}
+              style={effectiveSubNavSticky
+                ? isMobile ? { 
+                    left: 0,
+                    right: 0,
+                    width: '100vw',
+                    marginLeft: 0,
+                    marginRight: 0,
+                    paddingLeft: 0,
+                    paddingRight: 0,
+                    borderTop: 'none'
+                  } : {
+                    top: 64,
+                    left: sidebarState === 'collapsed' ? '3rem' : '16rem',
+                    right: isChatOpen ? '340px' : 0,
+                    transition: 'right 0.3s cubic-bezier(0.4, 0, 0.2, 1), left 0.2s ease-out'
+                  }
+                : {
+                    top: 'auto',
+                    left: 'auto',
+                    right: 'auto'
+                  }}
             >
                 <div 
                   ref={subNavScrollRef}
@@ -11852,7 +11965,7 @@ function NavTestPageContent() {
                     >
                     <AnimateTabs value={(() => {
                       // Don't highlight any tab if viewing vendor or category not in sub nav menu
-                      const subNavItems = casinoSubNavItems
+                      const subNavItems = effectiveSubNavItems
                       if (selectedVendor) return ''
                       if (selectedCategory && !subNavItems.includes(selectedCategory)) return ''
                       return activeSubNav
@@ -11874,7 +11987,7 @@ function NavTestPageContent() {
                       
                       // Scroll the clicked tab into view on mobile
                       if (isMobile && subNavScrollRef.current) {
-                        const tabIndex = casinoSubNavItems.indexOf(value)
+                        const tabIndex = effectiveSubNavItems.indexOf(value)
                         if (tabIndex !== -1) {
                           const tabs = subNavScrollRef.current.querySelectorAll('[data-tab-item]')
                           const targetTab = tabs[tabIndex] as HTMLElement
@@ -11924,7 +12037,7 @@ function NavTestPageContent() {
                             <IconFilter className="w-3.5 h-3.5" />
                           </button>
                         )}
-                        {casinoSubNavItems.map((tab, index) => {
+                        {effectiveSubNavItems.map((tab, index) => {
                           const TabIcon = casinoSubNavIconMap[tab] ?? IconLayoutGrid
                           return (
                           <TabsTab 
@@ -11932,33 +12045,51 @@ function NavTestPageContent() {
                             value={tab}
                             data-tab-item
                             className={cn(
-                              "relative z-10 text-white/70 dark:text-white/70 text-gray-900 dark:text-white/70 hover:text-white dark:hover:text-white hover:text-black dark:hover:text-white hover:bg-white/[0.04] dark:hover:bg-white/[0.04] hover:bg-gray-200/60 dark:hover:bg-white/[0.04] rounded-2xl px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-white dark:data-[state=active]:text-white focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none flex items-center gap-1.5 flex-shrink-0",
+                              "relative z-10 text-white/70 dark:text-white/70 text-gray-900 dark:text-white/70 hover:text-white dark:hover:text-white hover:text-black dark:hover:text-white hover:bg-white/[0.04] dark:hover:bg-white/[0.04] hover:bg-gray-200/60 dark:hover:bg-white/[0.04] px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-white dark:data-[state=active]:text-white focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none flex items-center gap-1.5 flex-shrink-0",
+                              effectiveSubNavTemplate === 'sub_underline_v3'
+                                ? "rounded-none border-b-2 border-transparent px-2.5"
+                                : "rounded-2xl",
                               isMobile && index === 0 && "scroll-snap-start",
-                              isMobile && index === casinoSubNavItems.length - 1 && "scroll-snap-end mr-12"
+                              isMobile && index === effectiveSubNavItems.length - 1 && "scroll-snap-end mr-12"
                             )}
                           >
                             {(() => {
                               // Don't highlight if viewing vendor or category not in sub nav menu
-                              const subNavItems = casinoSubNavItems
+                              const subNavItems = effectiveSubNavItems
                               if (selectedVendor) return false
                               if (selectedCategory && !subNavItems.includes(selectedCategory)) return false
                               return activeSubNav === tab
                             })() && (
-                              <motion.div
-                                layoutId="activeTab"
-                                layout="position"
-                                className="absolute inset-0 rounded-small -z-10"
-                                style={{
-                                  backgroundColor: 'transparent',
-                                  backgroundImage: 'var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%))',
-                                }}
-                                initial={false}
-                                transition={{
-                                  type: "spring",
-                                  stiffness: 400,
-                                  damping: 40
-                                }}
-                              />
+                              effectiveSubNavTemplate === 'sub_underline_v3' ? (
+                                <motion.div
+                                  layoutId="activeTabUnderline"
+                                  layout="position"
+                                  className="absolute left-0 right-0 bottom-0 h-[2px] -z-10"
+                                  style={{ backgroundColor: 'var(--ds-primary, #5C7CFA)' }}
+                                  initial={false}
+                                  transition={{
+                                    type: "spring",
+                                    stiffness: 420,
+                                    damping: 42
+                                  }}
+                                />
+                              ) : (
+                                <motion.div
+                                  layoutId="activeTab"
+                                  layout="position"
+                                  className="absolute inset-0 rounded-small -z-10"
+                                  style={{
+                                    backgroundColor: 'transparent',
+                                    backgroundImage: 'var(--ds-primary-gradient, linear-gradient(115deg, #ff7a2f 0%, #ff5a14 50%, #9a3f1f 100%))',
+                                  }}
+                                  initial={false}
+                                  transition={{
+                                    type: "spring",
+                                    stiffness: 400,
+                                    damping: 40
+                                  }}
+                                />
+                              )
                             )}
                             <TabIcon className="relative z-10 h-3.5 w-3.5 opacity-90" />
                             <span className="relative z-10 whitespace-nowrap">
@@ -14832,6 +14963,83 @@ function NavTestPageContent() {
                     </Button>
                     <h2 className="text-lg font-semibold text-white">Transactions History</h2>
                   </div>
+                ) : accountDrawerView === 'betHistory' ? (
+                  <div className="flex items-center gap-3 flex-1">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setAccountDrawerView('account')}
+                      className="h-8 w-8 p-0 hover:bg-white/10 -ml-2"
+                    >
+                      <IconChevronLeft className="h-5 w-5 text-white/70" />
+                    </Button>
+                    <h2 className="text-lg font-semibold text-white">Bet History</h2>
+                  </div>
+                ) : accountDrawerView === 'security' ? (
+                  <div className="flex items-center gap-3 flex-1">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setAccountDrawerView('account')}
+                      className="h-8 w-8 p-0 hover:bg-white/10 -ml-2"
+                    >
+                      <IconChevronLeft className="h-5 w-5 text-white/70" />
+                    </Button>
+                    <h2 className="text-lg font-semibold text-white">Security Central</h2>
+                  </div>
+                ) : accountDrawerView === 'securityRecommendations' ? (
+                  <div className="flex items-center gap-3 flex-1">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setAccountDrawerView('security')}
+                      className="h-8 w-8 p-0 hover:bg-white/10 -ml-2"
+                    >
+                      <IconChevronLeft className="h-5 w-5 text-white/70" />
+                    </Button>
+                    <h2 className="text-lg font-semibold text-white">Security Recommendations</h2>
+                  </div>
+                ) : accountDrawerView === 'trustedDevices' ? (
+                  <div className="flex items-center gap-3 flex-1">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setAccountDrawerView('security')}
+                      className="h-8 w-8 p-0 hover:bg-white/10 -ml-2"
+                    >
+                      <IconChevronLeft className="h-5 w-5 text-white/70" />
+                    </Button>
+                    <h2 className="text-lg font-semibold text-white">Trusted Devices</h2>
+                  </div>
+                ) : accountDrawerView === 'securityQuestion' ? (
+                  <div className="flex items-center gap-3 flex-1">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setAccountDrawerView('security')}
+                      className="h-8 w-8 p-0 hover:bg-white/10 -ml-2"
+                    >
+                      <IconChevronLeft className="h-5 w-5 text-white/70" />
+                    </Button>
+                    <h2 className="text-lg font-semibold text-white">Security Question</h2>
+                  </div>
+                ) : accountDrawerView === 'changePassword' ? (
+                  <div className="flex items-center gap-3 flex-1">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setAccountDrawerView('security')}
+                      className="h-8 w-8 p-0 hover:bg-white/10 -ml-2"
+                    >
+                      <IconChevronLeft className="h-5 w-5 text-white/70" />
+                    </Button>
+                    <h2 className="text-lg font-semibold text-white">Change Password</h2>
+                  </div>
+                ) : accountDrawerView === 'twoFactorAuth' ? (
+                  <div className="flex items-center gap-3 flex-1">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setAccountDrawerView('security')}
+                      className="h-8 w-8 p-0 hover:bg-white/10 -ml-2"
+                    >
+                      <IconChevronLeft className="h-5 w-5 text-white/70" />
+                    </Button>
+                    <h2 className="text-lg font-semibold text-white">2-Factor Authentication</h2>
+                  </div>
                 ) : (
                   <div className="flex items-center gap-3 flex-1">
                     <Avatar className="h-10 w-10 border border-white/20">
@@ -15027,6 +15235,9 @@ function NavTestPageContent() {
                     <Button 
                       variant="ghost" 
                       className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 transition-colors duration-200"
+                      onClick={() => {
+                        setAccountDrawerView('betHistory')
+                      }}
                     >
                       <IconTicket className="w-5 h-5 mr-3 text-white/65 transition-colors duration-200 group-hover:text-white/90" />
                       <span className="flex-1 text-left text-white">Bet History</span>
@@ -15043,6 +15254,7 @@ function NavTestPageContent() {
                     <Button 
                       variant="ghost" 
                       className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 transition-colors duration-200"
+                      onClick={() => setAccountDrawerView('security')}
                     >
                       <IconShield className="w-5 h-5 mr-3 text-white/65 transition-colors duration-200 group-hover:text-white/90" />
                       <span className="flex-1 text-left text-white">Security</span>
@@ -15058,6 +15270,251 @@ function NavTestPageContent() {
 
               </div>
                 </>
+              ) : accountDrawerView === 'security' ? (
+                <div className="space-y-3 pb-4">
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5">
+                    <div className="text-sm font-semibold text-white">Security Central</div>
+                    <p className="mt-1 text-xs leading-relaxed text-white/60">
+                      Manage account protection, trusted devices, and login security from one place.
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setAccountDrawerView('securityRecommendations')}
+                    className="w-full rounded-xl border border-white/10 bg-white/[0.03] p-3 text-left hover:bg-white/[0.05] transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="h-9 w-9 rounded-lg bg-white/[0.08] flex items-center justify-center">
+                        <IconShield className="h-5 w-5 text-[var(--ds-primary,#ff6a1a)]" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-[15px] font-semibold text-white">Security Recommendations</div>
+                        <div className="text-xs text-white/60 mt-0.5">Access security settings to protect your account.</div>
+                      </div>
+                      <IconChevronRight className="h-4 w-4 text-white/45" />
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setAccountDrawerView('trustedDevices')}
+                    className="w-full rounded-xl border border-white/10 bg-white/[0.03] p-3 text-left hover:bg-white/[0.05] transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="h-9 w-9 rounded-lg bg-white/[0.08] flex items-center justify-center">
+                        <IconLayoutDashboard className="h-5 w-5 text-[var(--ds-primary,#ff6a1a)]" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-[15px] font-semibold text-white">Trusted Devices</div>
+                        <div className="text-xs text-white/60 mt-0.5">Devices where your account has been active.</div>
+                      </div>
+                      <IconChevronRight className="h-4 w-4 text-white/45" />
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setAccountDrawerView('securityQuestion')}
+                    className="w-full rounded-xl border border-white/10 bg-white/[0.03] p-3 text-left hover:bg-white/[0.05] transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="h-9 w-9 rounded-lg bg-white/[0.08] flex items-center justify-center">
+                        <IconHelpCircle className="h-5 w-5 text-[var(--ds-primary,#ff6a1a)]" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-[15px] font-semibold text-white">Security Question</div>
+                        <div className="text-xs text-white/60 mt-0.5">Set up a security question to keep your account secure.</div>
+                      </div>
+                      <IconChevronRight className="h-4 w-4 text-white/45" />
+                    </div>
+                  </button>
+
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
+                    <div className="flex items-center gap-3 mb-2.5">
+                      <div className="h-9 w-9 rounded-lg bg-white/[0.08] flex items-center justify-center">
+                        <IconLock className="h-5 w-5 text-[var(--ds-primary,#ff6a1a)]" />
+                      </div>
+                      <div>
+                        <div className="text-[15px] font-semibold text-white">Change Password</div>
+                        <div className="text-xs text-white/60">Choose a strong password and do not use it on other accounts.</div>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setAccountDrawerView('changePassword')}
+                      className="w-full h-10 rounded-lg text-[12px] font-semibold tracking-wide text-black"
+                      style={{
+                        backgroundImage: 'linear-gradient(115deg, #ff8a3d 0%, #ff6a1a 52%, #ff3d00 100%)',
+                        boxShadow: '0 8px 18px rgba(255,106,26,0.28)',
+                      }}
+                    >
+                      CHANGE PASSWORD
+                    </button>
+                  </div>
+
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
+                    <div className="flex items-center gap-3 mb-2.5">
+                      <div className="h-9 w-9 rounded-lg bg-white/[0.08] flex items-center justify-center">
+                        <IconShield className="h-5 w-5 text-[var(--ds-primary,#ff6a1a)]" />
+                      </div>
+                      <div>
+                        <div className="text-[15px] font-semibold text-white">2-Factor Authentication</div>
+                        <div className="text-xs text-white/60">Enable 2FA to keep your account more secure.</div>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setAccountDrawerView('twoFactorAuth')}
+                      className="w-full h-10 rounded-lg text-[12px] font-semibold tracking-wide text-black"
+                      style={{
+                        backgroundImage: 'linear-gradient(115deg, #ff8a3d 0%, #ff6a1a 52%, #ff3d00 100%)',
+                        boxShadow: '0 8px 18px rgba(255,106,26,0.28)',
+                      }}
+                    >
+                      ENABLE 2FA
+                    </button>
+                  </div>
+                </div>
+              ) : accountDrawerView === 'securityRecommendations' ? (
+                <div className="space-y-3 pb-4">
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5">
+                    <div className="text-sm font-semibold text-white">Security Recommendations</div>
+                    <p className="mt-1 text-xs leading-relaxed text-white/60">
+                      Review the following recommendations to help keep your account protected against fraud.
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] divide-y divide-white/10">
+                    {securityRecommendationRows.map((item) => (
+                      <div key={item.id} className="p-3 flex items-center gap-3">
+                        <div className={cn(
+                          "h-6 w-6 rounded-full flex items-center justify-center",
+                          item.status === 'done' ? "bg-emerald-500/20 text-emerald-400" : "bg-white/[0.09] text-white/70"
+                        )}>
+                          <IconCheck className="h-3.5 w-3.5" strokeWidth={3} />
+                        </div>
+                        <p className="text-sm text-white/85 flex-1 leading-snug">{item.text}</p>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-9 border-white/25 bg-transparent text-white hover:bg-white/10 hover:text-white"
+                        >
+                          REVIEW
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : accountDrawerView === 'trustedDevices' ? (
+                <div className="space-y-3 pb-4">
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5">
+                    <div className="text-sm font-semibold text-white">Trusted Devices</div>
+                    <p className="mt-1 text-xs leading-relaxed text-white/60">
+                      These devices are remembered for faster login. Remove any device you do not recognize.
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] overflow-hidden">
+                    <div className="grid grid-cols-[1fr_auto] px-3 py-2 text-[11px] uppercase tracking-wide text-white/45 border-b border-white/10">
+                      <span>Device Name</span>
+                      <span>Last Seen</span>
+                    </div>
+                    {trustedDeviceRows.map((device) => (
+                      <div key={device.id} className="grid grid-cols-[1fr_auto_auto] items-center gap-2 px-3 py-3 border-b border-white/10 last:border-b-0">
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <div className="h-8 w-8 rounded-md bg-white/[0.08] flex items-center justify-center">
+                            <IconLayoutDashboard className="h-4 w-4 text-white/70" />
+                          </div>
+                          <span className="text-sm text-white truncate">{device.name}</span>
+                        </div>
+                        <span className={cn("text-sm", device.lastSeen === 'Current Device' ? "text-emerald-400" : "text-white/70")}>{device.lastSeen}</span>
+                        <IconChevronDown className="h-4 w-4 text-white/45" />
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex items-center justify-between text-white/60 text-xs px-1">
+                    <span>Page: 10</span>
+                    <span>1-5 of 13</span>
+                    <div className="inline-flex items-center gap-1.5">
+                      <button type="button" className="h-7 w-7 rounded-md border border-white/15 hover:bg-white/10 inline-flex items-center justify-center">
+                        <IconChevronLeft className="h-4 w-4" />
+                      </button>
+                      <button type="button" className="h-7 w-7 rounded-md border border-white/15 hover:bg-white/10 inline-flex items-center justify-center">
+                        <IconChevronRight className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : accountDrawerView === 'securityQuestion' ? (
+                <div className="space-y-3 pb-4">
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5">
+                    <div className="text-sm font-semibold text-white">Security Question</div>
+                    <p className="mt-1 text-xs leading-relaxed text-white/60">
+                      Add a security question to help verify your identity when needed.
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 space-y-3">
+                    <div className="space-y-1.5">
+                      <Label className="text-white/85 text-sm">Question</Label>
+                      <Input
+                        defaultValue="What was your first pet's name?"
+                        className="h-11 bg-white/[0.02] border-white/15 text-white placeholder:text-white/35 focus-visible:ring-white/35 focus-visible:ring-offset-0"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-white/85 text-sm">Answer</Label>
+                      <Input
+                        placeholder="Enter answer"
+                        className="h-11 bg-white/[0.02] border-white/15 text-white placeholder:text-white/35 focus-visible:ring-white/35 focus-visible:ring-offset-0"
+                      />
+                    </div>
+                    <Button className="w-full h-10 text-black font-semibold" style={{ backgroundImage: 'linear-gradient(115deg, #ff8a3d 0%, #ff6a1a 52%, #ff3d00 100%)' }}>
+                      SAVE QUESTION
+                    </Button>
+                  </div>
+                </div>
+              ) : accountDrawerView === 'changePassword' ? (
+                <div className="space-y-3 pb-4">
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5">
+                    <div className="text-sm font-semibold text-white">Change Password</div>
+                    <p className="mt-1 text-xs leading-relaxed text-white/60">
+                      Use a strong password with letters, numbers, and symbols.
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 space-y-3">
+                    <div className="space-y-1.5">
+                      <Label className="text-white/85 text-sm">Current Password</Label>
+                      <Input type="password" placeholder="••••••••" className="h-11 bg-white/[0.02] border-white/15 text-white placeholder:text-white/35 focus-visible:ring-white/35 focus-visible:ring-offset-0" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-white/85 text-sm">New Password</Label>
+                      <Input type="password" placeholder="••••••••" className="h-11 bg-white/[0.02] border-white/15 text-white placeholder:text-white/35 focus-visible:ring-white/35 focus-visible:ring-offset-0" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-white/85 text-sm">Confirm New Password</Label>
+                      <Input type="password" placeholder="••••••••" className="h-11 bg-white/[0.02] border-white/15 text-white placeholder:text-white/35 focus-visible:ring-white/35 focus-visible:ring-offset-0" />
+                    </div>
+                    <Button className="w-full h-10 text-black font-semibold" style={{ backgroundImage: 'linear-gradient(115deg, #ff8a3d 0%, #ff6a1a 52%, #ff3d00 100%)' }}>
+                      UPDATE PASSWORD
+                    </Button>
+                  </div>
+                </div>
+              ) : accountDrawerView === 'twoFactorAuth' ? (
+                <div className="space-y-3 pb-4">
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5">
+                    <div className="text-sm font-semibold text-white">2-Factor Authentication</div>
+                    <p className="mt-1 text-xs leading-relaxed text-white/60">
+                      Add an extra layer of security by requiring a one-time verification code at login.
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 space-y-2.5">
+                    <div className="text-sm text-white/85">1. Install an authenticator app (Google Authenticator / Authy).</div>
+                    <div className="text-sm text-white/85">2. Scan the QR code in the next step.</div>
+                    <div className="text-sm text-white/85">3. Enter the 6-digit code to complete setup.</div>
+                    <Button className="w-full h-10 text-black font-semibold mt-2" style={{ backgroundImage: 'linear-gradient(115deg, #ff8a3d 0%, #ff6a1a 52%, #ff3d00 100%)' }}>
+                      ENABLE 2FA
+                    </Button>
+                  </div>
+                </div>
               ) : accountDrawerView === 'profile' ? (
                 <div className="space-y-4 pb-4" data-account-profile-form="true">
                   <div className="grid grid-cols-1 gap-3">
@@ -15672,30 +16129,18 @@ function NavTestPageContent() {
                             )}
                           >
                             <div className="flex items-center gap-3">
-                              <div
-                                className={cn(
-                                  "h-9 w-9 shrink-0 rounded-full border flex items-center justify-center",
-                                  row.status === 'PENDING' && "border-amber-400/35 bg-amber-500/10",
-                                  row.status !== 'PENDING' && row.type === 'WITHDRAWAL' && "border-rose-400/35 bg-rose-500/10",
-                                  row.status !== 'PENDING' && row.type === 'DEPOSIT' && "border-emerald-400/35 bg-emerald-500/10",
-                                  row.status !== 'PENDING' && row.type === 'BONUS' && "border-blue-400/35 bg-blue-500/10",
-                                )}
-                              >
-                                {row.method === 'System' ? (
-                                  <IconSettings
-                                    className="h-4 w-4 text-blue-300"
-                                  />
-                                ) : (
+                              {row.method === 'System' ? (
+                                <IconSettings className="h-5 w-5 shrink-0 text-blue-300" />
+                              ) : (
                                 <IconWallet
                                   className={cn(
-                                    "h-4 w-4",
+                                    "h-5 w-5 shrink-0",
                                     row.status === 'PENDING' && "text-amber-300",
                                     row.status !== 'PENDING' && row.type === 'WITHDRAWAL' && "text-rose-300",
                                     row.status !== 'PENDING' && row.type === 'DEPOSIT' && "text-emerald-300",
                                   )}
                                 />
-                                )}
-                              </div>
+                              )}
                               <div className="min-w-0 flex-1">
                                 <p className="truncate text-[15px] font-semibold text-white">{row.date}</p>
                                 <p className="text-sm text-white/70">{row.method}</p>
@@ -15759,6 +16204,141 @@ function NavTestPageContent() {
                                     )}>
                                       {row.status}
                                     </span>
+                                  </div>
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : accountDrawerView === 'betHistory' ? (
+                <div className="space-y-4 pb-4">
+                  <div className="rounded-small border border-white/10 bg-[var(--ds-sidebar-bg,#121417)]/92 backdrop-blur-sm overflow-visible">
+                    <div className="relative flex items-center justify-between border-b border-white/10 px-4 py-3">
+                      <p className="text-sm font-semibold text-white">Bet History</p>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setAccountBetHistoryFilterOpen((prev) => !prev)}
+                        className="h-8 w-8 rounded-full border border-white/12 bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:text-white focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none"
+                        aria-label="Filter bet history"
+                      >
+                        <IconFilter className="h-4 w-4" />
+                      </Button>
+                      {accountBetHistoryFilterOpen && (
+                        <div className="absolute right-4 top-[calc(100%-2px)] z-[10070] mt-2 w-56 rounded-md border border-white/12 bg-[#121417] p-3 shadow-[0_12px_34px_rgba(0,0,0,0.52)]">
+                          <div className="space-y-3">
+                            <div>
+                              <p className="text-white/70 text-[11px] font-medium uppercase tracking-wide mb-2">Sort</p>
+                              <div className="space-y-1">
+                                <button type="button" onClick={() => { setAccountBetHistorySort('latest'); setAccountBetHistoryFilterOpen(false) }} className={cn("w-full text-left px-2 py-1.5 rounded text-sm transition-colors", accountBetHistorySort === 'latest' ? "bg-white/[0.06] text-white" : "text-white/75 hover:bg-white/[0.03] hover:text-white")}>Latest</button>
+                                <button type="button" onClick={() => { setAccountBetHistorySort('oldest'); setAccountBetHistoryFilterOpen(false) }} className={cn("w-full text-left px-2 py-1.5 rounded text-sm transition-colors", accountBetHistorySort === 'oldest' ? "bg-white/[0.06] text-white" : "text-white/75 hover:bg-white/[0.03] hover:text-white")}>Oldest</button>
+                              </div>
+                            </div>
+                            <Separator className="bg-white/10" />
+                            <div>
+                              <p className="text-white/70 text-[11px] font-medium uppercase tracking-wide mb-2">Type</p>
+                              <div className="space-y-1">
+                                {(['ALL', 'SINGLE', 'PARLAY'] as const).map((type) => (
+                                  <button key={type} type="button" onClick={() => { setAccountBetHistoryTypeFilter(type); setAccountBetHistoryFilterOpen(false) }} className={cn("w-full text-left px-2 py-1.5 rounded text-sm capitalize transition-colors", accountBetHistoryTypeFilter === type ? "bg-white/[0.06] text-white" : "text-white/75 hover:bg-white/[0.03] hover:text-white")}>
+                                    {type === 'ALL' ? 'All types' : type.toLowerCase()}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                            <Separator className="bg-white/10" />
+                            <div>
+                              <p className="text-white/70 text-[11px] font-medium uppercase tracking-wide mb-2">Status</p>
+                              <div className="space-y-1">
+                                {(['ALL', 'IN_PLAY', 'PENDING', 'WON', 'LOST', 'CASHED_OUT'] as const).map((status) => (
+                                  <button key={status} type="button" onClick={() => { setAccountBetHistoryStatusFilter(status); setAccountBetHistoryFilterOpen(false) }} className={cn("w-full text-left px-2 py-1.5 rounded text-sm transition-colors", accountBetHistoryStatusFilter === status ? "bg-white/[0.06] text-white" : "text-white/75 hover:bg-white/[0.03] hover:text-white")}>
+                                    {status === 'ALL' ? 'All statuses' : status.toLowerCase().replace('_', ' ')}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <div className="space-y-2 p-2">
+                      {accountBetHistoryFilteredRows.length === 0 ? (
+                        <div className="rounded-small border border-dashed border-white/20 bg-white/[0.02] px-4 py-6 text-center text-sm text-white/70">
+                          No bets for this filter.
+                        </div>
+                      ) : accountBetHistoryFilteredRows.map((row) => (
+                        <div key={row.id} className="overflow-hidden rounded-small border border-white/10 bg-white/[0.02]">
+                          <button
+                            type="button"
+                            onClick={() => setAccountBetHistoryExpandedId((prev) => (prev === row.id ? null : row.id))}
+                            className={cn(
+                              "w-full px-4 py-3 text-left transition-colors hover:bg-white/[0.015] focus-visible:outline-none focus-visible:ring-0",
+                              accountBetHistoryExpandedId === row.id ? "rounded-t-small rounded-b-none" : "rounded-small",
+                            )}
+                          >
+                            <div className="flex items-center gap-3">
+                              <img
+                                src={row.leagueIcon}
+                                alt={row.league}
+                                width={20}
+                                height={20}
+                                className="h-5 w-5 shrink-0 object-contain"
+                                onError={(e) => {
+                                  e.currentTarget.src = '/sports_icons/football.svg'
+                                }}
+                              />
+                              <div className="min-w-0 flex-1">
+                                <p className="truncate text-[15px] font-semibold text-white">{row.selection}</p>
+                                <div className="flex items-center gap-2">
+                                  <p className="truncate text-sm text-white/70">{row.fixture}</p>
+                                  <span
+                                    className={cn(
+                                      "h-1.5 w-1.5 rounded-full shrink-0",
+                                      row.status === 'IN_PLAY' && "bg-amber-400",
+                                      row.status === 'PENDING' && "bg-blue-400",
+                                      row.status === 'WON' && "bg-emerald-400",
+                                      row.status === 'LOST' && "bg-rose-400",
+                                      row.status === 'CASHED_OUT' && "bg-purple-400",
+                                    )}
+                                  />
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <p className="text-sm font-semibold text-white">{row.amount}</p>
+                                <p className="text-[11px] text-white/55">{row.odds}</p>
+                              </div>
+                              <IconChevronDown className={cn("h-4 w-4 shrink-0 text-white/45 transition-transform", accountBetHistoryExpandedId === row.id && "rotate-180")} />
+                            </div>
+                          </button>
+                          <AnimatePresence initial={false}>
+                            {accountBetHistoryExpandedId === row.id && (
+                              <motion.div
+                                key={`${row.id}-bet-details`}
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.2, ease: 'easeOut' }}
+                                className="overflow-hidden"
+                              >
+                                <div className="grid grid-cols-2 gap-3 border-t border-white/10 bg-white/[0.03] px-4 pb-3 pt-2 text-xs">
+                                  <div>
+                                    <p className="text-white/45 uppercase tracking-wide text-[10px]">Date</p>
+                                    <p className="mt-1 text-white/80">{row.date}</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-white/45 uppercase tracking-wide text-[10px]">Market</p>
+                                    <p className="mt-1 text-white/80">{row.market}</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-white/45 uppercase tracking-wide text-[10px]">Risk</p>
+                                    <p className="mt-1 text-white/80">${row.riskValue.toFixed(2)}</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-white/45 uppercase tracking-wide text-[10px]">Potential Return</p>
+                                    <p className="mt-1 text-white/80">${row.potentialReturnsValue.toFixed(2)}</p>
                                   </div>
                                 </div>
                               </motion.div>

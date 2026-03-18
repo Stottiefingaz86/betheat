@@ -1362,7 +1362,15 @@ function HomePageContent() {
   const [headerLanguage, setHeaderLanguage] = useState<'EN' | 'ES' | 'DE' | 'FR' | 'PT'>('EN')
   const [vipDrawerOpen, setVipDrawerOpen] = useState(false)
   const [accountDrawerOpen, setAccountDrawerOpen] = useState(false)
-  const [accountDrawerView, setAccountDrawerView] = useState<'account' | 'notifications' | 'createAccount' | 'createAccountConfirmation' | 'login'>('account')
+  const [accountDrawerView, setAccountDrawerView] = useState<'account' | 'notifications' | 'transactions' | 'security' | 'createAccount' | 'createAccountConfirmation' | 'login'>('account')
+  const accountTransactionRows = [
+    { id: 't1', date: '18/02/2026', type: 'DEPOSIT', method: 'Bitcoin', amount: '+$500.00', status: 'COMPLETED' },
+    { id: 't2', date: '15/02/2026', type: 'WITHDRAWAL', method: 'Bitcoin', amount: '-$200.00', status: 'COMPLETED' },
+    { id: 't3', date: '12/02/2026', type: 'DEPOSIT', method: 'Credit Card', amount: '+$100.00', status: 'COMPLETED' },
+    { id: 't4', date: '10/02/2026', type: 'BONUS', method: 'System', amount: '+$25.00', status: 'CREDITED' },
+    { id: 't5', date: '08/02/2026', type: 'WITHDRAWAL', method: 'Bitcoin', amount: '-$1000.00', status: 'PENDING' },
+    { id: 't6', date: '05/02/2026', type: 'DEPOSIT', method: 'Ethereum', amount: '+$250.00', status: 'COMPLETED' },
+  ] as const
   const webInboxUnreadCount = 2
   const [createAccountForm, setCreateAccountForm] = useState({
     fullName: '',
@@ -2324,7 +2332,7 @@ function HomePageContent() {
                         <img
                           src={banner.src}
                           alt={banner.alt}
-                          className={cn("block h-auto max-w-none", isMobile ? "w-[240px]" : "w-[300px]")}
+                          className={cn("block h-auto max-w-none", isMobile ? "w-[300px]" : "w-auto")}
                         />
                       </Card>
                     </CarouselItem>
@@ -4149,6 +4157,28 @@ function HomePageContent() {
                     </Button>
                     <h2 className="text-lg font-semibold text-white">Messages</h2>
                   </div>
+                ) : accountDrawerView === 'transactions' ? (
+                  <div className="flex items-center gap-3 flex-1">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setAccountDrawerView('account')}
+                      className="h-8 w-8 p-0 hover:bg-white/10 -ml-2"
+                    >
+                      <IconChevronLeft className="h-5 w-5 text-white/70" />
+                    </Button>
+                    <h2 className="text-lg font-semibold text-white">Transactions History</h2>
+                  </div>
+                ) : accountDrawerView === 'security' ? (
+                  <div className="flex items-center gap-3 flex-1">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setAccountDrawerView('account')}
+                      className="h-8 w-8 p-0 hover:bg-white/10 -ml-2"
+                    >
+                      <IconChevronLeft className="h-5 w-5 text-white/70" />
+                    </Button>
+                    <h2 className="text-lg font-semibold text-white">Security Central</h2>
+                  </div>
                 ) : accountDrawerView === 'createAccount' || accountDrawerView === 'createAccountConfirmation' || accountDrawerView === 'login' ? (
                   <div className="flex items-center gap-3 flex-1">
                     {accountDrawerView === 'createAccount' || accountDrawerView === 'login' ? (
@@ -4284,14 +4314,36 @@ function HomePageContent() {
                           <span className="flex-1 text-left text-white">My Bonus</span>
                         </Button>
 
-                        <Button variant="ghost" className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 transition-colors duration-200">
+                        <Button
+                          variant="ghost"
+                          className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 transition-colors duration-200"
+                          onClick={() => {
+                            setAccountDrawerView('transactions')
+                          }}
+                        >
                           <IconCurrencyDollar className="w-5 h-5 mr-3 text-white/65 transition-colors duration-200 group-hover:text-white/90" />
                           <span className="flex-1 text-left text-white">Transactions History</span>
                         </Button>
 
-                        <Button variant="ghost" className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 transition-colors duration-200">
+                        <Button
+                          variant="ghost"
+                          className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 transition-colors duration-200"
+                          onClick={() => {
+                            setAccountDrawerOpen(false)
+                            router.push('/sports?account=betHistory')
+                          }}
+                        >
                           <IconTicket className="w-5 h-5 mr-3 text-white/65 transition-colors duration-200 group-hover:text-white/90" />
                           <span className="flex-1 text-left text-white">Bet History</span>
+                        </Button>
+
+                        <Button
+                          variant="ghost"
+                          className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 transition-colors duration-200"
+                          onClick={() => setAccountDrawerView('security')}
+                        >
+                          <IconShield className="w-5 h-5 mr-3 text-white/65 transition-colors duration-200 group-hover:text-white/90" />
+                          <span className="flex-1 text-left text-white">Security</span>
                         </Button>
                       </div>
 
@@ -4367,6 +4419,69 @@ function HomePageContent() {
                     </>
                   )}
                 </>
+              ) : accountDrawerView === 'transactions' ? (
+                <div className="space-y-3">
+                  {accountTransactionRows.map((row) => (
+                    <div
+                      key={row.id}
+                      className="rounded-small border border-white/[0.08] bg-white/[0.03] px-3 py-3"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-white">{row.type}</p>
+                          <p className="text-xs text-white/55">{row.method}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm font-semibold text-white">{row.amount}</p>
+                          <p className="text-[11px] text-white/55">{row.date}</p>
+                        </div>
+                      </div>
+                      <div className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-white/[0.1] bg-white/[0.04] px-2 py-0.5">
+                        <span
+                          className={cn(
+                            "h-1.5 w-1.5 rounded-full",
+                            row.status === 'COMPLETED'
+                              ? "bg-emerald-400"
+                              : row.status === 'PENDING'
+                                ? "bg-amber-300"
+                                : "bg-blue-300"
+                          )}
+                        />
+                        <span className="text-[10px] text-white/70">{row.status}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : accountDrawerView === 'security' ? (
+                <div className="space-y-3">
+                  <div className="rounded-small border border-white/[0.08] bg-white/[0.03] px-3 py-3">
+                    <p className="text-sm font-semibold text-white">Security Central</p>
+                    <p className="mt-1 text-xs text-white/65">
+                      Manage password, login checks, and trusted access settings.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    className="w-full rounded-small border border-white/[0.1] bg-white/[0.03] px-3 py-3 text-left hover:bg-white/[0.05] transition-colors"
+                  >
+                    <p className="text-sm font-semibold text-white">Security Recommendations</p>
+                    <p className="mt-0.5 text-xs text-white/60">Review important actions to protect your account.</p>
+                  </button>
+                  <button
+                    type="button"
+                    className="w-full rounded-small border border-white/[0.1] bg-white/[0.03] px-3 py-3 text-left hover:bg-white/[0.05] transition-colors"
+                  >
+                    <p className="text-sm font-semibold text-white">Change Password</p>
+                    <p className="mt-0.5 text-xs text-white/60">Keep your account secure with regular password updates.</p>
+                  </button>
+                  <button
+                    type="button"
+                    className="w-full rounded-small border border-white/[0.1] bg-white/[0.03] px-3 py-3 text-left hover:bg-white/[0.05] transition-colors"
+                  >
+                    <p className="text-sm font-semibold text-white">2-Factor Authentication</p>
+                    <p className="mt-0.5 text-xs text-white/60">Add an extra verification step at sign-in.</p>
+                  </button>
+                </div>
               ) : accountDrawerView === 'login' ? (
                 <div className="space-y-4">
                   <div className="rounded-lg border border-gray-200 bg-white p-3 space-y-3">

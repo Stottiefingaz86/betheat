@@ -6,28 +6,29 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
   --ds-primary-gradient: linear-gradient(112deg, rgba(255, 136, 52, 1) 0%, rgba(255, 109, 42, 0.98) 40%, rgba(236, 73, 46, 0.94) 72%, rgba(168, 44, 42, 0.92) 100%);
   --ui-button-radius: 0.56rem;
-  --background: #f3f5f7;
-  --foreground: #151b24;
+  --background: #0a0d12;
+  --foreground: #dbe3ee;
   --border: 220 13% 18%;
   --input: 220 13% 18%;
   --ring: 217.2 91.2% 59.8%;
-  --card: 0 0% 98%;
-  --card-foreground: 0 0% 3.9%;
+  --card: 0 0% 3.9%;
+  --card-foreground: 0 0% 98%;
   --primary: 23 96% 54%;
   --primary-foreground: 26 100% 97%;
-  --secondary: 0 0% 96.1%;
-  --secondary-foreground: 0 0% 9%;
+  --secondary: 0 0% 14.9%;
+  --secondary-foreground: 0 0% 98%;
   --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 0 0% 98%;
-  --muted: 0 0% 96.1%;
-  --muted-foreground: 0 0% 45.1%;
-  --accent: 0 0% 96.1%;
-  --accent-foreground: 0 0% 9%;
-  --popover: 0 0% 98%;
-  --popover-foreground: 0 0% 3.9%;
+  --muted: 0 0% 14.9%;
+  --muted-foreground: 0 0% 63.9%;
+  --accent: 0 0% 14.9%;
+  --accent-foreground: 0 0% 98%;
+  --popover: 0 0% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --ds-primary-text: #ffffff;
 }
 
 .dark {
@@ -52,6 +53,7 @@
   --accent-foreground: 0 0% 98%;
   --popover: 0 0% 3.9%;
   --popover-foreground: 0 0% 98%;
+  --ds-primary-text: #ffffff;
 }
 
 * {
@@ -1018,7 +1020,7 @@ body {
 /* Betheat override: chips-only sub nav, neutral dark glass (no rail stroke) */
 [data-sub-nav] {
   position: fixed !important;
-  background: rgba(18, 20, 23, 0.84) !important;
+  background: color-mix(in srgb, var(--ds-page-bg, #121417) 84%, transparent) !important;
   border-bottom: 0 !important;
   box-shadow: none !important;
   backdrop-filter: blur(18px) saturate(110%) !important;
@@ -1032,9 +1034,9 @@ body {
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(18, 20, 23, 0.76) 0%,
-    rgba(18, 20, 23, 0.82) 58%,
-    rgba(18, 20, 23, 0.88) 100%
+    color-mix(in srgb, var(--ds-page-bg, #121417) 76%, transparent) 0%,
+    color-mix(in srgb, var(--ds-page-bg, #121417) 82%, transparent) 58%,
+    color-mix(in srgb, var(--ds-page-bg, #121417) 88%, transparent) 100%
   );
   pointer-events: none;
   z-index: 0;
@@ -1050,9 +1052,9 @@ body {
   height: 14px;
   background: linear-gradient(
     180deg,
-    rgba(18, 20, 23, 0.62) 0%,
-    rgba(18, 20, 23, 0.3) 55%,
-    rgba(18, 20, 23, 0) 100%
+    color-mix(in srgb, var(--ds-page-bg, #121417) 62%, transparent) 0%,
+    color-mix(in srgb, var(--ds-page-bg, #121417) 30%, transparent) 55%,
+    color-mix(in srgb, var(--ds-page-bg, #121417) 0%, transparent) 100%
   );
   pointer-events: none;
   z-index: 2;
@@ -1110,7 +1112,7 @@ body {
 [data-sub-nav] [data-state="active"][data-tab-item] {
   background-color: transparent !important;
   background-image: var(--ds-primary-gradient, linear-gradient(112deg, rgba(255, 136, 52, 1) 0%, rgba(255, 109, 42, 0.98) 40%, rgba(236, 73, 46, 0.94) 72%, rgba(168, 44, 42, 0.92) 100%)) !important;
-  color: #121417 !important;
+  color: var(--ds-primary-text, #ffffff) !important;
   border: 0 !important;
   box-shadow: none !important;
   border-radius: var(--ui-button-radius) !important;
@@ -1577,7 +1579,7 @@ button[data-active="true"][class*="SidebarMenuButton"],
 [data-active="true"][class*="SidebarMenuButton"] {
   background-color: transparent !important;
   background-image: var(--ds-primary-gradient, linear-gradient(112deg, rgba(255, 136, 52, 1) 0%, rgba(255, 109, 42, 0.98) 40%, rgba(236, 73, 46, 0.94) 72%, rgba(168, 44, 42, 0.92) 100%)) !important;
-  color: #121417 !important;
+  color: var(--ds-primary-text, #ffffff) !important;
   transition: background-color 0.2s ease-in-out !important;
 }
 
@@ -1587,7 +1589,7 @@ button[data-active="true"][class*="SidebarMenuButton"] span,
 button[data-active="true"][class*="SidebarMenuButton"] svg,
 [data-active="true"][class*="SidebarMenuButton"] span,
 [data-active="true"][class*="SidebarMenuButton"] svg {
-  color: #121417 !important;
+  color: var(--ds-primary-text, #ffffff) !important;
   font-weight: 500 !important;
   letter-spacing: inherit !important;
 }
@@ -1656,7 +1658,7 @@ button[data-active="true"][class*="SidebarMenuButton"] svg,
 }
 
 [data-nav-header] {
-  background-color: rgba(18, 20, 23, 0.96) !important;
+  background-color: color-mix(in srgb, var(--ds-nav-bg, #121417) 96%, transparent) !important;
   backdrop-filter: blur(22px) saturate(112%) !important;
   -webkit-backdrop-filter: blur(22px) saturate(112%) !important;
 }
@@ -1986,11 +1988,7 @@ button[class*="h-8 w-8 rounded-small bg-[#1a1a1a]/90"][class*="disabled:cursor-n
   border-color: #e65a12 !important;
 }
 
-/* Fully disable the floating brand switcher bubble/panel surface */
-[data-customizer],
-[data-customizer-fab] {
-  display: none !important;
-}
+/* Design customizer should remain visible for runtime styling */
 
 /* Ensure smooth transition from default to active state - prevent black flash */
 [data-sidebar="menu-button"] {

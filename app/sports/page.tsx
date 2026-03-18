@@ -10755,7 +10755,18 @@ function NavTestPageContent() {
       setShowMyBets?.(true)
       window.scrollTo(0, 0)
     }
-  }, [])
+
+    const accountParam = params.get('account')
+    if (accountParam === 'betHistory' || accountParam === 'transactions') {
+      setAccountDrawerView(accountParam)
+      openAccountDrawer()
+      const nextParams = new URLSearchParams(params)
+      nextParams.delete('account')
+      const nextQuery = nextParams.toString()
+      const nextUrl = `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ''}`
+      window.history.replaceState(null, '', nextUrl)
+    }
+  }, [openAccountDrawer])
   const [bets, setBets] = useState<Array<{
     id: string
     eventId: number

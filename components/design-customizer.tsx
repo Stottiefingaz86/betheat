@@ -7,6 +7,7 @@ import { IconPalette, IconX, IconCheck, IconPencil, IconArrowLeft, IconUpload, I
 import { cn } from '@/lib/utils'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { useRouter } from 'next/navigation'
+import { Button } from '@/components/ui/button'
 
 // ── Product definitions ───────────────────────────────────────────
 export const ALL_PRODUCTS = [
@@ -224,6 +225,15 @@ function loadActiveBrandId(): string {
 function saveActiveBrandId(id: string) {
   if (typeof window === 'undefined') return
   localStorage.setItem(LS_BRAND_KEY, id)
+}
+
+function hasSavedBrandSelection(): boolean {
+  if (typeof window === 'undefined') return false
+  try {
+    return Boolean(localStorage.getItem(LS_BRAND_KEY))
+  } catch {
+    return false
+  }
 }
 
 // ── Injected stylesheet builder ────────────────────────────────────
@@ -745,6 +755,13 @@ export function DesignCustomizer({ onBrandChange, currentBrandId = 'betheat' }: 
   const hasRestoredRef = useRef(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
+  // Open the panel on first visit so style selection is explicit.
+  useEffect(() => {
+    if (!hasSavedBrandSelection()) {
+      setIsOpen(true)
+    }
+  }, [])
+
   // Load saved product overrides and active brand from localStorage on mount
   useEffect(() => {
     setProductOverrides(loadProductOverrides())
@@ -1082,10 +1099,10 @@ export function DesignCustomizer({ onBrandChange, currentBrandId = 'betheat' }: 
       <motion.button
         onClick={() => { setIsOpen(!isOpen); setEditingBrandId(null) }}
         className={cn(
-          "fixed bottom-6 right-6 z-[200] flex items-center gap-2 rounded-full shadow-lg cursor-pointer transition-colors duration-200",
+          "fixed bottom-6 right-6 z-[200] flex items-center gap-2 rounded-full border border-border/70 bg-background/95 text-foreground shadow-lg backdrop-blur-xl cursor-pointer transition-colors duration-200",
           isOpen
-            ? "bg-white/10 backdrop-blur-xl border border-white/20 px-4 h-10"
-            : "bg-gradient-to-br from-violet-600 to-indigo-700 hover:from-violet-500 hover:to-indigo-600 w-11 h-11 justify-center"
+            ? "px-4 h-10"
+            : "w-11 h-11 justify-center hover:bg-accent/70"
         )}
         whileHover={{ scale: 1.04 }}
         whileTap={{ scale: 0.96 }}
@@ -1096,11 +1113,11 @@ export function DesignCustomizer({ onBrandChange, currentBrandId = 'betheat' }: 
           {isOpen ? (
             <motion.div key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.12 }} className="flex items-center gap-2">
               <IconX className="w-4 h-4 text-white/60" />
-              <span className="text-[11px] text-white/60 font-medium">Close</span>
+              <span className="text-[11px] text-foreground/70 font-medium">Close</span>
             </motion.div>
           ) : (
             <motion.div key="palette" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.12 }}>
-              <IconPalette className="w-5 h-5 text-white" />
+              <IconPalette className="w-5 h-5 text-foreground" />
             </motion.div>
           )}
         </AnimatePresence>
@@ -1115,8 +1132,7 @@ export function DesignCustomizer({ onBrandChange, currentBrandId = 'betheat' }: 
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.95 }}
             transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-            className="fixed bottom-[72px] right-6 z-[200] w-[300px] rounded-xl border shadow-2xl overflow-hidden"
-            style={{ backgroundColor: '#1c1c1e', borderColor: 'rgba(255,255,255,0.1)' }}
+            className="fixed bottom-[72px] right-6 z-[200] w-[320px] rounded-xl border border-border/80 bg-background/95 text-foreground shadow-2xl overflow-hidden backdrop-blur-xl"
           >
             <AnimatePresence mode="wait">
               {editingBrand ? (
@@ -1130,12 +1146,15 @@ export function DesignCustomizer({ onBrandChange, currentBrandId = 'betheat' }: 
                 >
                   {/* Edit header */}
                   <div className="px-3 py-2.5 flex items-center gap-2" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                    <button
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
                       onClick={() => setEditingBrandId(null)}
-                      className="p-1 rounded-md hover:bg-white/10 transition-colors"
+                      className="h-7 w-7 rounded-md"
                     >
-                      <IconArrowLeft className="w-3.5 h-3.5" style={{ color: 'rgba(255,255,255,0.5)' }} />
-                    </button>
+                      <IconArrowLeft className="w-3.5 h-3.5 text-foreground/70" />
+                    </Button>
                     <div className="w-3.5 h-3.5 rounded-full flex-shrink-0" style={{ backgroundColor: editingBrand.primary }} />
                     <span className="text-xs font-semibold" style={{ color: '#fff' }}>{editingBrand.name}</span>
                     <span className="text-[10px] ml-auto" style={{ color: 'rgba(255,255,255,0.3)' }}>Products</span>
@@ -1291,43 +1310,49 @@ export function DesignCustomizer({ onBrandChange, currentBrandId = 'betheat' }: 
                       className="hidden"
                       onChange={handleJsonImport}
                     />
-                    <button
+                    <Button
+                      type="button"
+                      variant="ghost"
                       onClick={() => fileInputRef.current?.click()}
-                      className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left transition-all duration-150 hover:bg-white/5 border border-transparent hover:border-white/10"
+                      className="w-full justify-start gap-2 px-3 py-2 h-auto rounded-lg border border-transparent hover:border-border/80"
                     >
-                      <IconUpload className="w-3.5 h-3.5 flex-shrink-0" style={{ color: 'rgba(255,255,255,0.4)' }} />
-                      <span className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                      <IconUpload className="w-3.5 h-3.5 flex-shrink-0 text-foreground/70" />
+                      <span className="text-[11px] font-medium text-foreground/80">
                         Import Brand JSON
                       </span>
-                    </button>
+                    </Button>
 
                     {/* Journey Map CTA */}
-                    <button
+                    <Button
+                      type="button"
+                      variant="ghost"
                       onClick={() => { setIsOpen(false); router.push('/journey-map') }}
-                      className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left transition-all duration-150 hover:bg-white/5 border border-dashed border-white/10 hover:border-white/20"
+                      className="w-full justify-start gap-2 px-3 py-2 h-auto rounded-lg border border-dashed border-border/70 hover:border-border"
                     >
-                      <IconMap2 className="w-3.5 h-3.5 flex-shrink-0" style={{ color: 'rgba(255,255,255,0.5)' }} />
-                      <span className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                      <IconMap2 className="w-3.5 h-3.5 flex-shrink-0 text-foreground/70" />
+                      <span className="text-[11px] font-medium text-foreground/85">
                         Journey Map
                       </span>
-                      <span className="ml-auto text-[9px] px-1.5 py-0.5 rounded-full bg-white/10" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                      <span className="ml-auto text-[9px] px-1.5 py-0.5 rounded-full bg-white/10 text-foreground/70">
                         NEW
                       </span>
-                    </button>
+                    </Button>
 
                     {/* Our Library CTA */}
-                    <button
+                    <Button
+                      type="button"
+                      variant="ghost"
                       onClick={() => { setIsOpen(false); router.push('/library') }}
-                      className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left transition-all duration-150 hover:bg-white/5 border border-dashed border-white/10 hover:border-white/20"
+                      className="w-full justify-start gap-2 px-3 py-2 h-auto rounded-lg border border-dashed border-border/70 hover:border-border"
                     >
-                      <IconBook2 className="w-3.5 h-3.5 flex-shrink-0" style={{ color: 'rgba(255,255,255,0.5)' }} />
-                      <span className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                      <IconBook2 className="w-3.5 h-3.5 flex-shrink-0 text-foreground/70" />
+                      <span className="text-[11px] font-medium text-foreground/85">
                         Our Library
                       </span>
-                      <span className="ml-auto text-[9px] px-1.5 py-0.5 rounded-full bg-white/10" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                      <span className="ml-auto text-[9px] px-1.5 py-0.5 rounded-full bg-white/10 text-foreground/70">
                         NEW
                       </span>
-                    </button>
+                    </Button>
                   </div>
 
                   {/* Footer hint */}
