@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next'
+import { Suspense } from 'react'
 import { Figtree } from 'next/font/google'
 import { ThemeProvider } from 'next-themes'
 import GlobalBetslip from '@/components/betslip/global-betslip'
@@ -42,7 +43,9 @@ export default function RootLayout({
       <body style={{ fontFamily: 'var(--font-figtree), sans-serif' }}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} storageKey="theme">
           <BrandSanitizer />
-          <BuilderPreviewBridge />
+          <Suspense fallback={null}>
+            <BuilderPreviewBridge />
+          </Suspense>
           <EsportsLinkFix />
           <PreventOverscroll />
           {children}
