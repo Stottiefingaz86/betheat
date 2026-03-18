@@ -8809,8 +8809,13 @@ function NavTestPageContent() {
       ? new URLSearchParams(window.location.search).toString()
       : ''
     const origin = `${pathname || '/casino'}${originQuery ? `?${originQuery}` : ''}`
-    router.push(`/casino?openSearch=1&openFilters=1&from=${encodeURIComponent(origin)}`)
-  }, [pathname, router])
+    // Open search + filters directly without polluting the URL.
+    setSearchScope('all')
+    setSearchReturnPath(origin)
+    setSearchFiltersOpen(true)
+    setSearchOverlayOpen(true)
+    setActiveIconTab('filter')
+  }, [pathname])
   const [favoritedGames, setFavoritedGames] = useState<Set<number>>(new Set())
   const [selectedGame, setSelectedGame] = useState<{ title: string; image: string; provider?: string; features?: string[] } | null>(null)
   const searchCatalog = useMemo(() => {
