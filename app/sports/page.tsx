@@ -10307,7 +10307,20 @@ function NavTestPageContent() {
   
   const [accountDrawerOpen, setAccountDrawerOpen] = useState(false)
   const [vipDrawerOpen, setVipDrawerOpen] = useState(false)
-  const [accountDrawerView, setAccountDrawerView] = useState<'account' | 'profile' | 'notifications' | 'bonus' | 'transactions' | 'betHistory'>('account')
+  const [accountDrawerView, setAccountDrawerView] = useState<
+    'account'
+    | 'profile'
+    | 'notifications'
+    | 'bonus'
+    | 'transactions'
+    | 'betHistory'
+    | 'security'
+    | 'securityRecommendations'
+    | 'trustedDevices'
+    | 'securityQuestion'
+    | 'changePassword'
+    | 'twoFactorAuth'
+  >('account')
   const accountDrawerOpenRef = useRef(accountDrawerOpen)
   const accountDrawerViewRef = useRef(accountDrawerView)
   const [accountIdCopied, setAccountIdCopied] = useState(false)
@@ -10426,6 +10439,18 @@ function NavTestPageContent() {
   const [accountBetHistorySort, setAccountBetHistorySort] = useState<'latest' | 'oldest'>('latest')
   const [accountBetHistoryStatusFilter, setAccountBetHistoryStatusFilter] = useState<'ALL' | 'IN_PLAY' | 'PENDING' | 'WON' | 'LOST' | 'CASHED_OUT'>('ALL')
   const [accountBetHistoryTypeFilter, setAccountBetHistoryTypeFilter] = useState<'ALL' | 'SINGLE' | 'PARLAY'>('ALL')
+  const securityRecommendationRows = [
+    { id: 'sr-1', text: 'Your personal information is incomplete. Please review and complete your details.', status: 'pending' as const },
+    { id: 'sr-2', text: 'Your current password is too weak. Set a stronger, more secure password.', status: 'pending' as const },
+    { id: 'sr-3', text: 'Enable 2-Factor Authentication to protect and keep your account more secure.', status: 'pending' as const },
+    { id: 'sr-4', text: 'Manage your trusted devices that have login status and review your device history.', status: 'done' as const },
+  ] as const
+  const trustedDeviceRows = [
+    { id: 'td-1', name: 'MacBook Pro', lastSeen: 'Current Device' },
+    { id: 'td-2', name: 'Aorus Pro PC', lastSeen: '10 days ago' },
+    { id: 'td-3', name: 'Galaxy A52', lastSeen: '5 hours ago' },
+    { id: 'td-4', name: 'iPhone', lastSeen: '30 min ago' },
+  ] as const
   const getBetPotentialReturns = useCallback((stake: number, odds: string) => {
     const parsedOdds = Number(odds)
     if (!Number.isFinite(parsedOdds)) return stake
@@ -14392,6 +14417,72 @@ function NavTestPageContent() {
                     </Button>
                     <h2 className="text-lg font-semibold text-white">Bet History</h2>
                   </div>
+                ) : accountDrawerView === 'security' ? (
+                  <div className="flex items-center gap-3 flex-1">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setAccountDrawerView('account')}
+                      className="h-8 w-8 p-0 hover:bg-white/10 -ml-2"
+                    >
+                      <IconChevronLeft className="h-5 w-5 text-white/70" />
+                    </Button>
+                    <h2 className="text-lg font-semibold text-white">Security Central</h2>
+                  </div>
+                ) : accountDrawerView === 'securityRecommendations' ? (
+                  <div className="flex items-center gap-3 flex-1">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setAccountDrawerView('security')}
+                      className="h-8 w-8 p-0 hover:bg-white/10 -ml-2"
+                    >
+                      <IconChevronLeft className="h-5 w-5 text-white/70" />
+                    </Button>
+                    <h2 className="text-lg font-semibold text-white">Security Recommendations</h2>
+                  </div>
+                ) : accountDrawerView === 'trustedDevices' ? (
+                  <div className="flex items-center gap-3 flex-1">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setAccountDrawerView('security')}
+                      className="h-8 w-8 p-0 hover:bg-white/10 -ml-2"
+                    >
+                      <IconChevronLeft className="h-5 w-5 text-white/70" />
+                    </Button>
+                    <h2 className="text-lg font-semibold text-white">Trusted Devices</h2>
+                  </div>
+                ) : accountDrawerView === 'securityQuestion' ? (
+                  <div className="flex items-center gap-3 flex-1">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setAccountDrawerView('security')}
+                      className="h-8 w-8 p-0 hover:bg-white/10 -ml-2"
+                    >
+                      <IconChevronLeft className="h-5 w-5 text-white/70" />
+                    </Button>
+                    <h2 className="text-lg font-semibold text-white">Security Question</h2>
+                  </div>
+                ) : accountDrawerView === 'changePassword' ? (
+                  <div className="flex items-center gap-3 flex-1">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setAccountDrawerView('security')}
+                      className="h-8 w-8 p-0 hover:bg-white/10 -ml-2"
+                    >
+                      <IconChevronLeft className="h-5 w-5 text-white/70" />
+                    </Button>
+                    <h2 className="text-lg font-semibold text-white">Change Password</h2>
+                  </div>
+                ) : accountDrawerView === 'twoFactorAuth' ? (
+                  <div className="flex items-center gap-3 flex-1">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setAccountDrawerView('security')}
+                      className="h-8 w-8 p-0 hover:bg-white/10 -ml-2"
+                    >
+                      <IconChevronLeft className="h-5 w-5 text-white/70" />
+                    </Button>
+                    <h2 className="text-lg font-semibold text-white">2-Factor Authentication</h2>
+                  </div>
                 ) : (
                   <div className="flex items-center gap-3 flex-1">
                     <Avatar className="h-10 w-10 border border-white/20">
@@ -14601,6 +14692,7 @@ function NavTestPageContent() {
                     <Button 
                       variant="ghost" 
                       className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 transition-colors duration-200"
+                      onClick={() => setAccountDrawerView('security')}
                     >
                       <IconShield className="w-5 h-5 mr-3 text-white/65 transition-colors duration-200 group-hover:text-white/90" />
                       <span className="flex-1 text-left text-white">Security</span>
@@ -14615,6 +14707,251 @@ function NavTestPageContent() {
                     </Button>
               </div>
                 </>
+              ) : accountDrawerView === 'security' ? (
+                <div className="space-y-3 pb-4">
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5">
+                    <div className="text-sm font-semibold text-white">Security Central</div>
+                    <p className="mt-1 text-xs leading-relaxed text-white/60">
+                      Manage account protection, trusted devices, and login security from one place.
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setAccountDrawerView('securityRecommendations')}
+                    className="w-full rounded-xl border border-white/10 bg-white/[0.03] p-3 text-left hover:bg-white/[0.05] transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="h-9 w-9 rounded-lg bg-white/[0.08] flex items-center justify-center">
+                        <IconShield className="h-5 w-5 text-[var(--ds-primary,#ff6a1a)]" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-[15px] font-semibold text-white">Security Recommendations</div>
+                        <div className="text-xs text-white/60 mt-0.5">Access security settings to protect your account.</div>
+                      </div>
+                      <IconChevronRight className="h-4 w-4 text-white/45" />
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setAccountDrawerView('trustedDevices')}
+                    className="w-full rounded-xl border border-white/10 bg-white/[0.03] p-3 text-left hover:bg-white/[0.05] transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="h-9 w-9 rounded-lg bg-white/[0.08] flex items-center justify-center">
+                        <IconLayoutDashboard className="h-5 w-5 text-[var(--ds-primary,#ff6a1a)]" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-[15px] font-semibold text-white">Trusted Devices</div>
+                        <div className="text-xs text-white/60 mt-0.5">Devices where your account has been active.</div>
+                      </div>
+                      <IconChevronRight className="h-4 w-4 text-white/45" />
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setAccountDrawerView('securityQuestion')}
+                    className="w-full rounded-xl border border-white/10 bg-white/[0.03] p-3 text-left hover:bg-white/[0.05] transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="h-9 w-9 rounded-lg bg-white/[0.08] flex items-center justify-center">
+                        <IconHelpCircle className="h-5 w-5 text-[var(--ds-primary,#ff6a1a)]" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-[15px] font-semibold text-white">Security Question</div>
+                        <div className="text-xs text-white/60 mt-0.5">Set up a security question to keep your account secure.</div>
+                      </div>
+                      <IconChevronRight className="h-4 w-4 text-white/45" />
+                    </div>
+                  </button>
+
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
+                    <div className="flex items-center gap-3 mb-2.5">
+                      <div className="h-9 w-9 rounded-lg bg-white/[0.08] flex items-center justify-center">
+                        <IconLock className="h-5 w-5 text-[var(--ds-primary,#ff6a1a)]" />
+                      </div>
+                      <div>
+                        <div className="text-[15px] font-semibold text-white">Change Password</div>
+                        <div className="text-xs text-white/60">Choose a strong password and do not use it on other accounts.</div>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setAccountDrawerView('changePassword')}
+                      className="w-full h-10 rounded-lg text-[12px] font-semibold tracking-wide text-black"
+                      style={{
+                        backgroundImage: 'linear-gradient(115deg, #ff8a3d 0%, #ff6a1a 52%, #ff3d00 100%)',
+                        boxShadow: '0 8px 18px rgba(255,106,26,0.28)',
+                      }}
+                    >
+                      CHANGE PASSWORD
+                    </button>
+                  </div>
+
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
+                    <div className="flex items-center gap-3 mb-2.5">
+                      <div className="h-9 w-9 rounded-lg bg-white/[0.08] flex items-center justify-center">
+                        <IconShield className="h-5 w-5 text-[var(--ds-primary,#ff6a1a)]" />
+                      </div>
+                      <div>
+                        <div className="text-[15px] font-semibold text-white">2-Factor Authentication</div>
+                        <div className="text-xs text-white/60">Enable 2FA to keep your account more secure.</div>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setAccountDrawerView('twoFactorAuth')}
+                      className="w-full h-10 rounded-lg text-[12px] font-semibold tracking-wide text-black"
+                      style={{
+                        backgroundImage: 'linear-gradient(115deg, #ff8a3d 0%, #ff6a1a 52%, #ff3d00 100%)',
+                        boxShadow: '0 8px 18px rgba(255,106,26,0.28)',
+                      }}
+                    >
+                      ENABLE 2FA
+                    </button>
+                  </div>
+                </div>
+              ) : accountDrawerView === 'securityRecommendations' ? (
+                <div className="space-y-3 pb-4">
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5">
+                    <div className="text-sm font-semibold text-white">Security Recommendations</div>
+                    <p className="mt-1 text-xs leading-relaxed text-white/60">
+                      Review the following recommendations to help keep your account protected against fraud.
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] divide-y divide-white/10">
+                    {securityRecommendationRows.map((item) => (
+                      <div key={item.id} className="p-3 flex items-center gap-3">
+                        <div className={cn(
+                          "h-6 w-6 rounded-full flex items-center justify-center",
+                          item.status === 'done' ? "bg-emerald-500/20 text-emerald-400" : "bg-white/[0.09] text-white/70"
+                        )}>
+                          <IconCheck className="h-3.5 w-3.5" strokeWidth={3} />
+                        </div>
+                        <p className="text-sm text-white/85 flex-1 leading-snug">{item.text}</p>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-9 border-white/25 bg-transparent text-white hover:bg-white/10 hover:text-white"
+                        >
+                          REVIEW
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : accountDrawerView === 'trustedDevices' ? (
+                <div className="space-y-3 pb-4">
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5">
+                    <div className="text-sm font-semibold text-white">Trusted Devices</div>
+                    <p className="mt-1 text-xs leading-relaxed text-white/60">
+                      These devices are remembered for faster login. Remove any device you do not recognize.
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] overflow-hidden">
+                    <div className="grid grid-cols-[1fr_auto] px-3 py-2 text-[11px] uppercase tracking-wide text-white/45 border-b border-white/10">
+                      <span>Device Name</span>
+                      <span>Last Seen</span>
+                    </div>
+                    {trustedDeviceRows.map((device) => (
+                      <div key={device.id} className="grid grid-cols-[1fr_auto_auto] items-center gap-2 px-3 py-3 border-b border-white/10 last:border-b-0">
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <div className="h-8 w-8 rounded-md bg-white/[0.08] flex items-center justify-center">
+                            <IconLayoutDashboard className="h-4 w-4 text-white/70" />
+                          </div>
+                          <span className="text-sm text-white truncate">{device.name}</span>
+                        </div>
+                        <span className={cn("text-sm", device.lastSeen === 'Current Device' ? "text-emerald-400" : "text-white/70")}>{device.lastSeen}</span>
+                        <IconChevronDown className="h-4 w-4 text-white/45" />
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex items-center justify-between text-white/60 text-xs px-1">
+                    <span>Page: 10</span>
+                    <span>1-5 of 13</span>
+                    <div className="inline-flex items-center gap-1.5">
+                      <button type="button" className="h-7 w-7 rounded-md border border-white/15 hover:bg-white/10 inline-flex items-center justify-center">
+                        <IconChevronLeft className="h-4 w-4" />
+                      </button>
+                      <button type="button" className="h-7 w-7 rounded-md border border-white/15 hover:bg-white/10 inline-flex items-center justify-center">
+                        <IconChevronRight className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : accountDrawerView === 'securityQuestion' ? (
+                <div className="space-y-3 pb-4">
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5">
+                    <div className="text-sm font-semibold text-white">Security Question</div>
+                    <p className="mt-1 text-xs leading-relaxed text-white/60">
+                      Add a security question to help verify your identity when needed.
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 space-y-3">
+                    <div className="space-y-1.5">
+                      <Label className="text-white/85 text-sm">Question</Label>
+                      <Input
+                        defaultValue="What was your first pet's name?"
+                        className="h-11 bg-white/[0.02] border-white/15 text-white placeholder:text-white/35 focus-visible:ring-white/35 focus-visible:ring-offset-0"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-white/85 text-sm">Answer</Label>
+                      <Input
+                        placeholder="Enter answer"
+                        className="h-11 bg-white/[0.02] border-white/15 text-white placeholder:text-white/35 focus-visible:ring-white/35 focus-visible:ring-offset-0"
+                      />
+                    </div>
+                    <Button className="w-full h-10 text-black font-semibold" style={{ backgroundImage: 'linear-gradient(115deg, #ff8a3d 0%, #ff6a1a 52%, #ff3d00 100%)' }}>
+                      SAVE QUESTION
+                    </Button>
+                  </div>
+                </div>
+              ) : accountDrawerView === 'changePassword' ? (
+                <div className="space-y-3 pb-4">
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5">
+                    <div className="text-sm font-semibold text-white">Change Password</div>
+                    <p className="mt-1 text-xs leading-relaxed text-white/60">
+                      Use a strong password with letters, numbers, and symbols.
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 space-y-3">
+                    <div className="space-y-1.5">
+                      <Label className="text-white/85 text-sm">Current Password</Label>
+                      <Input type="password" placeholder="••••••••" className="h-11 bg-white/[0.02] border-white/15 text-white placeholder:text-white/35 focus-visible:ring-white/35 focus-visible:ring-offset-0" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-white/85 text-sm">New Password</Label>
+                      <Input type="password" placeholder="••••••••" className="h-11 bg-white/[0.02] border-white/15 text-white placeholder:text-white/35 focus-visible:ring-white/35 focus-visible:ring-offset-0" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-white/85 text-sm">Confirm New Password</Label>
+                      <Input type="password" placeholder="••••••••" className="h-11 bg-white/[0.02] border-white/15 text-white placeholder:text-white/35 focus-visible:ring-white/35 focus-visible:ring-offset-0" />
+                    </div>
+                    <Button className="w-full h-10 text-black font-semibold" style={{ backgroundImage: 'linear-gradient(115deg, #ff8a3d 0%, #ff6a1a 52%, #ff3d00 100%)' }}>
+                      UPDATE PASSWORD
+                    </Button>
+                  </div>
+                </div>
+              ) : accountDrawerView === 'twoFactorAuth' ? (
+                <div className="space-y-3 pb-4">
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5">
+                    <div className="text-sm font-semibold text-white">2-Factor Authentication</div>
+                    <p className="mt-1 text-xs leading-relaxed text-white/60">
+                      Add an extra layer of security by requiring a one-time verification code at login.
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 space-y-2.5">
+                    <div className="text-sm text-white/85">1. Install an authenticator app (Google Authenticator / Authy).</div>
+                    <div className="text-sm text-white/85">2. Scan the QR code in the next step.</div>
+                    <div className="text-sm text-white/85">3. Enter the 6-digit code to complete setup.</div>
+                    <Button className="w-full h-10 text-black font-semibold mt-2" style={{ backgroundImage: 'linear-gradient(115deg, #ff8a3d 0%, #ff6a1a 52%, #ff3d00 100%)' }}>
+                      ENABLE 2FA
+                    </Button>
+                  </div>
+                </div>
               ) : accountDrawerView === 'profile' ? (
                 <div className="space-y-4 pb-4" data-account-profile-form="true">
                   <div className="grid grid-cols-1 gap-3">
@@ -15238,7 +15575,6 @@ function NavTestPageContent() {
                                     row.status === 'PENDING' && "text-amber-300",
                                     row.status !== 'PENDING' && row.type === 'WITHDRAWAL' && "text-rose-300",
                                     row.status !== 'PENDING' && row.type === 'DEPOSIT' && "text-emerald-300",
-                                    row.status !== 'PENDING' && row.type === 'BONUS' && "text-blue-300",
                                   )}
                                 />
                               )}
