@@ -262,12 +262,14 @@ interface FamilyDrawerContentProps {
   children: ReactNode
   className?: string
   asChild?: boolean
+  style?: React.CSSProperties
 }
 
 function FamilyDrawerContent({
   children,
   className,
   asChild = false,
+  style,
 }: FamilyDrawerContentProps) {
   const { isOpen } = useFamilyDrawer()
   const contentRef = useRef<HTMLDivElement>(null)
@@ -330,6 +332,7 @@ function FamilyDrawerContent({
           borderTopRightRadius: '7px',
           overflow: 'hidden',
           ...positionStyle,
+          ...style,
         }}
       >
         {asChild ? <Slot>{content}</Slot> : content}

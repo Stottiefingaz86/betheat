@@ -3997,7 +3997,7 @@ function MyBetsContent({ onBack, brandPrimary, initialFilter }: { onBack: () => 
 }
 
 // Sports Page Component
-function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimaryHover, onSearchClick, betslipOpen, setBetslipOpen, bets, setBets, setShowToast, setToastMessage, setToastAction, placedBets, setPlacedBets, myBetsAlertCount, setMyBetsAlertCount, betslipManuallyClosed, setBetslipManuallyClosed, activeSport, setActiveSport, showMyBets, setShowMyBets, myBetsInitialFilter }: { activeTab: string; onTabChange: (tab: string) => void; onBack: () => void; brandPrimary: string; brandPrimaryHover: string; onSearchClick: () => void; betslipOpen: boolean; setBetslipOpen: (open: boolean) => void; bets: Array<{ id: string; eventId: number; eventName: string; marketTitle: string; selection: string; odds: string; stake: number }>; setBets: (bets: Array<{ id: string; eventId: number; eventName: string; marketTitle: string; selection: string; odds: string; stake: number }> | ((prev: Array<{ id: string; eventId: number; eventName: string; marketTitle: string; selection: string; odds: string; stake: number }>) => Array<{ id: string; eventId: number; eventName: string; marketTitle: string; selection: string; odds: string; stake: number }>)) => void; setShowToast: (show: boolean) => void; setToastMessage: (message: string) => void; setToastAction: (action: { label: string; onClick: () => void } | null) => void; placedBets: Array<{ id: string; eventId: number; eventName: string; marketTitle: string; selection: string; odds: string; stake: number; placedAt: Date }>; setPlacedBets: (bets: Array<{ id: string; eventId: number; eventName: string; marketTitle: string; selection: string; odds: string; stake: number; placedAt: Date }> | ((prev: Array<{ id: string; eventId: number; eventName: string; marketTitle: string; selection: string; odds: string; stake: number; placedAt: Date }>) => Array<{ id: string; eventId: number; eventName: string; marketTitle: string; selection: string; odds: string; stake: number; placedAt: Date }>)) => void; myBetsAlertCount: number; setMyBetsAlertCount: (count: number | ((prev: number) => number)) => void; betslipManuallyClosed: boolean; setBetslipManuallyClosed: (closed: boolean) => void; activeSport: string; setActiveSport: (sport: string) => void; showMyBets?: boolean; setShowMyBets?: (show: boolean) => void; myBetsInitialFilter?: 'all' | 'cash_out' | 'in_play' | 'pending' | 'graded' }) {
+function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimaryHover, onSearchClick, betslipOpen, setBetslipOpen, bets, setBets, setShowToast, setToastMessage, setToastAction, placedBets, setPlacedBets, myBetsAlertCount, setMyBetsAlertCount, betslipManuallyClosed, setBetslipManuallyClosed, activeSport, setActiveSport, showMyBets, setShowMyBets, myBetsInitialFilter, isBetHistoryActive, onToggleBetHistoryFromBetslip }: { activeTab: string; onTabChange: (tab: string) => void; onBack: () => void; brandPrimary: string; brandPrimaryHover: string; onSearchClick: () => void; betslipOpen: boolean; setBetslipOpen: (open: boolean) => void; bets: Array<{ id: string; eventId: number; eventName: string; marketTitle: string; selection: string; odds: string; stake: number }>; setBets: (bets: Array<{ id: string; eventId: number; eventName: string; marketTitle: string; selection: string; odds: string; stake: number }> | ((prev: Array<{ id: string; eventId: number; eventName: string; marketTitle: string; selection: string; odds: string; stake: number }>) => Array<{ id: string; eventId: number; eventName: string; marketTitle: string; selection: string; odds: string; stake: number }>)) => void; setShowToast: (show: boolean) => void; setToastMessage: (message: string) => void; setToastAction: (action: { label: string; onClick: () => void } | null) => void; placedBets: Array<{ id: string; eventId: number; eventName: string; marketTitle: string; selection: string; odds: string; stake: number; placedAt: Date }>; setPlacedBets: (bets: Array<{ id: string; eventId: number; eventName: string; marketTitle: string; selection: string; odds: string; stake: number; placedAt: Date }> | ((prev: Array<{ id: string; eventId: number; eventName: string; marketTitle: string; selection: string; odds: string; stake: number; placedAt: Date }>) => Array<{ id: string; eventId: number; eventName: string; marketTitle: string; selection: string; odds: string; stake: number; placedAt: Date }>)) => void; myBetsAlertCount: number; setMyBetsAlertCount: (count: number | ((prev: number) => number)) => void; betslipManuallyClosed: boolean; setBetslipManuallyClosed: (closed: boolean) => void; activeSport: string; setActiveSport: (sport: string) => void; showMyBets?: boolean; setShowMyBets?: (show: boolean) => void; myBetsInitialFilter?: 'all' | 'cash_out' | 'in_play' | 'pending' | 'graded'; isBetHistoryActive: boolean; onToggleBetHistoryFromBetslip: () => void }) {
   const { state: sidebarState, toggleSidebar, setOpenMobile } = useSidebar()
   const isMobile = useIsMobile()
   const router = useRouter()
@@ -4230,16 +4230,16 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
   ]
 
   const topLeaguesList = [
-    { icon: '/banners/sports_league/NFL.svg', label: 'NFL', sport: 'Football', href: '/sports/football/nfl' },
-    { icon: '/banners/sports_league/nba.svg', label: 'NBA', sport: 'Basketball', href: '/sports/basketball/nba' },
-    { icon: '/banners/sports_league/MLB.svg', label: 'MLB', sport: 'Baseball', href: '/sports/baseball/mlb' },
-    { icon: '/banners/sports_league/NHL.svg', label: 'NHL', sport: 'Hockey', href: '/sports/hockey/nhl' },
-    { icon: '/banners/sports_league/prem.svg', label: 'Premier League', sport: 'Soccer', href: '/sports/soccer/premier-league' },
-    { icon: '/banners/sports_league/laliga.svg', label: 'La Liga', sport: 'Soccer', href: '/sports/soccer/la-liga' },
-    { icon: '/banners/sports_league/champions.svg', label: 'Champions League', sport: 'Soccer', href: '/sports/soccer/champions-league' },
-    { icon: '/banners/sports_league/mls.svg', label: 'MLS', sport: 'Soccer', href: '/sports/soccer/mls' },
-    { icon: '/banners/sports_league/ATP.svg', label: 'ATP Tour', sport: 'Tennis', href: '/sports/tennis/atp' },
-    { icon: '/banners/sports_league/f1.svg', label: 'Formula 1', sport: 'Auto Racing', href: '/sports/football/nfl' },
+    { icon: '/sports%20league/NFL.svg', label: 'NFL', sport: 'Football', href: '/sports/football/nfl' },
+    { icon: '/sports%20league/nba.svg', label: 'NBA', sport: 'Basketball', href: '/sports/basketball/nba' },
+    { icon: '/sports%20league/MLB.svg', label: 'MLB', sport: 'Baseball', href: '/sports/baseball/mlb' },
+    { icon: '/sports%20league/NHL.svg', label: 'NHL', sport: 'Hockey', href: '/sports/hockey/nhl' },
+    { icon: '/sports%20league/prem.svg', label: 'Premier League', sport: 'Soccer', href: '/sports/soccer/premier-league' },
+    { icon: '/sports%20league/copa.svg', label: 'La Liga', sport: 'Soccer', href: '/sports/soccer/la-liga' },
+    { icon: '/sports%20league/champions.svg', label: 'Champions League', sport: 'Soccer', href: '/sports/soccer/champions-league' },
+    { icon: '/sports%20league/mls.svg', label: 'MLS', sport: 'Soccer', href: '/sports/soccer/mls' },
+    { icon: '/sports%20league/ATP.svg', label: 'ATP Tour', sport: 'Tennis', href: '/sports/tennis/atp' },
+    { icon: '/sports%20league/f1.svg', label: 'Formula 1', sport: 'Auto Racing', href: '/sports/football/nfl' },
   ]
 
   const azSports: Array<{ icon: any; label: string; href: string }> = [
@@ -4968,13 +4968,16 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
   }, 0) + parlayPotentialWin
 
   // ── Betslip state hoisted to parent so it survives view re-renders ──
-    const currencySymbol = '$'
+    const currencySymbol = '€'
+  const quickStakeOptions = [5, 20, 50, 100]
   const [bsIsScrolled, setBsIsScrolled] = useState(false)
     const [nudgeKey, setNudgeKey] = useState(0)
+  const [collapsedShimmerKey, setCollapsedShimmerKey] = useState(0)
   const bsScrollContainerRef = useRef<HTMLDivElement>(null)
     const previousBetsLengthRef = useRef(bets.length)
     const [localStakes, setLocalStakes] = useState<Record<string, string>>({})
     const [localParlayStake, setLocalParlayStake] = useState<string>('')
+  const [activeQuickStakeBetId, setActiveQuickStakeBetId] = useState<string | null>(null)
   const [numpadTarget, _setNumpadTarget] = useState<string | null>(null)
   const numpadTargetRef = useRef<string | null>(null)
   const setNumpadTarget = (val: string | null) => { numpadTargetRef.current = val; _setNumpadTarget(val) }
@@ -5087,6 +5090,12 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
       previousBetsLengthRef.current = newLength
     }, [bets.length, betslipMinimized, isMobile])
 
+  useEffect(() => {
+    if (betslipMinimized && !isMobile) {
+      setCollapsedShimmerKey((prev) => prev + 1)
+    }
+  }, [betslipMinimized, isMobile])
+
   // Betslip Views — pure render function (called directly, NOT as <Component/>)
   // This avoids React treating it as a new component type on every render,
   // which would unmount/remount the numpad and scroll container.
@@ -5098,51 +5107,81 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
     // Minimized state - just header bar (desktop only)
     if (betslipMinimized && !isMobile) {
       return (
-        <motion.div 
-          key={`minimized-nudge-${nudgeKey}`}
-          className="px-4 py-2 flex items-center justify-between border-b border-black/5"
-          initial={{ y: 0 }}
-          animate={nudgeKey > 0 ? {
-            y: [0, -12, 0],
-          } : {
-            y: 0
+        <div
+          className="relative overflow-hidden px-4 py-2 flex items-center justify-between border-b border-white/10"
+          style={{
+            background: 'rgba(18,20,23,0.92)',
+            backdropFilter: 'saturate(180%) blur(20px)',
+            WebkitBackdropFilter: 'saturate(180%) blur(20px)',
           }}
-          transition={{
-            duration: 0.6,
-            ease: [0.4, 0, 0.2, 1],
-            times: [0, 0.5, 1]
-          }}
-          onAnimationStart={() => console.log('🎬 Drawer nudge animation started! Key:', nudgeKey)}
-          onAnimationComplete={() => console.log('✅ Drawer nudge completed!')}
         >
-          <div className="flex items-center gap-2">
+          <div
+            key={`collapsed-shimmer-${collapsedShimmerKey}`}
+            className="pointer-events-none absolute inset-0 overflow-hidden"
+          >
+            <div className="betslip-collapsed-shimmer-track h-full w-[42%]" />
+          </div>
+          <div className="relative z-[1] flex items-center gap-2">
             {bets.length > 0 && (
-              <div className="bg-[#424242] h-5 min-w-[20px] px-1.5 flex items-center justify-center rounded">
-                <span className="text-xs font-semibold text-white leading-none">{bets.length}</span>
+              <div
+                className="h-7 min-w-[28px] px-2 flex items-center justify-center rounded-md overflow-hidden"
+                style={{
+                  backgroundImage: 'linear-gradient(115deg, #ff8a3d 0%, #ff6a1a 52%, #ff3d00 100%)',
+                  boxShadow: '0 4px 12px rgba(255, 106, 26, 0.35)',
+                }}
+              >
+                <span
+                  key={`betslip-count-roll-${nudgeKey}-${bets.length}`}
+                  className="betslip-count-roll inline-block text-sm font-bold text-black leading-none"
+                >
+                  {bets.length}
+                </span>
               </div>
             )}
-            <span className="text-sm font-semibold text-black">Betslip</span>
+            <span className="text-sm font-semibold text-white">Betslip</span>
             {totalStake > 0 && (
-              <span className="text-xs text-black/60">{currencySymbol}{totalStake.toFixed(2)}</span>
+              <span className="text-xs text-white/60">{currencySymbol}{totalStake.toFixed(2)}</span>
             )}
           </div>
-          <button
-            onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              setBetslipMinimized(false)
-            }}
-            className="text-[10px] font-semibold uppercase tracking-wide text-black/60 hover:text-black/80 flex items-center gap-1 px-2.5 py-1 rounded-md border border-black/20 hover:border-black/30 transition-colors"
-          >
-            <IconChevronUp className="w-3 h-3" />
-            SHOW
-          </button>
-        </motion.div>
+          <div className="relative z-[1] flex items-center gap-2">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                onToggleBetHistoryFromBetslip()
+              }}
+              className={cn(
+                "h-8 px-3 rounded-lg border transition-colors inline-flex items-center gap-1.5 text-[11px] font-medium",
+                isBetHistoryActive
+                  ? "border-transparent text-black"
+                  : "border-white/15 bg-white/[0.03] hover:bg-white/[0.08] hover:border-white/25 text-white/75 hover:text-white"
+              )}
+              style={isBetHistoryActive ? {
+                backgroundImage: 'linear-gradient(115deg, #ff8a3d 0%, #ff6a1a 52%, #ff3d00 100%)',
+                boxShadow: '0 4px 12px rgba(255, 106, 26, 0.35)',
+              } : undefined}
+            >
+              <IconTicket className={cn("h-3.5 w-3.5", isBetHistoryActive ? "text-black" : "text-white/75")} />
+              <span>My Bets</span>
+            </button>
+            <button
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                setBetslipMinimized(false)
+              }}
+              className="text-white/70 hover:text-white flex items-center justify-center h-8 w-8 rounded-lg border border-white/15 bg-white/[0.03] hover:bg-white/[0.08] hover:border-white/25 transition-colors"
+            >
+              <IconChevronUp className="w-3 h-3" />
+            </button>
+          </div>
+        </div>
       )
     }
     // Expanded state
     return (
-      <div className="flex flex-col w-full" 
+      <div className="flex flex-col w-full bg-[var(--ds-sidebar-bg,#121417)]" 
         style={{ 
           display: 'flex', 
           flexDirection: 'column', 
@@ -5154,20 +5193,48 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
         {/* Drag Handle - Mobile Only */}
         {isMobile && (
           <div className="flex justify-center pt-2 pb-0.5 shrink-0 cursor-grab active:cursor-grabbing">
-            <div className="w-10 h-1 bg-black/20 rounded-full" />
+            <div className="w-10 h-1 bg-white/20 rounded-full" />
           </div>
         )}
         {/* Header - Always visible at top - Glass effect when scrolled */}
-        <div className="px-3 py-2.5 flex items-center justify-between border-b border-black/5" style={{ flexShrink: 0, flexGrow: 0, zIndex: 15, background: 'rgba(255,255,255,0.82)', backdropFilter: 'saturate(180%) blur(20px)', WebkitBackdropFilter: 'saturate(180%) blur(20px)' }}>
+        <div className="px-3 py-2.5 flex items-center justify-between border-b border-white/10" style={{ flexShrink: 0, flexGrow: 0, zIndex: 15, background: 'rgba(18,20,23,0.92)', backdropFilter: 'saturate(180%) blur(20px)', WebkitBackdropFilter: 'saturate(180%) blur(20px)' }}>
                 <div className="flex items-center gap-2">
                   {bets.length > 0 && (
-              <div className="bg-[#424242] h-5 min-w-[20px] px-1.5 flex items-center justify-center rounded-md">
-                <span className="text-xs font-semibold text-white leading-none">{bets.length}</span>
+              <div
+                className="h-7 min-w-[28px] px-2 flex items-center justify-center rounded-md"
+                style={{
+                  backgroundImage: 'linear-gradient(115deg, #ff8a3d 0%, #ff6a1a 52%, #ff3d00 100%)',
+                  boxShadow: '0 4px 12px rgba(255, 106, 26, 0.35)',
+                }}
+              >
+                <span className="text-sm font-bold text-black leading-none">{bets.length}</span>
                     </div>
                   )}
-            <h2 data-tour-target="sports-betslip" className="text-sm font-semibold text-black/90">Betslip</h2>
+            <h2 data-tour-target="sports-betslip" className="text-sm font-semibold text-white/90">Betslip</h2>
                 </div>
                 {bets.length > 0 && (
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        onToggleBetHistoryFromBetslip()
+                      }}
+                      className={cn(
+                        "h-8 px-3 rounded-lg border transition-colors inline-flex items-center gap-1.5 text-[11px] font-medium",
+                        isBetHistoryActive
+                          ? "border-transparent text-black"
+                          : "border-white/15 bg-white/[0.03] hover:bg-white/[0.08] hover:border-white/25 text-white/75 hover:text-white"
+                      )}
+                      style={isBetHistoryActive ? {
+                        backgroundImage: 'linear-gradient(115deg, #ff8a3d 0%, #ff6a1a 52%, #ff3d00 100%)',
+                        boxShadow: '0 4px 12px rgba(255, 106, 26, 0.35)',
+                      } : undefined}
+                    >
+                      <IconTicket className={cn("h-3.5 w-3.5", isBetHistoryActive ? "text-black" : "text-white/75")} />
+                      <span>My Bets</span>
+                    </button>
                   <button
                     onClick={(e) => {
                       e.preventDefault()
@@ -5179,11 +5246,11 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                   setBetslipMinimized(true)
                 }
               }}
-              className="text-[10px] font-semibold uppercase tracking-wide text-black/60 hover:text-black/80 flex items-center gap-1 px-2.5 py-1 rounded-md border border-black/20 hover:border-black/30 transition-colors"
+              className="text-white/70 hover:text-white flex items-center justify-center h-8 w-8 rounded-lg border border-white/15 bg-white/[0.03] hover:bg-white/[0.08] hover:border-white/25 transition-colors"
             >
                   <IconChevronDown className="w-3 h-3" />
-                  MINIMIZE
                   </button>
+                  </div>
                 )}
             </div>
 
@@ -5191,8 +5258,8 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
             {bets.length === 0 ? (
           <div className="px-4 py-12 text-center flex-1 min-h-0 flex flex-col items-center justify-center" style={{ flex: '1 1 auto', minHeight: 0, overflow: 'hidden' }}>
             <div>
-              <p className="text-sm text-black/70">Your betslip is empty</p>
-              <p className="text-xs mt-2 text-black/50">Select odds to add bets</p>
+              <p className="text-sm text-white/75">Your betslip is empty</p>
+              <p className="text-xs mt-2 text-white/50">Select odds to add bets</p>
                     </div>
             <button
               onClick={(e) => {
@@ -5205,7 +5272,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                   setBetslipManuallyClosed(true)
                 }
               }}
-              className="mt-6 px-4 py-2 text-xs font-medium text-black/70 hover:text-black border border-black/10 rounded hover:bg-black/5 transition-colors"
+              className="mt-6 px-4 py-2 text-xs font-medium text-white/75 hover:text-white border border-white/20 rounded hover:bg-white/[0.06] transition-colors"
             >
               Close
             </button>
@@ -5230,38 +5297,9 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                 {bets.length > 0 && (
                 <div className="px-2" style={{ minHeight: 'fit-content' }}>
                   <div className="flex items-center justify-between mb-1.5 pt-2">
-                    <div className="text-[10px] font-medium text-black/50 uppercase tracking-wide">
+                    <div className="text-[10px] font-medium text-white/50 uppercase tracking-wide">
                       {hasMultipleGames ? `${bets.length} Selections` : 'Straight Bet'}
                     </div>
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault()
-                      e.stopPropagation()
-                        // Clear all bets - this will trigger re-render and clear highlighting
-                        setBets([])
-                        setParlayStake(0)
-                        setLocalParlayStake('')
-                        setLocalStakes({})
-                        setNumpadTarget(null)
-                        setBetslipOpen(false)
-                        setBetslipMinimized(false)
-                        // Reset manually closed flag so next first bet will open betslip
-                        setBetslipManuallyClosed(false)
-                        // Clear any inline styles from hover handlers on all odds buttons
-                        // This ensures the red highlighting is cleared immediately
-                        requestAnimationFrame(() => {
-                          const oddsButtons = document.querySelectorAll('button[data-event-id]')
-                          oddsButtons.forEach((button) => {
-                            const el = button as HTMLElement
-                            // Clear inline background color to let className take over
-                            el.style.backgroundColor = ''
-                          })
-                        })
-                      }}
-                      className="text-[10px] font-medium text-red-400 hover:text-red-500 uppercase tracking-wide px-2 py-0.5 rounded border border-red-200 hover:border-red-300 hover:bg-red-50 transition-colors"
-                    >
-                      Remove All
-                  </button>
               </div>
                   {/* New bets appear at top (reversed array order) */}
                   <AnimatePresence initial={false}>
@@ -5347,32 +5385,33 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                         <IconTrash className="w-4 h-4 text-white" />
                       </div>
                     )}
-                    <div data-bet-inner="" className="flex items-start gap-2.5 py-2.5 px-2.5 bg-[#f5f5f5] rounded-lg border border-black/[0.04] relative" style={{ zIndex: 1 }}>
-                    {/* Remove Button - Smaller, more subtle */}
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault()
-                        e.stopPropagation()
-                        removeBet(bet.id)
-                      }}
-                      className="mt-0.5 flex-shrink-0 w-4 h-4 flex items-center justify-center hover:bg-black/5 rounded"
-                    >
-                      <IconX className="w-3 h-3 text-black/50" strokeWidth={2.5} />
-                    </button>
+                    <div data-bet-inner="" className="py-2.5 px-2.5 bg-white/[0.03] rounded-lg border border-white/10 relative" style={{ zIndex: 1 }}>
+                    <div className="flex items-start gap-2.5">
+                      {/* Remove Button - Smaller, more subtle */}
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          removeBet(bet.id)
+                        }}
+                        className="mt-0.5 flex-shrink-0 w-4 h-4 flex items-center justify-center hover:bg-white/[0.08] rounded"
+                      >
+                        <IconX className="w-3 h-3 text-white/55" strokeWidth={2.5} />
+                      </button>
 
-                    {/* Bet Info - Tighter spacing */}
-                    <div className="flex-1 min-w-0 pr-1.5">
+                      {/* Bet Info - Tighter spacing */}
+                      <div className="flex-1 min-w-0 pr-1.5">
                       {(bet.marketTitle === 'Same Game Parlay' || bet.marketTitle === 'Acca') ? (
                         <>
-                          <div className="text-[10px] font-semibold text-black/60 uppercase tracking-wide mb-0.5 leading-tight">ACCA · {bet.selection.split(' + ').length} Legs</div>
-                          <div className="text-[10px] text-black/40 mb-1.5 leading-tight">{bet.eventName}</div>
+                          <div className="text-[10px] font-semibold text-white/70 uppercase tracking-wide mb-0.5 leading-tight">ACCA · {bet.selection.split(' + ').length} Legs</div>
+                          <div className="text-[10px] text-white/45 mb-1.5 leading-tight">{bet.eventName}</div>
                           <div className="relative ml-[2px] mb-0.5">
-                            <div className="absolute left-[2px] top-[4px] bottom-[4px] w-[1px] bg-black/15" />
+                            <div className="absolute left-[2px] top-[4px] bottom-[4px] w-[1px] bg-white/20" />
                             <div className="space-y-1.5">
                               {bet.selection.split(' + ').map((leg: string, i: number) => (
                                 <div key={i} className="flex items-center gap-2 relative">
                                   <div className="w-[5px] h-[5px] rounded-full bg-emerald-500 flex-shrink-0 relative z-10 ring-1 ring-emerald-500/20" />
-                                  <span className="text-[11px] text-black/70 leading-tight">{leg}</span>
+                                  <span className="text-[11px] text-white/75 leading-tight">{leg}</span>
                                 </div>
                               ))}
                             </div>
@@ -5385,55 +5424,54 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                           </div>
                           {bet.selection.includes(' & ') ? (
                             <>
-                              <div className="text-[10px] text-black/40 mb-1.5 leading-tight">{bet.eventName}</div>
+                              <div className="text-[10px] text-white/45 mb-1.5 leading-tight">{bet.eventName}</div>
                               <div className="relative ml-[2px] mb-0.5">
                                 <div className="absolute left-[2px] top-[4px] bottom-[4px] w-[1px] bg-amber-300/40" />
                                 <div className="space-y-1.5">
                                   {bet.selection.split(' & ').map((leg: string, i: number) => (
                                     <div key={i} className="flex items-center gap-2 relative">
                                       <div className="w-[5px] h-[5px] rounded-full bg-amber-500 flex-shrink-0 relative z-10 ring-1 ring-amber-500/20" />
-                                      <span className="text-[11px] text-black/70 leading-tight">{leg.trim()}</span>
+                                      <span className="text-[11px] text-white/75 leading-tight">{leg.trim()}</span>
                                     </div>
                                   ))}
                                 </div>
                               </div>
                             </>
                           ) : (
-                            <div className="text-xs font-medium text-black mb-0.5 truncate leading-tight">{bet.selection}</div>
+                            <div className="text-xs font-medium text-white mb-0.5 truncate leading-tight">{bet.selection}</div>
                           )}
                         </>
                       ) : (
                         <>
-                      <div className="text-xs font-medium text-black mb-0.5 truncate leading-tight">{bet.selection}</div>
-                      <div className="text-[10px] text-black/50 mb-0.5 leading-tight">{bet.marketTitle}</div>
+                      <div className="text-xs font-medium text-white mb-0.5 truncate leading-tight">{bet.selection}</div>
+                      <div className="text-[10px] text-white/55 mb-0.5 leading-tight">{bet.marketTitle}</div>
                       {event && (
                             <>
-                        <div className="text-[10px] text-black/40 truncate leading-tight">{event.team1} v {event.team2}</div>
+                        <div className="text-[10px] text-white/45 truncate leading-tight">{event.team1} v {event.team2}</div>
                               {('isLive' in event) && (event as any).isLive && liveScores[bet.eventId] && (
                                 <div className="flex items-center gap-1.5 mt-1">
                                   <div className="flex items-center gap-0.5 bg-red-500/10 border border-red-500/20 rounded px-1 py-[1px]">
                                     <div className="w-1 h-1 bg-red-500 rounded-full animate-pulse" />
                                     <span className="text-[8px] font-bold text-red-500 uppercase">Live</span>
                                   </div>
-                                  <span className="text-[10px] font-semibold text-black/70">{liveScores[bet.eventId].team1} - {liveScores[bet.eventId].team2}</span>
+                                  <span className="text-[10px] font-semibold text-white/75">{liveScores[bet.eventId].team1} - {liveScores[bet.eventId].team2}</span>
                                 </div>
                               )}
                             </>
                           )}
                         </>
                       )}
-                    </div>
-
+                      </div>
                       {/* Odds badge */}
-                    <div className="flex-shrink-0 bg-black/[0.06] rounded-md px-2 py-1 mr-1">
-                          <span className="text-[11px] font-semibold text-black/80 whitespace-nowrap">{bet.odds}</span>
-                        </div>
+                      <div className="flex-shrink-0 bg-white/[0.08] rounded-md px-2 py-1 mr-1">
+                        <span className="text-[11px] font-semibold text-white/85 whitespace-nowrap">{bet.odds}</span>
+                      </div>
 
-                    {/* Stake Input - Smaller, tighter */}
-                    <div className="flex-shrink-0 w-[100px] min-w-[100px]">
-                      <div className={cn("border rounded-lg h-[38px] flex items-center justify-end px-2 relative bg-white focus-within:border-[#059669] focus-within:ring-1 focus-within:ring-[#059669]/30 transition-all", numpadTarget === bet.id ? "border-[#059669] ring-1 ring-[#059669]/30" : "border-black/10")}>
-                          <span className="absolute left-2 text-xs text-black/50 z-10">$</span>
-                          <input
+                      {/* Stake Input - Smaller, tighter */}
+                      <div className="flex-shrink-0 w-[100px] min-w-[100px]">
+                        <div className={cn("border rounded-lg h-[38px] flex items-center justify-end px-2 relative bg-white/[0.02] focus-within:border-[#059669] focus-within:ring-1 focus-within:ring-[#059669]/30 transition-all", numpadTarget === bet.id ? "border-[#059669] ring-1 ring-[#059669]/30" : "border-white/20")}>
+                            <span className="absolute left-2 text-xs text-white/55 z-10">{currencySymbol}</span>
+                            <input
                             data-vaul-no-drag=""
                             ref={(el) => {
                               if (el) inputRefs.current[bet.id] = el
@@ -5450,6 +5488,8 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                 if (localStakes[bet.id] === undefined) {
                                   setLocalStakes(prev => ({ ...prev, [bet.id]: bet.stake === 0 ? '' : bet.stake.toString() }))
                                 }
+                              } else {
+                                setActiveQuickStakeBetId(bet.id)
                               }
                             }}
                             value={localStakes[bet.id] !== undefined ? localStakes[bet.id] : (bet.stake > 0 ? bet.stake.toString() : '')}
@@ -5472,6 +5512,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                 e.target.blur()
                                 return
                               }
+                              setActiveQuickStakeBetId(bet.id)
                               focusedInputRef.current = bet.id
                               if (localStakes[bet.id] === undefined) {
                                 setLocalStakes(prev => ({ ...prev, [bet.id]: bet.stake === 0 ? '' : bet.stake.toString() }))
@@ -5492,6 +5533,9 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                 delete next[bet.id]
                                 return next
                               })
+                              setTimeout(() => {
+                                setActiveQuickStakeBetId((prev) => (prev === bet.id ? null : prev))
+                              }, 120)
                             }}
                             onWheel={(e) => e.stopPropagation()}
                             onTouchMove={(e) => e.stopPropagation()}
@@ -5502,16 +5546,51 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                 e.currentTarget.blur()
                               }
                             }}
-                            className="border-0 bg-transparent h-full p-0 pl-5 pr-1 text-right focus-visible:outline-none focus-visible:ring-0 text-black font-medium w-full overflow-visible placeholder:text-black/30 placeholder:font-normal"
+                            className="border-0 bg-transparent h-full p-0 pl-5 pr-1 text-right focus-visible:outline-none focus-visible:ring-0 text-white font-medium w-full overflow-visible placeholder:text-white/30 placeholder:font-normal"
                             placeholder="0.00"
                             style={{ fontSize: '16px', WebkitAppearance: 'none', MozAppearance: 'textfield' as any, minWidth: 0 }}
-                          />
+                            />
 
-                      </div>
-                      <div className="text-[9px] text-black/50 text-right mt-0.5 leading-tight">
-                        To Win {currencySymbol}{toWin.toFixed(2)}
+                        </div>
+                        <div className="text-[9px] text-white/55 text-left mt-0.5 leading-tight">
+                          To Win {currencySymbol}{toWin.toFixed(2)}
+                        </div>
                       </div>
                     </div>
+
+                    {!isMobile && activeQuickStakeBetId === bet.id && (
+                    <div className="mt-3 pl-6 flex items-center gap-1.5 overflow-x-auto whitespace-nowrap pb-0.5">
+                      {quickStakeOptions.map((amount) => {
+                        const selected = Math.abs(currentStake - amount) < 0.001
+                        return (
+                          <button
+                            key={`${bet.id}-stake-${amount}`}
+                            type="button"
+                            data-vaul-no-drag=""
+                            onClick={(e) => {
+                              e.preventDefault()
+                              e.stopPropagation()
+                              setActiveQuickStakeBetId(bet.id)
+                              setLocalStakes((prev) => ({ ...prev, [bet.id]: amount.toString() }))
+                              updateBetStake(bet.id, amount)
+                              if (numpadTargetRef.current === bet.id) {
+                                setNumpadTarget(null)
+                              }
+                            }}
+                            className={cn(
+                              "h-7 min-w-[46px] px-2 rounded-[6px] border text-[13px] leading-none transition-colors flex-shrink-0",
+                              selected
+                                ? "border-transparent text-[#121417]"
+                                : "border-white/15 bg-white/[0.03] text-white/65 hover:bg-white/[0.07] hover:text-white"
+                            )}
+                            style={selected ? { backgroundColor: '#c9b4ff' } : undefined}
+                          >
+                            {currencySymbol}{amount}
+                          </button>
+                        )
+                      })}
+                    </div>
+                    )}
                   </div>
                   </motion.div>
                 )
@@ -5529,28 +5608,28 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                 const currentParlayPotentialWin = currentParlayStake * parlayOddsMultiplier - currentParlayStake
                 
                 return (
-                <div className="px-2 pt-2">
-                <div className="bg-[#f5f5f5] rounded px-2 py-2 -mx-2">
-                <div className="text-[10px] font-medium text-black/50 uppercase tracking-wide mb-1.5">
-                  {bets.length}-Pick Parlay
+                <div className="px-2 pt-2 pb-3">
+                <div className="bg-white/[0.03] rounded-lg border border-white/10 px-2.5 py-2.5">
+                <div className="text-[10px] font-medium text-white/50 uppercase tracking-wide mb-1.5">
+                  {bets.length}-Pick Acca
                 </div>
-                <div className="flex items-start gap-2 py-2">
+                <div className="flex items-start gap-2">
                   {/* Parlay Info */}
                   <div className="flex-1 min-w-0">
-                    <div className="text-xs font-medium text-black">
+                    <div className="text-xs font-medium text-white">
                       {bets.length} Legs
                     </div>
                   </div>
 
                   {/* Parlay Odds */}
-                  <div className="flex-shrink-0 text-xs font-medium text-black mr-1.5">
+                  <div className="flex-shrink-0 text-xs font-medium text-white/85 mr-1.5">
                     {parlayOdds}
                   </div>
 
                   {/* Parlay Stake Input - Smaller */}
                   <div className="flex-shrink-0 w-[100px] min-w-[100px]">
-                    <div className={cn("border rounded-lg h-[38px] flex items-center justify-end px-2 relative bg-white focus-within:border-[#059669] focus-within:ring-1 focus-within:ring-[#059669]/30 transition-all", numpadTarget === 'parlay' ? "border-[#059669] ring-1 ring-[#059669]/30" : "border-black/10")}>
-                      <span className="absolute left-2 text-xs text-black/50 z-10">$</span>
+                    <div className={cn("border rounded-lg h-[38px] flex items-center justify-end px-2 relative bg-white/[0.02] focus-within:border-[#059669] focus-within:ring-1 focus-within:ring-[#059669]/30 transition-all", numpadTarget === 'parlay' ? "border-[#059669] ring-1 ring-[#059669]/30" : "border-white/20")}>
+                      <span className="absolute left-2 text-xs text-white/55 z-10">{currencySymbol}</span>
                       <input
                         data-vaul-no-drag=""
                         type="text"
@@ -5606,12 +5685,12 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                             e.currentTarget.blur()
                           }
                         }}
-                        className="border-0 bg-transparent h-full p-0 pl-5 pr-1 text-right focus-visible:outline-none focus-visible:ring-0 text-black font-medium w-full overflow-visible placeholder:text-black/30 placeholder:font-normal"
+                        className="border-0 bg-transparent h-full p-0 pl-5 pr-1 text-right focus-visible:outline-none focus-visible:ring-0 text-white font-medium w-full overflow-visible placeholder:text-white/30 placeholder:font-normal"
                         placeholder="0.00"
                       />
 
                         </div>
-                    <div className="text-[9px] text-black/50 text-right mt-0.5 leading-tight">
+                    <div className="text-[9px] text-white/55 text-right mt-0.5 leading-tight">
                       To Win {currencySymbol}{currentParlayPotentialWin.toFixed(2)}
                           </div>
                         </div>
@@ -5625,7 +5704,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                 
         {/* Summary and Place Bet - Always visible above keyboard */}
                 {bets.length > 0 && (
-          <div className="px-3 pt-2 pb-2 border-t border-white/10 shrink-0" style={{ background: 'rgba(255,255,255,0.55)', backdropFilter: 'saturate(180%) blur(30px)', WebkitBackdropFilter: 'saturate(180%) blur(30px)' }}>
+          <div className="px-3 pt-2 pb-2 border-t border-white/10 shrink-0" style={{ background: 'rgba(18,20,23,0.88)', backdropFilter: 'saturate(180%) blur(30px)', WebkitBackdropFilter: 'saturate(180%) blur(30px)' }}>
                     <button
                       onClick={() => {
                         if (bets.length === 0 || totalStake === 0) return
@@ -5663,16 +5742,21 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                       className={cn(
                   "w-full py-3 rounded-lg transition-all flex flex-col items-center justify-center font-medium shadow-sm",
                         totalStake > 0 
-                    ? "bg-[#059669] text-white hover:bg-[#10b981] active:scale-[0.98]" 
-                    : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                    ? "text-[#121417] hover:text-[#121417] active:scale-[0.98]" 
+                    : "bg-white/[0.05] text-white/35 cursor-not-allowed border border-white/10"
                       )}
+                      style={totalStake > 0 ? {
+                        backgroundColor: '#c9b4ff',
+                        border: '1px solid rgba(154, 134, 209, 0.75)',
+                        boxShadow: '0 6px 18px rgba(122, 92, 196, 0.28)',
+                      } : undefined}
                     >
                       <span className="text-xs font-medium uppercase tracking-wide">
                         PLACE {currencySymbol}{totalStake.toFixed(2)} BET
                       </span>
                       <span className={cn(
                         "text-[10px] mt-0.5",
-                        totalStake > 0 ? "text-white/90" : "text-gray-400"
+                        totalStake > 0 ? "text-[#121417]/80" : "text-white/35"
                       )}>
                         To Win {currencySymbol}{totalPotentialWin.toFixed(2)}
                       </span>
@@ -5714,22 +5798,28 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
     const { setView } = useFamilyDrawer()
     
     return (
-      <div className="flex flex-col w-full bg-white" style={{ maxHeight: 'inherit', overflow: 'auto' }}>
-        <div className="flex flex-col items-center justify-center px-6 py-6">
+      <div className="flex flex-col w-full bg-[var(--ds-sidebar-bg,#121417)]" style={{ maxHeight: 'inherit', overflow: 'auto' }}>
+        <div className="flex flex-col items-center justify-center px-5 py-5">
           {/* Success Icon */}
           <div className="mb-4">
-            <div className="w-16 h-16 rounded-full bg-[#059669] flex items-center justify-center">
+            <div
+              className="w-16 h-16 rounded-full flex items-center justify-center"
+              style={{
+                backgroundColor: 'rgba(255,255,255,0.14)',
+                boxShadow: '0 10px 24px rgba(0, 0, 0, 0.35)',
+              }}
+            >
               <IconCheck className="w-8 h-8 text-white" strokeWidth={3} />
             </div>
           </div>
           
           {/* Message */}
-          <h3 className="text-lg font-semibold text-black text-center mb-6">
+          <h3 className="text-lg font-semibold text-white text-center mb-5">
             Bet Placed Successfully
           </h3>
           
           {/* Buttons */}
-          <div className="flex flex-col gap-3 w-full max-w-sm mb-6">
+          <div className="flex flex-col gap-3 w-full max-w-sm mb-5">
             <button
               onClick={() => {
                 setView('default')
@@ -5742,11 +5832,14 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                 setBetslipOpen(false)
                 setMyBetsAlertCount(0)
                 setBetslipManuallyClosed(false)
-                setShowMyBets?.(true)
+                if (typeof window !== 'undefined') {
+                  window.dispatchEvent(new CustomEvent('open-account-bet-history'))
+                }
               }}
-              className="w-full py-3 px-4 border border-black/10 rounded text-sm font-medium text-black hover:bg-black/5 transition-colors"
+              className="w-full py-3 px-4 rounded-lg border border-white/15 bg-white/[0.03] hover:bg-white/[0.08] hover:border-white/25 text-sm font-medium text-white transition-colors inline-flex items-center justify-center gap-2"
             >
-              GO TO MY BETS
+              <IconTicket className="w-4 h-4 text-white/80" />
+              BET HISTORY
             </button>
             <button
               onClick={() => {
@@ -5760,64 +5853,19 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                 setBetslipOpen(false)
                 setBetslipManuallyClosed(false)
               }}
-              className="w-full py-3 px-4 bg-red-500 rounded text-sm font-medium text-white hover:bg-red-600 transition-colors"
-            >              DONE
+              className="w-full py-3 px-4 rounded-lg text-sm font-semibold text-black transition-colors"
+              style={{
+                backgroundImage: 'linear-gradient(115deg, #ff8a3d 0%, #ff6a1a 52%, #ff3d00 100%)',
+                boxShadow: '0 10px 24px rgba(255, 106, 26, 0.35)',
+              }}
+            >
+              DONE
             </button>
-            {(() => {
-              const [sharing, setSharing] = React.useState(false)
-              const [shared, setShared] = React.useState(false)
-              return (
-                <button
-                  disabled={sharing || shared}
-                  onClick={() => {
-                    if (pendingBets.length > 0 && !sharing && !shared) {
-                      setSharing(true)
-                      setTimeout(() => {
-                        const { shareBetToChat } = useChatStore.getState()
-                        shareBetToChat(pendingBets.map(b => ({
-                          eventName: b.eventName,
-                          selection: b.selection,
-                          odds: b.odds,
-                          stake: b.stake,
-                        })))
-                        setSharing(false)
-                        setShared(true)
-                      }, 1200)
-                    }
-                  }}
-                  className={cn(
-                    "w-full py-3 px-4 rounded text-sm font-medium transition-all flex items-center justify-center gap-2",
-                    shared
-                      ? "border border-emerald-500/50 bg-emerald-500/20 text-emerald-600 cursor-default"
-                      : sharing
-                      ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-500 cursor-wait opacity-80"
-                      : "border border-emerald-500/30 bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20"
-                  )}
-                >
-                  {sharing ? (
-                    <>
-                      <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" className="opacity-25" /><path d="M4 12a8 8 0 018-8" stroke="currentColor" strokeWidth="3" strokeLinecap="round" /></svg>
-                      SHARING...
-                    </>
-                  ) : shared ? (
-                    <>
-                      <IconCheck className="w-4 h-4" />
-                      SHARED TO CHAT ✓
-                    </>
-                  ) : (
-                    <>
-                      <IconMessageCircle2 className="w-4 h-4" />
-                      SHARE TO CHAT
-                    </>
-                  )}
-                </button>
-              )
-            })()}
           </div>
           
           {/* Re-use Selections */}
-          <div className="text-center pt-4 border-t border-black/10 w-full max-w-sm">
-            <p className="text-xs text-black/50 mb-2 leading-tight">
+          <div className="text-center pt-4 border-t border-white/10 w-full max-w-sm">
+            <p className="text-xs text-white/55 mb-2 leading-tight">
               Once this window is closed, your betslip will be cleared, or you can
             </p>
             <button
@@ -5834,7 +5882,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                 setView('default')
                 setShowConfirmation(false)
               }}
-              className="text-sm font-medium text-black hover:text-black/70 flex items-center justify-center gap-1 mx-auto transition-colors"
+              className="text-sm font-medium text-white hover:text-white/75 flex items-center justify-center gap-1 mx-auto transition-colors"
             >
               RE-USE SELECTIONS
               <IconChevronRight className="w-4 h-4" />
@@ -6198,12 +6246,24 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                     e.stopPropagation()
                                     router.push(league.href)
                                   }}
-                                  className="pl-4 text-xs text-white/70 hover:text-white hover:bg-white/5 cursor-pointer"
+                                  className="w-full pl-4 text-xs text-white/70 hover:text-white hover:bg-white/5 cursor-pointer !justify-start !items-center !gap-2"
                                 >
-                                  <div className="flex items-center gap-2">
-                                    <img src={league.icon} alt={league.label} width={16} height={16} className="object-contain" decoding="sync" />
-                                    <span>{league.label}</span>
-                                  </div>
+                                  <img
+                                    src={league.icon}
+                                    alt={league.label}
+                                    width={16}
+                                    height={16}
+                                    className={cn(
+                                      "w-4 h-4 object-contain flex-shrink-0",
+                                      league.label === 'Champions League' && "brightness-0 invert"
+                                    )}
+                                    decoding="sync"
+                                    onError={(e) => {
+                                      e.currentTarget.src = '/sports_icons/football.svg'
+                                      e.currentTarget.classList.remove('brightness-0', 'invert')
+                                    }}
+                                  />
+                                  <span className="truncate whitespace-nowrap leading-none">{league.label}</span>
                                 </SidebarMenuSubButton>
                               </SidebarMenuSubItem>
                             ))}
@@ -9197,7 +9257,8 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
         }}
       >
         <FamilyDrawerContent 
-          className="bg-white rounded-t-[7px] shadow-2xl"
+          className="mb-4 md:mb-5 bg-[rgba(18,20,23,0.88)] backdrop-blur-md rounded-[7px] border border-white/10 ring-1 ring-white/[0.07] shadow-[0_18px_48px_rgba(0,0,0,0.55),0_2px_0_rgba(255,255,255,0.05)_inset]"
+          style={{ bottom: isMobile ? 16 : 20, WebkitBackdropFilter: 'blur(12px) saturate(160%)' }}
         >
           <FamilyDrawerAnimatedWrapper 
             key={`betslip-${betslipMinimized}`}
@@ -10246,7 +10307,9 @@ function NavTestPageContent() {
   
   const [accountDrawerOpen, setAccountDrawerOpen] = useState(false)
   const [vipDrawerOpen, setVipDrawerOpen] = useState(false)
-  const [accountDrawerView, setAccountDrawerView] = useState<'account' | 'profile' | 'notifications' | 'bonus' | 'transactions'>('account')
+  const [accountDrawerView, setAccountDrawerView] = useState<'account' | 'profile' | 'notifications' | 'bonus' | 'transactions' | 'betHistory'>('account')
+  const accountDrawerOpenRef = useRef(accountDrawerOpen)
+  const accountDrawerViewRef = useRef(accountDrawerView)
   const [accountIdCopied, setAccountIdCopied] = useState(false)
   const webInboxUnreadCount = 2
   const [accountBonusTab, setAccountBonusTab] = useState<'available' | 'active' | 'history'>('available')
@@ -10357,6 +10420,94 @@ function NavTestPageContent() {
       return accountTransactionSort === 'latest' ? bTime - aTime : aTime - bTime
     })
   }, [accountTransactionRows, accountTransactionSort, accountTransactionStatusFilter, accountTransactionTypeFilter])
+  const [accountBetHistoryExpandedId, setAccountBetHistoryExpandedId] = useState<string | null>(null)
+  const [accountBetHistoryCopiedId, setAccountBetHistoryCopiedId] = useState<string | null>(null)
+  const [accountBetHistoryFilterOpen, setAccountBetHistoryFilterOpen] = useState(false)
+  const [accountBetHistorySort, setAccountBetHistorySort] = useState<'latest' | 'oldest'>('latest')
+  const [accountBetHistoryStatusFilter, setAccountBetHistoryStatusFilter] = useState<'ALL' | 'IN_PLAY' | 'PENDING' | 'WON' | 'LOST' | 'CASHED_OUT'>('ALL')
+  const [accountBetHistoryTypeFilter, setAccountBetHistoryTypeFilter] = useState<'ALL' | 'SINGLE' | 'PARLAY'>('ALL')
+  const getBetPotentialReturns = useCallback((stake: number, odds: string) => {
+    const parsedOdds = Number(odds)
+    if (!Number.isFinite(parsedOdds)) return stake
+    if (parsedOdds > 0) return stake + (stake * parsedOdds) / 100
+    if (parsedOdds < 0) return stake + (stake * 100) / Math.abs(parsedOdds)
+    return stake
+  }, [])
+  const accountBetHistoryRows = useMemo(() => {
+    return sampleBets.map((bet) => {
+      let status: 'IN_PLAY' | 'PENDING' | 'WON' | 'LOST' | 'CASHED_OUT'
+      if (bet.status === 'won') status = 'WON'
+      else if (bet.status === 'lost') status = 'LOST'
+      else if (bet.status === 'cashed_out') status = 'CASHED_OUT'
+      else if (bet.isLive) status = 'IN_PLAY'
+      else status = 'PENDING'
+
+      const riskValue = bet.amount
+      const potentialReturnsValue = getBetPotentialReturns(bet.amount, bet.odds)
+      const settledWinningsValue =
+        typeof bet.wonAmount === 'number'
+          ? bet.wonAmount
+          : typeof bet.cashedOutAmount === 'number'
+            ? bet.cashedOutAmount
+            : null
+      const leagueIconMap: Record<string, string> = {
+        'Premier League': '/sports%20league/prem.svg',
+        'La Liga': '/sports%20league/copa.svg',
+        'Serie A': '/sports%20league/champions.svg',
+        NFL: '/sports%20league/NFL.svg',
+        NBA: '/sports%20league/nba.svg',
+        MLB: '/sports%20league/MLB.svg',
+        NHL: '/sports%20league/NHL.svg',
+        MLS: '/sports%20league/mls.svg',
+        ATP: '/sports%20league/ATP.svg',
+        'Roland Garros': '/sports%20league/ATP.svg',
+      }
+      const sportIconMap: Record<string, string> = {
+        soccer: '/sports_icons/soccer.svg',
+        football: '/sports_icons/football.svg',
+        basketball: '/sports_icons/Basketball.svg',
+        baseball: '/sports_icons/baseball.svg',
+        tennis: '/sports_icons/tennis.svg',
+        hockey: '/sports_icons/Hockey.svg',
+        mma: '/sports_icons/mma.svg',
+      }
+      const leagueIcon = leagueIconMap[bet.league || ''] || sportIconMap[bet.sport] || '/sports_icons/football.svg'
+
+      return {
+        id: `bh-${bet.id}`,
+        betId: bet.betId || `BET-${bet.id}`,
+        date: bet.datePlaced || 'Unknown date',
+        type: (bet.type || 'single').toUpperCase() as 'SINGLE' | 'PARLAY',
+        status,
+        amount: `$${bet.amount.toFixed(2)}`,
+        selection: bet.selection,
+        market: bet.market,
+        odds: bet.odds,
+        league: bet.league || 'Sports',
+        leagueIcon,
+        fixture: bet.team1 && bet.team2 ? `${bet.team1} vs ${bet.team2}` : bet.league || 'Multi-leg bet',
+        riskValue,
+        potentialReturnsValue,
+        settledWinningsValue,
+      }
+    })
+  }, [getBetPotentialReturns])
+  const accountBetHistoryFilteredRows = useMemo(() => {
+    const parseDate = (value: string) => {
+      const parsed = Date.parse(value)
+      return Number.isNaN(parsed) ? 0 : parsed
+    }
+    const filtered = accountBetHistoryRows.filter((row) => {
+      const statusOk = accountBetHistoryStatusFilter === 'ALL' || row.status === accountBetHistoryStatusFilter
+      const typeOk = accountBetHistoryTypeFilter === 'ALL' || row.type === accountBetHistoryTypeFilter
+      return statusOk && typeOk
+    })
+    return [...filtered].sort((a, b) => {
+      const aTime = parseDate(a.date)
+      const bTime = parseDate(b.date)
+      return accountBetHistorySort === 'latest' ? bTime - aTime : aTime - bTime
+    })
+  }, [accountBetHistoryRows, accountBetHistorySort, accountBetHistoryStatusFilter, accountBetHistoryTypeFilter])
   const [profileForm, setProfileForm] = useState({
     username: '5Aces',
     email: 'christopher.hunt86@gmail.com',
@@ -10421,6 +10572,16 @@ function NavTestPageContent() {
     setDepositDrawerOpen(true)
     useChatStore.getState().setIsOpen(false)
   }, [])
+  const isBetHistoryActive = accountDrawerOpen && accountDrawerView === 'betHistory'
+  const toggleBetHistoryFromBetslip = useCallback(() => {
+    if (accountDrawerOpen && accountDrawerView === 'betHistory') {
+      setAccountDrawerOpen(false)
+      setAccountDrawerView('account')
+      return
+    }
+    setAccountDrawerView('betHistory')
+    openAccountDrawer()
+  }, [accountDrawerOpen, accountDrawerView, openAccountDrawer])
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -10430,10 +10591,46 @@ function NavTestPageContent() {
       setAccountDrawerView('bonus')
       openAccountDrawer()
     }
+    const handleOpenAccountBetHistory = () => {
+      setAccountDrawerView('betHistory')
+      openAccountDrawer()
+    }
+    const handleCloseAccountBetHistory = () => {
+      setAccountDrawerOpen(false)
+      setAccountDrawerView('account')
+    }
+    const handleToggleAccountBetHistory = () => {
+      const isBetHistoryActive =
+        accountDrawerOpenRef.current && accountDrawerViewRef.current === 'betHistory'
+      if (isBetHistoryActive) {
+        setAccountDrawerOpen(false)
+        setAccountDrawerView('account')
+      } else {
+        setAccountDrawerView('betHistory')
+        openAccountDrawer()
+      }
+    }
 
     window.addEventListener('open-account-bonus', handleOpenAccountBonus)
-    return () => window.removeEventListener('open-account-bonus', handleOpenAccountBonus)
+    window.addEventListener('open-account-bet-history', handleOpenAccountBetHistory)
+    window.addEventListener('close-account-bet-history', handleCloseAccountBetHistory)
+    window.addEventListener('toggle-account-bet-history', handleToggleAccountBetHistory)
+    return () => {
+      window.removeEventListener('open-account-bonus', handleOpenAccountBonus)
+      window.removeEventListener('open-account-bet-history', handleOpenAccountBetHistory)
+      window.removeEventListener('close-account-bet-history', handleCloseAccountBetHistory)
+      window.removeEventListener('toggle-account-bet-history', handleToggleAccountBetHistory)
+    }
   }, [openAccountDrawer])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    window.dispatchEvent(
+      new CustomEvent('account-bet-history-active-change', {
+        detail: { active: accountDrawerOpen && accountDrawerView === 'betHistory' },
+      })
+    )
+  }, [accountDrawerOpen, accountDrawerView])
 
   // Panel exclusivity: when chat opens, close all drawers + collapse sidebar
   useEffect(() => {
@@ -10912,6 +11109,14 @@ function NavTestPageContent() {
     { icon: IconBuilding, label: 'Banking' },
     { icon: IconLifebuoy, label: 'Need Help' },
   ]
+
+  useEffect(() => {
+    accountDrawerOpenRef.current = accountDrawerOpen
+  }, [accountDrawerOpen])
+
+  useEffect(() => {
+    accountDrawerViewRef.current = accountDrawerView
+  }, [accountDrawerView])
 
   const gameFilters = ['For You', 'Bonus Buys', 'Megaways', 'Slots', 'Live', 'Jackpots', 'Early', 'Staff Picks', 'New', 'Exclusive']
 
@@ -12651,6 +12856,8 @@ function NavTestPageContent() {
                 showMyBets={showMyBets}
                 setShowMyBets={setShowMyBets}
                 myBetsInitialFilter={myBetsInitialFilter}
+                isBetHistoryActive={isBetHistoryActive}
+                onToggleBetHistoryFromBetslip={toggleBetHistoryFromBetslip}
               />
                 </motion.div>
               ) : (
@@ -14174,6 +14381,17 @@ function NavTestPageContent() {
                     </Button>
                     <h2 className="text-lg font-semibold text-white">Transactions History</h2>
                   </div>
+                ) : accountDrawerView === 'betHistory' ? (
+                  <div className="flex items-center gap-3 flex-1">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setAccountDrawerView('account')}
+                      className="h-8 w-8 p-0 hover:bg-white/10 -ml-2"
+                    >
+                      <IconChevronLeft className="h-5 w-5 text-white/70" />
+                    </Button>
+                    <h2 className="text-lg font-semibold text-white">Bet History</h2>
+                  </div>
                 ) : (
                   <div className="flex items-center gap-3 flex-1">
                     <Avatar className="h-10 w-10 border border-white/20">
@@ -14366,6 +14584,7 @@ function NavTestPageContent() {
                     <Button 
                       variant="ghost" 
                       className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 transition-colors duration-200"
+                      onClick={() => setAccountDrawerView('betHistory')}
                     >
                       <IconTicket className="w-5 h-5 mr-3 text-white/65 transition-colors duration-200 group-hover:text-white/90" />
                       <span className="flex-1 text-left text-white">Bet History</span>
@@ -15010,28 +15229,19 @@ function NavTestPageContent() {
                             )}
                           >
                             <div className="flex items-center gap-3">
-                              <div
-                                className={cn(
-                                  "h-9 w-9 shrink-0 rounded-full border flex items-center justify-center",
-                                  row.status === 'PENDING' && "border-amber-400/35 bg-amber-500/10",
-                                  row.status !== 'PENDING' && row.type === 'WITHDRAWAL' && "border-rose-400/35 bg-rose-500/10",
-                                  row.status !== 'PENDING' && row.type === 'DEPOSIT' && "border-emerald-400/35 bg-emerald-500/10",
-                                  row.status !== 'PENDING' && row.type === 'BONUS' && "border-blue-400/35 bg-blue-500/10",
-                                )}
-                              >
-                                {row.method === 'System' ? (
-                                  <IconSettings className="h-4 w-4 text-blue-300" />
-                                ) : (
-                                  <IconWallet
-                                    className={cn(
-                                      "h-4 w-4",
-                                      row.status === 'PENDING' && "text-amber-300",
-                                      row.status !== 'PENDING' && row.type === 'WITHDRAWAL' && "text-rose-300",
-                                      row.status !== 'PENDING' && row.type === 'DEPOSIT' && "text-emerald-300",
-                                    )}
-                                  />
-                                )}
-                              </div>
+                              {row.method === 'System' ? (
+                                <IconSettings className="h-5 w-5 shrink-0 text-blue-300" />
+                              ) : (
+                                <IconWallet
+                                  className={cn(
+                                    "h-5 w-5 shrink-0",
+                                    row.status === 'PENDING' && "text-amber-300",
+                                    row.status !== 'PENDING' && row.type === 'WITHDRAWAL' && "text-rose-300",
+                                    row.status !== 'PENDING' && row.type === 'DEPOSIT' && "text-emerald-300",
+                                    row.status !== 'PENDING' && row.type === 'BONUS' && "text-blue-300",
+                                  )}
+                                />
+                              )}
                               <div className="min-w-0 flex-1">
                                 <p className="truncate text-[15px] font-semibold text-white">{row.date}</p>
                                 <p className="text-sm text-white/70">{row.method}</p>
@@ -15095,6 +15305,188 @@ function NavTestPageContent() {
                                     )}>
                                       {row.status}
                                     </span>
+                                  </div>
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : accountDrawerView === 'betHistory' ? (
+                <div className="space-y-4 pb-4">
+                  <div className="rounded-small border border-white/10 bg-[var(--ds-sidebar-bg,#121417)]/92 backdrop-blur-sm overflow-visible">
+                    <div className="relative flex items-center justify-between border-b border-white/10 px-4 py-3">
+                      <p className="text-sm font-semibold text-white">Bet History</p>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setAccountBetHistoryFilterOpen((prev) => !prev)}
+                        className="h-8 w-8 rounded-full border border-white/12 bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:text-white focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none"
+                        aria-label="Filter bet history"
+                      >
+                        <IconFilter className="h-4 w-4" />
+                      </Button>
+                      {accountBetHistoryFilterOpen && (
+                        <div className="absolute right-4 top-[calc(100%-2px)] z-[10070] mt-2 w-56 rounded-md border border-white/12 bg-[#121417] p-3 shadow-[0_12px_34px_rgba(0,0,0,0.52)]">
+                          <div className="space-y-3">
+                            <div>
+                              <p className="text-white/70 text-[11px] font-medium uppercase tracking-wide mb-2">Sort</p>
+                              <div className="space-y-1">
+                                <button type="button" onClick={() => { setAccountBetHistorySort('latest'); setAccountBetHistoryFilterOpen(false) }} className={cn("w-full text-left px-2 py-1.5 rounded text-sm transition-colors", accountBetHistorySort === 'latest' ? "bg-white/[0.06] text-white" : "text-white/75 hover:bg-white/[0.03] hover:text-white")}>Latest</button>
+                                <button type="button" onClick={() => { setAccountBetHistorySort('oldest'); setAccountBetHistoryFilterOpen(false) }} className={cn("w-full text-left px-2 py-1.5 rounded text-sm transition-colors", accountBetHistorySort === 'oldest' ? "bg-white/[0.06] text-white" : "text-white/75 hover:bg-white/[0.03] hover:text-white")}>Oldest</button>
+                              </div>
+                            </div>
+                            <Separator className="bg-white/10" />
+                            <div>
+                              <p className="text-white/70 text-[11px] font-medium uppercase tracking-wide mb-2">Type</p>
+                              <div className="space-y-1">
+                                {(['ALL', 'SINGLE', 'PARLAY'] as const).map((type) => (
+                                  <button key={type} type="button" onClick={() => { setAccountBetHistoryTypeFilter(type); setAccountBetHistoryFilterOpen(false) }} className={cn("w-full text-left px-2 py-1.5 rounded text-sm capitalize transition-colors", accountBetHistoryTypeFilter === type ? "bg-white/[0.06] text-white" : "text-white/75 hover:bg-white/[0.03] hover:text-white")}>
+                                    {type === 'ALL' ? 'All types' : type.toLowerCase()}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                            <Separator className="bg-white/10" />
+                            <div>
+                              <p className="text-white/70 text-[11px] font-medium uppercase tracking-wide mb-2">Status</p>
+                              <div className="space-y-1">
+                                {(['ALL', 'IN_PLAY', 'PENDING', 'WON', 'LOST', 'CASHED_OUT'] as const).map((status) => (
+                                  <button key={status} type="button" onClick={() => { setAccountBetHistoryStatusFilter(status); setAccountBetHistoryFilterOpen(false) }} className={cn("w-full text-left px-2 py-1.5 rounded text-sm transition-colors", accountBetHistoryStatusFilter === status ? "bg-white/[0.06] text-white" : "text-white/75 hover:bg-white/[0.03] hover:text-white")}>
+                                    {status === 'ALL' ? 'All statuses' : status.toLowerCase().replace('_', ' ')}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <div className="space-y-2 p-2">
+                      {accountBetHistoryFilteredRows.length === 0 ? (
+                        <div className="rounded-small border border-dashed border-white/20 bg-white/[0.02] px-4 py-6 text-center text-sm text-white/70">
+                          No bets for this filter.
+                        </div>
+                      ) : accountBetHistoryFilteredRows.map((row) => (
+                        <div key={row.id} className="overflow-hidden rounded-small border border-white/10 bg-white/[0.02]">
+                          <button
+                            type="button"
+                            onClick={() => setAccountBetHistoryExpandedId((prev) => (prev === row.id ? null : row.id))}
+                            className={cn(
+                              "w-full px-4 py-3 text-left transition-colors hover:bg-white/[0.015] focus-visible:outline-none focus-visible:ring-0",
+                              accountBetHistoryExpandedId === row.id ? "rounded-t-small rounded-b-none" : "rounded-small",
+                            )}
+                          >
+                            <div className="flex items-center gap-3">
+                              <img
+                                src={row.leagueIcon}
+                                alt={row.league}
+                                width={20}
+                                height={20}
+                                className="h-5 w-5 shrink-0 object-contain"
+                                onError={(e) => {
+                                  e.currentTarget.src = '/sports_icons/football.svg'
+                                }}
+                              />
+                              <div className="min-w-0 flex-1">
+                                <p className="truncate text-[15px] font-semibold text-white">{row.selection}</p>
+                                <div className="flex items-center gap-2">
+                                  <p className="truncate text-sm text-white/70">{row.fixture}</p>
+                                  <span
+                                    className={cn(
+                                      "h-1.5 w-1.5 rounded-full shrink-0",
+                                      row.status === 'IN_PLAY' && "bg-amber-400",
+                                      row.status === 'PENDING' && "bg-blue-400",
+                                      row.status === 'WON' && "bg-emerald-400",
+                                      row.status === 'LOST' && "bg-rose-400",
+                                      row.status === 'CASHED_OUT' && "bg-purple-400",
+                                    )}
+                                  />
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <p className="text-sm font-semibold text-white">{row.amount}</p>
+                                <p className="text-[11px] text-white/55">{row.odds}</p>
+                              </div>
+                              <IconChevronDown className={cn("h-4 w-4 shrink-0 text-white/45 transition-transform", accountBetHistoryExpandedId === row.id && "rotate-180")} />
+                            </div>
+                          </button>
+                          <AnimatePresence initial={false}>
+                            {accountBetHistoryExpandedId === row.id && (
+                              <motion.div
+                                key={`${row.id}-bet-details`}
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.2, ease: 'easeOut' }}
+                                className="overflow-hidden"
+                              >
+                                <div className="grid grid-cols-2 gap-3 border-t border-white/10 bg-white/[0.03] px-4 pb-3 pt-2 text-xs">
+                                  <div>
+                                    <p className="text-white/45 uppercase tracking-wide text-[10px]">Date Placed</p>
+                                    <p className="mt-1 text-white/80">{row.date}</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-white/45 uppercase tracking-wide text-[10px]">Bet ID</p>
+                                    <div className="mt-1 flex items-center gap-2">
+                                      <p className="text-white/80 font-mono">{row.betId}</p>
+                                      <button
+                                        type="button"
+                                        onClick={async () => {
+                                          try {
+                                            await navigator.clipboard.writeText(row.betId)
+                                            setAccountBetHistoryCopiedId(row.id)
+                                            window.setTimeout(() => setAccountBetHistoryCopiedId((prev) => (prev === row.id ? null : prev)), 1200)
+                                          } catch {
+                                            setAccountBetHistoryCopiedId(null)
+                                          }
+                                        }}
+                                        className={cn(
+                                          "inline-flex h-5 w-5 items-center justify-center rounded-sm border transition-colors",
+                                          accountBetHistoryCopiedId === row.id
+                                            ? "border-emerald-400/35 bg-emerald-500/12 text-emerald-300"
+                                            : "border-white/15 bg-white/[0.04] text-white/65 hover:bg-white/[0.08] hover:text-white/90",
+                                        )}
+                                        aria-label={`Copy bet ID ${row.betId}`}
+                                      >
+                                        {accountBetHistoryCopiedId === row.id ? <IconCheck className="h-3 w-3" /> : <IconCopy className="h-3 w-3" />}
+                                      </button>
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <p className="text-white/45 uppercase tracking-wide text-[10px]">Market</p>
+                                    <p className="mt-1 text-white/80">{row.market}</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-white/45 uppercase tracking-wide text-[10px]">Risk</p>
+                                    <p className="mt-1 text-white/80">${row.riskValue.toFixed(2)}</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-white/45 uppercase tracking-wide text-[10px]">
+                                      {row.settledWinningsValue !== null ? 'Winnings' : 'Potential Returns'}
+                                    </p>
+                                    <p className="mt-1 text-white/80">
+                                      ${(row.settledWinningsValue ?? row.potentialReturnsValue).toFixed(2)}
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <p className="text-white/45 uppercase tracking-wide text-[10px]">Status</p>
+                                    <div className="mt-1 inline-flex items-center gap-1.5">
+                                      <span
+                                        className={cn(
+                                          "h-1.5 w-1.5 rounded-full",
+                                          row.status === 'IN_PLAY' && "bg-amber-400",
+                                          row.status === 'PENDING' && "bg-blue-400",
+                                          row.status === 'WON' && "bg-emerald-400",
+                                          row.status === 'LOST' && "bg-rose-400",
+                                          row.status === 'CASHED_OUT' && "bg-purple-400",
+                                        )}
+                                      />
+                                      <span className="text-white/80 text-[11px] font-medium">{row.status.replace('_', ' ')}</span>
+                                    </div>
                                   </div>
                                 </div>
                               </motion.div>
