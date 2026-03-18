@@ -14708,6 +14708,7 @@ function NavTestPageContent() {
               </div>
                 </>
               ) : accountDrawerView === 'security' ? (
+                // Security hub screens follow the same account drawer pattern.
                 <div className="space-y-3 pb-4">
                   <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5">
                     <div className="text-sm font-semibold text-white">Security Central</div>
