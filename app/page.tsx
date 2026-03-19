@@ -1362,7 +1362,7 @@ function HomePageContent() {
   const [headerLanguage, setHeaderLanguage] = useState<'EN' | 'ES' | 'DE' | 'FR' | 'PT'>('EN')
   const [vipDrawerOpen, setVipDrawerOpen] = useState(false)
   const [accountDrawerOpen, setAccountDrawerOpen] = useState(false)
-  const [accountDrawerView, setAccountDrawerView] = useState<'account' | 'notifications' | 'transactions' | 'security' | 'createAccount' | 'createAccountConfirmation' | 'login'>('account')
+  const [accountDrawerView, setAccountDrawerView] = useState<'account' | 'notifications' | 'transactions' | 'betHistory' | 'security' | 'createAccount' | 'createAccountConfirmation' | 'login'>('account')
   const accountTransactionRows = [
     { id: 't1', date: '18/02/2026', type: 'DEPOSIT', method: 'Bitcoin', amount: '+$500.00', status: 'COMPLETED' },
     { id: 't2', date: '15/02/2026', type: 'WITHDRAWAL', method: 'Bitcoin', amount: '-$200.00', status: 'COMPLETED' },
@@ -1370,6 +1370,12 @@ function HomePageContent() {
     { id: 't4', date: '10/02/2026', type: 'BONUS', method: 'System', amount: '+$25.00', status: 'CREDITED' },
     { id: 't5', date: '08/02/2026', type: 'WITHDRAWAL', method: 'Bitcoin', amount: '-$1000.00', status: 'PENDING' },
     { id: 't6', date: '05/02/2026', type: 'DEPOSIT', method: 'Ethereum', amount: '+$250.00', status: 'COMPLETED' },
+  ] as const
+  const accountBetHistoryRows = [
+    { id: 'bh-1', selection: 'Chernomorets Odessa', fixture: 'Chernomorets Odessa vs LNZ Cherkasy', amount: '$10.00', odds: '+990', status: 'PENDING' },
+    { id: 'bh-2', selection: 'Tottenham', fixture: 'Tottenham vs Newcastle', amount: '$10.00', odds: '+120', status: 'WON' },
+    { id: 'bh-3', selection: '2-Team Parlay', fixture: 'Multi-leg bet', amount: '$10.00', odds: '+352', status: 'IN_PLAY' },
+    { id: 'bh-4', selection: '3-Team Parlay', fixture: 'Multi-leg bet', amount: '$10.00', odds: '+4630', status: 'PENDING' },
   ] as const
   const webInboxUnreadCount = 2
   const [createAccountForm, setCreateAccountForm] = useState({
@@ -4168,6 +4174,17 @@ function HomePageContent() {
                     </Button>
                     <h2 className="text-lg font-semibold text-white">Transactions History</h2>
                   </div>
+                ) : accountDrawerView === 'betHistory' ? (
+                  <div className="flex items-center gap-3 flex-1">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setAccountDrawerView('account')}
+                      className="h-8 w-8 p-0 hover:bg-white/10 -ml-2"
+                    >
+                      <IconChevronLeft className="h-5 w-5 text-white/70" />
+                    </Button>
+                    <h2 className="text-lg font-semibold text-white">Bet History</h2>
+                  </div>
                 ) : accountDrawerView === 'security' ? (
                   <div className="flex items-center gap-3 flex-1">
                     <Button
@@ -4329,8 +4346,7 @@ function HomePageContent() {
                           variant="ghost"
                           className="group w-full justify-start text-white hover:bg-white/[0.06] hover:text-white h-12 px-3 transition-colors duration-200"
                           onClick={() => {
-                            setAccountDrawerOpen(false)
-                            router.push('/sports?account=betHistory')
+                            setAccountDrawerView('betHistory')
                           }}
                         >
                           <IconTicket className="w-5 h-5 mr-3 text-white/65 transition-colors duration-200 group-hover:text-white/90" />
@@ -4445,6 +4461,36 @@ function HomePageContent() {
                               : row.status === 'PENDING'
                                 ? "bg-amber-300"
                                 : "bg-blue-300"
+                          )}
+                        />
+                        <span className="text-[10px] text-white/70">{row.status}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : accountDrawerView === 'betHistory' ? (
+                <div className="space-y-3">
+                  {accountBetHistoryRows.map((row) => (
+                    <div key={row.id} className="rounded-small border border-white/[0.08] bg-white/[0.03] px-3 py-3">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-semibold text-white">{row.selection}</p>
+                          <p className="truncate text-xs text-white/55">{row.fixture}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm font-semibold text-white">{row.amount}</p>
+                          <p className="text-[11px] text-white/55">{row.odds}</p>
+                        </div>
+                      </div>
+                      <div className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-white/[0.1] bg-white/[0.04] px-2 py-0.5">
+                        <span
+                          className={cn(
+                            "h-1.5 w-1.5 rounded-full",
+                            row.status === 'IN_PLAY'
+                              ? "bg-amber-400"
+                              : row.status === 'WON'
+                                ? "bg-emerald-400"
+                                : "bg-blue-400"
                           )}
                         />
                         <span className="text-[10px] text-white/70">{row.status}</span>

@@ -8145,6 +8145,7 @@ function NavTestPageContent() {
   const [accountTransactionSort, setAccountTransactionSort] = useState<'latest' | 'oldest'>('latest')
   const [accountTransactionTypeFilter, setAccountTransactionTypeFilter] = useState<'ALL' | 'DEPOSIT' | 'WITHDRAWAL' | 'BONUS'>('ALL')
   const [accountBetHistoryExpandedId, setAccountBetHistoryExpandedId] = useState<string | null>(null)
+  const [accountBetHistoryCopiedId, setAccountBetHistoryCopiedId] = useState<string | null>(null)
   const [accountBetHistoryFilterOpen, setAccountBetHistoryFilterOpen] = useState(false)
   const [accountBetHistorySort, setAccountBetHistorySort] = useState<'latest' | 'oldest'>('latest')
   const [accountBetHistoryStatusFilter, setAccountBetHistoryStatusFilter] = useState<'ALL' | 'IN_PLAY' | 'PENDING' | 'WON' | 'LOST' | 'CASHED_OUT'>('ALL')
@@ -8186,15 +8187,15 @@ function NavTestPageContent() {
     })
   }, [accountTransactionRows, accountTransactionSort, accountTransactionStatusFilter, accountTransactionTypeFilter])
   const accountBetHistoryRows = [
-    { id: 'bh-1', date: '18/02/2026', selection: 'Chernomorets Odessa', fixture: 'Chernomorets Odessa vs LNZ Cherkasy', amount: '$10.00', odds: '+990', status: 'PENDING', type: 'SINGLE', market: 'Moneyline', league: 'Soccer', leagueIcon: '/sports_icons/soccer.svg', riskValue: 10, potentialReturnsValue: 99 },
-    { id: 'bh-2', date: '17/02/2026', selection: 'Tottenham', fixture: 'Tottenham vs Newcastle', amount: '$10.00', odds: '+120', status: 'WON', type: 'SINGLE', market: 'Moneyline', league: 'Premier League', leagueIcon: '/sports%20league/prem.svg', riskValue: 10, potentialReturnsValue: 22 },
-    { id: 'bh-3', date: '16/02/2026', selection: '2-Team Parlay', fixture: 'Multi-leg bet', amount: '$10.00', odds: '+352', status: 'IN_PLAY', type: 'PARLAY', market: 'Parlay', league: 'Tennis', leagueIcon: '/sports_icons/tennis.svg', riskValue: 10, potentialReturnsValue: 45.2 },
-    { id: 'bh-4', date: '15/02/2026', selection: 'LA Clippers +12.5', fixture: 'LA Clippers vs Boston Celtics', amount: '$10.00', odds: '+120', status: 'LOST', type: 'SINGLE', market: 'Spread', league: 'NBA', leagueIcon: '/sports%20league/NBA.svg', riskValue: 10, potentialReturnsValue: 22 },
-    { id: 'bh-5', date: '14/02/2026', selection: '3-Team Parlay', fixture: 'Multi-leg bet', amount: '$10.00', odds: '+4630', status: 'PENDING', type: 'PARLAY', market: 'Parlay', league: 'Tennis', leagueIcon: '/sports_icons/tennis.svg', riskValue: 10, potentialReturnsValue: 473 },
-    { id: 'bh-6', date: '13/02/2026', selection: 'Atletico Madrid', fixture: 'Atletico Madrid vs Leganes', amount: '$10.00', odds: '+120', status: 'IN_PLAY', type: 'SINGLE', market: 'Moneyline', league: 'La Liga', leagueIcon: '/sports%20league/copa.svg', riskValue: 10, potentialReturnsValue: 22 },
-    { id: 'bh-7', date: '12/02/2026', selection: 'Chelsea', fixture: 'Chelsea vs West Ham', amount: '$10.00', odds: '+120', status: 'IN_PLAY', type: 'SINGLE', market: 'Moneyline', league: 'Premier League', leagueIcon: '/sports%20league/prem.svg', riskValue: 10, potentialReturnsValue: 22 },
-    { id: 'bh-8', date: '11/02/2026', selection: 'Carlos Alcaraz', fixture: 'Carlos Alcaraz vs Novak Djokovic', amount: '$10.00', odds: '+120', status: 'IN_PLAY', type: 'SINGLE', market: 'Match Winner', league: 'ATP', leagueIcon: '/sports_icons/tennis.svg', riskValue: 10, potentialReturnsValue: 22 },
-    { id: 'bh-9', date: '10/02/2026', selection: 'Cadiz', fixture: 'Cadiz vs Sevilla', amount: '$10.00', odds: '+120', status: 'CASHED_OUT', type: 'SINGLE', market: 'Moneyline', league: 'La Liga', leagueIcon: '/sports%20league/copa.svg', riskValue: 10, potentialReturnsValue: 22 },
+    { id: 'bh-1', betId: '76573663537737', date: '18/02/2026', selection: 'Chernomorets Odessa', fixture: 'Chernomorets Odessa vs LNZ Cherkasy', amount: '$10.00', odds: '+990', status: 'PENDING', type: 'SINGLE', market: 'Moneyline', league: 'Soccer', leagueIcon: '/sports_icons/soccer.svg', riskValue: 10, potentialReturnsValue: 99, settledWinningsValue: null },
+    { id: 'bh-2', betId: '76573663537738', date: '17/02/2026', selection: 'Tottenham', fixture: 'Tottenham vs Newcastle', amount: '$10.00', odds: '+120', status: 'WON', type: 'SINGLE', market: 'Moneyline', league: 'Premier League', leagueIcon: '/sports%20league/prem.svg', riskValue: 10, potentialReturnsValue: 22, settledWinningsValue: 22 },
+    { id: 'bh-3', betId: '76573663537739', date: '16/02/2026', selection: '2-Team Parlay', fixture: 'Multi-leg bet', amount: '$10.00', odds: '+352', status: 'IN_PLAY', type: 'PARLAY', market: 'Parlay', league: 'Tennis', leagueIcon: '/sports_icons/tennis.svg', riskValue: 10, potentialReturnsValue: 45.2, settledWinningsValue: null },
+    { id: 'bh-4', betId: '76573663537740', date: '15/02/2026', selection: 'Manchester Utd +0.5', fixture: 'Manchester Utd vs Liverpool', amount: '$10.00', odds: '+120', status: 'LOST', type: 'SINGLE', market: 'Spread', league: 'Premier League', leagueIcon: '/sports%20league/prem.svg', riskValue: 10, potentialReturnsValue: 22, settledWinningsValue: 0 },
+    { id: 'bh-5', betId: '76573663537741', date: '14/02/2026', selection: '3-Team Parlay', fixture: 'Multi-leg bet', amount: '$10.00', odds: '+4630', status: 'PENDING', type: 'PARLAY', market: 'Parlay', league: 'Tennis', leagueIcon: '/sports_icons/tennis.svg', riskValue: 10, potentialReturnsValue: 473, settledWinningsValue: null },
+    { id: 'bh-6', betId: '76573663537742', date: '13/02/2026', selection: 'Atletico Madrid', fixture: 'Atletico Madrid vs Leganes', amount: '$10.00', odds: '+120', status: 'IN_PLAY', type: 'SINGLE', market: 'Moneyline', league: 'La Liga', leagueIcon: '/sports%20league/copa.svg', riskValue: 10, potentialReturnsValue: 22, settledWinningsValue: null },
+    { id: 'bh-7', betId: '76573663537743', date: '12/02/2026', selection: 'Chelsea', fixture: 'Chelsea vs West Ham', amount: '$10.00', odds: '+120', status: 'IN_PLAY', type: 'SINGLE', market: 'Moneyline', league: 'Premier League', leagueIcon: '/sports%20league/prem.svg', riskValue: 10, potentialReturnsValue: 22, settledWinningsValue: null },
+    { id: 'bh-8', betId: '76573663537744', date: '11/02/2026', selection: 'Carlos Alcaraz', fixture: 'Carlos Alcaraz vs Novak Djokovic', amount: '$10.00', odds: '+120', status: 'IN_PLAY', type: 'SINGLE', market: 'Match Winner', league: 'ATP', leagueIcon: '/sports_icons/tennis.svg', riskValue: 10, potentialReturnsValue: 22, settledWinningsValue: null },
+    { id: 'bh-9', betId: '76573663537745', date: '10/02/2026', selection: 'Cadiz', fixture: 'Cadiz vs Sevilla', amount: '$10.00', odds: '+120', status: 'CASHED_OUT', type: 'SINGLE', market: 'Moneyline', league: 'La Liga', leagueIcon: '/sports%20league/copa.svg', riskValue: 10, potentialReturnsValue: 22, settledWinningsValue: 18.5 },
   ] as const
   const accountBetHistoryFilteredRows = useMemo(() => {
     const parseDate = (value: string) => {
@@ -8204,7 +8205,12 @@ function NavTestPageContent() {
     const filtered = accountBetHistoryRows.filter((row) => {
       const statusOk = accountBetHistoryStatusFilter === 'ALL' || row.status === accountBetHistoryStatusFilter
       const typeOk = accountBetHistoryTypeFilter === 'ALL' || row.type === accountBetHistoryTypeFilter
-      return statusOk && typeOk
+      const hasRenderableCoreFields =
+        typeof row.selection === 'string' &&
+        row.selection.trim().length > 0 &&
+        typeof row.amount === 'string' &&
+        row.amount.trim().length > 0
+      return statusOk && typeOk && hasRenderableCoreFields
     })
     return [...filtered].sort((a, b) => {
       const aTime = parseDate(a.date)
@@ -8217,6 +8223,13 @@ function NavTestPageContent() {
       setAccountBetHistoryExpandedId(null)
     }
   }, [accountDrawerView])
+  useEffect(() => {
+    if (!accountBetHistoryExpandedId) return
+    const stillVisible = accountBetHistoryFilteredRows.some((row) => row.id === accountBetHistoryExpandedId)
+    if (!stillVisible) {
+      setAccountBetHistoryExpandedId(null)
+    }
+  }, [accountBetHistoryExpandedId, accountBetHistoryFilteredRows])
   const [profileForm, setProfileForm] = useState({
     username: '5Aces',
     email: 'christopher.hunt86@gmail.com',
@@ -16279,48 +16292,126 @@ function NavTestPageContent() {
                         <div className="rounded-small border border-dashed border-white/20 bg-white/[0.02] px-4 py-6 text-center text-sm text-white/70">
                           No bets for this filter.
                         </div>
-                      ) : accountBetHistoryFilteredRows.map((row) => {
+                      ) : accountBetHistoryFilteredRows.map((row, rowIndex) => {
                         const displaySelection = row.selection?.trim() || (row.type === 'PARLAY' ? 'Parlay Bet' : 'Selection')
                         const displayFixture = row.fixture?.trim() || 'Multi-leg bet'
                         const displayAmount = row.amount?.trim() || '$0.00'
                         const displayOdds = row.odds?.trim() || '--'
                         const displayDate = row.date?.trim() || 'Unknown date'
+                        const displayBetId = row.betId?.trim() || `BET-${row.id || rowIndex + 1}`
                         const displayMarket = row.market?.trim() || 'N/A'
                         const displayRisk = Number.isFinite(row.riskValue) ? row.riskValue : 0
-                        const displayPotential = Number.isFinite(row.potentialReturnsValue) ? row.potentialReturnsValue : 0
+                        const displayReturn = Number.isFinite(row.settledWinningsValue ?? row.potentialReturnsValue)
+                          ? (row.settledWinningsValue ?? row.potentialReturnsValue)
+                          : 0
                         const isExpanded = accountBetHistoryExpandedId === row.id
 
                         return (
-                          <div
-                            key={row.id}
+                        <div
+                          key={row.id || `bh-row-${rowIndex}`}
+                          className={cn(
+                            "overflow-hidden rounded-small border border-white/10 bg-white/[0.02]",
+                            isExpanded ? "max-h-[220px]" : "max-h-[86px]"
+                          )}
+                        >
+                          <button
+                            type="button"
+                            onClick={() => setAccountBetHistoryExpandedId((prev) => (prev === row.id ? null : row.id))}
                             className={cn(
-                              "overflow-hidden rounded-small border border-white/10 bg-white/[0.02] transition-[max-height] duration-200 ease-out",
-                              isExpanded ? "max-h-[188px]" : "max-h-[86px]",
+                              "w-full px-4 py-3 text-left transition-colors hover:bg-white/[0.015] focus-visible:outline-none focus-visible:ring-0",
+                              accountBetHistoryExpandedId === row.id ? "rounded-t-small rounded-b-none" : "rounded-small",
                             )}
                           >
-                            <button
-                              type="button"
-                              onClick={() => setAccountBetHistoryExpandedId((prev) => (prev === row.id ? null : row.id))}
-                              className="w-full px-4 py-3 text-left transition-colors hover:bg-white/[0.015] focus-visible:outline-none focus-visible:ring-0"
-                            >
-                              <div className="flex items-center gap-3">
-                                <img
-                                  src={row.leagueIcon}
-                                  alt={row.league}
-                                  width={20}
-                                  height={20}
-                                  className="h-5 w-5 shrink-0 object-contain"
-                                  onError={(e) => {
-                                    e.currentTarget.src = '/sports_icons/football.svg'
-                                  }}
-                                />
-                                <div className="min-w-0 flex-1">
-                                  <p className="truncate text-[15px] font-semibold text-white">{displaySelection}</p>
-                                  <div className="flex items-center gap-2">
-                                    <p className="truncate text-sm text-white/70">{displayFixture}</p>
+                            <div className="flex items-center gap-3">
+                              <img
+                                src={row.leagueIcon}
+                                alt={row.league}
+                                width={20}
+                                height={20}
+                                className="h-5 w-5 shrink-0 object-contain"
+                                onError={(e) => {
+                                  e.currentTarget.src = '/sports_icons/football.svg'
+                                }}
+                              />
+                              <div className="min-w-0 flex-1">
+                                <p className="truncate text-[15px] font-semibold text-white">{displaySelection}</p>
+                                <div className="flex items-center gap-2">
+                                  <p className="truncate text-sm text-white/70">{displayFixture}</p>
+                                  <span
+                                    className={cn(
+                                      "h-1.5 w-1.5 rounded-full shrink-0",
+                                      row.status === 'IN_PLAY' && "bg-amber-400",
+                                      row.status === 'PENDING' && "bg-blue-400",
+                                      row.status === 'WON' && "bg-emerald-400",
+                                      row.status === 'LOST' && "bg-rose-400",
+                                      row.status === 'CASHED_OUT' && "bg-purple-400",
+                                    )}
+                                  />
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <p className="text-sm font-semibold text-white">{displayAmount}</p>
+                                <p className="text-[11px] text-white/55">{displayOdds}</p>
+                              </div>
+                              <IconChevronDown className={cn("h-4 w-4 shrink-0 text-white/45 transition-transform", isExpanded && "rotate-180")} />
+                            </div>
+                          </button>
+                          {isExpanded ? (
+                            <div className="overflow-hidden">
+                              <div className="grid grid-cols-2 gap-3 border-t border-white/10 bg-white/[0.03] px-4 pb-3 pt-2 text-xs">
+                                <div>
+                                  <p className="text-white/45 uppercase tracking-wide text-[10px]">Date Placed</p>
+                                  <p className="mt-1 text-white/80">{displayDate}</p>
+                                </div>
+                                <div>
+                                  <p className="text-white/45 uppercase tracking-wide text-[10px]">Bet ID</p>
+                                  <div className="mt-1 flex items-center gap-2">
+                                    <p className="text-white/80 font-mono">{displayBetId}</p>
+                                    <button
+                                      type="button"
+                                      onClick={async () => {
+                                        try {
+                                          await navigator.clipboard.writeText(displayBetId)
+                                          setAccountBetHistoryCopiedId(row.id)
+                                          window.setTimeout(() => setAccountBetHistoryCopiedId((prev) => (prev === row.id ? null : prev)), 1200)
+                                        } catch {
+                                          setAccountBetHistoryCopiedId(null)
+                                        }
+                                      }}
+                                      className={cn(
+                                        "inline-flex h-5 w-5 items-center justify-center rounded-sm border transition-colors",
+                                        accountBetHistoryCopiedId === row.id
+                                          ? "border-emerald-400/35 bg-emerald-500/12 text-emerald-300"
+                                          : "border-white/15 bg-white/[0.04] text-white/65 hover:bg-white/[0.08] hover:text-white/90",
+                                      )}
+                                      aria-label={`Copy bet ID ${displayBetId}`}
+                                    >
+                                      {accountBetHistoryCopiedId === row.id ? <IconCheck className="h-3 w-3" /> : <IconCopy className="h-3 w-3" />}
+                                    </button>
+                                  </div>
+                                </div>
+                                <div>
+                                  <p className="text-white/45 uppercase tracking-wide text-[10px]">Market</p>
+                                  <p className="mt-1 text-white/80">{displayMarket}</p>
+                                </div>
+                                <div>
+                                  <p className="text-white/45 uppercase tracking-wide text-[10px]">Risk</p>
+                                  <p className="mt-1 text-white/80">${displayRisk.toFixed(2)}</p>
+                                </div>
+                                <div>
+                                  <p className="text-white/45 uppercase tracking-wide text-[10px]">
+                                    {row.settledWinningsValue !== null ? 'Winnings' : 'Potential Returns'}
+                                  </p>
+                                  <p className="mt-1 text-white/80">
+                                    ${displayReturn.toFixed(2)}
+                                  </p>
+                                </div>
+                                <div>
+                                  <p className="text-white/45 uppercase tracking-wide text-[10px]">Status</p>
+                                  <div className="mt-1 inline-flex items-center gap-1.5">
                                     <span
                                       className={cn(
-                                        "h-1.5 w-1.5 rounded-full shrink-0",
+                                        "h-1.5 w-1.5 rounded-full",
                                         row.status === 'IN_PLAY' && "bg-amber-400",
                                         row.status === 'PENDING' && "bg-blue-400",
                                         row.status === 'WON' && "bg-emerald-400",
@@ -16328,34 +16419,13 @@ function NavTestPageContent() {
                                         row.status === 'CASHED_OUT' && "bg-purple-400",
                                       )}
                                     />
+                                    <span className="text-white/80 text-[11px] font-medium">{row.status.replace('_', ' ')}</span>
                                   </div>
-                                </div>
-                                <div className="text-right">
-                                  <p className="text-sm font-semibold text-white">{displayAmount}</p>
-                                  <p className="text-[11px] text-white/55">{displayOdds}</p>
-                                </div>
-                                <IconChevronDown className={cn("h-4 w-4 shrink-0 text-white/45 transition-transform", isExpanded && "rotate-180")} />
-                              </div>
-                            </button>
-                            {isExpanded ? (
-                              <div className="border-t border-white/10 bg-white/[0.03] px-4 pb-3 pt-2">
-                                <div className="grid grid-cols-2 gap-3 text-xs">
-                                  <div>
-                                    <p className="text-white/45 uppercase tracking-wide text-[10px]">Date</p>
-                                    <p className="mt-1 text-white/80">{displayDate}</p>
-                                  </div>
-                                  <div>
-                                    <p className="text-white/45 uppercase tracking-wide text-[10px]">Market</p>
-                                    <p className="mt-1 text-white/80">{displayMarket}</p>
-                                  </div>
-                                </div>
-                                <div className="mt-2 flex items-center justify-between text-[11px] text-white/55">
-                                  <p>Risk: ${displayRisk.toFixed(2)}</p>
-                                  <p>Potential Return: ${displayPotential.toFixed(2)}</p>
                                 </div>
                               </div>
-                            ) : null}
-                          </div>
+                            </div>
+                          ) : null}
+                        </div>
                         )
                       })}
                     </div>

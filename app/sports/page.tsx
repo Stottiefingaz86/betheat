@@ -4280,8 +4280,11 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
   
   const handleFeatureClick = (label: string, href?: string) => {
     if (label === 'My Bets') {
-      // Reset to 'all' filter when clicking from sidebar (not deep-linking)
-      setShowMyBets?.(true)
+      // Side-nav My Bets should open the account Bet History drawer (not the full-page My Bets view).
+      setShowMyBets?.(false)
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('open-account-bet-history'))
+      }
       if (isMobile) setOpenMobile(false)
       return
     }
@@ -5907,9 +5910,9 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
         variant="sidebar"
         mobileOverlay
         mobileNoDrag
-        mobileBg="#2d2d2d"
+        mobileBg="var(--ds-sidebar-bg, #141920)"
         mobileOverlayClassName="!bg-black/30 !backdrop-blur-sm"
-        className="!bg-[#2d2d2d] border-r border-white/10 text-white [&>div]:!bg-[#2d2d2d] !h-screen !top-0 !z-[102]"
+        className="!bg-[var(--ds-sidebar-bg)] border-r border-white/10 text-white [&>div]:!bg-[var(--ds-sidebar-bg)] !h-screen !top-0 !z-[102]"
       >
         {/* Sidebar Header — logo with collapse animation */}
         <SidebarHeader
@@ -5998,9 +6001,9 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
           <div 
             className="sticky top-14 z-20 border-b border-white/5"
             style={{
-              backdropFilter: 'blur(16px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(16px) saturate(180%)',
-              backgroundColor: 'rgba(45, 45, 45, 0.92)',
+              backdropFilter: 'none',
+              WebkitBackdropFilter: 'none',
+              backgroundColor: '#121417',
             }}
           >
             <div 
@@ -6108,7 +6111,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                     const IconComp = typeof item.icon === 'string' ? null : item.icon
                     const isItemActive =
                       item.label === 'My Bets'
-                        ? !!showMyBets
+                        ? !!isBetHistoryActive
                         : item.label === 'Home'
                           ? !showMyBets && !activeSport
                           : ('active' in item ? !!item.active : false)
@@ -16822,8 +16825,9 @@ function NavTestPageContent() {
           showBetslip={true}
           betCount={bets.length}
           isSearchActive={searchOverlayOpen}
-          showSearch={!showVipRewards}
-          showFavorites={!showVipRewards}
+          showSearch={false}
+          showFavorites={false}
+          showChat={false}
             />
       )}
     </div>
