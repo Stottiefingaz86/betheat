@@ -1107,8 +1107,8 @@ body {
 }
 
 /* Active pill: burnt orange faded gradient */
-[data-sub-nav] button[data-state="active"],
-[data-sub-nav] button[data-active="true"],
+[data-sub-nav] button[data-state="active"]:not([data-subnav-plain="true"]),
+[data-sub-nav] button[data-active="true"]:not([data-subnav-plain="true"]),
 [data-sub-nav] [data-state="active"][data-tab-item] {
   background-color: transparent !important;
   background-image: var(--ds-primary-gradient, linear-gradient(112deg, rgba(255, 136, 52, 1) 0%, rgba(255, 109, 42, 0.98) 40%, rgba(236, 73, 46, 0.94) 72%, rgba(168, 44, 42, 0.92) 100%)) !important;
@@ -1119,8 +1119,8 @@ body {
 }
 
 /* Ensure inner labels/icons don't keep hardcoded white classes */
-[data-sub-nav] button[data-state="active"] *,
-[data-sub-nav] button[data-active="true"] *,
+[data-sub-nav] button[data-state="active"]:not([data-subnav-plain="true"]) *,
+[data-sub-nav] button[data-active="true"]:not([data-subnav-plain="true"]) *,
 [data-sub-nav] [data-state="active"][data-tab-item] * {
   color: #121417 !important;
 }

@@ -48,10 +48,10 @@ export function BetslipNumberPad({
     <div
       className="shrink-0 w-full pt-2"
       style={{
-        background: 'rgba(255, 255, 255, 0.78)',
-        backdropFilter: 'blur(40px)',
-        WebkitBackdropFilter: 'blur(40px)',
-        borderTop: '1px solid rgba(0,0,0,0.08)',
+        background: 'rgba(18, 20, 23, 0.96)',
+        backdropFilter: 'blur(28px)',
+        WebkitBackdropFilter: 'blur(28px)',
+        borderTop: '1px solid rgba(255,255,255,0.08)',
         paddingBottom: 'max(16px, env(safe-area-inset-bottom, 16px))',
       }}
       data-vaul-no-drag=""
@@ -78,8 +78,8 @@ export function BetslipNumberPad({
             {...makeTapHandler(() => handleQuickAmountTap(amount))}
             className={`shrink-0 px-4 py-2 rounded-lg text-[13px] font-semibold transition-colors select-none touch-manipulation ${
               selectedAmount === amount
-                ? 'bg-[#059669] text-white'
-                : 'text-black/70 bg-black/[0.05] active:bg-black/[0.12]'
+                ? 'bg-[var(--ds-primary,#ff7a2f)] text-[#121417]'
+                : 'text-white/75 bg-white/[0.08] active:bg-white/[0.16]'
             }`}
             style={{ scrollSnapAlign: 'start' }}
           >
@@ -95,7 +95,7 @@ export function BetslipNumberPad({
             key={key}
             type="button"
             {...makeTapHandler(() => onDigit(key))}
-            className="py-3 rounded-xl text-[20px] font-medium text-black/90 bg-black/[0.04] active:bg-black/[0.12] transition-colors select-none touch-manipulation"
+            className="py-3 rounded-xl text-[20px] font-medium text-white/95 bg-white/[0.08] active:bg-white/[0.16] transition-colors select-none touch-manipulation"
           >
             {key}
           </button>
@@ -104,21 +104,21 @@ export function BetslipNumberPad({
         <button
           type="button"
           {...makeTapHandler(onBackspace)}
-          className="py-3 rounded-xl text-black/50 bg-black/[0.04] active:bg-black/[0.12] transition-colors flex items-center justify-center select-none touch-manipulation"
+          className="py-3 rounded-xl text-white/55 bg-white/[0.08] active:bg-white/[0.16] transition-colors flex items-center justify-center select-none touch-manipulation"
         >
           <IconBackspace className="w-5 h-5" />
         </button>
         <button
           type="button"
           {...makeTapHandler(() => onDigit('0'))}
-          className="py-3 rounded-xl text-[20px] font-medium text-black/90 bg-black/[0.04] active:bg-black/[0.12] transition-colors select-none touch-manipulation"
+          className="py-3 rounded-xl text-[20px] font-medium text-white/95 bg-white/[0.08] active:bg-white/[0.16] transition-colors select-none touch-manipulation"
         >
           0
         </button>
         <button
           type="button"
           {...makeTapHandler(onDone)}
-          className="py-3 rounded-xl text-black/50 bg-black/[0.04] active:bg-black/[0.12] transition-colors flex items-center justify-center select-none touch-manipulation"
+          className="py-3 rounded-xl text-white/55 bg-white/[0.08] active:bg-white/[0.16] transition-colors flex items-center justify-center select-none touch-manipulation"
         >
           <IconCheck className="w-5 h-5" />
         </button>

@@ -6,6 +6,8 @@ export interface TrackerEventData {
   id: number
   team1: string
   team2: string
+  team1Logo?: string
+  team2Logo?: string
   league: string
   country: string
   score?: { team1: number; team2: number }

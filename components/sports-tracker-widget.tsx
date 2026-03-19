@@ -57,9 +57,9 @@ export function TrackerWidgetContent({
     event?.statscoreEventId && event?.statscoreConfigId
   )
   const tabs = ['Live', 'Lineups', 'H2H', 'Incidents', 'Stats', 'Standings']
-  const widgetBg = 'var(--ds-page-bg, #222222)'
+  const widgetBg = 'var(--ds-page-bg, #151a22)'
   const widgetBgDarker =
-    'color-mix(in srgb, var(--ds-page-bg, #222222) 85%, black)'
+    'color-mix(in srgb, var(--ds-page-bg, #151a22) 78%, black)'
 
   // STATSCORE Widget SDK — programmatic initialization
   useEffect(() => {
@@ -199,22 +199,33 @@ export function TrackerWidgetContent({
       <div className="px-4 py-3" style={{ backgroundColor: widgetBg }}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 flex-1 min-w-0">
-            <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
-              <span className="text-xs font-bold text-white/70">
-                {event.team1.substring(0, 2).toUpperCase()}
-              </span>
-            </div>
+            {event.team1Logo ? (
+              <img
+                src={event.team1Logo}
+                alt={event.team1}
+                width={28}
+                height={28}
+                className="w-7 h-7 object-contain flex-shrink-0"
+                decoding="async"
+              />
+            ) : (
+              <div className="w-7 h-7 rounded-full bg-white/10 border border-white/15 flex items-center justify-center flex-shrink-0">
+                <span className="text-xs font-bold text-white/70">
+                  {event.team1.substring(0, 2).toUpperCase()}
+                </span>
+              </div>
+            )}
             <span className="text-sm font-medium text-white truncate">
               {event.team1}
             </span>
           </div>
-          <div className="flex flex-col items-center mx-3">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl font-bold text-white tabular-nums">
+          <div className="flex flex-col items-center mx-3 min-w-[84px]">
+            <div className="flex items-center justify-center gap-1.5">
+              <span className="text-2xl font-bold text-white tabular-nums leading-none">
                 {event.score?.team1 ?? 0}
               </span>
-              <span className="text-lg text-white/30">:</span>
-              <span className="text-2xl font-bold text-white tabular-nums">
+              <span className="text-base text-white/35 leading-none">:</span>
+              <span className="text-2xl font-bold text-white tabular-nums leading-none">
                 {event.score?.team2 ?? 0}
               </span>
             </div>
@@ -231,28 +242,39 @@ export function TrackerWidgetContent({
             <span className="text-sm font-medium text-white truncate text-right">
               {event.team2}
             </span>
-            <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
-              <span className="text-xs font-bold text-white/70">
-                {event.team2.substring(0, 2).toUpperCase()}
-              </span>
-            </div>
+            {event.team2Logo ? (
+              <img
+                src={event.team2Logo}
+                alt={event.team2}
+                width={28}
+                height={28}
+                className="w-7 h-7 object-contain flex-shrink-0"
+                decoding="async"
+              />
+            ) : (
+              <div className="w-7 h-7 rounded-full bg-white/10 border border-white/15 flex items-center justify-center flex-shrink-0">
+                <span className="text-xs font-bold text-white/70">
+                  {event.team2.substring(0, 2).toUpperCase()}
+                </span>
+              </div>
+            )}
           </div>
         </div>
         <div className="flex items-center justify-center gap-6 mt-2 pt-2 border-t border-white/5">
           <div className="flex items-center gap-1">
-            <span className="text-[10px] text-[#00ffa5] font-semibold">1</span>
+            <span className="text-[10px] text-white font-semibold">1</span>
             <span className="text-[10px] text-white/40">⚽</span>
-            <span className="text-[10px] text-[#ff00ed] font-semibold">3</span>
+            <span className="text-[10px] text-[#3b82f6] font-semibold">3</span>
           </div>
           <div className="flex items-center gap-1">
-            <span className="text-[10px] text-[#00ffa5] font-semibold">2</span>
+            <span className="text-[10px] text-white font-semibold">2</span>
             <span className="text-[10px] text-white/40">🟨</span>
-            <span className="text-[10px] text-[#ff00ed] font-semibold">1</span>
+            <span className="text-[10px] text-[#3b82f6] font-semibold">1</span>
           </div>
           <div className="flex items-center gap-1">
-            <span className="text-[10px] text-[#00ffa5] font-semibold">0</span>
+            <span className="text-[10px] text-white font-semibold">0</span>
             <span className="text-[10px] text-white/40">🟥</span>
-            <span className="text-[10px] text-[#ff00ed] font-semibold">0</span>
+            <span className="text-[10px] text-[#3b82f6] font-semibold">0</span>
           </div>
         </div>
       </div>
@@ -261,21 +283,21 @@ export function TrackerWidgetContent({
       <div className="px-3 py-2" style={{ backgroundColor: widgetBgDarker }}>
         <div className="flex items-center gap-2 mb-1.5">
           <div className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded-full bg-[#00ffa5]" />
-            <span className="text-[9px] text-white/50">
+            <div className="w-2 h-2 rounded-full bg-white" />
+            <span className="text-[9px] text-white/70">
               {event.team1.substring(0, 3).toUpperCase()}
             </span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded-full bg-[#ff00ed]" />
-            <span className="text-[9px] text-white/50">
+            <div className="w-2 h-2 rounded-full bg-[#3b82f6]" />
+            <span className="text-[9px] text-white/70">
               {event.team2.substring(0, 3).toUpperCase()}
             </span>
           </div>
         </div>
-        <div className="relative h-2 bg-white/5 rounded-full overflow-hidden">
+        <div className="relative h-2 bg-white/10 rounded-full overflow-hidden">
           <div
-            className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#00ffa5]/30 to-[#00ffa5]/10 rounded-full"
+            className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#ff7a18] via-[#ff8f1f] to-[#ffb347] rounded-full"
             style={{ width: '50%' }}
           />
           <div
@@ -301,13 +323,13 @@ export function TrackerWidgetContent({
             onClick={() => setActiveTab(tab)}
             className={`px-3 py-2 text-[10px] font-medium whitespace-nowrap transition-colors relative ${
               activeTab === tab
-                ? 'text-[#00ffa5]'
-                : 'text-white/50 hover:text-white/70'
+                ? 'text-white'
+                : 'text-white/50 hover:text-white/80'
             }`}
           >
             {tab}
             {activeTab === tab && (
-              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#00ffa5]" />
+              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#ff8f1f]" />
             )}
           </button>
         ))}
@@ -316,8 +338,11 @@ export function TrackerWidgetContent({
       {/* Live Pitch */}
       {activeTab === 'Live' && (
         <div
-          className="relative bg-[#1a3a1a] overflow-hidden"
-          style={{ height: isCompact ? 120 : isMobile ? 140 : 180 }}
+          className="relative bg-[#1a3a1a] overflow-hidden w-full"
+          style={{
+            aspectRatio: '100 / 65',
+            height: isCompact ? 190 : 'auto',
+          }}
         >
           <svg
             viewBox="0 0 100 65"
@@ -400,31 +425,31 @@ export function TrackerWidgetContent({
               cy="30"
               rx="12"
               ry="8"
-              fill="rgba(255,0,237,0.08)"
+              fill="rgba(59,130,246,0.10)"
             />
             <ellipse
               cx="38"
               cy="35"
               rx="10"
               ry="7"
-              fill="rgba(0,255,165,0.06)"
+              fill="rgba(255,255,255,0.08)"
             />
           </svg>
           <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-black/60 backdrop-blur-sm rounded-full px-3 py-1">
-            <span className="text-[10px] font-semibold text-[#00ffa5]">
+            <span className="text-[10px] font-semibold text-white">
               45%
             </span>
             <div className="w-16 h-1.5 bg-white/10 rounded-full overflow-hidden flex">
               <div
-                className="bg-[#00ffa5]/60 h-full"
+                className="bg-white/95 h-full"
                 style={{ width: '45%' }}
               />
               <div
-                className="bg-[#ff00ed]/60 h-full"
+                className="bg-[#3b82f6]/90 h-full"
                 style={{ width: '55%' }}
               />
             </div>
-            <span className="text-[10px] font-semibold text-[#ff00ed]">
+            <span className="text-[10px] font-semibold text-[#3b82f6]">
               55%
             </span>
           </div>
@@ -444,12 +469,12 @@ export function TrackerWidgetContent({
           ].map((stat) => (
             <div key={stat.label} className="space-y-0.5">
               <div className="flex justify-between items-center">
-                <span className="text-[10px] font-semibold text-[#00ffa5] tabular-nums">
+                <span className="text-[10px] font-semibold text-white tabular-nums">
                   {stat.home}
                   {stat.label === 'Ball Possession' ? '%' : ''}
                 </span>
                 <span className="text-[9px] text-white/50">{stat.label}</span>
-                <span className="text-[10px] font-semibold text-[#ff00ed] tabular-nums">
+                <span className="text-[10px] font-semibold text-[#3b82f6] tabular-nums">
                   {stat.away}
                   {stat.label === 'Ball Possession' ? '%' : ''}
                 </span>
@@ -457,7 +482,7 @@ export function TrackerWidgetContent({
               <div className="flex gap-0.5 h-1">
                 <div className="flex-1 bg-white/5 rounded-full overflow-hidden flex justify-end">
                   <div
-                    className="bg-[#00ffa5]/50 h-full rounded-full"
+                    className="bg-white/80 h-full rounded-full"
                     style={{
                       width: `${
                         (stat.home / (stat.home + stat.away)) * 100
@@ -467,7 +492,7 @@ export function TrackerWidgetContent({
                 </div>
                 <div className="flex-1 bg-white/5 rounded-full overflow-hidden">
                   <div
-                    className="bg-[#ff00ed]/50 h-full rounded-full"
+                    className="bg-[#3b82f6]/70 h-full rounded-full"
                     style={{
                       width: `${
                         (stat.away / (stat.home + stat.away)) * 100
@@ -496,7 +521,7 @@ export function TrackerWidgetContent({
             <div
               key={i}
               className={`flex items-center gap-2 px-2 py-1 rounded ${
-                incident.team === 'home' ? 'bg-[#00ffa5]/5' : 'bg-[#ff00ed]/5'
+                incident.team === 'home' ? 'bg-white/5' : 'bg-[#3b82f6]/10'
               }`}
             >
               <span className="text-[10px] text-white/40 w-6 text-right tabular-nums">
@@ -508,7 +533,7 @@ export function TrackerWidgetContent({
               </span>
               <div
                 className={`w-1.5 h-1.5 rounded-full ml-auto ${
-                  incident.team === 'home' ? 'bg-[#00ffa5]' : 'bg-[#ff00ed]'
+                  incident.team === 'home' ? 'bg-white' : 'bg-[#3b82f6]'
                 }`}
               />
             </div>

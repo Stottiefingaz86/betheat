@@ -125,7 +125,7 @@ import {
   IconShare,
   IconChartBar
 , IconMessageCircle2, IconTrash, IconBrandTelegram, IconRefresh, IconParachute, IconTargetArrow} from '@tabler/icons-react'
-import { SportsTrackerWidget } from '@/components/sports-tracker-widget'
+import { SportsTrackerWidget, TrackerWidgetContent } from '@/components/sports-tracker-widget'
 import { colorTokenMap } from '@/lib/agent/designSystem'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
@@ -3143,6 +3143,10 @@ function TeamLogo({ teamName, size = 12 }: { teamName: string; size?: number }) 
   )
 }
 
+function getTrackerTeamLogoPath(teamName: string): string | undefined {
+  return nflBadgeMap[teamName] || nbaBadgeMap[teamName] || rugbyFlagMap[teamName] || soccerBadgeMap[teamName] || undefined
+}
+
 // ─── Module-level event sub-components ──────────────────────
 // MUST live outside .map() so React keeps a stable identity across re-renders.
 // If defined inside .map(), React unmounts/remounts them every render → images flash.
@@ -4095,6 +4099,22 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
   const [sportsbookSettingsOpen, setSportsbookSettingsOpen] = useState(false)
   const [oddsFormat, setOddsFormat] = useState<'American' | 'Fractional' | 'Decimal'>('American')
   const [betslipOddsSetting, setBetslipOddsSetting] = useState<'dont_accept' | 'higher' | 'any'>('higher')
+  const [eventOddsDrawerEvent, setEventOddsDrawerEvent] = useState<{
+    id: number
+    league: string
+    country: string
+    team1: string
+    team2: string
+    time?: string
+    startTime?: string
+    elapsedSeconds?: number
+    isLive?: boolean
+    minute?: string
+    statscoreEventId?: number
+    statscoreConfigId?: string
+    score?: { team1: number; team2: number }
+    markets: Array<{ title: string; options: Array<{ label: string; odds: string }> }>
+  } | null>(null)
   useEffect(() => {
     const openSettings = () => setSportsbookSettingsOpen(true)
     window.addEventListener('sportsbook:open-settings', openSettings)
@@ -4217,6 +4237,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
   
   // Sports sidebar menu items
   const sportsFeatures = [
+    { icon: IconSettings, label: 'Settings', subtitle: 'Sportsbook Preferences' },
     { icon: IconHome, label: 'Home', subtitle: 'Sports lobby' },
     { icon: IconTicket, label: 'My Bets', subtitle: 'Track your slips', action: 'myBets' },
     { icon: IconBolt, label: 'In-Play', subtitle: 'Live events now' },
@@ -4279,6 +4300,11 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
   }
   
   const handleFeatureClick = (label: string, href?: string) => {
+    if (label === 'Settings') {
+      setSportsbookSettingsOpen(true)
+      if (isMobile) setOpenMobile(false)
+      return
+    }
     if (label === 'My Bets') {
       // Side-nav My Bets should open the account Bet History drawer (not the full-page My Bets view).
       setShowMyBets?.(false)
@@ -4819,6 +4845,27 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
   // Filter events based on active sport
   const filteredLiveEvents = activeSport === 'Football' ? nflLiveEvents : liveEvents.filter(e => e.league !== 'NFL')
   const filteredUpcomingEvents = activeSport === 'Football' ? nflUpcomingEvents : upcomingEvents.filter(e => e.league !== 'NFL')
+  const openEventDetailDrawer = useCallback((event: {
+    id: number
+    league: string
+    country: string
+    team1: string
+    team2: string
+    time?: string
+    startTime?: string
+    elapsedSeconds?: number
+    isLive?: boolean
+    score?: { team1: number; team2: number }
+    markets: Array<{ title: string; options: Array<{ label: string; odds: string }> }>
+  }) => {
+    setEventOddsDrawerEvent({
+      ...event,
+      // Keep this panel aligned with the same in-play widget experience.
+      statscoreEventId: 6188732,
+      statscoreConfigId: '60dc694d4321eaff1879f0cf',
+      minute: event.isLive ? "45'" : undefined,
+    })
+  }, [])
   // Helper function to check if a bet is selected
   const isBetSelected = (eventId: number, marketTitle: string, selection: string) => {
     return bets.some(bet => 
@@ -6110,6 +6157,9 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                   {sportsFeatures.map((item, index) => {
                     const IconComp = typeof item.icon === 'string' ? null : item.icon
                     const isItemActive =
+                      item.label === 'Settings'
+                        ? !!sportsbookSettingsOpen
+                        :
                       item.label === 'My Bets'
                         ? !!isBetHistoryActive
                         : item.label === 'Home'
@@ -7861,7 +7911,20 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                 // Use module-level components (stable identity — no flickering)
                 
                 return (
-                  <div key={event.id} className="bg-white/[0.02] border border-white/[0.05] rounded-small" style={{ overflow: 'visible', width: '100%' }}>
+                  <div
+                    key={event.id}
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => openEventDetailDrawer(event)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        openEventDetailDrawer(event)
+                      }
+                    }}
+                    className="bg-white/[0.02] border border-white/[0.05] rounded-small hover:bg-white/[0.04] transition-colors cursor-pointer"
+                    style={{ overflow: 'visible', width: '100%' }}
+                  >
                     {/* Header Section - Premier League | England, Soccer */}
                     <div className="px-2.5 py-1.5 flex items-center justify-between">
                       <div className="flex items-center gap-1">
@@ -8623,7 +8686,20 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                 ]
 
                 return (
-                  <div key={event.id} className="bg-white/[0.02] border border-white/[0.05] rounded-small" style={{ overflow: 'visible', width: '100%' }}>
+                  <div
+                    key={event.id}
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => openEventDetailDrawer(event)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        openEventDetailDrawer(event)
+                      }
+                    }}
+                    className="bg-white/[0.02] border border-white/[0.05] rounded-small hover:bg-white/[0.04] transition-colors cursor-pointer"
+                    style={{ overflow: 'visible', width: '100%' }}
+                  >
                     {/* Header Section - Same as live, without watch icon */}
                     <div className="px-2.5 py-1.5 flex items-center justify-between">
                       <div className="flex items-center gap-1">
@@ -9014,6 +9090,228 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
           </div>
         </div>
         )}
+
+        {/* Event card detail draw: aligned with existing drawer style */}
+        <AnimatePresence>
+          {eventOddsDrawerEvent && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="fixed inset-0 z-[205] bg-black/70 backdrop-blur-sm"
+                onClick={() => setEventOddsDrawerEvent(null)}
+              />
+
+              {isMobile ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  className="fixed inset-0 z-[210] bg-[#1a1a1a] text-white overflow-y-auto"
+                >
+                  <div className="sticky top-0 z-10 bg-[#1a1a1a]/90 backdrop-blur-xl border-b border-white/10 px-4 py-3 flex items-center justify-between">
+                    <div className="min-w-0 flex items-center gap-2 pr-3">
+                      <TeamLogo teamName={eventOddsDrawerEvent.team1} size={16} />
+                      <div className="text-sm font-semibold truncate">
+                        {eventOddsDrawerEvent.team1} vs {eventOddsDrawerEvent.team2}
+                      </div>
+                      <TeamLogo teamName={eventOddsDrawerEvent.team2} size={16} />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setEventOddsDrawerEvent(null)}
+                      className="h-8 w-8 rounded-small bg-white/[0.05] hover:bg-white/[0.12] text-white/75 hover:text-white inline-flex items-center justify-center transition-colors"
+                    >
+                      <IconX className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  <div className="p-3 space-y-3">
+
+                    <div className="rounded-small border border-white/10 overflow-hidden bg-[#121417]">
+                      <TrackerWidgetContent
+                        event={{
+                          id: eventOddsDrawerEvent.id,
+                          team1: eventOddsDrawerEvent.team1,
+                          team2: eventOddsDrawerEvent.team2,
+                          team1Logo: getTrackerTeamLogoPath(eventOddsDrawerEvent.team1),
+                          team2Logo: getTrackerTeamLogoPath(eventOddsDrawerEvent.team2),
+                          league: eventOddsDrawerEvent.league,
+                          country: eventOddsDrawerEvent.country,
+                          score: eventOddsDrawerEvent.score ?? { team1: 0, team2: 0 },
+                          minute: eventOddsDrawerEvent.minute,
+                          isLive: eventOddsDrawerEvent.isLive ?? true,
+                        }}
+                        maxHeight={700}
+                      />
+                    </div>
+
+                    <div className="rounded-small border border-white/10 bg-white/[0.02]">
+                      <Accordion
+                        type="multiple"
+                        defaultValue={`event-market-mobile-${eventOddsDrawerEvent.id}-0`}
+                        className="w-full"
+                      >
+                        {eventOddsDrawerEvent.markets.slice(0, 8).map((market, marketIdx) => (
+                          <AccordionItem
+                            key={`${eventOddsDrawerEvent.id}-${market.title}-${marketIdx}-mobile`}
+                            value={`event-market-mobile-${eventOddsDrawerEvent.id}-${marketIdx}`}
+                            className="border-white/10"
+                          >
+                            <AccordionTrigger
+                              value={`event-market-mobile-${eventOddsDrawerEvent.id}-${marketIdx}`}
+                              className="px-3 py-2 text-sm font-semibold text-white/90"
+                            >
+                              {market.title}
+                            </AccordionTrigger>
+                            <AccordionContent value={`event-market-mobile-${eventOddsDrawerEvent.id}-${marketIdx}`}>
+                              <div className="px-2 pb-2 space-y-1.5">
+                                {market.options.map((option, optionIdx) => {
+                                  const selected = isBetSelected(eventOddsDrawerEvent.id, market.title, option.label)
+                                  return (
+                                    <button
+                                      key={`${eventOddsDrawerEvent.id}-${market.title}-${option.label}-${optionIdx}-mobile-accordion`}
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.preventDefault()
+                                        e.stopPropagation()
+                                        addBetToSlip(
+                                          eventOddsDrawerEvent.id,
+                                          `${eventOddsDrawerEvent.team1} v ${eventOddsDrawerEvent.team2}`,
+                                          market.title,
+                                          option.label,
+                                          formatDecimalOdds(option.odds)
+                                        )
+                                        setBetslipOpen(true)
+                                        setBetslipManuallyClosed(false)
+                                      }}
+                                      className={cn(
+                                        "w-full h-10 rounded-small px-3 border flex items-center justify-between transition-colors",
+                                        selected ? "bg-[#c9b4ff] border-[#c9b4ff] text-[#121417]" : "bg-white/[0.02] border-white/10 text-white hover:bg-white/[0.06]"
+                                      )}
+                                    >
+                                      <span className={cn("text-sm", selected ? "text-[#121417]/85" : "text-white/80")}>{option.label}</span>
+                                      <span className="text-lg font-semibold leading-none">{formatDecimalOdds(option.odds)}</span>
+                                    </button>
+                                  )
+                                })}
+                              </div>
+                            </AccordionContent>
+                          </AccordionItem>
+                        ))}
+                      </Accordion>
+                    </div>
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.aside
+                  initial={{ x: 360, opacity: 0.2 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: 360, opacity: 0.2 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  className="fixed top-0 right-0 bottom-0 w-full sm:max-w-md bg-[#2d2d2d] border-l border-white/10 text-white z-[210] shadow-2xl overflow-y-auto"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="sticky top-0 z-10 bg-[#2d2d2d]/90 backdrop-blur-xl border-b border-white/10 px-4 py-4 flex items-center justify-between">
+                    <div className="min-w-0 flex items-center gap-2 pr-3">
+                      <TeamLogo teamName={eventOddsDrawerEvent.team1} size={18} />
+                      <div className="text-[18px] font-semibold truncate">
+                        {eventOddsDrawerEvent.team1} vs {eventOddsDrawerEvent.team2}
+                      </div>
+                      <TeamLogo teamName={eventOddsDrawerEvent.team2} size={18} />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setEventOddsDrawerEvent(null)}
+                      className="h-11 w-11 rounded-2xl bg-white/[0.05] hover:bg-white/[0.12] text-white/75 hover:text-white inline-flex items-center justify-center transition-colors"
+                    >
+                      <IconX className="w-6 h-6" />
+                    </button>
+                  </div>
+
+                  <div className="p-4 space-y-3">
+
+                    <div className="rounded-small border border-white/10 overflow-hidden bg-[#121417]">
+                      <TrackerWidgetContent
+                        event={{
+                          id: eventOddsDrawerEvent.id,
+                          team1: eventOddsDrawerEvent.team1,
+                          team2: eventOddsDrawerEvent.team2,
+                          team1Logo: getTrackerTeamLogoPath(eventOddsDrawerEvent.team1),
+                          team2Logo: getTrackerTeamLogoPath(eventOddsDrawerEvent.team2),
+                          league: eventOddsDrawerEvent.league,
+                          country: eventOddsDrawerEvent.country,
+                          score: eventOddsDrawerEvent.score ?? { team1: 0, team2: 0 },
+                          minute: eventOddsDrawerEvent.minute,
+                          isLive: eventOddsDrawerEvent.isLive ?? true,
+                        }}
+                        maxHeight={780}
+                      />
+                    </div>
+
+                    <div className="rounded-small border border-white/10 bg-white/[0.02]">
+                      <Accordion
+                        type="multiple"
+                        defaultValue={`event-market-${eventOddsDrawerEvent.id}-0`}
+                        className="w-full"
+                      >
+                        {eventOddsDrawerEvent.markets.slice(0, 8).map((market, marketIdx) => (
+                          <AccordionItem
+                            key={`${eventOddsDrawerEvent.id}-${market.title}-${marketIdx}`}
+                            value={`event-market-${eventOddsDrawerEvent.id}-${marketIdx}`}
+                            className="border-white/10"
+                          >
+                            <AccordionTrigger
+                              value={`event-market-${eventOddsDrawerEvent.id}-${marketIdx}`}
+                              className="px-3 py-2 text-sm font-semibold text-white/90"
+                            >
+                              {market.title}
+                            </AccordionTrigger>
+                            <AccordionContent value={`event-market-${eventOddsDrawerEvent.id}-${marketIdx}`}>
+                              <div className="px-2 pb-2 space-y-1.5">
+                                {market.options.map((option, optionIdx) => {
+                                  const selected = isBetSelected(eventOddsDrawerEvent.id, market.title, option.label)
+                                  return (
+                                    <button
+                                      key={`${eventOddsDrawerEvent.id}-${market.title}-${option.label}-${optionIdx}-desktop-accordion`}
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.preventDefault()
+                                        e.stopPropagation()
+                                        addBetToSlip(
+                                          eventOddsDrawerEvent.id,
+                                          `${eventOddsDrawerEvent.team1} v ${eventOddsDrawerEvent.team2}`,
+                                          market.title,
+                                          option.label,
+                                          formatDecimalOdds(option.odds)
+                                        )
+                                        setBetslipOpen(true)
+                                      }}
+                                      className={cn(
+                                        "w-full h-10 rounded-small px-3 border flex items-center justify-between transition-colors",
+                                        selected ? "bg-[#c9b4ff] border-[#c9b4ff] text-[#121417]" : "bg-white/[0.02] border-white/10 text-white hover:bg-white/[0.06]"
+                                      )}
+                                    >
+                                      <span className={cn("text-sm", selected ? "text-[#121417]/85" : "text-white/80")}>{option.label}</span>
+                                      <span className="text-lg font-semibold leading-none">{formatDecimalOdds(option.odds)}</span>
+                                    </button>
+                                  )
+                                })}
+                              </div>
+                            </AccordionContent>
+                          </AccordionItem>
+                        ))}
+                      </Accordion>
+                    </div>
+                  </div>
+                </motion.aside>
+              )}
+            </>
+          )}
+        </AnimatePresence>
         
         {/* Footer - aligned with casino shell */}
         <footer className="bg-[#2d2d2d] border-t border-white/10 text-white mt-12 relative z-0">
@@ -11644,34 +11942,6 @@ function NavTestPageContent() {
             }}
           >
             <div className="flex items-center gap-1.5">
-              {/* Settings button - fixed in sub nav */}
-              <div className="flex-shrink-0 relative">
-                <button
-                  data-subnav-plain="true"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    window.dispatchEvent(new CustomEvent('sportsbook:open-settings'))
-                  }}
-                  className={cn(
-                    "appearance-none border-0 shadow-none outline-none bg-transparent hover:bg-white/5 flex flex-col items-center justify-center gap-1 min-w-[60px] px-2 py-1.5 rounded-small transition-all duration-300 cursor-pointer relative",
-                    isMobile && "pb-3"
-                  )}
-                  style={{ position: 'relative', overflow: 'visible', WebkitAppearance: 'none', MozAppearance: 'none' }}
-                >
-                  <IconSettings className="w-5 h-5 text-white/70 transition-opacity duration-300" />
-                  <span className="text-[10px] font-medium text-white/70 transition-colors duration-300">Settings</span>
-                  <div
-                    className={cn(
-                      "absolute left-1/2 -translate-x-1/2 h-0.5 rounded-full transition-all duration-300 ease-in-out z-10",
-                      "w-0 opacity-0",
-                      isMobile ? "bottom-0" : "-bottom-2"
-                    )}
-                    style={{ backgroundColor: 'var(--ds-primary, #ee3536)' }}
-                  />
-                </button>
-              </div>
-
               {/* Sports Icons - Scrollable */}
               <div 
                 className={cn(
