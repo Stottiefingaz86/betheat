@@ -1003,7 +1003,7 @@ const liveCasinoOriginalImages = [
   '/games/live%20casino/90fbc8abe43e60bf09c6a2554b3b6b1e0664ffb9a7d1a0a7b966a1f44e8ede6e.avif',
   '/games/live%20casino/e65a14fd91f3f19bd3b81806583419cf2e9e010f5f2b42483ec8a7ce0d3b8fc2.avif',
   '/games/live%20casino/fe8a138599e05331809e86bc4b7856e930ab799d08ba3fe3a982d0c4920e64a2.avif',
-  '/games/live%20casino/31d384b25e3d6c8704f84b3db84e31bceacf2ff16279fbcc25ad9e1bf55a7564%20%281%29.avif',
+  '/games/live%20casino/31d384b25e3d6c8704f84b3db84e31bceacf2ff16279fbcc25ad9e1bf55a7564%20(1).avif',
 ]
 
 type LiveGameType = 'blackjack' | 'roulette' | 'baccarat' | 'poker'
@@ -1886,7 +1886,7 @@ function CashRacesPage({ brandPrimary, setVipDrawerOpen, setShowVipRewards, setV
                 <TabsTab
                   key={tab}
                   value={tab} 
-                  className="relative z-10 text-white/70 dark:text-white/70 text-gray-900 dark:text-white/70 hover:text-white dark:hover:text-white hover:text-black dark:hover:text-white hover:bg-white/5 dark:hover:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/5 rounded-2xl px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-white dark:data-[state=active]:text-white focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none flex items-center gap-1.5"
+                  className="relative z-10 text-white/70 dark:text-white/70 text-gray-900 dark:text-white/70 hover:text-white dark:hover:text-white hover:text-black dark:hover:text-white hover:bg-white/5 dark:hover:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/5 rounded-2xl px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-[#121417] dark:data-[state=active]:text-[#121417] focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none flex items-center gap-1.5"
                 >
                   {activeRaceTab === tab && (
                     <motion.div
@@ -2393,7 +2393,7 @@ function MyBonusPage({ brandPrimary, setShowVipRewards }: { brandPrimary: string
                   <TabsTab 
                     key={tab}
                     value={tab} 
-                    className="relative z-10 text-white/70 dark:text-white/70 text-gray-900 dark:text-white/70 hover:text-white dark:hover:text-white hover:text-black dark:hover:text-white hover:bg-white/5 dark:hover:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/5 rounded-2xl px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-white dark:data-[state=active]:text-white focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none flex items-center gap-1.5"
+                    className="relative z-10 text-white/70 dark:text-white/70 text-gray-900 dark:text-white/70 hover:text-white dark:hover:text-white hover:text-black dark:hover:text-white hover:bg-white/5 dark:hover:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/5 rounded-2xl px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-[#121417] dark:data-[state=active]:text-[#121417] focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none flex items-center gap-1.5"
                   >
                     {activeTab === tab && (
                       <motion.div
@@ -2977,7 +2977,7 @@ function VIPRewardsPage({ brandPrimary, setVipDrawerOpen, setVipActiveTab, setSh
                   <TabsTab
                     key={item.id}
                     value={item.id}
-                    className="relative z-10 text-white/70 hover:text-white hover:bg-white/5 rounded-2xl px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-white focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none whitespace-nowrap"
+                    className="relative z-10 text-white/70 hover:text-white hover:bg-white/5 rounded-2xl px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-[#121417] focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none whitespace-nowrap"
                   >
                     {vipActiveSidebarItem === item.id && (
                       <motion.div
@@ -4171,7 +4171,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                               }}
                               className={cn(
                                 "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
-                                "data-[active=true]:text-white data-[active=true]:font-medium",
+                                "data-[active=true]:text-[#121417] data-[active=true]:font-medium",
                                 "data-[active=false]:text-white/70 hover:text-white hover:bg-white/5"
                               )}
                               style={item.active ? { backgroundColor: 'var(--ds-primary, #ee3536)' } : undefined}
@@ -4216,11 +4216,11 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                   }}
                                   className={cn(
                                     "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
-                                    "data-[active=true]:text-white data-[active=true]:font-medium",
+                                "data-[active=true]:text-[#121417] data-[active=true]:font-medium",
                                     "data-[active=false]:text-white/70 hover:text-white hover:bg-white/5",
                                     "bg-white/[0.02] border border-white/[0.05] hover:border-white/[0.08]"
                                   )}
-                                  style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)' } : undefined}
+                                  style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)', color: '#121417' } : undefined}
                                 >
                                   <Icon strokeWidth={1.5} className="w-5 h-5" />
                                   <span>{sport.label}</span>
@@ -4336,10 +4336,10 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                                 }}
                                 className={cn(
                                   "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
-                                  "data-[active=true]:text-white data-[active=true]:font-medium",
+                                  "data-[active=true]:text-[#121417] data-[active=true]:font-medium",
                                   "data-[active=false]:text-white/70 hover:text-white hover:bg-white/5"
                                 )}
-                                style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)' } : undefined}
+                                style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)', color: '#121417' } : undefined}
                               >
                                 <Icon strokeWidth={1.5} className="w-5 h-5" />
                                 <span>{sport.label}</span>
@@ -4716,7 +4716,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                       <TabsTab 
                         key={tab}
                         value={tab} 
-                        className="relative z-10 text-white/70 hover:text-white hover:bg-white/5 rounded-2xl px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-white focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none"
+                        className="relative z-10 text-white/70 hover:text-white hover:bg-white/5 rounded-2xl px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-[#121417] focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none"
                       >
                         {activeTab === tab && (
                           <motion.div
@@ -7372,10 +7372,10 @@ function PokerLandingPage({ brandPrimary, quickLinksOpen, onNavigate }: { brandP
                               }}
                               className={cn(
                                 "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
-                                "data-[active=true]:text-white data-[active=true]:font-medium",
+                                "data-[active=true]:text-[#121417] data-[active=true]:font-medium",
                                 "data-[active=false]:text-white/70 hover:text-white hover:bg-white/5"
                               )}
-                              style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)' } : undefined}
+                              style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)', color: '#121417' } : undefined}
                             >
                               <div className={cn("w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0", isActive ? "bg-white/20" : "bg-white/10")}>
                                 <Icon strokeWidth={1.5} className="w-4 h-4" />
@@ -7418,10 +7418,10 @@ function PokerLandingPage({ brandPrimary, quickLinksOpen, onNavigate }: { brandP
                               }}
                               className={cn(
                                 "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
-                                "data-[active=true]:text-white data-[active=true]:font-medium",
+                                "data-[active=true]:text-[#121417] data-[active=true]:font-medium",
                                 "data-[active=false]:text-white/70 hover:text-white hover:bg-white/5"
                               )}
-                              style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)' } : undefined}
+                              style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)', color: '#121417' } : undefined}
                             >
                               <Icon strokeWidth={1.5} className="w-5 h-5" />
                               <span>{item.label}</span>
@@ -7465,10 +7465,10 @@ function PokerLandingPage({ brandPrimary, quickLinksOpen, onNavigate }: { brandP
                               }}
                               className={cn(
                                 "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
-                                "data-[active=true]:text-white data-[active=true]:font-medium",
+                                "data-[active=true]:text-[#121417] data-[active=true]:font-medium",
                                 "data-[active=false]:text-white/70 hover:text-white hover:bg-white/5"
                               )}
-                              style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)' } : undefined}
+                              style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)', color: '#121417' } : undefined}
                             >
                               <Icon strokeWidth={1.5} className="w-5 h-5" />
                               <span>{item.label}</span>
@@ -11351,7 +11351,7 @@ function NavTestPageContent() {
                                       }}
                                       className={cn(
                                         "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
-                                        "data-[active=true]:text-white data-[active=true]:font-medium",
+                                        "data-[active=true]:text-[#121417] data-[active=true]:font-medium",
                                         "data-[active=false]:text-white/70 hover:text-white hover:bg-white/5",
                                         sidebarState === 'collapsed' && !isMobile && "h-10 w-10 mx-auto p-0 justify-center"
                                       )}
@@ -11531,11 +11531,11 @@ function NavTestPageContent() {
                                   }}
                                   className={cn(
                                     "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
-                                    "data-[active=true]:text-white data-[active=true]:font-medium",
+                                    "data-[active=true]:text-[#121417] data-[active=true]:font-medium",
                                       "data-[active=false]:text-white/70 hover:text-white hover:bg-white/5",
                                       "bg-white/[0.02] border border-white/[0.08] hover:border-white/[0.12]"
                                   )}
-                                  style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)' } : undefined}
+                                  style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)', color: '#121417' } : undefined}
                                 >
                                   <div
                                     className={cn(
@@ -11548,7 +11548,7 @@ function NavTestPageContent() {
                                   {(sidebarState !== 'collapsed' || isMobile) && (
                                       <div className="flex flex-col leading-tight min-w-0">
                                         <span>{item.label}</span>
-                                        <span className="text-[11px] text-white/40 font-normal mt-0.5">{item.subtitle}</span>
+                                        <span className={cn("text-[11px] font-normal mt-0.5", isActive ? "text-[#121417]/70" : "text-white/40")}>{item.subtitle}</span>
                                       </div>
                                   )}
                                 </SidebarMenuButton>
@@ -11632,12 +11632,12 @@ function NavTestPageContent() {
                                 <TooltipTrigger asChild>
                                   <SidebarMenuButton
                                     isActive={isActive}
-                                    style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)' } : undefined}
+                                    style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)', color: '#121417' } : undefined}
                                     className={cn(
                                       "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
-                                      "data-[active=true]:text-white data-[active=true]:font-medium",
+                                      "data-[active=true]:text-[#121417] data-[active=true]:font-medium",
                                       "data-[active=false]:text-white/70 hover:text-white hover:bg-white/5",
-                                      isActive && '[&[data-active=true]]:!bg-[var(--brand-primary)]'
+                                      isActive && '[&[data-active=true]]:!bg-[var(--brand-primary)] !text-[#121417] [&_*]:!text-[#121417]'
                                     )}
                                     onClick={(e) => {
                                       e.preventDefault()
@@ -11712,8 +11712,8 @@ function NavTestPageContent() {
                                       }
                                     }}
                                   >
-                                    <Icon strokeWidth={1.5} className="w-5 h-5" />
-                                    <span>{item.label}</span>
+                                    <Icon strokeWidth={1.5} className={cn("w-5 h-5", isActive && "!text-[#121417]")} />
+                                    <span className={cn(isActive && "!text-[#121417]")}>{item.label}</span>
                                   </SidebarMenuButton>
                                 </TooltipTrigger>
                                 {sidebarState === 'collapsed' && (
@@ -12062,27 +12062,23 @@ function NavTestPageContent() {
                         )}
                         {effectiveSubNavItems.map((tab, index) => {
                           const TabIcon = casinoSubNavIconMap[tab] ?? IconLayoutGrid
+                          const isTabActive = !selectedVendor && (!(selectedCategory && !effectiveSubNavItems.includes(selectedCategory))) && activeSubNav === tab
                           return (
                           <TabsTab 
                             key={tab}
                             value={tab}
                             data-tab-item
                             className={cn(
-                              "relative z-10 text-white/70 dark:text-white/70 text-gray-900 dark:text-white/70 hover:text-white dark:hover:text-white hover:text-black dark:hover:text-white hover:bg-white/[0.04] dark:hover:bg-white/[0.04] hover:bg-gray-200/60 dark:hover:bg-white/[0.04] px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-white dark:data-[state=active]:text-white focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none flex items-center gap-1.5 flex-shrink-0",
+                              "relative z-10 text-white/70 dark:text-white/70 text-gray-900 dark:text-white/70 hover:text-white dark:hover:text-white hover:text-black dark:hover:text-white hover:bg-white/[0.04] dark:hover:bg-white/[0.04] hover:bg-gray-200/60 dark:hover:bg-white/[0.04] px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-[#121417] dark:data-[state=active]:text-[#121417] focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none flex items-center gap-1.5 flex-shrink-0",
                               effectiveSubNavTemplate === 'sub_underline_v3'
                                 ? "rounded-none border-b-2 border-transparent px-2.5"
                                 : "rounded-2xl",
                               isMobile && index === 0 && "scroll-snap-start",
                               isMobile && index === effectiveSubNavItems.length - 1 && "scroll-snap-end mr-12"
                             )}
+                            style={isTabActive ? { color: '#121417' } : undefined}
                           >
-                            {(() => {
-                              // Don't highlight if viewing vendor or category not in sub nav menu
-                              const subNavItems = effectiveSubNavItems
-                              if (selectedVendor) return false
-                              if (selectedCategory && !subNavItems.includes(selectedCategory)) return false
-                              return activeSubNav === tab
-                            })() && (
+                            {isTabActive && (
                               effectiveSubNavTemplate === 'sub_underline_v3' ? (
                                 <motion.div
                                   layoutId="activeTabUnderline"
@@ -12114,8 +12110,8 @@ function NavTestPageContent() {
                                 />
                               )
                             )}
-                            <TabIcon className="relative z-10 h-3.5 w-3.5 opacity-90" />
-                            <span className="relative z-10 whitespace-nowrap">
+                            <TabIcon className={cn("relative z-10 h-3.5 w-3.5 opacity-90", isTabActive && "!text-[#121417]")} />
+                            <span className={cn("relative z-10 whitespace-nowrap", isTabActive && "!text-[#121417]")}>
                               {activeSubNav === tab && subNavRollKey > 0 ? (
                                 <SubNavRollText text={tab} animateKey={subNavRollKey} />
                               ) : (

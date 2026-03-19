@@ -306,7 +306,7 @@ const Sidebar = React.forwardRef<
             noDrag={mobileNoDrag}
             className={cn(
               "w-[320px] sm:max-w-[320px] bg-[#2d2d2d] dark:bg-[#2d2d2d] border-r border-white/10 text-white p-0 [&>button]:hidden",
-              "[&_*]:text-white [&_*]:text-inherit",
+              "[&_*]:text-inherit",
               "shadow-2xl",
               mobileNoDrag && "!rounded-l-none !rounded-tr-2xl !rounded-br-none overflow-hidden",
               className
@@ -336,7 +336,7 @@ const Sidebar = React.forwardRef<
             {/* Render children directly - same structure as desktop, no extra wrapper */}
             <div 
               className={cn(
-                "flex h-full w-full flex-col overflow-y-auto overflow-x-hidden text-white [&_*]:text-white [&_*]:text-inherit scrollbar-hide",
+                "flex h-full w-full flex-col overflow-y-auto overflow-x-hidden text-white [&_*]:text-inherit scrollbar-hide",
                 mobileNoDrag ? "pt-0 [&_[data-sidebar=content]]:overflow-visible [&_[data-sidebar=content]]:min-h-0" : "py-2"
               )}
               style={{

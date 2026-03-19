@@ -28,7 +28,7 @@
   --accent-foreground: 0 0% 98%;
   --popover: 0 0% 3.9%;
   --popover-foreground: 0 0% 98%;
-  --ds-primary-text: #ffffff;
+  --ds-primary-text: #121417;
 }
 
 .dark {
@@ -53,7 +53,7 @@
   --accent-foreground: 0 0% 98%;
   --popover: 0 0% 3.9%;
   --popover-foreground: 0 0% 98%;
-  --ds-primary-text: #ffffff;
+  --ds-primary-text: #121417;
 }
 
 * {
@@ -1112,10 +1112,17 @@ body {
 [data-sub-nav] [data-state="active"][data-tab-item] {
   background-color: transparent !important;
   background-image: var(--ds-primary-gradient, linear-gradient(112deg, rgba(255, 136, 52, 1) 0%, rgba(255, 109, 42, 0.98) 40%, rgba(236, 73, 46, 0.94) 72%, rgba(168, 44, 42, 0.92) 100%)) !important;
-  color: var(--ds-primary-text, #ffffff) !important;
+  color: #121417 !important;
   border: 0 !important;
   box-shadow: none !important;
   border-radius: var(--ui-button-radius) !important;
+}
+
+/* Ensure inner labels/icons don't keep hardcoded white classes */
+[data-sub-nav] button[data-state="active"] *,
+[data-sub-nav] button[data-active="true"] *,
+[data-sub-nav] [data-state="active"][data-tab-item] * {
+  color: #121417 !important;
 }
 
 /* Tabs with animated active pill already render their own fill layer.
@@ -1131,6 +1138,16 @@ body {
   background-color: transparent !important;
   background-image: var(--ds-primary-gradient, linear-gradient(112deg, rgba(255, 136, 52, 1) 0%, rgba(255, 109, 42, 0.98) 40%, rgba(236, 73, 46, 0.94) 72%, rgba(168, 44, 42, 0.92) 100%)) !important;
   border-radius: var(--ui-button-radius) !important;
+}
+
+/* Inline primary-bg buttons/cards must always use dark foreground */
+[style*="background-color: var(--ds-primary"],
+[style*="background-color:var(--ds-primary"] {
+  color: #121417 !important;
+}
+[style*="background-color: var(--ds-primary"] *,
+[style*="background-color:var(--ds-primary"] * {
+  color: #121417 !important;
 }
 
 /* Sports sub-nav icon chips: transparent by default, tile on hover/selected */
@@ -1579,7 +1596,7 @@ button[data-active="true"][class*="SidebarMenuButton"],
 [data-active="true"][class*="SidebarMenuButton"] {
   background-color: transparent !important;
   background-image: var(--ds-primary-gradient, linear-gradient(112deg, rgba(255, 136, 52, 1) 0%, rgba(255, 109, 42, 0.98) 40%, rgba(236, 73, 46, 0.94) 72%, rgba(168, 44, 42, 0.92) 100%)) !important;
-  color: var(--ds-primary-text, #ffffff) !important;
+  color: #121417 !important;
   transition: background-color 0.2s ease-in-out !important;
 }
 
@@ -1589,9 +1606,16 @@ button[data-active="true"][class*="SidebarMenuButton"] span,
 button[data-active="true"][class*="SidebarMenuButton"] svg,
 [data-active="true"][class*="SidebarMenuButton"] span,
 [data-active="true"][class*="SidebarMenuButton"] svg {
-  color: var(--ds-primary-text, #ffffff) !important;
+  color: #121417 !important;
   font-weight: 500 !important;
   letter-spacing: inherit !important;
+}
+
+/* Sidebar active card label stacks can include nested wrappers */
+[data-sidebar="menu-button"][data-active="true"] *,
+button[data-active="true"][class*="SidebarMenuButton"] *,
+[data-active="true"][class*="SidebarMenuButton"] * {
+  color: #121417 !important;
 }
 
 .image-skeleton-fallback {
@@ -1937,6 +1961,14 @@ a[role="button"]:not(.rounded-full):not([class*="rounded-full"]),
 [style*="background-color: rgb(238, 53, 54)"] {
   background-color: var(--ds-primary, #ff6a1a) !important;
   background-image: var(--ds-primary-gradient, linear-gradient(112deg, rgba(255, 136, 52, 1) 0%, rgba(255, 109, 42, 0.98) 40%, rgba(236, 73, 46, 0.94) 72%, rgba(168, 44, 42, 0.92) 100%)) !important;
+  color: #121417 !important;
+}
+.bg-\[\#ee3536\]:not(.animate-pulse) *,
+.\!bg-\[\#ee3536\]:not(.animate-pulse) *,
+[style*="background-color: #ee3536"] *,
+[style*="background-color:#ee3536"] *,
+[style*="background-color: rgb(238, 53, 54)"] * {
+  color: #121417 !important;
 }
 
 /* Connected carousel arrows for header controls */

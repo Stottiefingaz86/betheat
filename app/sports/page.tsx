@@ -1440,7 +1440,7 @@ function CashRacesPage({ brandPrimary, setVipDrawerOpen, setShowVipRewards, setV
                 <TabsTab
                   key={tab}
                   value={tab} 
-                  className="relative z-10 text-white/70 dark:text-white/70 text-gray-900 dark:text-white/70 hover:text-white dark:hover:text-white hover:text-black dark:hover:text-white hover:bg-white/5 dark:hover:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/5 rounded-2xl px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-white dark:data-[state=active]:text-white focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none flex items-center gap-1.5"
+                  className="relative z-10 text-white/70 dark:text-white/70 text-gray-900 dark:text-white/70 hover:text-white dark:hover:text-white hover:text-black dark:hover:text-white hover:bg-white/5 dark:hover:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/5 rounded-2xl px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-[#121417] dark:data-[state=active]:text-[#121417] focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none flex items-center gap-1.5"
                 >
                   {activeRaceTab === tab && (
                     <motion.div
@@ -1679,7 +1679,7 @@ function PromosPage({ brandPrimary, setVipDrawerOpen, setShowVipRewards, setVipA
                   <TabsTab 
                     key={tab}
                     value={tab} 
-                    className="relative z-10 text-white/70 dark:text-white/70 text-gray-900 dark:text-white/70 hover:text-white dark:hover:text-white hover:text-black dark:hover:text-white hover:bg-white/5 dark:hover:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/5 rounded-2xl px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-white dark:data-[state=active]:text-white focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none flex items-center gap-1.5"
+                    className="relative z-10 text-white/70 dark:text-white/70 text-gray-900 dark:text-white/70 hover:text-white dark:hover:text-white hover:text-black dark:hover:text-white hover:bg-white/5 dark:hover:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/5 rounded-2xl px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-[#121417] dark:data-[state=active]:text-[#121417] focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none flex items-center gap-1.5"
                   >
                     {activeTab === tab && (
                       <motion.div
@@ -1953,7 +1953,7 @@ function MyBonusPage({ brandPrimary, setShowVipRewards }: { brandPrimary: string
                   <TabsTab 
                     key={tab}
                     value={tab} 
-                    className="relative z-10 text-white/70 dark:text-white/70 text-gray-900 dark:text-white/70 hover:text-white dark:hover:text-white hover:text-black dark:hover:text-white hover:bg-white/5 dark:hover:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/5 rounded-2xl px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-white dark:data-[state=active]:text-white focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none flex items-center gap-1.5"
+                    className="relative z-10 text-white/70 dark:text-white/70 text-gray-900 dark:text-white/70 hover:text-white dark:hover:text-white hover:text-black dark:hover:text-white hover:bg-white/5 dark:hover:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/5 rounded-2xl px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-[#121417] dark:data-[state=active]:text-[#121417] focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none flex items-center gap-1.5"
                   >
                     {activeTab === tab && (
                       <motion.div
@@ -2539,7 +2539,7 @@ function VIPRewardsPage({ brandPrimary, setVipDrawerOpen, setVipActiveTab, setSh
                   <TabsTab
                     key={item.id}
                     value={item.id}
-                    className="relative z-10 text-white/70 hover:text-white hover:bg-white/5 rounded-2xl px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-white focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none whitespace-nowrap"
+                    className="relative z-10 text-white/70 hover:text-white hover:bg-white/5 rounded-2xl px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-[#121417] focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none whitespace-nowrap"
                   >
                     {vipActiveSidebarItem === item.id && (
                       <motion.div
@@ -6129,7 +6129,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                               className={cn(
                                 "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer border transition-colors",
                                 "bg-white/[0.02] border-white/[0.08]",
-                                "data-[active=true]:text-white data-[active=true]:font-medium",
+                                "data-[active=true]:text-[#121417] data-[active=true]:font-medium",
                                 "data-[active=false]:text-white/70 hover:text-white",
                                 "hover:bg-white/[0.035] hover:border-white/[0.12]",
                               )}
@@ -12479,10 +12479,10 @@ function NavTestPageContent() {
                                 <TooltipTrigger asChild>
                                   <SidebarMenuButton
                                     isActive={isActive}
-                                    style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)' } : undefined}
+                                    style={isActive ? { backgroundColor: 'var(--ds-primary, #ee3536)', color: '#121417' } : undefined}
                                     className={cn(
                                       "w-full justify-start rounded-small h-auto py-2.5 px-3 text-sm font-medium cursor-pointer",
-                                      "data-[active=true]:text-white data-[active=true]:font-medium",
+                                      "data-[active=true]:text-[#121417] data-[active=true]:font-medium",
                                       "data-[active=false]:text-white/70 hover:text-white hover:bg-white/5",
                                       isActive && '[&[data-active=true]]:!bg-[var(--brand-primary)]'
                                     )}
@@ -12759,10 +12759,16 @@ function NavTestPageContent() {
                             value={tab}
                             data-tab-item
                             className={cn(
-                              "relative z-10 text-white/70 dark:text-white/70 text-gray-900 dark:text-white/70 hover:text-white dark:hover:text-white hover:text-black dark:hover:text-white hover:bg-white/5 dark:hover:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/5 rounded-2xl px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-white dark:data-[state=active]:text-white focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none flex items-center gap-1.5 flex-shrink-0",
+                              "relative z-10 text-white/70 dark:text-white/70 text-gray-900 dark:text-white/70 hover:text-white dark:hover:text-white hover:text-black dark:hover:text-white hover:bg-white/5 dark:hover:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/5 rounded-2xl px-4 py-1 h-9 text-xs font-medium transition-colors duration-300 ease-in-out data-[state=active]:text-[#121417] dark:data-[state=active]:text-[#121417] focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:bg-transparent active:outline-none flex items-center gap-1.5 flex-shrink-0",
                               isMobile && index === 0 && "scroll-snap-start",
                               isMobile && index === ['For You', 'Slots', 'Bonus Buys', 'Megaways', 'Originals', 'Blackjack', 'Live', 'Jackpots', 'Early', 'Staff Picks', 'Exclusive', 'New'].length - 1 && "scroll-snap-end mr-12"
                             )}
+                            style={(() => {
+                              const subNavItems = ['For You', 'Slots', 'Bonus Buys', 'Megaways', 'Originals', 'Blackjack', 'Live', 'Jackpots', 'Early', 'Staff Picks', 'Exclusive', 'New']
+                              if (selectedVendor) return undefined
+                              if (selectedCategory && !subNavItems.includes(selectedCategory)) return undefined
+                              return activeSubNav === tab ? { color: '#121417' } : undefined
+                            })()}
                           >
                             {(() => {
                               // Don't highlight if viewing vendor or category not in sub nav menu
