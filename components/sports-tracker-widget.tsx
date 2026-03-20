@@ -57,9 +57,9 @@ export function TrackerWidgetContent({
     event?.statscoreEventId && event?.statscoreConfigId
   )
   const tabs = ['Live', 'Lineups', 'H2H', 'Incidents', 'Stats', 'Standings']
-  const widgetBg = 'var(--ds-page-bg, #151a22)'
+  const widgetBg = 'var(--ds-page-bg, #1a1a1a)'
   const widgetBgDarker =
-    'color-mix(in srgb, var(--ds-page-bg, #151a22) 78%, black)'
+    'color-mix(in srgb, var(--ds-page-bg, #1a1a1a) 86%, black)'
 
   // STATSCORE Widget SDK — programmatic initialization
   useEffect(() => {
@@ -179,9 +179,14 @@ export function TrackerWidgetContent({
         style={{ backgroundColor: widgetBgDarker }}
       >
         <div className="flex items-center gap-1.5">
-          <div className="w-4 h-3 rounded-sm bg-white/10 flex items-center justify-center">
-            <span className="text-[6px]">🏴</span>
-          </div>
+          <img
+            src="/sports%20league/prem.svg"
+            alt="Premier League"
+            width={14}
+            height={14}
+            className="w-3.5 h-3.5 object-contain opacity-90"
+            decoding="async"
+          />
           <span className="text-[10px] text-white/60">
             {event.country}, {event.league}
           </span>
@@ -197,8 +202,8 @@ export function TrackerWidgetContent({
 
       {/* Scoreboard */}
       <div className="px-4 py-3" style={{ backgroundColor: widgetBg }}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 flex-1 min-w-0">
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+          <div className="flex items-center gap-2 min-w-0">
             {event.team1Logo ? (
               <img
                 src={event.team1Logo}
@@ -219,7 +224,7 @@ export function TrackerWidgetContent({
               {event.team1}
             </span>
           </div>
-          <div className="flex flex-col items-center mx-3 min-w-[84px]">
+          <div className="flex flex-col items-center min-w-[76px]">
             <div className="flex items-center justify-center gap-1.5">
               <span className="text-2xl font-bold text-white tabular-nums leading-none">
                 {event.score?.team1 ?? 0}
@@ -238,7 +243,7 @@ export function TrackerWidgetContent({
               </div>
             )}
           </div>
-          <div className="flex items-center gap-2 flex-1 min-w-0 justify-end">
+          <div className="flex items-center gap-2 min-w-0 justify-end">
             <span className="text-sm font-medium text-white truncate text-right">
               {event.team2}
             </span>
@@ -264,17 +269,17 @@ export function TrackerWidgetContent({
           <div className="flex items-center gap-1">
             <span className="text-[10px] text-white font-semibold">1</span>
             <span className="text-[10px] text-white/40">⚽</span>
-            <span className="text-[10px] text-[#3b82f6] font-semibold">3</span>
+            <span className="text-[10px] text-[#c4cad3] font-semibold">3</span>
           </div>
           <div className="flex items-center gap-1">
             <span className="text-[10px] text-white font-semibold">2</span>
             <span className="text-[10px] text-white/40">🟨</span>
-            <span className="text-[10px] text-[#3b82f6] font-semibold">1</span>
+            <span className="text-[10px] text-[#c4cad3] font-semibold">1</span>
           </div>
           <div className="flex items-center gap-1">
             <span className="text-[10px] text-white font-semibold">0</span>
             <span className="text-[10px] text-white/40">🟥</span>
-            <span className="text-[10px] text-[#3b82f6] font-semibold">0</span>
+            <span className="text-[10px] text-[#c4cad3] font-semibold">0</span>
           </div>
         </div>
       </div>
@@ -289,7 +294,7 @@ export function TrackerWidgetContent({
             </span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded-full bg-[#3b82f6]" />
+            <div className="w-2 h-2 rounded-full bg-[#c4cad3]" />
             <span className="text-[9px] text-white/70">
               {event.team2.substring(0, 3).toUpperCase()}
             </span>
@@ -338,7 +343,7 @@ export function TrackerWidgetContent({
       {/* Live Pitch */}
       {activeTab === 'Live' && (
         <div
-          className="relative bg-[#1a3a1a] overflow-hidden w-full"
+          className="relative bg-[#1a3a1a] overflow-hidden w-full rounded-small border border-white/10"
           style={{
             aspectRatio: '100 / 65',
             height: isCompact ? 190 : 'auto',
@@ -445,11 +450,11 @@ export function TrackerWidgetContent({
                 style={{ width: '45%' }}
               />
               <div
-                className="bg-[#3b82f6]/90 h-full"
+                className="bg-[#c4cad3]/90 h-full"
                 style={{ width: '55%' }}
               />
             </div>
-            <span className="text-[10px] font-semibold text-[#3b82f6]">
+            <span className="text-[10px] font-semibold text-[#c4cad3]">
               55%
             </span>
           </div>
@@ -474,7 +479,7 @@ export function TrackerWidgetContent({
                   {stat.label === 'Ball Possession' ? '%' : ''}
                 </span>
                 <span className="text-[9px] text-white/50">{stat.label}</span>
-                <span className="text-[10px] font-semibold text-[#3b82f6] tabular-nums">
+                <span className="text-[10px] font-semibold text-[#c4cad3] tabular-nums">
                   {stat.away}
                   {stat.label === 'Ball Possession' ? '%' : ''}
                 </span>
@@ -492,7 +497,7 @@ export function TrackerWidgetContent({
                 </div>
                 <div className="flex-1 bg-white/5 rounded-full overflow-hidden">
                   <div
-                    className="bg-[#3b82f6]/70 h-full rounded-full"
+                    className="bg-[#c4cad3]/70 h-full rounded-full"
                     style={{
                       width: `${
                         (stat.away / (stat.home + stat.away)) * 100
@@ -521,7 +526,7 @@ export function TrackerWidgetContent({
             <div
               key={i}
               className={`flex items-center gap-2 px-2 py-1 rounded ${
-                incident.team === 'home' ? 'bg-white/5' : 'bg-[#3b82f6]/10'
+                incident.team === 'home' ? 'bg-white/5' : 'bg-[#c4cad3]/10'
               }`}
             >
               <span className="text-[10px] text-white/40 w-6 text-right tabular-nums">
@@ -533,7 +538,7 @@ export function TrackerWidgetContent({
               </span>
               <div
                 className={`w-1.5 h-1.5 rounded-full ml-auto ${
-                  incident.team === 'home' ? 'bg-white' : 'bg-[#3b82f6]'
+                  incident.team === 'home' ? 'bg-white' : 'bg-[#c4cad3]'
                 }`}
               />
             </div>

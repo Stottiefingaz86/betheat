@@ -54,7 +54,7 @@ export default function RootLayout({
           <PreventOverscroll />
           {children}
           {showEditorRuntimeTools ? <DesignCustomizer /> : null}
-          {showEditorRuntimeTools ? <FloatingSiteButtons /> : null}
+          <FloatingSiteButtons />
           <GlobalBetslip />
         </ThemeProvider>
       </body>

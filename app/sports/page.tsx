@@ -189,6 +189,7 @@ import {
 } from '@/components/ui/table'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
+import Scrubber from '@/components/ui/scrubber'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -4160,6 +4161,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
 
   // Total market price selection state - key: `${eventId}-${marketIndex}`, value: selected price
   const [totalMarketPrices, setTotalMarketPrices] = useState<{ [key: string]: string }>({})
+  const [drawerTotalsScrubberIndex, setDrawerTotalsScrubberIndex] = useState<Record<string, number>>({})
   
   // Top Bet Boosts carousel state
   const [topBetBoostsCarouselApi, setTopBetBoostsCarouselApi] = useState<CarouselApi>()
@@ -4872,6 +4874,210 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
       bet.eventId === eventId && 
       bet.marketTitle === marketTitle && 
       bet.selection === selection
+    )
+  }
+
+  const parseTotalOptionLabel = useCallback((label: string) => {
+    const match = label.trim().match(/^(o|over|u|under)\s*([0-9]+(?:\.[0-9]+)?)/i)
+    if (!match) return null
+    return {
+      side: match[1].toLowerCase().startsWith('o') ? 'over' as const : 'under' as const,
+      line: Number.parseFloat(match[2]),
+    }
+  }, [])
+
+  const buildSyntheticGoalLines = useCallback((baseLine: number) => {
+    const candidates = [baseLine - 1, baseLine - 0.5, baseLine, baseLine + 0.5, baseLine + 1]
+    return candidates
+      .filter((line) => line >= 0.5)
+      .map((line) => Math.round(line * 10) / 10)
+  }, [])
+
+  const getSyntheticTotalOdds = useCallback((
+    baseOdds: string | undefined,
+    side: 'over' | 'under',
+    baseLine: number,
+    targetLine: number,
+  ) => {
+    if (!baseOdds) return '2.00'
+    const baseDecimal = oddsToDecimal(baseOdds)
+    const lineDelta = targetLine - baseLine
+    const adjusted =
+      side === 'over'
+        ? baseDecimal + lineDelta * 0.28
+        : baseDecimal - lineDelta * 0.28
+    const clamped = Math.min(Math.max(adjusted, 1.05), 8)
+    return clamped.toFixed(2)
+  }, [])
+
+  const getTotalsScrubberMarket = useCallback((
+    market: { title: string; options: Array<{ label: string; odds: string }> }
+  ) => {
+    if (!/total|goals/i.test(market.title)) return null
+    const byLine = new Map<number, { over?: { label: string; odds: string }; under?: { label: string; odds: string } }>()
+    for (const option of market.options) {
+      const parsed = parseTotalOptionLabel(option.label)
+      if (!parsed || Number.isNaN(parsed.line)) continue
+      const current = byLine.get(parsed.line) ?? {}
+      current[parsed.side] = option
+      byLine.set(parsed.line, current)
+    }
+    const lines = Array.from(byLine.keys()).sort((a, b) => a - b)
+    if (!lines.length) return null
+    return { lines, byLine }
+  }, [parseTotalOptionLabel])
+
+  const getEventDrawerDefaultMarketIndex = useCallback((
+    eventItem: NonNullable<typeof eventOddsDrawerEvent>
+  ) => {
+    const totalIdx = eventItem.markets.findIndex((market) =>
+      /total|goals/i.test(market.title)
+    )
+    return totalIdx >= 0 ? totalIdx : 0
+  }, [])
+
+  const renderEventDrawerMarketOptions = (
+    eventItem: NonNullable<typeof eventOddsDrawerEvent>,
+    market: { title: string; options: Array<{ label: string; odds: string }> },
+    marketIdx: number,
+    variant: 'mobile' | 'desktop',
+  ) => {
+    const setManualOpenOnBet = variant === 'mobile'
+    const scrubberKey = `${eventItem.id}-${market.title}-${marketIdx}`
+    const totalsData = getTotalsScrubberMarket(market)
+
+    const placeDrawerBet = (selection: string, odds: string) => {
+      addBetToSlip(
+        eventItem.id,
+        `${eventItem.team1} v ${eventItem.team2}`,
+        market.title,
+        selection,
+        formatDecimalOdds(odds)
+      )
+      setBetslipOpen(true)
+      if (setManualOpenOnBet) {
+        setBetslipManuallyClosed(false)
+      }
+    }
+
+    if (totalsData) {
+      const scrubberLines =
+        totalsData.lines.length > 1
+          ? totalsData.lines
+          : buildSyntheticGoalLines(totalsData.lines[0])
+      const selectedIdxRaw = drawerTotalsScrubberIndex[scrubberKey] ?? 0
+      const selectedIdx = Math.min(selectedIdxRaw, Math.max(scrubberLines.length - 1, 0))
+      const selectedLine = scrubberLines[selectedIdx]
+      const selectedLineBook = totalsData.byLine.get(selectedLine) ?? {}
+      const baseLine = totalsData.lines[0]
+      const baseLineBook = totalsData.byLine.get(baseLine) ?? {}
+      const overOption = selectedLineBook.over ?? {
+        label: `O ${selectedLine.toFixed(1)}`,
+        odds: getSyntheticTotalOdds(baseLineBook.over?.odds, 'over', baseLine, selectedLine),
+      }
+      const underOption = selectedLineBook.under ?? {
+        label: `U ${selectedLine.toFixed(1)}`,
+        odds: getSyntheticTotalOdds(baseLineBook.under?.odds, 'under', baseLine, selectedLine),
+      }
+      const goalLineLabel = Number.isInteger(selectedLine) ? `${selectedLine}.0` : `${selectedLine}`
+      const lineStep =
+        scrubberLines.length > 1
+          ? Math.min(
+              ...scrubberLines
+                .slice(1)
+                .map((line, idx) => line - scrubberLines[idx])
+                .filter((delta) => delta > 0)
+            )
+          : 0.5
+
+      return (
+        <div className="px-2 pb-2 space-y-2">
+          <div className="rounded-small border border-white/10 bg-[#121417] px-3 py-2">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[11px] font-medium text-white/85">Total Goals: {goalLineLabel}</span>
+              <span className="text-[10px] text-white/45">{selectedIdx + 1}/{scrubberLines.length}</span>
+            </div>
+            <Scrubber
+              label="Goals"
+              value={selectedLine}
+              min={scrubberLines[0]}
+              max={scrubberLines[scrubberLines.length - 1]}
+              step={lineStep}
+              decimals={1}
+              ticks={9}
+              onValueChange={(next) => {
+                const nearestIdx = scrubberLines.reduce((bestIdx, line, idx) => {
+                  const bestDistance = Math.abs(scrubberLines[bestIdx] - next)
+                  const nextDistance = Math.abs(line - next)
+                  return nextDistance < bestDistance ? idx : bestIdx
+                }, 0)
+                setDrawerTotalsScrubberIndex((prev) => ({ ...prev, [scrubberKey]: nearestIdx }))
+              }}
+              className="[--muted:220_11%_17%] [--foreground:210_18%_96%]"
+            />
+            <div className="flex items-center justify-between mt-1 text-[10px] text-white/35">
+              <span>{scrubberLines[0]}</span>
+              <span>{scrubberLines[scrubberLines.length - 1]}</span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-1.5">
+            {[{ key: 'over', option: overOption }, { key: 'under', option: underOption }].map(({ key, option }) => {
+              const selected = isBetSelected(eventItem.id, market.title, option.label)
+              return (
+                <button
+                  key={`${scrubberKey}-${option.label}-${variant}`}
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    placeDrawerBet(option.label, option.odds)
+                  }}
+                  className={cn(
+                    "h-10 rounded-small px-3 border flex items-center justify-between transition-colors",
+                    selected
+                      ? "bg-[#c9b4ff] border-[#c9b4ff] text-[#121417]"
+                      : "bg-white/[0.02] border-white/10 text-white hover:bg-white/[0.06]"
+                  )}
+                >
+                  <span className={cn("text-sm", selected ? "text-[#121417]/85" : "text-white/80")}>
+                    {option.label}
+                  </span>
+                  <span className="text-lg font-semibold leading-none">{formatDecimalOdds(option.odds)}</span>
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      )
+    }
+
+    return (
+      <div className="px-2 pb-2 space-y-1.5">
+        {market.options.map((option, optionIdx) => {
+          const selected = isBetSelected(eventItem.id, market.title, option.label)
+          return (
+            <button
+              key={`${eventItem.id}-${market.title}-${option.label}-${optionIdx}-${variant}-accordion`}
+              type="button"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                placeDrawerBet(option.label, option.odds)
+              }}
+              className={cn(
+                "w-full h-10 rounded-small px-3 border flex items-center justify-between transition-colors",
+                selected
+                  ? "bg-[#c9b4ff] border-[#c9b4ff] text-[#121417]"
+                  : "bg-white/[0.02] border-white/10 text-white hover:bg-white/[0.06]"
+              )}
+            >
+              <span className={cn("text-sm", selected ? "text-[#121417]/85" : "text-white/80")}>{option.label}</span>
+              <span className="text-lg font-semibold leading-none">{formatDecimalOdds(option.odds)}</span>
+            </button>
+          )
+        })}
+      </div>
     )
   }
 
@@ -9092,6 +9298,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
         )}
 
         {/* Event card detail draw: aligned with existing drawer style */}
+        {typeof document !== 'undefined' && createPortal(
         <AnimatePresence>
           {eventOddsDrawerEvent && (
             <>
@@ -9100,7 +9307,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="fixed inset-0 z-[205] bg-black/70 backdrop-blur-sm"
+                className="fixed inset-0 z-[12050] bg-black/70 backdrop-blur-sm"
                 onClick={() => setEventOddsDrawerEvent(null)}
               />
 
@@ -9110,7 +9317,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 20 }}
                   transition={{ duration: 0.2, ease: "easeOut" }}
-                  className="fixed inset-0 z-[210] bg-[#1a1a1a] text-white overflow-y-auto"
+                  className="fixed inset-0 z-[12060] bg-[#1a1a1a] text-white overflow-y-auto"
                 >
                   <div className="sticky top-0 z-10 bg-[#1a1a1a]/90 backdrop-blur-xl border-b border-white/10 px-4 py-3 flex items-center justify-between">
                     <div className="min-w-0 flex items-center gap-2 pr-3">
@@ -9152,7 +9359,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                     <div className="rounded-small border border-white/10 bg-white/[0.02]">
                       <Accordion
                         type="multiple"
-                        defaultValue={`event-market-mobile-${eventOddsDrawerEvent.id}-0`}
+                        defaultValue={`event-market-mobile-${eventOddsDrawerEvent.id}-${getEventDrawerDefaultMarketIndex(eventOddsDrawerEvent)}`}
                         className="w-full"
                       >
                         {eventOddsDrawerEvent.markets.slice(0, 8).map((market, marketIdx) => (
@@ -9168,37 +9375,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                               {market.title}
                             </AccordionTrigger>
                             <AccordionContent value={`event-market-mobile-${eventOddsDrawerEvent.id}-${marketIdx}`}>
-                              <div className="px-2 pb-2 space-y-1.5">
-                                {market.options.map((option, optionIdx) => {
-                                  const selected = isBetSelected(eventOddsDrawerEvent.id, market.title, option.label)
-                                  return (
-                                    <button
-                                      key={`${eventOddsDrawerEvent.id}-${market.title}-${option.label}-${optionIdx}-mobile-accordion`}
-                                      type="button"
-                                      onClick={(e) => {
-                                        e.preventDefault()
-                                        e.stopPropagation()
-                                        addBetToSlip(
-                                          eventOddsDrawerEvent.id,
-                                          `${eventOddsDrawerEvent.team1} v ${eventOddsDrawerEvent.team2}`,
-                                          market.title,
-                                          option.label,
-                                          formatDecimalOdds(option.odds)
-                                        )
-                                        setBetslipOpen(true)
-                                        setBetslipManuallyClosed(false)
-                                      }}
-                                      className={cn(
-                                        "w-full h-10 rounded-small px-3 border flex items-center justify-between transition-colors",
-                                        selected ? "bg-[#c9b4ff] border-[#c9b4ff] text-[#121417]" : "bg-white/[0.02] border-white/10 text-white hover:bg-white/[0.06]"
-                                      )}
-                                    >
-                                      <span className={cn("text-sm", selected ? "text-[#121417]/85" : "text-white/80")}>{option.label}</span>
-                                      <span className="text-lg font-semibold leading-none">{formatDecimalOdds(option.odds)}</span>
-                                    </button>
-                                  )
-                                })}
-                              </div>
+                              {renderEventDrawerMarketOptions(eventOddsDrawerEvent, market, marketIdx, 'mobile')}
                             </AccordionContent>
                           </AccordionItem>
                         ))}
@@ -9212,7 +9389,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                   animate={{ x: 0, opacity: 1 }}
                   exit={{ x: 360, opacity: 0.2 }}
                   transition={{ duration: 0.2, ease: "easeOut" }}
-                  className="fixed top-0 right-0 bottom-0 w-full sm:max-w-md bg-[#2d2d2d] border-l border-white/10 text-white z-[210] shadow-2xl overflow-y-auto"
+                  className="fixed top-0 right-0 bottom-0 w-full sm:max-w-md bg-[#2d2d2d] border-l border-white/10 text-white z-[12060] shadow-2xl overflow-y-auto"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div className="sticky top-0 z-10 bg-[#2d2d2d]/90 backdrop-blur-xl border-b border-white/10 px-4 py-4 flex items-center justify-between">
@@ -9255,7 +9432,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                     <div className="rounded-small border border-white/10 bg-white/[0.02]">
                       <Accordion
                         type="multiple"
-                        defaultValue={`event-market-${eventOddsDrawerEvent.id}-0`}
+                        defaultValue={`event-market-${eventOddsDrawerEvent.id}-${getEventDrawerDefaultMarketIndex(eventOddsDrawerEvent)}`}
                         className="w-full"
                       >
                         {eventOddsDrawerEvent.markets.slice(0, 8).map((market, marketIdx) => (
@@ -9271,36 +9448,7 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
                               {market.title}
                             </AccordionTrigger>
                             <AccordionContent value={`event-market-${eventOddsDrawerEvent.id}-${marketIdx}`}>
-                              <div className="px-2 pb-2 space-y-1.5">
-                                {market.options.map((option, optionIdx) => {
-                                  const selected = isBetSelected(eventOddsDrawerEvent.id, market.title, option.label)
-                                  return (
-                                    <button
-                                      key={`${eventOddsDrawerEvent.id}-${market.title}-${option.label}-${optionIdx}-desktop-accordion`}
-                                      type="button"
-                                      onClick={(e) => {
-                                        e.preventDefault()
-                                        e.stopPropagation()
-                                        addBetToSlip(
-                                          eventOddsDrawerEvent.id,
-                                          `${eventOddsDrawerEvent.team1} v ${eventOddsDrawerEvent.team2}`,
-                                          market.title,
-                                          option.label,
-                                          formatDecimalOdds(option.odds)
-                                        )
-                                        setBetslipOpen(true)
-                                      }}
-                                      className={cn(
-                                        "w-full h-10 rounded-small px-3 border flex items-center justify-between transition-colors",
-                                        selected ? "bg-[#c9b4ff] border-[#c9b4ff] text-[#121417]" : "bg-white/[0.02] border-white/10 text-white hover:bg-white/[0.06]"
-                                      )}
-                                    >
-                                      <span className={cn("text-sm", selected ? "text-[#121417]/85" : "text-white/80")}>{option.label}</span>
-                                      <span className="text-lg font-semibold leading-none">{formatDecimalOdds(option.odds)}</span>
-                                    </button>
-                                  )
-                                })}
-                              </div>
+                              {renderEventDrawerMarketOptions(eventOddsDrawerEvent, market, marketIdx, 'desktop')}
                             </AccordionContent>
                           </AccordionItem>
                         ))}
@@ -9311,7 +9459,9 @@ function SportsPage({ activeTab, onTabChange, onBack, brandPrimary, brandPrimary
               )}
             </>
           )}
-        </AnimatePresence>
+        </AnimatePresence>,
+        document.body
+      )}
         
         {/* Footer - aligned with casino shell */}
         <footer className="bg-[#2d2d2d] border-t border-white/10 text-white mt-12 relative z-0">
